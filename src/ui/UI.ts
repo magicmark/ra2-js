@@ -4,6 +4,11 @@ import type { ControlMode, ControlCommand } from '../input/Controls';
 import type { NativeFont } from '../assets/NativeFont';
 import type { NativeCursors, NativeCursorName } from '../assets/NativeCursor';
 import { assetSourceUrl, assetCacheKey, DEFAULT_ASSET_URL } from '../assets/AssetDownload';
+import { Tooltips } from './Tooltips';
+import { BINDING_DEFAULTS } from '../input/bindings';
+import { NativeOptions, optionsMarkup, type OptionsScreen } from './NativeOptions';
+import type { BindingInfo, BindingResult } from '../input/bindings';
+export type { BindingInfo, BindingResult } from '../input/bindings';
 export type { ControlMode } from '../input/Controls';
 export interface UIActions {
   onPlace(type: string): void;
@@ -24,13 +29,24 @@ export interface UIActions {
   getTargetLines?(): boolean;
   onScrollRate?(value: number): void;
   getScrollRate?(): number;
+  onEffectsVolume?(value: number): void;
+  getEffectsVolume?(): number;
+  onPreviewSound?(): void;
+  onAbort?(): void;
+  onShowHidden?(enabled: boolean): void;
+  getShowHidden?(): boolean;
+  getBindings?(): readonly BindingInfo[];
+  inspectBinding?(id: string, key: string): BindingResult;
+  onAssignBinding?(id: string, key: string): BindingResult;
+  onResetBindings?(): void;
+  getBattlefieldTooltip?(x: number, y: number): { id: number; title: string; description?: string } | null;
 }
 export interface AssetStatus {
   phase: string; detail?: string; progress?: number | null; error?: string; ready?: boolean; source?: string; cacheWarning?: string | null;
 }
 const CATEGORIES: Category[] = ['structures', 'defenses', 'infantry', 'vehicles'];
 const CATEGORY_NAMES: Record<Category, string> = { structures: 'Structures', defenses: 'Defenses', infantry: 'Infantry', vehicles: 'Vehicles' };
-const COMMANDS: [ControlCommand, string][] = [['team1', 'Team 1 · click to create or select; right click to disband'], ['team2', 'Team 2 · click to create or select; right click to disband'], ['type', 'Select units of the same type · T'], ['deploy', 'Deploy · D'], ['guard', 'Guard area · G'], ['planning', 'Planning mode · Z']];
+const COMMANDS: [ControlCommand, string][] = [['team1', 'Team 1 · click to create or select; right click to disband'], ['team2', 'Team 2 · click to create or select; right click to disband'], ['type', 'Select units of the same type'], ['deploy', 'Deploy'], ['guard', 'Guard area'], ['planning', 'Planning mode']];
 // Authored Allied [BuildingTypes] order: GAPOWR(1), GAREFN(2), GAPILE(4),
 // GAWEAP(8), GAAIRC(106), also visible in the retail sidebar reference.
 const ALLIED_STRUCTURE_ORDER = ['power', 'refinery', 'barracks', 'warfactory', 'radar'];
@@ -86,7 +102,9 @@ export class UI {
   private nativeLabels = new WeakMap<HTMLElement, string>();
   private cardElements = new Map<string, HTMLElement>();
   private mobile: boolean;
-  private soundEnabled = true;
+  private options!: NativeOptions;
+  private tooltipsEnabled = true;
+  private tooltips!: Tooltips;
   private assetStatus: AssetStatus = { phase: 'awaiting-source', detail: 'Choose your original game files to begin.', progress: null };
   private lastSelection = '';
   private lastEvent = -1;
@@ -115,28 +133,35 @@ export class UI {
       </div>
 
       <aside class="build-sidebar" id="build-sidebar" aria-label="Production and radar">
-        <div class="sidebar-topline"><span class="resource credits" title="Available credits"><strong id="credits-value" aria-label="0 credits"></strong></span><button class="icon-button mobile-close" data-action="build-toggle" aria-label="Close build panel">${icon('close')}</button></div>
-        <div class="sidebar-menu"><button data-action="help" title="Briefing" aria-label="Open mission briefing">${icon('help')}</button><button data-action="settings" title="Options · Esc" aria-label="Open options">${icon('settings')}</button></div>
+        <div class="sidebar-topline"><span class="resource credits" data-tooltip="Available credits"><strong id="credits-value" aria-label="0 credits"></strong></span><button class="icon-button mobile-close" data-action="build-toggle" aria-label="Close build panel">${icon('close')}</button></div>
+        <div class="sidebar-menu"><button data-action="help" data-tooltip="Briefing" aria-label="Open mission briefing">${icon('help')}</button><button data-action="settings" data-tooltip="Options · Esc" aria-label="Open options">${icon('settings')}</button></div>
         <div class="radar-section"><div class="radar-frame" id="radar-frame"><div class="radar-offline" aria-label="Radar offline"></div><canvas id="minimap" width="140" height="110" aria-label="Radar offline. Build an Airforce Command to activate." tabindex="0" role="button"></canvas></div></div>
-        <div class="sidebar-tools"><button data-mode="repair" class="repair-tool" title="Repair mode · K" aria-label="Repair mode" aria-pressed="false">${icon('wrench')}</button><button data-mode="sell" class="sell-tool" title="Sell mode · L" aria-label="Sell mode" aria-pressed="false">${icon('sell')}</button></div>
-        <div class="build-tabs" role="tablist" aria-label="Production categories">${CATEGORIES.map((category, i) => `<button role="tab" class="build-tab ${i === 0 ? 'active' : ''}" data-category="${category}" aria-selected="${i === 0}" aria-label="${CATEGORY_NAMES[category]}" title="${CATEGORY_NAMES[category]} · ${['Q', 'W', 'E', 'R'][i]}">${icon(category)}<span>${CATEGORY_NAMES[category]}</span><i class="category-queue-dot" id="queue-dot-${category}"></i></button>`).join('')}</div>
+        <div class="sidebar-tools"><button data-mode="repair" class="repair-tool" data-tooltip="Repair mode · K" aria-label="Repair mode" aria-pressed="false">${icon('wrench')}</button><button data-mode="sell" class="sell-tool" data-tooltip="Sell mode · L" aria-label="Sell mode" aria-pressed="false">${icon('sell')}</button></div>
+        <div class="build-tabs" role="tablist" aria-label="Production categories">${CATEGORIES.map((category, i) => `<button role="tab" class="build-tab ${i === 0 ? 'active' : ''}" data-category="${category}" aria-selected="${i === 0}" aria-label="${CATEGORY_NAMES[category]}" data-tooltip="${CATEGORY_NAMES[category]} · ${['Q', 'W', 'E', 'R'][i]}">${icon(category)}<span>${CATEGORY_NAMES[category]}</span><i class="category-queue-dot" id="queue-dot-${category}"></i></button>`).join('')}</div>
         <div class="production-heading" hidden><span id="production-counter"></span><h3 id="category-name">Structures</h3><span id="category-count"></span></div>
-        <div class="production-well"><div class="resource power" id="power-resource" title="Power supply / demand"><span class="power-meter"><i id="power-fill"></i><b id="power-demand"></b></span><strong id="power-value"></strong></div><div class="build-grid" id="build-grid" role="tabpanel" aria-label="Available production"></div></div>
-        <div class="sidebar-scroll"><button data-action="build-down" aria-label="Scroll production down" title="Scroll down"></button><button data-action="build-up" aria-label="Scroll production up" title="Scroll up"></button></div>
+        <div class="production-well"><div class="resource power" id="power-resource" data-tooltip="Power supply / demand"><span class="power-meter"><i id="power-fill"></i><b id="power-demand"></b></span><strong id="power-value"></strong></div><div class="build-grid" id="build-grid" role="tabpanel" aria-label="Available production"></div></div>
+        <div class="sidebar-scroll"><button data-action="build-down" aria-label="Scroll production down" data-tooltip="Scroll down"></button><button data-action="build-up" aria-label="Scroll production up" data-tooltip="Scroll up"></button></div>
         <div class="queue-panel" id="queue-panel"><div class="queue-idle"></div></div>
       </aside>
 
       <div class="loading-screen" id="loading-screen" role="dialog" aria-modal="true" aria-labelledby="loading-title"><div class="loading-command"><div class="loading-insignia">★</div><h1 id="loading-title">RED ALERT <b>2</b></h1><p class="loading-operation">Your battlefield awaits.</p><form id="startup-source-form" class="source-form" novalidate><label for="startup-asset-source">Game archive URL</label><p class="source-intro" id="startup-source-description">Use the prefilled archive URL, or enter a URL for your own copy of the game.</p><input id="startup-asset-source" name="asset-source" type="text" inputmode="url" enterkeyhint="go" autocomplete="url" spellcheck="false" aria-describedby="startup-source-description startup-source-hint startup-source-error" value="${escapeHTML(initialSource)}" /><small id="startup-source-hint">${SOURCE_HINT}</small><p id="startup-source-error" class="source-error" role="alert"></p><button class="primary-button asset-submit-button" type="submit"><span id="startup-submit-label">Load & play</span><kbd>Enter ↵</kbd></button></form><div class="loading-status" role="status" aria-live="polite"><strong id="loading-phase">Choose your game files</strong><div class="loading-track"><i id="loading-progress"></i></div><p id="loading-detail">No download starts until you press Enter or choose Load & play.</p></div><div class="loading-actions"><label class="secondary-button file-button">${icon('upload')} Import game files<input type="file" multiple id="startup-asset-import" accept=".exe,.zip,.mix" aria-label="Import local game installer or MIX files" /></label></div><small id="loading-note" role="status">${STORAGE_NOTE}</small><button class="primary-button runtime-reload" data-action="reload" hidden>Reload battlefield</button></div></div>
 
       <nav class="mobile-commandbar" aria-label="Mobile commands"><button class="active" data-mode="select" aria-label="Select units mode; cancel building placement">${icon('select')}<span>SELECT</span></button><button data-mode="pan" aria-label="Pan camera mode">${icon('pan')}<span>PAN</span></button><button data-mode="attack" aria-label="Attack move mode">${icon('target')}<span>ATTACK</span></button><button data-action="stop" aria-label="Stop selected units">${icon('stop')}<span>STOP</span></button><button class="mobile-build-button" data-action="build-toggle" aria-expanded="false">${icon('structures')}<span>BUILD</span><i id="mobile-ready-dot"></i></button></nav>
-      <footer class="statusbar" aria-label="Advanced command bar"><button class="command-bar-toggle" data-action="command-toggle" aria-label="Toggle advanced command bar" aria-expanded="true"></button><div class="tactical-buttons">${COMMANDS.map(([command, label]) => `<button data-command="${command}" aria-label="${label}" title="${label}"${command === 'planning' ? ' aria-pressed="false"' : ''}></button>`).join('')}</div></footer>
+      <footer class="statusbar" aria-label="Advanced command bar"><button class="command-bar-toggle" data-action="command-toggle" aria-label="Toggle advanced command bar" aria-expanded="true"></button><div class="tactical-buttons">${COMMANDS.map(([command, label]) => `<button data-command="${command}" aria-label="${label}" data-tooltip="${label}"${command === 'planning' ? ' aria-pressed="false"' : ''}></button>`).join('')}</div></footer>
 
-      <div class="modal-backdrop" id="settings-modal" hidden><section class="settings-dialog" role="dialog" aria-modal="true" aria-labelledby="settings-title"><header><div><span class="eyebrow">COMMAND INTERFACE</span><h2 id="settings-title">FIELD SETTINGS</h2></div><button class="icon-button" data-action="close-settings" aria-label="Close settings">${icon('close')}</button></header><div class="settings-tabs" role="tablist"><button data-settings-tab="general" class="active" role="tab" aria-selected="true">GENERAL</button><button data-settings-tab="assets" role="tab" aria-selected="false">GAME ASSETS</button><button data-settings-tab="help" role="tab" aria-selected="false">FIELD MANUAL</button></div>
-        <div class="settings-content" data-settings-panel="general"><p class="settings-intro">Your operation. Your rules of engagement.</p><div class="setting-row"><div><strong>Sound effects</strong><small>Orders, production and battlefield audio</small></div><button class="toggle-switch on" id="sound-toggle" role="switch" aria-checked="true" aria-label="Sound effects" data-action="sound"><span></span></button></div><div class="setting-row"><div><strong>Game speed</strong><small>Simulation speed for both commanders</small></div><select id="game-speed" aria-label="Game speed"><option value="0.5">0.5× · Deliberate</option><option value="1" selected>1× · Normal</option><option value="1.5">1.5× · Fast</option><option value="2">2× · Very fast</option></select></div><div class="setting-row"><div><strong>Operation status</strong><small id="settings-pause-status">Battlefield simulation is running</small></div><button class="secondary-button" data-action="pause" id="settings-pause-button">PAUSE GAME</button></div><div class="settings-note">A self-contained skirmish against an enemy commander. Mine ore, build your base, and destroy the enemy's production.</div><button class="danger-button" data-action="restart">RESTART SKIRMISH <span>↗</span></button></div>
-        <div class="settings-content" data-settings-panel="assets" hidden><p class="settings-intro">Enter a URL for your own copy of the game, or use the prefilled archive URL. Saved game files are reused when available.</p><div class="asset-detail-status"><span class="eyebrow" id="asset-phase">CHOOSE GAME FILES</span><strong id="asset-detail">Waiting for your game archive URL</strong><div class="download-track"><i id="download-progress"></i></div><small id="asset-error" role="alert"></small></div><form id="settings-source-form" class="source-form" novalidate><label class="input-label" for="asset-source">GAME ARCHIVE URL</label><input id="asset-source" name="asset-source" type="text" inputmode="url" enterkeyhint="go" autocomplete="url" spellcheck="false" aria-describedby="settings-source-hint asset-error" value="${escapeHTML(initialSource)}" /><small id="settings-source-hint">${SOURCE_HINT}</small><div class="asset-buttons"><button class="primary-button asset-submit-button" type="submit">${icon('radar')} LOAD / RETRY <kbd>Enter ↵</kbd></button><label class="secondary-button file-button">${icon('upload')} IMPORT LOCAL FILE<input type="file" multiple id="asset-import" accept=".exe,.zip,.mix" aria-label="Import local game archive or MIX file" /></label></div></form><p class="settings-note">You can import a downloaded .exe or .zip archive, or select ra2.mix and language.mix together. Custom remote URLs must allow cross-origin downloads. Your files stay saved in this browser when storage is available.</p></div>
-        <div class="settings-content" data-settings-panel="help" hidden><p class="settings-intro">Build an economy. Protect your foothold. Bring the fight to the enemy.</p><ol class="field-manual"><li><span>01</span><div><strong>Establish your base</strong><p>Build a Power Plant, then a Barracks and Ore Refinery. When a structure is ready, click its card and choose a clear tile near your base.</p></div></li><li><span>02</span><div><strong>Keep the credits flowing</strong><p>Ore miners automatically find ore and return it to a refinery. Build additional miners to expand your economy.</p></div></li><li><span>03</span><div><strong>Command your army</strong><p>Select friendly units and give a move or attack order. Scout the map, defend your miners, and destroy the enemy base.</p></div></li></ol><div class="controls-table"><div><span>Select / order / attack</span><kbd>Left click</kbd></div><div><span>Select a group</span><kbd>Left drag</kbd></div><div><span>Add to selection</span><kbd>Shift + click</kbd></div><div><span>Deselect / cancel</span><kbd>Right click</kbd></div><div><span>Pan camera</span><kbd>Arrows / middle or right drag</kbd></div><div><span>Zoom battlefield</span><kbd>Mouse wheel / + −</kbd></div><div><span>Stop / guard / deploy</span><kbd>S / G / D</kbd></div><div><span>Repair / sell mode</span><kbd>K / L</kbd></div><div><span>Select all units</span><kbd>P</kbd></div><div><span>Select same type</span><kbd>T · twice for whole map</kbd></div><div><span>Attack move</span><kbd>Ctrl + Shift + click</kbd></div><div><span>Force fire / force move</span><kbd>Ctrl + click / Alt + click</kbd></div><div><span>Guard a unit or building</span><kbd>Ctrl + Alt + click</kbd></div><div><span>Plan waypoints</span><kbd>Hold Z + click destinations</kbd></div><div><span>Scatter / follow</span><kbd>X / F</kbd></div><div><span>Next / previous / health group</span><kbd>M / N / U</kbd></div><div><span>Home base / options</span><kbd>H / Escape</kbd></div><div><span>Production categories</span><kbd>Q · W · E · R</kbd></div><div><span>Assign / recall team</span><kbd>Ctrl + 1–9 / 1–9</kbd></div><div><span>Add team to selection</span><kbd>Shift + 1–9</kbd></div><div><span>Set / recall camera bookmark</span><kbd>Ctrl + F1–F4 / F1–F4</kbd></div></div><p class="mobile-help settings-note">On touch devices, use Select to tap units or drag a selection box. Tap terrain to move selected units. Pan mode drags the map, Attack issues attack-move orders, and a two-finger pinch zooms. Open Build to manage production. Tap Select to cancel building placement without losing your completed structure.</p></div>
-      </section></div>`;
+      ${optionsMarkup(`<div class="settings-content"><p class="settings-intro">Enter a URL for your own copy of the game, or use the prefilled archive URL. Saved game files are reused when available.</p><div class="asset-detail-status"><span class="eyebrow" id="asset-phase">CHOOSE GAME FILES</span><strong id="asset-detail">Waiting for your game archive URL</strong><div class="download-track"><i id="download-progress"></i></div><small id="asset-error" role="alert"></small></div><form id="settings-source-form" class="source-form" novalidate><label class="input-label" for="asset-source">GAME ARCHIVE URL</label><input id="asset-source" name="asset-source" type="text" inputmode="url" enterkeyhint="go" autocomplete="url" spellcheck="false" aria-describedby="settings-source-hint asset-error" value="${escapeHTML(initialSource)}" /><small id="settings-source-hint">${SOURCE_HINT}</small><div class="asset-buttons"><button class="primary-button asset-submit-button" type="submit">${icon('radar')} LOAD / RETRY <kbd>Enter ↵</kbd></button><label class="secondary-button file-button">${icon('upload')} IMPORT LOCAL FILE<input type="file" multiple id="asset-import" accept=".exe,.zip,.mix" aria-label="Import local game archive or MIX file" /></label></div></form><p class="settings-note">You can import a downloaded .exe or .zip archive, or select ra2.mix and language.mix together. Custom remote URLs must allow cross-origin downloads. Your files stay saved in this browser when storage is available.</p></div>`, `<div class="settings-content"><p class="settings-intro">Build an economy. Protect your foothold. Bring the fight to the enemy.</p><ol class="field-manual"><li><span>01</span><div><strong>Establish your base</strong><p>Build a Power Plant, then a Barracks and Ore Refinery. When a structure is ready, click its card and choose a clear tile near your base.</p></div></li><li><span>02</span><div><strong>Keep the credits flowing</strong><p>Ore miners automatically find ore and return it to a refinery. Build additional miners to expand your economy.</p></div></li><li><span>03</span><div><strong>Command your army</strong><p>Select friendly units and give a move or attack order. Scout the map, defend your miners, and destroy the enemy base.</p></div></li></ol><div class="controls-table"><div><span>Select / order / attack</span><kbd>Left click</kbd></div><div><span>Select a group</span><kbd>Left drag</kbd></div><div><span>Add to selection</span><kbd>Shift + click</kbd></div><div><span>Deselect / cancel</span><kbd>Right click</kbd></div><div><span>Pan camera</span><kbd>Arrows / middle or right drag</kbd></div><div><span>Zoom battlefield</span><kbd>Mouse wheel / + −</kbd></div><div><span>Attack move</span><kbd>Ctrl + Shift + click</kbd></div><div><span>Force fire / force move</span><kbd>Ctrl + click / Alt + click</kbd></div><div><span>Guard a unit or building</span><kbd>Ctrl + Alt + click</kbd></div><div><span>Options</span><kbd>Escape</kbd></div><section id="binding-help"></section><div><span>Assign / recall team</span><kbd>Ctrl + 1–9 / 1–9</kbd></div><div><span>Add team to selection</span><kbd>Shift + 1–9</kbd></div><div><span>Set / recall camera bookmark</span><kbd>Ctrl + F1–F4 / F1–F4</kbd></div></div><p class="mobile-help settings-note">On touch devices, use Select to tap units or drag a selection box. Tap terrain to move selected units. Pan mode drags the map, Attack issues attack-move orders, and a two-finger pinch zooms. Open Build to manage production. Tap Select to cancel building placement without losing your completed structure.</p></div>`)}`;
     document.querySelector('#app')!.append(this.root);
+    this.options = new NativeOptions(this.el('settings-modal'), this.game, this.actions, {
+      paint: (element,text) => this.nativeText(element,text), close: () => this.closeSettings(),
+      tooltips: enabled => { if (enabled !== undefined) { this.tooltipsEnabled=enabled; this.tooltips?.setEnabled(enabled); } return this.tooltipsEnabled; },
+      bindingsChanged: () => this.refreshBindingHints(),
+    });
+    this.tooltips = new Tooltips({
+      paint: (element,text) => this.nativeText(element,text),
+      allowed: element => !this.loading && (!this.isModalOpen() || !!element.closest('#settings-modal')),
+      battlefield: (x,y) => this.actions.getBattlefieldTooltip?.(x,y) ?? null,
+    });
+    this.refreshBindingHints();
     this.root.addEventListener('click', event => this.handleClick(event));
     this.el('build-grid').addEventListener('scroll', () => this.updateScrollButtons(), { passive: true });
     this.root.addEventListener('contextmenu', event => {
@@ -152,9 +177,6 @@ export class UI {
       } else if (active.paused || active.ready) this.game.cancelBuild(def.category, 0, active.id);
       else this.game.toggleBuildPause(def.category);
       this.update();
-    });
-    this.el<HTMLSelectElement>('game-speed').addEventListener('change', event => {
-      const speed = Number((event.target as HTMLSelectElement).value); this.game.state.speed = speed; this.actions.onSpeed?.(speed);
     });
     for (const [formId, inputId] of [['startup-source-form', 'startup-asset-source'], ['settings-source-form', 'asset-source']]) {
       this.el<HTMLFormElement>(formId).addEventListener('submit', event => {
@@ -192,6 +214,21 @@ export class UI {
   }
 
   private el<T extends HTMLElement = HTMLElement>(id: string): T { return this.root.querySelector(`#${id}`)!; }
+  private refreshBindingHints() {
+    const supplied = this.actions.getBindings?.();
+    const bindings = supplied?.length ? supplied : BINDING_DEFAULTS.map(row => ({ ...row, key: row.defaultKey }));
+    const byId = new Map(bindings.map(row => [row.id as string, row]));
+    const hint = (selector: string, id: string, label: string) => {
+      const key = byId.get(id)?.key;
+      this.root.querySelectorAll<HTMLElement>(selector).forEach(element => { element.dataset.tooltip = `${label}${key ? ` · ${key}` : ''}`; });
+    };
+    for (const mode of ['repair', 'sell']) hint(`[data-mode="${mode}"]`, mode, `${mode === 'repair' ? 'Repair' : 'Sell'} mode`);
+    for (const category of CATEGORIES) hint(`[data-category="${category}"]`, category, CATEGORY_NAMES[category]);
+    hint('[data-action="help"]', 'briefing', 'Briefing');
+    for (const [command, id, label] of [['type','selectType','Select units of the same type'],['deploy','deploy','Deploy'],['guard','guard','Guard area'],['planning','planning','Planning mode']]) hint(`[data-command="${command}"]`, id, label);
+    const help = this.el('binding-help');
+    help.innerHTML = bindings.map(row => `<div><span>${escapeHTML(row.label)}</span><kbd>${escapeHTML(row.key ?? 'Unassigned')}</kbd></div>`).join('');
+  }
   private selected() { return this.game.state.entities.filter(entity => entity.selected && entity.side === 0); }
   private centerBase() {
     const base = this.game.state.entities.find(entity => entity.side === 0 && /yard|conyard|construction/i.test(`${entity.type} ${this.game.defs[entity.type]?.name}`)) ?? this.game.state.entities.find(entity => entity.side === 0);
@@ -202,7 +239,6 @@ export class UI {
     const target = (event.target as Element).closest<HTMLElement>('button, [data-action], [data-mode]');
     if (!target || !this.root.contains(target)) return;
     if (target.dataset.category) { this.selectCategory(target.dataset.category as Category); return; }
-    if (target.dataset.settingsTab) { this.showSettingsTab(target.dataset.settingsTab); return; }
     if (target.dataset.command) {
       if (!this.isModalOpen()) this.actions.onCommand?.(target.dataset.command as ControlCommand, { shift: event.shiftKey, ctrl: event.ctrlKey });
       this.update(); return;
@@ -236,8 +272,8 @@ export class UI {
       case 'build-down': this.el('build-grid').scrollBy({ top: 100, behavior: 'smooth' }); break;
       case 'home': event.preventDefault(); this.centerBase(); break;
       case 'pause': this.game.state.paused = !this.game.state.paused; this.actions.onPause?.(this.game.state.paused); this.update(); break;
-      case 'settings': this.openSettings('general'); break;
-      case 'help': this.openSettings('help'); break;
+      case 'settings': this.openSettings('options'); break;
+      case 'help': this.openSettings('briefing'); break;
       case 'close-settings': this.closeSettings(); break;
       case 'zoom-in': this.actions.onZoom(0.15); break;
       case 'zoom-out': this.actions.onZoom(-0.15); break;
@@ -250,7 +286,6 @@ export class UI {
       }
       case 'queue-pause': this.game.toggleBuildPause(this.category); this.update(); break;
       case 'queue-cancel': this.game.cancelBuild(this.category); this.update(); break;
-      case 'sound': this.soundEnabled = !this.soundEnabled; this.actions.onSound(this.soundEnabled); target.classList.toggle('on', this.soundEnabled); target.setAttribute('aria-checked', String(this.soundEnabled)); break;
       case 'restart': this.closeSettings(); this.actions.onRestart(); this.lastSelection = ''; this.lastEvent = -1; this.lastWinner = null; this.el('victory-panel').hidden = true; this.showToast('New operation initialized. Good luck, commander.'); this.update(); break;
     }
   }
@@ -259,9 +294,9 @@ export class UI {
     const modal = this.el('settings-modal');
     if (!modal.hidden) {
       event.stopPropagation();
-      if (event.key === 'Escape') { event.preventDefault(); this.closeSettings(); }
+      if (event.key === 'Escape') { event.preventDefault(); this.options.back(); }
       if (event.key === 'Tab') {
-        const focusable = [...modal.querySelectorAll<HTMLElement>('button, input, select, [tabindex="0"]')].filter(el => el.offsetParent !== null);
+        const focusable = [...modal.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), select:not(:disabled), [tabindex="0"]')].filter(el => el.offsetParent !== null);
         const first = focusable[0], last = focusable.at(-1);
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
@@ -284,24 +319,26 @@ export class UI {
     if (this.isModalOpen()) return;
     this.category = category; this.renderCards(); this.update();
   }
-  openOptions() { if (!this.loading) this.openSettings('general'); }
-  openBriefing() { if (!this.loading) this.openSettings('help'); }
+  openOptions() { if (!this.loading) this.openSettings('options'); }
+  openBriefing() { if (!this.loading) this.openSettings('briefing'); }
   isModalOpen() { return this.loading || !this.el('settings-modal').hidden; }
 
   private closeBuildPanel() { document.documentElement.classList.remove('build-panel-open'); this.root.querySelector('.mobile-build-button')?.setAttribute('aria-expanded', 'false'); }
-  private openSettings(tab: string) {
+  private openSettings(screen: OptionsScreen) {
     this.previousFocus = document.activeElement as HTMLElement;
-    this.el('settings-modal').hidden = false; document.documentElement.classList.add('settings-open'); this.showSettingsTab(tab);
-    this.root.querySelector<HTMLButtonElement>('[data-action="close-settings"]')?.focus();
+    this.el('settings-modal').hidden = false;
+    document.documentElement.classList.add('settings-open');
+    this.tooltips.clear(); this.refreshBindingHints(); this.options.show(screen);
   }
-  private closeSettings() { this.el('settings-modal').hidden = true; document.documentElement.classList.remove('settings-open'); this.previousFocus?.focus(); }
-  private showSettingsTab(tab: string) {
-    this.root.querySelectorAll<HTMLElement>('[data-settings-tab]').forEach(button => { const active = button.dataset.settingsTab === tab; button.classList.toggle('active', active); button.setAttribute('aria-selected', String(active)); });
-    this.root.querySelectorAll<HTMLElement>('[data-settings-panel]').forEach(panel => panel.hidden = panel.dataset.settingsPanel !== tab);
+  private closeSettings() {
+    this.tooltips.clear();
+    this.el('settings-modal').hidden = true; document.documentElement.classList.remove('settings-open');
+    this.previousFocus?.focus({ preventScroll: true });
   }
 
   setLoading(loading: boolean) {
-    this.loading = loading;
+    this.tooltips?.clear(); this.loading = loading;
+    if (loading && !this.el('settings-modal').hidden) this.closeSettings();
     this.el('loading-screen').classList.remove('runtime-error');
     this.root.querySelector<HTMLButtonElement>('.runtime-reload')!.hidden = true;
     this.el('loading-screen').hidden = !this.loading;
@@ -367,7 +404,7 @@ export class UI {
   }
 
   setFont(font: NativeFont) {
-    this.font = font; this.nativeLabels = new WeakMap(); this.update();
+    this.font = font; this.nativeLabels = new WeakMap(); this.options.applyPreferences(); this.refreshBindingHints(); this.update();
   }
   setCursors(cursors: NativeCursors) {
     this.cursors = cursors;
@@ -475,7 +512,7 @@ export class UI {
     const def = this.game.defs[selected[0].type], cameo = this.cameos.get(def.id);
     if (!cameo) { this.el('selection-panel').hidden = true; this.el('selection-panel').replaceChildren(); return; }
     const building = selected.length === 1 && (def.category === 'structures' || def.category === 'defenses');
-    this.el('selection-panel').innerHTML = `<img class="selection-cameo" src="${escapeHTML(cameo)}" alt=""/><div class="selection-copy"><span class="eyebrow">${selected.length > 1 ? `${selected.length} UNITS SELECTED` : `${CATEGORY_NAMES[def.category]} / FRIENDLY`}</span><h3>${escapeHTML(selected.length > 1 ? 'Strike group' : def.name)}</h3><div class="selection-health"><i id="selection-health-fill"></i></div><span class="selection-status" id="selection-status"></span></div><div class="selection-actions">${building ? `<button data-action="repair" title="Repair selected building" aria-label="Repair selected building">${icon('wrench')}</button><button data-action="sell" title="Sell selected building" aria-label="Sell selected building">${icon('sell')}</button>` : `<button data-action="stop" title="Stop selected units" aria-label="Stop selected units">${icon('stop')}</button><button data-mode="attack" title="Attack-move mode" aria-label="Attack move mode">${icon('target')}</button>`}</div>`;
+    this.el('selection-panel').innerHTML = `<img class="selection-cameo" src="${escapeHTML(cameo)}" alt=""/><div class="selection-copy"><span class="eyebrow">${selected.length > 1 ? `${selected.length} UNITS SELECTED` : `${CATEGORY_NAMES[def.category]} / FRIENDLY`}</span><h3>${escapeHTML(selected.length > 1 ? 'Strike group' : def.name)}</h3><div class="selection-health"><i id="selection-health-fill"></i></div><span class="selection-status" id="selection-status"></span></div><div class="selection-actions">${building ? `<button data-action="repair" data-tooltip="Repair selected building" aria-label="Repair selected building">${icon('wrench')}</button><button data-action="sell" data-tooltip="Sell selected building" aria-label="Sell selected building">${icon('sell')}</button>` : `<button data-action="stop" data-tooltip="Stop selected units" aria-label="Stop selected units">${icon('stop')}</button><button data-mode="attack" data-tooltip="Attack-move mode" aria-label="Attack move mode">${icon('target')}</button>`}</div>`;
   }
 
   private drawMinimap() {
@@ -519,14 +556,14 @@ export class UI {
     // Replacing the panel every update can detach a button between pointerdown
     // and pointerup, losing native clicks and keyboard focus.
     if (!panel.querySelector('.active-queue')) {
-      panel.innerHTML = `<div class="active-queue"><div><span class="eyebrow"></span><strong></strong></div><div class="queue-buttons"><button data-action="queue-pause"></button><button data-action="queue-cancel" aria-label="Cancel last queued item and refund" title="Cancel last item & refund">${icon('close')}</button></div></div><div class="queue-track"><i></i></div><span class="queue-total"></span>`;
+      panel.innerHTML = `<div class="active-queue"><div><span class="eyebrow"></span><strong></strong></div><div class="queue-buttons"><button data-action="queue-pause"></button><button data-action="queue-cancel" aria-label="Cancel last queued item and refund" data-tooltip="Cancel last item & refund">${icon('close')}</button></div></div><div class="queue-track"><i></i></div><span class="queue-total"></span>`;
     }
     panel.querySelector<HTMLElement>('.eyebrow')!.textContent = active.ready ? 'AWAITING DEPLOYMENT' : active.paused || active.blockedFunds ? 'PRODUCTION ON HOLD' : 'PRODUCTION IN PROGRESS';
     panel.querySelector<HTMLElement>('.active-queue strong')!.textContent = this.game.defs[active.type]?.name ?? active.type;
     const pauseButton = panel.querySelector<HTMLButtonElement>('[data-action="queue-pause"]')!;
     pauseButton.hidden = active.ready;
     pauseButton.setAttribute('aria-label', `${active.paused ? 'Resume' : 'Pause'} current production`);
-    pauseButton.title = `${active.paused ? 'Resume' : 'Pause'} production`;
+    pauseButton.dataset.tooltip = `${active.paused ? 'Resume' : 'Pause'} production`;
     if (pauseButton.dataset.paused !== String(active.paused)) {
       pauseButton.innerHTML = icon(active.paused ? 'play' : 'pause');
       pauseButton.dataset.paused = String(active.paused);
@@ -545,16 +582,14 @@ export class UI {
     const powerScale = Math.max(500, side.power, side.powerUsed) * 1.15;
     this.el('power-fill').style.height = `${side.power / powerScale * 100}%`;
     this.el('power-demand').style.bottom = `${side.powerUsed / powerScale * 100}%`;
-    this.el('power-resource').title = `Power: ${side.power} generated / ${side.powerUsed} used`;
+    this.el('power-resource').dataset.tooltip = `Power: ${side.power} generated / ${side.powerUsed} used`;
     const radarOnline = side.power >= side.powerUsed && state.entities.some(entity => entity.side === 0 && entity.hp > 0 && /^radar/.test(entity.type));
     this.radarOnline = radarOnline; this.el('radar-frame').classList.toggle('online', radarOnline);
     this.el('minimap').setAttribute('aria-label', radarOnline ? 'Tactical radar. Click to order selected units; with no selection, center the camera.' : 'Radar offline. Build an Airforce Command to activate.');
 
     this.el('pause-banner').hidden = this.loading || !state.paused || state.winner !== null;
 
-    this.el('settings-pause-button').textContent = state.paused ? 'RESUME GAME' : 'PAUSE GAME';
-    this.el('settings-pause-status').textContent = state.paused ? 'Battlefield simulation is paused' : 'Battlefield simulation is running';
-    this.el<HTMLSelectElement>('game-speed').value = String(state.speed);
+    this.options?.update();
 
     const friendly = state.entities.filter(entity => entity.side === 0);
     let totalQueue = 0, hasReady = false;
@@ -572,7 +607,7 @@ export class UI {
       const matching = queue.filter(item => item.type === type), ready = matching.some(item => item.ready), active = queue[0]?.type === type ? queue[0] : null;
       card.classList.toggle('unavailable', !available.ok && !ready); card.classList.toggle('producing', !!active && !ready); card.classList.toggle('ready', ready);
       card.setAttribute('aria-disabled', String(!available.ok && !ready));
-      card.title = `${def.name} · $${formatMoney(def.cost)}\n${def.description}\n${ready ? 'Ready. Click to place near your base.' : available.ok ? `Build time: ${def.buildTime}s` : available.reason}`;
+      card.dataset.tooltip = `${def.name} · $${formatMoney(def.cost)}\n${def.description}\n${ready ? 'Ready. Click to place near your base.' : available.ok ? `Build time: ${def.buildTime}s` : available.reason}`;
       this.nativeText(card.querySelector<HTMLElement>('.card-queue')!, matching.length > 1 ? String(matching.length) : '');
       this.nativeText(card.querySelector<HTMLElement>('.card-state')!, ready ? 'Ready' : active?.paused || active?.blockedFunds ? 'On Hold' : '');
       card.querySelector<HTMLElement>('.card-progress')!.style.width = active ? `${active.progress * 100}%` : '0';
@@ -602,5 +637,5 @@ export class UI {
   }
 
   getBattlefieldRect(): DOMRect { return document.querySelector('#battlefield')!.getBoundingClientRect(); }
-  destroy() { document.removeEventListener('keydown', this.keyHandler); window.clearTimeout(this.toastTimer); this.root.remove(); }
+  destroy() { this.tooltips.destroy(); document.removeEventListener('keydown', this.keyHandler); window.clearTimeout(this.toastTimer); this.root.remove(); }
 }

@@ -202,11 +202,18 @@ describe('simulation frame and speed independence', () => {
     game.state.paused = false; game.tick(500); expect(game.state.time).toBeLessThanOrEqual(.25);
     for (const dt of [NaN, Infinity, -1]) game.tick(dt); expect(game.state.time).toBeLessThanOrEqual(.25);
   });
-  it('fires exact authored weapon frames without accumulating a 20Hz rounding penalty', () => {
+  it('uses integer authored ROF frames plus the native zero-to-two-frame rearm jitter', () => {
     const { game, tank, target, gi } = arena(); game.state.entities = game.state.entities.filter(e => e.id !== gi.id); tank.x = 20.5; tank.y = 30.5;
     tank.turretFacing = Math.atan2(target.y + 1 - tank.y, target.x + 1.5 - tank.x);
-    game.orderAttack([tank.id], target.id); advance(game, 4 + 1 / 30);
-    // Shots at simulation frames 1, 61, 121: 105mm ROF60, AP verses wood65%.
+    game.orderAttack([tank.id], target.id); const shots: number[] = [];
+    for (let frame = 1; frame <= 125; frame++) {
+      const previous = tank.firedAt; game.tick(1 / 30);
+      if (tank.firedAt !== previous) shots.push(frame);
+    }
+    expect(shots).toHaveLength(3); expect(shots[0]).toBe(1);
+    for (let i = 1; i < shots.length; i++) expect(shots[i] - shots[i - 1]).toBeGreaterThanOrEqual(60);
+    for (let i = 1; i < shots.length; i++) expect(shots[i] - shots[i - 1]).toBeLessThanOrEqual(62);
+    // AP verses wood remains 65%; the supplied executable adds jitter to ROF60.
     expect(10000 - target.hp).toBeCloseTo(3 * 65 * .65, 8);
   });
 });

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { Renderer, type SpriteProvider } from '../src/render/Renderer';
 import type { GameAPI } from '../src/game/types';
 
-vi.mock('../src/render/GL', () => ({ GL: class { begin = vi.fn(); rect = vi.fn(); line = vi.fn(); polygon = vi.fn(); } }));
+vi.mock('../src/render/GL', () => ({ GL: class { begin = vi.fn(); rect = vi.fn(); line = vi.fn(); polygon = vi.fn(); flush = vi.fn(); } }));
 
 function renderer() {
   const canvas = { getBoundingClientRect: () => ({ width: 640, height: 480 }) } as HTMLCanvasElement;
@@ -19,7 +19,7 @@ describe('original artwork renderer', () => {
 
   it('reports missing original terrain instead of drawing a substitute', () => {
     const view = renderer();
-    view.assets = { ready: true, getSprite: () => null, getInfantryFrame: () => null, getVehicleSprite: () => null, getBuildingSprite: () => null, getTerrain: () => null, getOverlay: () => null } satisfies SpriteProvider;
+    view.assets = { ready: true, getSprite: () => null, getInfantryFrame: () => null, getInfantrySequence: () => null, getAnimationSprite: () => null, getAnimationOpacity: () => 1, getVehicleSprite: () => null, getBuildingSprite: () => null, getTerrain: () => null, getOverlay: () => null } satisfies SpriteProvider;
     expect(() => view.render()).toThrow('Missing original artwork: grass terrain');
   });
 
@@ -51,24 +51,26 @@ describe('original artwork renderer', () => {
 
   it('uses authored deployed GI frames and keeps blocked infantry in their idle pose', () => {
     const view = renderer(), art = { source: {}, width: 1, height: 1 } as any;
-    const provider = { ready: true, getSprite: vi.fn(() => art), getInfantryFrame: vi.fn(() => art) };
+    const provider = { ready: true, getSprite: vi.fn(() => art), getInfantrySequence: vi.fn((..._args: unknown[]) => art) };
     view.assets = provider as any;
     vi.spyOn(view as any, 'drawArt').mockImplementation(() => {});
     const def = { category: 'infantry', sprite: 'e1', footprint: [1, 1], fireRate: .4, deployedFireRate: .5 } as any;
     const unit = { type: 'gi', x: 1, y: 1, previous: { x: 1, y: 1 }, facing: 0, side: 0, anim: .1, cooldown: 0, hp: 10, maxHp: 10, path: [{ x: 2, y: 1 }] } as any;
     (view as any).drawEntity(unit, def, { x: 100, y: 100 });
-    expect(provider.getSprite).toHaveBeenLastCalledWith('e1', 5, 0);
+    expect(provider.getInfantrySequence).toHaveBeenLastCalledWith('e1', 'Ready', 5, .1, 0, undefined);
     unit.deployed = true;
     (view as any).drawEntity(unit, def, { x: 100, y: 100 });
-    expect(provider.getInfantryFrame).toHaveBeenLastCalledWith('e1', 297, 0);
-    unit.cooldown = .5;
+    expect(provider.getInfantrySequence).toHaveBeenLastCalledWith('e1', 'Deployed', 5, .1, 0, undefined);
+    unit.infantryAnimation = { sequence: 'DeployedFire', startedAt: 2 };
+    view.game.state.time = 2 + 1 / 30;
     (view as any).drawEntity(unit, def, { x: 100, y: 100 });
-    expect(provider.getInfantryFrame).toHaveBeenLastCalledWith('e1', 346, 0);
+    expect(provider.getInfantrySequence.mock.calls.at(-1)?.slice(0, 3)).toEqual(['e1', 'DeployedFire', 5]);
+    expect(provider.getInfantrySequence.mock.calls.at(-1)?.[3]).toBeCloseTo(1 / 30);
   });
 
   it('draws the native 18×4 infantry health frame with alternating pips and no corner box', () => {
     const view = renderer(), art = { source: {}, width: 20, height: 30, anchorY: 24 } as any;
-    view.assets = { ready: true, getSprite: () => art } as any;
+    view.assets = { ready: true, getSprite: () => art, getInfantrySequence: () => art } as any;
     vi.spyOn(view as any, 'drawArt').mockImplementation(() => {});
     const unit = { id: 1, type: 'gi', x: 1, y: 1, facing: 0, side: 0, anim: 0, cooldown: 0, hp: 10, maxHp: 10, path: [], selected: true } as any;
     const def = { category: 'infantry', sprite: 'gi', footprint: [1, 1] } as any;
@@ -87,6 +89,28 @@ describe('original artwork renderer', () => {
     const unit = { type: 'grizzly', x: 1, y: 1, facing: Math.PI / 2, previousFacing: 0, turretFacing: Math.PI, previousTurretFacing: Math.PI / 2, side: 0, anim: 0, hp: 10, maxHp: 10, path: [] } as any;
     (view as any).drawEntity(unit, def, { x: 100, y: 100 });
     expect(getVehicleSprite).toHaveBeenCalledWith('mtnk', 4, 12, 0);
+  });
+
+  it('renders original impact frames from event time and captured interval without substituting generic death art', () => {
+    const view=renderer(), art={source:{},width:20,height:16} as any;
+    const getAnimationSprite=vi.fn((_name:string,_age:number,_interval?:number)=>art);
+    view.assets={ready:true,getAnimationSprite,getAnimationOpacity:()=>.5} as any;
+    vi.spyOn(view as any,'drawTerrain').mockImplementation(()=>{});
+    vi.spyOn(view as any,'drawShroud').mockImplementation(()=>{});
+    const draw=vi.spyOn(view as any,'drawArt').mockImplementation(()=>{});
+    Object.assign(view.game.state,{time:2.2,fog:new Uint8Array([1]),explored:new Uint8Array([1]),effects:[
+      {kind:'impact',animation:'HTRKPUFF',animationTicksPerFrame:1,startedAt:2,x:.5,y:.5,life:.3,maxLife:.5},
+      {kind:'explosion',x:.5,y:.5,life:.5,maxLife:.5},
+      {kind:'shot',x:.5,y:.5,to:{x:1,y:1},life:.1,maxLife:.1},
+    ]});
+    view.render();
+    expect(getAnimationSprite).toHaveBeenCalledOnce();
+    expect(getAnimationSprite.mock.calls[0][0]).toBe('HTRKPUFF');
+    expect(getAnimationSprite.mock.calls[0][1]).toBeCloseTo(.2);
+    expect(getAnimationSprite.mock.calls[0][2]).toBe(1);
+    const p=view.camera.screen(.5,.5);
+    expect(draw).toHaveBeenCalledExactlyOnceWith(art,p.x,p.y,1,.5);
+    expect(view.gl.line).not.toHaveBeenCalled();
   });
 
   it('draws selected command goals with interpolated origins, correct colors, and no deselected or disabled lines', () => {

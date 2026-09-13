@@ -4,11 +4,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AssetManager, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL, assetCacheKey, assetSourceUrl, HUD_ASSET_FRAMES, REQUIRED_TERRAIN } from './AssetManager';
 
 import { assetCache, archiveStageKey, LEGACY_ASSET_URL, type SavedArchive } from './AssetDownload';
-import { TestCanvas, testShape, testFont, testCursorShape } from './asset-test-fixtures';
+import { TestCanvas, testShape, testFont, testCursorShape, testPcx } from './asset-test-fixtures';
+import { DIALOG_PCX_FILES, DIALOG_SHAPE_FILES, EFFECT_ANIMATIONS } from './catalog';
 
 // Keep the persistence tests small while exercising real palette/SHP/TMP
 // decoding. The browser audit also checks the full catalog with original art.
-vi.mock('./catalog', () => ({
+vi.mock('./catalog', async importOriginal => ({
+  ...await importOriginal<typeof import('./catalog')>(),
   CATALOG: { gi: { sprite: 'gi', cameo: 'giicon', kind: 'infantry' } },
   theaterNames: (name: string) => [name],
 }));
@@ -31,8 +33,8 @@ function files(): AssetFile[] {
   const vpl = new Uint8Array(784 + 8192); new DataView(vpl.buffer).setUint32(8, 32, true);
   for (let i = 784; i < vpl.length; i++) vpl[i] = (i - 784) % 256;
   return [
-    ...['unittem.pal', 'cameo.pal', 'isotem.pal', 'temperat.pal', 'side0/sidebar.pal'].map(name => ({ name, bytes: palette.slice() })),
-    { name: 'art.ini', bytes: new TextEncoder().encode('[gi]\nCameo=giicon') },
+    ...['unittem.pal', 'cameo.pal', 'isotem.pal', 'temperat.pal', 'anim.pal', 'side0/sidebar.pal', 'side0/uibkgd.pal'].map(name => ({ name, bytes: palette.slice() })),
+    { name: 'art.ini', bytes: new TextEncoder().encode('[gi]\nCameo=giicon\nSequence=GISequence\nFireUp=2\n[GISequence]\nReady=0,1,1\nWalk=8,6,6\nFireUp=164,6,6\nDeploy=300,15,0\nDeployed=292,1,1\nDeployedFire=315,6,6\nUndeploy=276,2,2') },
     { name: 'game.fnt', bytes: testFont() },
     { name: 'mouse.shp', bytes: testCursorShape() }, { name: 'mousepal.pal', bytes: palette.slice() },
     { name: 'voxels.vpl', bytes: vpl }, { name: 'gi.shp', bytes: testShape(756) }, { name: 'giicon.shp', bytes: testShape() },
@@ -40,6 +42,9 @@ function files(): AssetFile[] {
     ...Array.from({ length: 8 }, (_, i) => ({ name: `tree${String(i + 1).padStart(2, '0')}.tem`, bytes: testShape(2) })),
     ...REQUIRED_TERRAIN.map(name => ({ name: `${name}.tem`, bytes: tile.slice() })),
     ...Object.entries(HUD_ASSET_FRAMES).map(([name, frames]) => ({ name: `side0/${name}.shp`, bytes: testShape(Math.max(...frames) + 1) })),
+    ...DIALOG_SHAPE_FILES.map(name => ({ name: `side0/${name}.shp`, bytes: testShape(name === 'sidebttn' ? 3 : 1) })),
+    ...Object.values(DIALOG_PCX_FILES).map(name => ({ name, bytes: testPcx() })),
+    ...EFFECT_ANIMATIONS.map(name => ({ name: `${name}.shp`, bytes: testShape(12) })),
   ];
 }
 async function database(): Promise<IDBDatabase> {

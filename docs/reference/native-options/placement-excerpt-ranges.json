@@ -1,0 +1,222 @@
+{
+  "input_sha256": "06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb",
+  "excerpts": [
+    {
+      "file": "05-battle-layout-mode.asm",
+      "ranges": [
+        {
+          "start_va": "0x481d92",
+          "end_va_exclusive": "0x481de9",
+          "note": "Battle menu entry calls flag setter, menu dispatcher loop, then flag clearer.",
+          "raw_bytes_sha256": "e3d2ae97be00ab3e8737192ab0af297c39f0eabfcc146576a4089f975b6e343b"
+        },
+        {
+          "start_va": "0x672de0",
+          "end_va_exclusive": "0x672f17",
+          "note": "Flag setter/clearer/getter. ECX=a3d298; field3080 is a40318. Setter requires a40958 != 0.",
+          "raw_bytes_sha256": "4eba5738334f2617c2b7562e80c4b443c399969e8faabd1e7c57c582c6d1ef6c"
+        },
+        {
+          "start_va": "0x5ed5f2",
+          "end_va_exclusive": "0x5ed659",
+          "note": "Class literal7ead6c is Button. BS_OWNERDRAW branch chooses proc5f0320 and metadata type0.",
+          "raw_bytes_sha256": "05092dae51c453874b0c4adff4707b1edbe1ea6a3a4c589d4d0fe5dfcfcebb47"
+        },
+        {
+          "start_va": "0x5eda58",
+          "end_va_exclusive": "0x5eda66",
+          "note": "Store that class/type in child metadata+68.",
+          "raw_bytes_sha256": "c489bf7cf191835b46b2d147109fb808c802223ef8527c445fa8dd46b7f4bfe7"
+        },
+        {
+          "start_va": "0x5fff02",
+          "end_va_exclusive": "0x5fff78",
+          "note": "Full-frame initialization passes design constants640,480 into5e9f00.",
+          "raw_bytes_sha256": "ec0c741572773ba7fbc4adc72936306c728eff46afe1cf49df8a20b205d624df"
+        },
+        {
+          "start_va": "0x600021",
+          "end_va_exclusive": "0x60004d",
+          "note": "After placement: paint/style and text metadata enumeration.",
+          "raw_bytes_sha256": "5552f77b3e3f9f4bb9a2488530442fc048d63d74c90f23e789a53e2c713954f2"
+        },
+        {
+          "start_va": "0x5e9f00",
+          "end_va_exclusive": "0x5e9fa0",
+          "note": "Parent becomes viewport rectangle0,0,W,H; children enumerated through5e9bb0.",
+          "raw_bytes_sha256": "7d08cb877ab0ceda0dbdd9b9cb003f4a0ca6948106acbcf64dc95a12e011d660"
+        },
+        {
+          "start_va": "0x5fef8d",
+          "end_va_exclusive": "0x5fefbf",
+          "note": "Full-frame parent paint selects battle compositor6f4620 when pause flag true.",
+          "raw_bytes_sha256": "34b21856e78322be68503c6947c8eb243bd3d550cffc386300e902b8331b6580"
+        }
+      ]
+    },
+    {
+      "file": "06-control-placement.asm",
+      "ranges": [
+        {
+          "start_va": "0x5e6450",
+          "end_va_exclusive": "0x5e6860",
+          "note": "Explicit rectangle override predicate. No resources181,184,3003 in this function.",
+          "raw_bytes_sha256": "65de7a39d68daec6a134a82f125c3a57be0d85558e9ed04e8cd2637fcb48c065"
+        },
+        {
+          "start_va": "0x5e6860",
+          "end_va_exclusive": "0x5e72c0",
+          "note": "Right-column predicate: title1684; resource181 action IDs1310..1314; resource3003 IDs1324,1325.",
+          "raw_bytes_sha256": "170fcbf9f6b0b46e4f3c7cf3bece0971323f5b4043f22dabed3e288a8350765c"
+        },
+        {
+          "start_va": "0x5e72c0",
+          "end_va_exclusive": "0x5e7640",
+          "note": "Bottom predicate: relevant battle-family resources select1670. Continued unrelated cases omitted.",
+          "raw_bytes_sha256": "71216d8db37df932100a9ad8bf2d985bef724aca3e374f87e83f2e2a8189851d"
+        },
+        {
+          "start_va": "0x5df660",
+          "end_va_exclusive": "0x5df8d8",
+          "note": "Help-family membership includes181,184,3003. Used with control1685.",
+          "raw_bytes_sha256": "73a65420ea7dc7f7cc9352202fb213a995ffaf9da64e88d4a1eda695595c0e66"
+        },
+        {
+          "start_va": "0x5e8c50",
+          "end_va_exclusive": "0x5e9260",
+          "note": "Final right authored button, right generic/title, bottom authored button, bottom generic, and help placement helpers.",
+          "raw_bytes_sha256": "becddb40f8b564965d06ab920e9a07765ad1a710da340f5607b81d7379ad31d4"
+        },
+        {
+          "start_va": "0x5e9410",
+          "end_va_exclusive": "0x5e9ba2",
+          "note": "Post-placement adjustment: our battle titles bypass extra shell adjustments; other relevant IDs do not match special cases.",
+          "raw_bytes_sha256": "a12d7d61ca1d0310b05a7fef1e032c0984c3eb550496eb3f198706e2d8c4b05e"
+        },
+        {
+          "start_va": "0x5e9bb0",
+          "end_va_exclusive": "0x5e9f00",
+          "note": "Child routing and centered design640x480 content fallback.",
+          "raw_bytes_sha256": "d740705eac0fe49c79bdc6437778da1ce6d1e2bafe7ab35ef10deb63ca25597c"
+        }
+      ]
+    },
+    {
+      "file": "07-sidebar-composition.asm",
+      "ranges": [
+        {
+          "start_va": "0x6f4b00",
+          "end_va_exclusive": "0x6f4c60",
+          "note": "SHP loader and pointer assignments; see placement-formulas.json string table.",
+          "raw_bytes_sha256": "657f467b18fe165c79971da4005a1a5eaff05ca20d547c706667beb3ab09ebfe"
+        },
+        {
+          "start_va": "0x6f4c90",
+          "end_va_exclusive": "0x6f4f24",
+          "note": "Background at0,0. Sequential sidebar rectangles, repeat count, SIDE3/ADDON origins, footer row.",
+          "raw_bytes_sha256": "31b53acce789a8f5f56ac859ad85e5345a5bc1604068b69f1709f36470c4712f"
+        },
+        {
+          "start_va": "0x6f4620",
+          "end_va_exclusive": "0x6f4920",
+          "note": "Battle compositor: fixed-width background, sidebar pieces; repeats use SIDE2B pointerac100c and SIDE2 rectangleac11ec.",
+          "raw_bytes_sha256": "7cd474dd9f3987e680b42b4829e8845b517f88c4de7bf244195d1d0b769433eb"
+        },
+        {
+          "start_va": "0x49eea0",
+          "end_va_exclusive": "0x49efed",
+          "note": "Blitter Point and SHP frame rectangle inputs.",
+          "raw_bytes_sha256": "28d052603005308eaae92d57ac27dc11ed770c3be30cbb0f6cbfdf3d91b2ee61"
+        },
+        {
+          "start_va": "0x49f10a",
+          "end_va_exclusive": "0x49f197",
+          "note": "Blitter0x200 centers; supplied0x400 does not. Frame crop offsets added to Point.",
+          "raw_bytes_sha256": "01fd1ca0363a61f56dba8dc22623a76a2a2a6dd23fec2dcd866cc0e2360c6f50"
+        }
+      ]
+    },
+    {
+      "file": "08-sidebar-button-states.asm",
+      "ranges": [
+        {
+          "start_va": "0x5e8009",
+          "end_va_exclusive": "0x5e8112",
+          "note": "Battle right/bottom ownerdraw buttons receive paint mode2.",
+          "raw_bytes_sha256": "2a8e4265b68dca989ae23fef09203f48d7bb78b0ffe8589208c98d9fec04cd75"
+        },
+        {
+          "start_va": "0x6f45f0",
+          "end_va_exclusive": "0x6f45f6",
+          "note": "Sidebar palette converter getter returnsac11a4.",
+          "raw_bytes_sha256": "8fd07c667f6fefb116e78a5eb71b3b7d9bc86dcc8110fcc35bb99542f0dd923f"
+        },
+        {
+          "start_va": "0x5fe380",
+          "end_va_exclusive": "0x5fe48a",
+          "note": "ODT_BUTTON(4): DRAWITEMSTRUCT.itemState at+10 copied to metadata+e8.",
+          "raw_bytes_sha256": "6d5f48b2b6ed15cab9eb287db30f400857d358208d8a75c2867eb1ec34fdb5d3"
+        },
+        {
+          "start_va": "0x5f04be",
+          "end_va_exclusive": "0x5f0510",
+          "note": "Button paint reads metadata+e8 and Windows style; message113 goes to timer toggle.",
+          "raw_bytes_sha256": "5efffafe42262e1e5a0985823895b4a1a895e4e5d2b9739c23e7e536f05706dc"
+        },
+        {
+          "start_va": "0x5f0637",
+          "end_va_exclusive": "0x5f093d",
+          "note": "Mode2 drawsSIDEBTTN: selected bit1 -> frame1; otherwise flash+c5 ->2; else0. WS_DISABLED changes text color, not frame.",
+          "raw_bytes_sha256": "c9b9a32c2e48732098dbb122672a81995d1ca6a7caab019606b253a18760f869"
+        },
+        {
+          "start_va": "0x5f0cce",
+          "end_va_exclusive": "0x5f0d59",
+          "note": "Text draw box and selected offset(+2,+4); baseline geometry still requires font/pixel observation.",
+          "raw_bytes_sha256": "93aa3e391d3e06a2ffd7a0ff05b66362b6096ba14077ad5068bcd7f256d2bfc5"
+        },
+        {
+          "start_va": "0x5f0da5",
+          "end_va_exclusive": "0x5f0f10",
+          "note": "WM_TIMER toggles+c5. Custom4dc with lParam1 starts1000ms timer; disable clears+c4,+c5 and kills timer.",
+          "raw_bytes_sha256": "f1f00a9cbc6d90516bb0b18fe7966a6ceca7c7c8ccb03568ac84258689de8a64"
+        }
+      ]
+    },
+    {
+      "file": "09-default-button-font.asm",
+      "ranges": [
+        {
+          "start_va": "0x432c90",
+          "end_va_exclusive": "0x432cbb",
+          "note": "GAME.FNT constructor and default font global84e9e8.",
+          "raw_bytes_sha256": "5fdf30e386c7840dd513080251b34da79f10a455faccb04936a93242d22941b4"
+        },
+        {
+          "start_va": "0x431040",
+          "end_va_exclusive": "0x4310fd",
+          "note": "Font object constructor passes the filename to loader431150.",
+          "raw_bytes_sha256": "ae2c302c2dc8cc108533de4934d869f8a1f910d807c139b67243eb0d8a7c9a9c"
+        },
+        {
+          "start_va": "0x5ed8be",
+          "end_va_exclusive": "0x5ed8e8",
+          "note": "Child metadata default: +64 from84e9e8, +68 type0xb before type-specific assignment.",
+          "raw_bytes_sha256": "8e420957508c627b95b8ffb114f2412e462a44884e6e8cb5af89bf87531aeb1b"
+        },
+        {
+          "start_va": "0x5f0d37",
+          "end_va_exclusive": "0x5f0d59",
+          "note": "Button text uses font metadata+64.",
+          "raw_bytes_sha256": "b2805258d5ed3359b72ca3965e89955ba0f20c23660432cdf077417aeeea93e9"
+        },
+        {
+          "start_va": "0x5fe020",
+          "end_va_exclusive": "0x5fe130",
+          "note": "Text rectangle measurement and final text dispatch; not a measured glyph baseline.",
+          "raw_bytes_sha256": "ab543335dc0ea045365ca261b1473ee5177c33821021570bbae25f8f6de87093"
+        }
+      ]
+    }
+  ]
+}

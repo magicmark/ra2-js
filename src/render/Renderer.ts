@@ -4,7 +4,7 @@ import { Camera } from './Camera';
 const terrainCodes:Record<Tile['terrain'],number>={grass:1,water:2,rock:3,road:4,sand:5};
 
 export interface OriginalSprite { source: CanvasImageSource; width: number; height: number; offsetX?:number; offsetY?:number; anchorX?:number; anchorY?:number }
-export interface SpriteProvider { ready:boolean; getSprite(name:string,frame?:number,side?:number):OriginalSprite|null; getInfantryFrame(name:string,frame:number,side?:number):OriginalSprite|null; getVehicleSprite(name:string,hull:number,turret:number,side?:number):OriginalSprite|null; getBuildingSprite(name:string,time:number,side?:number):OriginalSprite|null; getTerrain(terrain:string,variant?:number):OriginalSprite|null; getOverlay(kind:'ore'|'tree',variant?:number):OriginalSprite|null }
+export interface SpriteProvider { ready:boolean; getSprite(name:string,frame?:number,side?:number):OriginalSprite|null; getInfantryFrame(name:string,frame:number,side?:number):OriginalSprite|null; getInfantrySequence(name:string,action:string,facing:number,age:number,side?:number,speedIndex?:number):OriginalSprite|null; getAnimationSprite(name:string,age:number,ticksPerFrame?:number):OriginalSprite|null; getAnimationOpacity(name:string):number; getVehicleSprite(name:string,hull:number,turret:number,side?:number):OriginalSprite|null; getBuildingSprite(name:string,time:number,side?:number,speedIndex?:number):OriginalSprite|null; getTerrain(terrain:string,variant?:number):OriginalSprite|null; getOverlay(kind:'ore'|'tree',variant?:number):OriginalSprite|null }
 export class Renderer {
   readonly gl: GL;
   readonly camera = new Camera();
@@ -193,8 +193,14 @@ export class Renderer {
     }
     renderables.sort((a,b)=>a.depth-b.depth);for(const item of renderables)item.draw();
     for(const e of s.effects){if(!s.explored[Math.floor(e.y)*s.width+Math.floor(e.x)])continue;const p=c.screen(e.x,e.y),progress=1-e.life/e.maxLife;
-      if(e.kind==='shot'&&e.to){const to=c.screen(e.to.x,e.to.y);this.gl.line(p.x,p.y-17*c.zoom,to.x,to.y-13*c.zoom,2*c.zoom,[1,.88,.47,Math.min(1,e.life*6)]);}
-      if(e.kind==='explosion'){for(let i=0;i<8;i++){const a=i*.8,r=progress*26*c.zoom;this.gl.ring(p.x+Math.cos(a)*r,p.y+Math.sin(a)*r*.6-12*c.zoom,(1-progress)*12*c.zoom,(1-progress)*10*c.zoom,[1,.3+i*.07,.08,1-progress],3*c.zoom);}}
+      if(e.animation){
+        const age=e.startedAt===undefined?e.maxLife-e.life:s.time-e.startedAt;
+        this.drawArt(this.required(assets.getAnimationSprite(e.animation,age,e.animationTicksPerFrame),`${e.animation} animation`),p.x,p.y,1,assets.getAnimationOpacity(e.animation));
+        continue;
+      }
+      // Shot/death events without authored animation metadata remain audio
+      // events. Projectile art and infantry/building death sequences are
+      // separate native paths; a generic tracer or ring is not their artwork.
       if(e.kind==='order'){const rx=(15-progress*4)*c.zoom,ry=rx*.5,color:Color=[0,1,0,1-progress];
         for(const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1]]){const x=p.x+dx*rx,y=p.y+dy*ry;this.gl.line(x,y,x-dx*5*c.zoom-dy*5*c.zoom,y-dy*3*c.zoom-dx*3*c.zoom,1,color);this.gl.line(x,y,x-dx*5*c.zoom+dy*5*c.zoom,y-dy*3*c.zoom+dx*3*c.zoom,1,color);}}
     }
@@ -216,23 +222,21 @@ export class Renderer {
     // simulation headings start at world +X (screen-southeast).
     let frame=building&&e.type!=='sentry'?0:d.category==='vehicles'||e.type==='sentry'?Math.round(heading/(Math.PI*2)*32)%32:(5-Math.round(heading/(Math.PI*2)*8)+8)%8;
     const moving=e.previous?Math.hypot(e.x-e.previous.x,e.y-e.previous.y)>1e-7:e.path.length>0;
-    if(d.category==='infantry'&&moving)frame+=8+(Math.floor(e.anim*10)%6)*8;
     const name=e.type==='conyard'&&e.side===1?'conyard_soviet':d.sprite||e.type;
     const assets=this.originals();
     let original:OriginalSprite;
-    if(e.type==='gi'&&e.deployed){
+    if(d.category==='infantry'){
       const facing=(5-Math.round(heading/(Math.PI*2)*8)+8)%8;
-      const firing=e.cooldown>Math.max(0,(d.deployedFireRate??d.fireRate)-.4);
-      const index=firing?315+facing*6+Math.floor(e.anim*15)%6:292+facing;
-      original=this.required(assets.getInfantryFrame(name,index,e.side),`${name} deployed frame ${index}`);
+      const action=e.infantryAnimation?.sequence??(e.type==='rocketeer'?(moving?'Fly':'Hover'):e.deployed?'Deployed':moving?'Walk':'Ready');
+      const age=e.infantryAnimation?this.game.state.time-e.infantryAnimation.startedAt:e.anim;
+      original=this.required(assets.getInfantrySequence(name,action,facing,age,e.side,this.game.nativeGameSpeedIndex),`${name} ${action} sequence`);
     }else if(d.category==='vehicles'&&d.turret&&e.turretFacing!==undefined){
       const previous=e.previousTurretFacing??e.turretFacing,delta=Math.atan2(Math.sin(e.turretFacing-previous),Math.cos(e.turretFacing-previous));
       const angle=previous+delta*Math.max(0,Math.min(1,this.game.interpolation??1));
       const turret=Math.round(angle/(Math.PI*2)*32);
       original=this.required(assets.getVehicleSprite(name,frame,turret,e.side),`${name} hull/turret`);
-    }else original=this.required(building&&e.type!=='sentry'?assets.getBuildingSprite(name,this.game.state.time,e.side):assets.getSprite(name,frame,e.side),name);
+    }else original=this.required(building&&e.type!=='sentry'?assets.getBuildingSprite(name,this.game.state.time,e.side,this.game.nativeGameSpeedIndex):assets.getSprite(name,frame,e.side),name);
     this.drawArt(original,p.x,p.y);
-    if(e.hp<e.maxHp*.4&&building&&Math.sin(this.game.state.time*2+e.id)>.1){this.gl.ring(p.x+12*c.zoom,p.y-65*c.zoom,7*c.zoom,10*c.zoom,[.22,.22,.19,.5],6*c.zoom);}
     if(selected||hover){const z=c.zoom,w=(building?Math.max(30,(d.footprint[0]+d.footprint[1])*15-8):d.category==='infantry'?16:28)*z;
       // Rotating turrets and walking poses keep the same health-frame anchor.
       const healthSprite=building?original:this.required(assets.getSprite(name,0,e.side),`${name} health anchor`);

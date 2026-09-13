@@ -1,0 +1,5860 @@
+{
+  "snapshot": "http://omarky:4205/",
+  "bundle": "index-2MgjThs6.js",
+  "bundleSha256": "c0b065542af8fb70f03742dce9001e2aa241edefeaceb46473f6dfb400308c25",
+  "originalFiles": 265,
+  "archiveAttempts": [],
+  "viewport": {
+    "width": 1024,
+    "height": 768
+  },
+  "speed": 0.3333333333333333,
+  "nativeIndex": 6,
+  "method": "Isolated selected-original fixture; native cached Continue and D; scenario staging plus public attack commands, automatic loop only; observers forwarded existing methods unchanged; diagnostic pause at bound.",
+  "runs": [
+    {
+      "label": "native-deploy",
+      "type": "gi",
+      "limit": 23,
+      "nativeDeploy": true,
+      "death": false,
+      "start": 0,
+      "actor": 21,
+      "target": 22,
+      "steps": [
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 3,
+          "time": 0.1,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 5,
+          "time": 0.16666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 10,
+          "time": 0.3333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 11,
+          "time": 0.36666666666666664,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 12,
+          "time": 0.39999999999999997,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 13,
+          "time": 0.4333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 14,
+          "time": 0.4666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "Deploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": true
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 15,
+          "time": 0.49999999999999994,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "DeployedFire",
+            "startedAt": 0.49999999999999994
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 16,
+          "time": 0.5333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "DeployedFire",
+            "startedAt": 0.49999999999999994
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 17,
+          "time": 0.5666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "DeployedFire",
+            "startedAt": 0.49999999999999994
+          },
+          "deployment": null,
+          "firedAt": 0.5666666666666667,
+          "cooldown": 0.5,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.5666666666666667,
+              "life": 0.4,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": true
+        },
+        {
+          "frame": 18,
+          "time": 0.6,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "DeployedFire",
+            "startedAt": 0.49999999999999994
+          },
+          "deployment": null,
+          "firedAt": 0.5666666666666667,
+          "cooldown": 0.46666666656666667,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.5666666666666667,
+              "life": 0.3666666666666667,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 19,
+          "time": 0.6333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "DeployedFire",
+            "startedAt": 0.49999999999999994
+          },
+          "deployment": null,
+          "firedAt": 0.5666666666666667,
+          "cooldown": 0.43333333313333333,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.5666666666666667,
+              "life": 0.33333333333333337,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 20,
+          "time": 0.6666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": {
+            "sequence": "DeployedFire",
+            "startedAt": 0.49999999999999994
+          },
+          "deployment": null,
+          "firedAt": 0.5666666666666667,
+          "cooldown": 0.3999999997,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.5666666666666667,
+              "life": 0.30000000000000004,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 21,
+          "time": 0.7,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.5666666666666667,
+          "cooldown": 0.36666666626666666,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.5666666666666667,
+              "life": 0.2666666666666667,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 22,
+          "time": 0.7333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.5666666666666667,
+          "cooldown": 0.33333333283333333,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.5666666666666667,
+              "life": 0.2333333333333334,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 23,
+          "time": 0.7666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": true,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.5666666666666667,
+          "cooldown": 0.2999999994,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.5666666666666667,
+              "life": 0.20000000000000007,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        }
+      ],
+      "renders": [
+        {
+          "frame": 0,
+          "time": 0,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deploy",
+              "facing": 5,
+              "age": 0.06666666666666667,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 5,
+          "time": 0.16666666666666666,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deploy",
+              "facing": 5,
+              "age": 0.16666666666666666,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deploy",
+              "facing": 5,
+              "age": 0.2333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 10,
+          "time": 0.3333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deploy",
+              "facing": 5,
+              "age": 0.3333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 12,
+          "time": 0.39999999999999997,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deploy",
+              "facing": 5,
+              "age": 0.39999999999999997,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 15,
+          "time": 0.49999999999999994,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "DeployedFire",
+              "facing": 5,
+              "age": 0,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 17,
+          "time": 0.5666666666666667,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "DeployedFire",
+              "facing": 5,
+              "age": 0.06666666666666671,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 20,
+          "time": 0.6666666666666666,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "DeployedFire",
+              "facing": 5,
+              "age": 0.16666666666666669,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.09999999999999998,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 22,
+          "time": 0.7333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deployed",
+              "facing": 5,
+              "age": 0.7333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.16666666666666663,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 23,
+          "time": 0.8333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deployed",
+              "facing": 5,
+              "age": 0.8333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.2666666666666666,
+              "ticksPerFrame": 1
+            }
+          ]
+        }
+      ],
+      "done": true,
+      "images": [
+        {
+          "frame": 0,
+          "time": 0,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deploy",
+              "facing": 5,
+              "age": 0.06666666666666667,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 5,
+          "time": 0.16666666666666666,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deploy",
+              "facing": 5,
+              "age": 0.16666666666666666,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deploy",
+              "facing": 5,
+              "age": 0.2333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 10,
+          "time": 0.3333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deploy",
+              "facing": 5,
+              "age": 0.3333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 12,
+          "time": 0.39999999999999997,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deploy",
+              "facing": 5,
+              "age": 0.39999999999999997,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 15,
+          "time": 0.49999999999999994,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "DeployedFire",
+              "facing": 5,
+              "age": 0,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 17,
+          "time": 0.5666666666666667,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "DeployedFire",
+              "facing": 5,
+              "age": 0.06666666666666671,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 20,
+          "time": 0.6666666666666666,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "DeployedFire",
+              "facing": 5,
+              "age": 0.16666666666666669,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 22,
+          "time": 0.7333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deployed",
+              "facing": 5,
+              "age": 0.7333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 23,
+          "time": 0.8333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deployed",
+              "facing": 5,
+              "age": 0.8333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "gi-fire",
+      "type": "gi",
+      "limit": 10,
+      "nativeDeploy": false,
+      "death": false,
+      "start": 0,
+      "actor": 21,
+      "target": 22,
+      "steps": [
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 3,
+          "time": 0.1,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.6666666666666666,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.4,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": true
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.6333333332333333,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.3666666666666667,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 5,
+          "time": 0.16666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.5999999998,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.33333333333333337,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.5666666663666666,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.30000000000000004,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.5333333329333333,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.2666666666666667,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.49999999949999996,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.2333333333333334,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.4666666660666666,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.20000000000000007,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 10,
+          "time": 0.3333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.4333333326333333,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.16666666666666674,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        }
+      ],
+      "renders": [
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.03333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.1,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.033333333333333326,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.2333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.1333333333333333,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.3,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.19999999999999998,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 10,
+          "time": 0.36666666666666664,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.36666666666666664,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.2666666666666666,
+              "ticksPerFrame": 1
+            }
+          ]
+        }
+      ],
+      "done": true,
+      "images": [
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.03333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.1,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.2333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.3,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 10,
+          "time": 0.36666666666666664,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.36666666666666664,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "conscript-fire",
+      "type": "conscript",
+      "limit": 11,
+      "nativeDeploy": false,
+      "death": false,
+      "start": 0,
+      "actor": 21,
+      "target": 22,
+      "steps": [
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 3,
+          "time": 0.1,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 5,
+          "time": 0.16666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.2333333333333333,
+          "cooldown": 0.8333333333333334,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.2333333333333333,
+              "life": 0.4,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": true
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.2333333333333333,
+          "cooldown": 0.7999999999,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.2333333333333333,
+              "life": 0.3666666666666667,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.2333333333333333,
+          "cooldown": 0.7666666664666667,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.2333333333333333,
+              "life": 0.33333333333333337,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 10,
+          "time": 0.3333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.2333333333333333,
+          "cooldown": 0.7333333330333334,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.2333333333333333,
+              "life": 0.30000000000000004,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 11,
+          "time": 0.36666666666666664,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.2333333333333333,
+          "cooldown": 0.6999999996,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.2333333333333333,
+              "life": 0.2666666666666667,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        }
+      ],
+      "renders": [
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "infantry": [
+            {
+              "sprite": "cons",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.03333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "infantry": [
+            {
+              "sprite": "cons",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.1,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "infantry": [
+            {
+              "sprite": "cons",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.16666666666666666,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "infantry": [
+            {
+              "sprite": "cons",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.3,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.06666666666666668,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 11,
+          "time": 0.36666666666666664,
+          "infantry": [
+            {
+              "sprite": "cons",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.36666666666666664,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.13333333333333333,
+              "ticksPerFrame": 1
+            }
+          ]
+        }
+      ],
+      "done": true,
+      "images": [
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "infantry": [
+            {
+              "sprite": "cons",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.03333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "infantry": [
+            {
+              "sprite": "cons",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.1,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "infantry": [
+            {
+              "sprite": "cons",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.16666666666666666,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "infantry": [
+            {
+              "sprite": "cons",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.3,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 11,
+          "time": 0.36666666666666664,
+          "infantry": [
+            {
+              "sprite": "cons",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.36666666666666664,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "rocketeer-fire",
+      "type": "rocketeer",
+      "limit": 10,
+      "nativeDeploy": false,
+      "death": false,
+      "start": 0,
+      "actor": 21,
+      "target": 22,
+      "steps": [
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireFly",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireFly",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 3,
+          "time": 0.1,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireFly",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 1,
+          "targetHp": 9981.25,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.4,
+              "maxLife": 0.4,
+              "damage": 25
+            }
+          ],
+          "shot": true
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireFly",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.9666666665666667,
+          "targetHp": 9981.25,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.3666666666666667,
+              "maxLife": 0.4,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 5,
+          "time": 0.16666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireFly",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.9333333331333333,
+          "targetHp": 9981.25,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.33333333333333337,
+              "maxLife": 0.4,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": {
+            "sequence": "FireFly",
+            "startedAt": 0.03333333333333333
+          },
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.8999999997,
+          "targetHp": 9981.25,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.30000000000000004,
+              "maxLife": 0.4,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.8666666662666667,
+          "targetHp": 9981.25,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.2666666666666667,
+              "maxLife": 0.4,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.8333333328333333,
+          "targetHp": 9981.25,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.2333333333333334,
+              "maxLife": 0.4,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.7999999994,
+          "targetHp": 9981.25,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.20000000000000007,
+              "maxLife": 0.4,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 10,
+          "time": 0.3333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.1,
+          "cooldown": 0.7666666659666667,
+          "targetHp": 9981.25,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.1,
+              "life": 0.16666666666666674,
+              "maxLife": 0.4,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        }
+      ],
+      "renders": [
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "infantry": [
+            {
+              "sprite": "rock",
+              "action": "FireFly",
+              "facing": 5,
+              "age": 0.03333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 5,
+          "time": 0.16666666666666666,
+          "infantry": [
+            {
+              "sprite": "rock",
+              "action": "FireFly",
+              "facing": 5,
+              "age": 0.13333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.06666666666666665,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "infantry": [
+            {
+              "sprite": "rock",
+              "action": "Hover",
+              "facing": 5,
+              "age": 0.2333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.1333333333333333,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "infantry": [
+            {
+              "sprite": "rock",
+              "action": "Hover",
+              "facing": 5,
+              "age": 0.3,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.19999999999999998,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 10,
+          "time": 0.36666666666666664,
+          "infantry": [
+            {
+              "sprite": "rock",
+              "action": "Hover",
+              "facing": 5,
+              "age": 0.36666666666666664,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.2666666666666666,
+              "ticksPerFrame": 1
+            }
+          ]
+        }
+      ],
+      "done": true,
+      "images": [
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "infantry": [
+            {
+              "sprite": "rock",
+              "action": "FireFly",
+              "facing": 5,
+              "age": 0.03333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 5,
+          "time": 0.16666666666666666,
+          "infantry": [
+            {
+              "sprite": "rock",
+              "action": "FireFly",
+              "facing": 5,
+              "age": 0.13333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "infantry": [
+            {
+              "sprite": "rock",
+              "action": "Hover",
+              "facing": 5,
+              "age": 0.2333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "infantry": [
+            {
+              "sprite": "rock",
+              "action": "Hover",
+              "facing": 5,
+              "age": 0.3,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 10,
+          "time": 0.36666666666666664,
+          "infantry": [
+            {
+              "sprite": "rock",
+              "action": "Hover",
+              "facing": 5,
+              "age": 0.36666666666666664,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "ifv-burst",
+      "type": "ifv",
+      "limit": 65,
+      "nativeDeploy": false,
+      "death": false,
+      "start": 0,
+      "actor": 21,
+      "target": 22,
+      "steps": [
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 0.1,
+          "targetHp": 9981.25,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.43333333333333335,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": true
+        },
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 0.06666666656666669,
+          "targetHp": 9981.25,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.4,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 3,
+          "time": 0.1,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 0.03333333313333335,
+          "targetHp": 9981.25,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.3666666666666667,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.7333333333333334,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.33333333333333337,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.43333333333333335,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": true
+        },
+        {
+          "frame": 5,
+          "time": 0.16666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.6999999999,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.30000000000000004,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.4,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.6666666664666665,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.2666666666666667,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.3666666666666667,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.633333333033333,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.2333333333333334,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.33333333333333337,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.5999999995999996,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.20000000000000007,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.30000000000000004,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.5666666661666662,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.16666666666666674,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.2666666666666667,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 10,
+          "time": 0.3333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.5333333327333327,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.13333333333333341,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.2333333333333334,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 11,
+          "time": 0.36666666666666664,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.4999999992999993,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.10000000000000009,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.20000000000000007,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 12,
+          "time": 0.39999999999999997,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.4666666658666658,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.06666666666666676,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.16666666666666674,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 13,
+          "time": 0.4333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.4333333324333324,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.03333333333333343,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.13333333333333341,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 14,
+          "time": 0.4666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.399999998999999,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.10000000000000009,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 15,
+          "time": 0.49999999999999994,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.3666666655666655,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.06666666666666676,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 16,
+          "time": 0.5333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.333333332133332,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.03333333333333343,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 17,
+          "time": 0.5666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.2999999986999986,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 18,
+          "time": 0.6,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.2666666652666652,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 19,
+          "time": 0.6333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.2333333318333317,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 20,
+          "time": 0.6666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.1999999983999983,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 21,
+          "time": 0.7,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.1666666649666648,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 22,
+          "time": 0.7333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.1333333315333314,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 23,
+          "time": 0.7666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.099999998099998,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 24,
+          "time": 0.7999999999999999,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.0666666646666645,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 25,
+          "time": 0.8333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 1.033333331233331,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 26,
+          "time": 0.8666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.9999999977999977,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 27,
+          "time": 0.8999999999999999,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.9666666643666644,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 28,
+          "time": 0.9333333333333332,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.933333330933331,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 29,
+          "time": 0.9666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.8999999974999977,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 30,
+          "time": 0.9999999999999999,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.8666666640666644,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 31,
+          "time": 1.0333333333333332,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.833333330633331,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 32,
+          "time": 1.0666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.7999999971999977,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 33,
+          "time": 1.1,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.7666666637666644,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 34,
+          "time": 1.1333333333333335,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.733333330333331,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 35,
+          "time": 1.166666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.6999999968999977,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 36,
+          "time": 1.2000000000000004,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.6666666634666644,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 37,
+          "time": 1.2333333333333338,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.633333330033331,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 38,
+          "time": 1.2666666666666673,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.5999999965999977,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 39,
+          "time": 1.3000000000000007,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.5666666631666644,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 40,
+          "time": 1.3333333333333341,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.533333329733331,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 41,
+          "time": 1.3666666666666676,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.4999999962999977,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 42,
+          "time": 1.400000000000001,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.46666666286666436,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 43,
+          "time": 1.4333333333333345,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.433333329433331,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 44,
+          "time": 1.466666666666668,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.3999999959999977,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 45,
+          "time": 1.5000000000000013,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.36666666256666436,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 46,
+          "time": 1.5333333333333348,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.333333329133331,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 47,
+          "time": 1.5666666666666682,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.2999999956999977,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 48,
+          "time": 1.6000000000000016,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.26666666226666436,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 49,
+          "time": 1.633333333333335,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.23333332883333102,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 50,
+          "time": 1.6666666666666685,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.1999999953999977,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 51,
+          "time": 1.700000000000002,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.16666666196666435,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 52,
+          "time": 1.7333333333333354,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.13333332853333102,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 53,
+          "time": 1.7666666666666688,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.0999999950999977,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 54,
+          "time": 1.8000000000000023,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.06666666166666436,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 55,
+          "time": 1.8333333333333357,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.03333332823333103,
+          "targetHp": 9962.5,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 56,
+          "time": 1.8666666666666691,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 1.8666666666666691,
+          "cooldown": 0.16666666666666666,
+          "targetHp": 9943.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 1.8666666666666691,
+              "life": 0.43333333333333335,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": true
+        },
+        {
+          "frame": 57,
+          "time": 1.9000000000000026,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 1.8666666666666691,
+          "cooldown": 0.13333333323333332,
+          "targetHp": 9943.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 1.8666666666666691,
+              "life": 0.4,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 58,
+          "time": 1.933333333333336,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 1.8666666666666691,
+          "cooldown": 0.0999999998,
+          "targetHp": 9943.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 1.8666666666666691,
+              "life": 0.3666666666666667,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 59,
+          "time": 1.9666666666666694,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 1.8666666666666691,
+          "cooldown": 0.06666666636666667,
+          "targetHp": 9943.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 1.8666666666666691,
+              "life": 0.33333333333333337,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 60,
+          "time": 2.0000000000000027,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 1.8666666666666691,
+          "cooldown": 0.033333332933333334,
+          "targetHp": 9943.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 1.8666666666666691,
+              "life": 0.30000000000000004,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 61,
+          "time": 2.033333333333336,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 2.033333333333336,
+          "cooldown": 1.7000000000000002,
+          "targetHp": 9925,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 1.8666666666666691,
+              "life": 0.2666666666666667,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 2.033333333333336,
+              "life": 0.43333333333333335,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": true
+        },
+        {
+          "frame": 62,
+          "time": 2.066666666666669,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 2.033333333333336,
+          "cooldown": 1.6666666665666667,
+          "targetHp": 9925,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 1.8666666666666691,
+              "life": 0.2333333333333334,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 2.033333333333336,
+              "life": 0.4,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 63,
+          "time": 2.1000000000000023,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 2.033333333333336,
+          "cooldown": 1.6333333331333333,
+          "targetHp": 9925,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 1.8666666666666691,
+              "life": 0.20000000000000007,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 2.033333333333336,
+              "life": 0.3666666666666667,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 64,
+          "time": 2.1333333333333355,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 2.033333333333336,
+          "cooldown": 1.5999999996999998,
+          "targetHp": 9925,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 1.8666666666666691,
+              "life": 0.16666666666666674,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 2.033333333333336,
+              "life": 0.33333333333333337,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 65,
+          "time": 2.1666666666666687,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 2.033333333333336,
+          "cooldown": 1.5666666662666664,
+          "targetHp": 9925,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 1.8666666666666691,
+              "life": 0.13333333333333341,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            },
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "XGRYSML2",
+              "animationTicksPerFrame": 1,
+              "startedAt": 2.033333333333336,
+              "life": 0.30000000000000004,
+              "maxLife": 0.43333333333333335,
+              "damage": 25
+            }
+          ],
+          "shot": false
+        }
+      ],
+      "renders": [
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0.1,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "XGRYSML2",
+              "age": 0,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0.16666666666666666,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "XGRYSML2",
+              "age": 0.06666666666666665,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0.23333333333333334,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "XGRYSML2",
+              "age": 0.13333333333333333,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 11,
+          "time": 0.36666666666666664,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0.3333333333333333,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "XGRYSML2",
+              "age": 0.2333333333333333,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 13,
+          "time": 0.4333333333333333,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0.39999999999999997,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "XGRYSML2",
+              "age": 0.29999999999999993,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 15,
+          "time": 0.49999999999999994,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0.3666666666666666,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 17,
+          "time": 0.5666666666666667,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 19,
+          "time": 0.6333333333333333,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 21,
+          "time": 0.7,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 24,
+          "time": 0.7999999999999999,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 25,
+          "time": 0.8333333333333333,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 28,
+          "time": 0.9333333333333332,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 30,
+          "time": 0.9999999999999999,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 33,
+          "time": 1.1,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 35,
+          "time": 1.166666666666667,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 37,
+          "time": 1.2333333333333338,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 39,
+          "time": 1.3000000000000007,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 41,
+          "time": 1.3666666666666676,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 44,
+          "time": 1.466666666666668,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 46,
+          "time": 1.5333333333333348,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 48,
+          "time": 1.6000000000000016,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 50,
+          "time": 1.6666666666666685,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 52,
+          "time": 1.7333333333333354,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 54,
+          "time": 1.8000000000000023,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 56,
+          "time": 1.8666666666666691,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 58,
+          "time": 1.933333333333336,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0.06666666666666687,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 61,
+          "time": 2.033333333333336,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0.16666666666666674,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "XGRYSML2",
+              "age": 0,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 63,
+          "time": 2.1000000000000023,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0.23333333333333317,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "XGRYSML2",
+              "age": 0.06666666666666643,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 65,
+          "time": 2.200000000000002,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "XGRYSML2",
+              "age": 0.3333333333333328,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "XGRYSML2",
+              "age": 0.16666666666666607,
+              "ticksPerFrame": 1
+            }
+          ]
+        }
+      ],
+      "done": true,
+      "images": [
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2"
+          ]
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2",
+            "XGRYSML2"
+          ]
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2",
+            "XGRYSML2"
+          ]
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2",
+            "XGRYSML2"
+          ]
+        },
+        {
+          "frame": 11,
+          "time": 0.36666666666666664,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2",
+            "XGRYSML2"
+          ]
+        },
+        {
+          "frame": 13,
+          "time": 0.4333333333333333,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2",
+            "XGRYSML2"
+          ]
+        },
+        {
+          "frame": 15,
+          "time": 0.49999999999999994,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2"
+          ]
+        },
+        {
+          "frame": 17,
+          "time": 0.5666666666666667,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 19,
+          "time": 0.6333333333333333,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 21,
+          "time": 0.7,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 24,
+          "time": 0.7999999999999999,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 25,
+          "time": 0.8333333333333333,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 28,
+          "time": 0.9333333333333332,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 30,
+          "time": 0.9999999999999999,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 33,
+          "time": 1.1,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 35,
+          "time": 1.166666666666667,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 37,
+          "time": 1.2333333333333338,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 39,
+          "time": 1.3000000000000007,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 41,
+          "time": 1.3666666666666676,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 44,
+          "time": 1.466666666666668,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 46,
+          "time": 1.5333333333333348,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 48,
+          "time": 1.6000000000000016,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 50,
+          "time": 1.6666666666666685,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 52,
+          "time": 1.7333333333333354,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 54,
+          "time": 1.8000000000000023,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 56,
+          "time": 1.8666666666666691,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2"
+          ]
+        },
+        {
+          "frame": 58,
+          "time": 1.933333333333336,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2"
+          ]
+        },
+        {
+          "frame": 61,
+          "time": 2.033333333333336,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2",
+            "XGRYSML2"
+          ]
+        },
+        {
+          "frame": 63,
+          "time": 2.1000000000000023,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2",
+            "XGRYSML2"
+          ]
+        },
+        {
+          "frame": 65,
+          "time": 2.200000000000002,
+          "infantry": [],
+          "effects": [
+            "XGRYSML2",
+            "XGRYSML2"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "vehicle-death",
+      "type": "grizzly",
+      "limit": 34,
+      "nativeDeploy": false,
+      "death": true,
+      "start": 0,
+      "actor": 21,
+      "target": 22,
+      "steps": [
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 2,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.43333333333333335,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.7666666666666666,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": true
+        },
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.9666666665666666,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.4,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.7333333333333333,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 3,
+          "time": 0.1,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.933333333133333,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.3666666666666667,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.7,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.8999999996999997,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.33333333333333337,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.6666666666666666,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 5,
+          "time": 0.16666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.8666666662666662,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.30000000000000004,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.6333333333333333,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.8333333328333328,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.2666666666666667,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.6,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.7999999993999993,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.2333333333333334,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.5666666666666667,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.7666666659666659,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.20000000000000007,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.5333333333333333,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.7333333325333324,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.16666666666666674,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.5,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 10,
+          "time": 0.3333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.699999999099999,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.13333333333333341,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.4666666666666667,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 11,
+          "time": 0.36666666666666664,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.6666666656666655,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.10000000000000009,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.43333333333333335,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 12,
+          "time": 0.39999999999999997,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.633333332233332,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.06666666666666676,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.4,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 13,
+          "time": 0.4333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.5999999987999987,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 25,
+              "y": 30,
+              "side": 0,
+              "animation": "S_CLSN22",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.03333333333333343,
+              "maxLife": 0.43333333333333335,
+              "damage": 65
+            },
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.3666666666666667,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 14,
+          "time": 0.4666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.5666666653666652,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.33333333333333337,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 15,
+          "time": 0.49999999999999994,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.5333333319333318,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.30000000000000004,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 16,
+          "time": 0.5333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.4999999984999983,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.2666666666666667,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 17,
+          "time": 0.5666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.4666666650666649,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.2333333333333334,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 18,
+          "time": 0.6,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.4333333316333314,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.20000000000000007,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 19,
+          "time": 0.6333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.399999998199998,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.16666666666666674,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 20,
+          "time": 0.6666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.3666666647666645,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.13333333333333341,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 21,
+          "time": 0.7,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.333333331333331,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.10000000000000009,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 22,
+          "time": 0.7333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.2999999978999977,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.06666666666666676,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 23,
+          "time": 0.7666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.2666666644666642,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [
+            {
+              "kind": "explosion",
+              "x": 25,
+              "y": 30,
+              "side": 1,
+              "animation": "S_BANG48",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.03333333333333333,
+              "life": 0.03333333333333343,
+              "maxLife": 0.7666666666666666
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 24,
+          "time": 0.7999999999999999,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.2333333310333308,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 25,
+          "time": 0.8333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.1999999975999973,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 26,
+          "time": 0.8666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.1666666641666639,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 27,
+          "time": 0.8999999999999999,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.1333333307333304,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 28,
+          "time": 0.9333333333333332,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.099999997299997,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 29,
+          "time": 0.9666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.0666666638666635,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 30,
+          "time": 0.9999999999999999,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 1.03333333043333,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 31,
+          "time": 1.0333333333333332,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 0.9999999969999968,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 32,
+          "time": 1.0666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 0.9666666635666634,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 33,
+          "time": 1.1,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 0.9333333301333301,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 34,
+          "time": 1.1333333333333335,
+          "x": 22.5,
+          "y": 30.5,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.03333333333333333,
+          "cooldown": 0.8999999966999968,
+          "targetHp": 0,
+          "targetAlive": false,
+          "effects": [],
+          "shot": false
+        }
+      ],
+      "renders": [
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "S_CLSN22",
+              "age": 0,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "S_BANG48",
+              "age": 0,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "S_CLSN22",
+              "age": 0.1,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "S_BANG48",
+              "age": 0.1,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "S_CLSN22",
+              "age": 0.16666666666666666,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "S_BANG48",
+              "age": 0.16666666666666666,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "S_CLSN22",
+              "age": 0.23333333333333334,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "S_BANG48",
+              "age": 0.23333333333333334,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 10,
+          "time": 0.3333333333333333,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "S_CLSN22",
+              "age": 0.3,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "S_BANG48",
+              "age": 0.3,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 13,
+          "time": 0.4333333333333333,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "S_CLSN22",
+              "age": 0.39999999999999997,
+              "ticksPerFrame": 1
+            },
+            {
+              "animation": "S_BANG48",
+              "age": 0.39999999999999997,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 15,
+          "time": 0.49999999999999994,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "S_BANG48",
+              "age": 0.4666666666666666,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 18,
+          "time": 0.6,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "S_BANG48",
+              "age": 0.5666666666666667,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 19,
+          "time": 0.6333333333333333,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "S_BANG48",
+              "age": 0.6,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 21,
+          "time": 0.7,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "S_BANG48",
+              "age": 0.6666666666666666,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 23,
+          "time": 0.7666666666666666,
+          "infantry": [],
+          "effects": [
+            {
+              "animation": "S_BANG48",
+              "age": 0.7333333333333333,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 25,
+          "time": 0.8333333333333333,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 28,
+          "time": 0.9333333333333332,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 29,
+          "time": 0.9666666666666666,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 32,
+          "time": 1.0666666666666667,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 34,
+          "time": 1.1333333333333335,
+          "infantry": [],
+          "effects": []
+        }
+      ],
+      "done": true,
+      "images": [
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "infantry": [],
+          "effects": [
+            "S_CLSN22",
+            "S_BANG48"
+          ]
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "infantry": [],
+          "effects": [
+            "S_CLSN22",
+            "S_BANG48"
+          ]
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "infantry": [],
+          "effects": [
+            "S_CLSN22",
+            "S_BANG48"
+          ]
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "infantry": [],
+          "effects": [
+            "S_CLSN22",
+            "S_BANG48"
+          ]
+        },
+        {
+          "frame": 10,
+          "time": 0.3333333333333333,
+          "infantry": [],
+          "effects": [
+            "S_CLSN22",
+            "S_BANG48"
+          ]
+        },
+        {
+          "frame": 13,
+          "time": 0.4333333333333333,
+          "infantry": [],
+          "effects": [
+            "S_CLSN22",
+            "S_BANG48"
+          ]
+        },
+        {
+          "frame": 15,
+          "time": 0.49999999999999994,
+          "infantry": [],
+          "effects": [
+            "S_BANG48"
+          ]
+        },
+        {
+          "frame": 18,
+          "time": 0.6,
+          "infantry": [],
+          "effects": [
+            "S_BANG48"
+          ]
+        },
+        {
+          "frame": 19,
+          "time": 0.6333333333333333,
+          "infantry": [],
+          "effects": [
+            "S_BANG48"
+          ]
+        },
+        {
+          "frame": 21,
+          "time": 0.7,
+          "infantry": [],
+          "effects": [
+            "S_BANG48"
+          ]
+        },
+        {
+          "frame": 23,
+          "time": 0.7666666666666666,
+          "infantry": [],
+          "effects": [
+            "S_BANG48"
+          ]
+        },
+        {
+          "frame": 25,
+          "time": 0.8333333333333333,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 28,
+          "time": 0.9333333333333332,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 29,
+          "time": 0.9666666666666666,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 32,
+          "time": 1.0666666666666667,
+          "infantry": [],
+          "effects": []
+        },
+        {
+          "frame": 34,
+          "time": 1.1333333333333335,
+          "infantry": [],
+          "effects": []
+        }
+      ]
+    },
+    {
+      "label": "native-undeploy",
+      "type": "gi",
+      "limit": 9,
+      "nativeDeploy": true,
+      "death": false,
+      "start": 0,
+      "actor": 21,
+      "target": 22,
+      "steps": [
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": false,
+          "animation": {
+            "sequence": "Undeploy",
+            "startedAt": 0
+          },
+          "deployment": {
+            "startedAt": 0,
+            "target": false
+          },
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 2,
+          "time": 0.06666666666666667,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": false,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.06666666666666667
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 3,
+          "time": 0.1,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": false,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.06666666666666667
+          },
+          "deployment": null,
+          "firedAt": null,
+          "cooldown": 0,
+          "targetHp": 10000,
+          "targetAlive": true,
+          "effects": [],
+          "shot": false
+        },
+        {
+          "frame": 4,
+          "time": 0.13333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": false,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.06666666666666667
+          },
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.6666666666666666,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.4,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": true
+        },
+        {
+          "frame": 5,
+          "time": 0.16666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": false,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.06666666666666667
+          },
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.6333333332333333,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.3666666666666667,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": false,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.06666666666666667
+          },
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.5999999998,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.33333333333333337,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 7,
+          "time": 0.2333333333333333,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": false,
+          "animation": {
+            "sequence": "FireUp",
+            "startedAt": 0.06666666666666667
+          },
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.5666666663666666,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.30000000000000004,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": false,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.5333333329333333,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.2666666666666667,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        },
+        {
+          "frame": 9,
+          "time": 0.3,
+          "x": 22.5,
+          "y": 30.5,
+          "deployed": false,
+          "animation": null,
+          "deployment": null,
+          "firedAt": 0.13333333333333333,
+          "cooldown": 0.49999999949999996,
+          "targetHp": 9988.75,
+          "targetAlive": true,
+          "effects": [
+            {
+              "kind": "impact",
+              "x": 26.5,
+              "y": 31,
+              "side": 0,
+              "animation": "PIFFPIFF",
+              "animationTicksPerFrame": 1,
+              "startedAt": 0.13333333333333333,
+              "life": 0.2333333333333334,
+              "maxLife": 0.4,
+              "damage": 15
+            }
+          ],
+          "shot": false
+        }
+      ],
+      "renders": [
+        {
+          "frame": 0,
+          "time": 0,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deployed",
+              "facing": 5,
+              "age": 0,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Undeploy",
+              "facing": 5,
+              "age": 0.03333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 3,
+          "time": 0.1,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.03333333333333334,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.1333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.06666666666666665,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.26666666666666666,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.13333333333333333,
+              "ticksPerFrame": 1
+            }
+          ]
+        },
+        {
+          "frame": 9,
+          "time": 0.3333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.3333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            {
+              "animation": "PIFFPIFF",
+              "age": 0.19999999999999998,
+              "ticksPerFrame": 1
+            }
+          ]
+        }
+      ],
+      "done": true,
+      "images": [
+        {
+          "frame": 0,
+          "time": 0,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Deployed",
+              "facing": 5,
+              "age": 0,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 1,
+          "time": 0.03333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Undeploy",
+              "facing": 5,
+              "age": 0.03333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 3,
+          "time": 0.1,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.03333333333333334,
+              "speedIndex": 6
+            }
+          ],
+          "effects": []
+        },
+        {
+          "frame": 6,
+          "time": 0.19999999999999998,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "FireUp",
+              "facing": 5,
+              "age": 0.1333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 8,
+          "time": 0.26666666666666666,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.26666666666666666,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        },
+        {
+          "frame": 9,
+          "time": 0.3333333333333333,
+          "infantry": [
+            {
+              "sprite": "gi",
+              "action": "Ready",
+              "facing": 5,
+              "age": 0.3333333333333333,
+              "speedIndex": 6
+            }
+          ],
+          "effects": [
+            "PIFFPIFF"
+          ]
+        }
+      ]
+    }
+  ],
+  "observersRestored": true
+}

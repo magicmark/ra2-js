@@ -23,10 +23,13 @@ Current follow-up status supersedes the earlier milestone audit below:
 - [x] Draw green move/red target lines with the sourced shared 25-logic-frame timer. Native input/canvas captures verify the lines and controlled original simulation ticks verify expiry while selection/orders persist.
 - [x] Verify native progressive production, Hold/resume, funds recovery, Ready/category pulse, placement/cancellation, exact queued-item refunds and focus stability. Correct near-integer credit-display roundoff; see [native UI evidence](tests/NATIVE_UI_VERIFICATION.md).
 - [x] Replay the corrected six-unit crowd for 600 automatic logic frames: all movers arrive, and all seven departures after a sustained stop align with the hull. Preserve the native Stop/fresh-turn/moving-bend evidence and stated collision/curvature limits in [FINAL_MOVEMENT_VERIFICATION.md](tests/FINAL_MOVEMENT_VERIFICATION.md).
+- [x] Add original infantry firing/deployment sequences, individual IFV burst events, ground impacts/ordinary vehicle explosions, and source-backed normalized animation timing.
+- [x] Add original-art Options navigation, persisted game preferences, and 19 remappable core commands with occupied-key replacement.
+- [x] Verify the real saved 242-file artwork cache upgrades locally to 265 files without installer download/extraction; subsequent reload and native Continue perform zero downloads, workers, or writes.
 - [ ] Finish remaining animation/Options differences and the broader retail-parity limits. Current acceptance criteria are in [PARITY_ACCEPTANCE.md](docs/PARITY_ACCEPTANCE.md).
 
-Latest integrated gates: **210 tests passed, one optional diagnostic skipped,
-production build passed**. [Checkpoint evidence](tests/FINAL_CHECKPOINT_VERIFICATION.md)
+Latest integrated gates: **240 tests passed, one optional diagnostic skipped,
+production build passed**. [Checkpoint evidence](tests/NATIVE_ANIMATION_OPTIONS_VERIFICATION.md)
 identifies the exact build and the remaining scope; historical counts below
 belong to their original source snapshots.
 

@@ -1,0 +1,22 @@
+{
+  "checked": "2026-09-13T22:04:43.200Z",
+  "url": "https://ra2-js.markl.workers.dev/",
+  "title": "Red Alert II · Field Command",
+  "documentReady": "complete",
+  "time": 0,
+  "gateVisible": true,
+  "editableSource": {
+    "value": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "disabled": false,
+    "readOnly": false
+  },
+  "probe": {
+    "errors": [],
+    "archives": [],
+    "workers": []
+  },
+  "scripts": [
+    "https://ra2-js.markl.workers.dev/assets/index--DDHi-ak.js"
+  ],
+  "method": "Fresh isolated production context; archive URLs instrumented and blocked. No submit or fixture seed. Verifies initial production gate and absence of automatic transfer, not full archive extraction."
+}

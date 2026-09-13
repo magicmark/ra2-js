@@ -77,6 +77,40 @@ describe('retail mouse commands', () => {
 });
 
 describe('retail keyboard commands', () => {
+  it('reassigns an occupied core key, unbinds its previous command, and restores defaults', () => {
+    const { game, controls, key, callbacks } = fixture(), tank = game.state.entities.find(e => e.type === 'grizzly')!;
+    game.select([tank.id]); const stop = vi.spyOn(game, 'stop'), guard = vi.spyOn(game, 'guard');
+    expect(controls.inspectBinding('stop', 'G')).toMatchObject({ ok: true, conflict: { id: 'guard', label: 'Guard' } });
+    expect(controls.getBindings().find(binding => binding.id === 'guard')?.key).toBe('G');
+    expect(controls.assignBinding('stop', 'G')).toMatchObject({ ok: true, replaced: 'guard' });
+    expect(controls.getBindings().find(binding => binding.id === 'guard')?.key).toBeNull();
+    key('s'); expect(stop).not.toHaveBeenCalled(); key('g'); expect(stop).toHaveBeenCalledWith([tank.id]); expect(guard).not.toHaveBeenCalled();
+    controls.assignBinding('structures', 'B'); key('q'); expect(callbacks.category).not.toHaveBeenCalled(); key('b'); expect(callbacks.category).toHaveBeenCalledWith('structures');
+    controls.resetBindings(); key('g'); expect(guard).toHaveBeenCalledWith([tank.id]);
+    expect(controls.getBindings().every(binding => binding.key === binding.defaultKey)).toBe(true);
+  });
+  it('remaps held planning and preserves modal, text, and browser shortcut guards', () => {
+    const { game, controls, key, click, settings } = fixture(), tank = game.state.entities.find(e => e.type === 'grizzly')!;
+    game.select([tank.id]); controls.assignBinding('planning', 'B'); const route = vi.spyOn(game, 'orderWaypoints'), stop = vi.spyOn(game, 'stop');
+    key('z'); expect(controls.planning).toBe(false); key('b'); expect(controls.planning).toBe(true);
+    click(); expect(route).not.toHaveBeenCalled(); key('b', { type: 'keyup' }); expect(route).toHaveBeenCalledOnce();
+    controls.assignBinding('stop', 'C'); key('c', { ctrlKey: true }); key('c', { kind: 'input' }); settings(true); key('c');
+    expect(stop).not.toHaveBeenCalled(); settings(false); key('c'); expect(stop).toHaveBeenCalledOnce();
+    for (const reserved of ['Escape', 'F1', '1', 'ArrowLeft', 'Enter', 'Ctrl+C', '']) expect(controls.assignBinding('stop', reserved).ok).toBe(false);
+    expect(controls.assignBinding('unknown', 'A').ok).toBe(false);
+  });
+  it('persists replaced bindings without touching asset preferences and tolerates unavailable storage', () => {
+    const stored = new Map<string, string>([['asset-source-url', 'keep-this-source']]);
+    vi.stubGlobal('localStorage', { getItem: (key: string) => stored.get(key) ?? null, setItem: (key: string, value: string) => stored.set(key, value) });
+    fixture().controls.assignBinding('stop', 'G'); const restored = fixture().controls;
+    expect(restored.getBindings().find(binding => binding.id === 'stop')?.key).toBe('G');
+    expect(restored.getBindings().find(binding => binding.id === 'guard')?.key).toBeNull();
+    expect(stored.get('asset-source-url')).toBe('keep-this-source');
+    vi.stubGlobal('localStorage', { getItem: () => { throw Error('Denied'); }, setItem: () => { throw Error('Denied'); } });
+    const denied = fixture().controls;
+    expect(denied.getBindings().find(binding => binding.id === 'stop')?.key).toBe('S');
+    expect(() => denied.assignBinding('stop', 'B')).not.toThrow(); expect(() => denied.resetBindings()).not.toThrow();
+  });
   it('adjusts continuous scroll speed while preserving direct dragging and modal suppression', () => {
     const { controls, camera, key, pointer, settings } = fixture(), pan = vi.spyOn(camera, 'pan');
     expect(controls.scrollRate).toBe(1);

@@ -1,0 +1,384 @@
+{
+  "evidence": "Static interpretation of modified supplied base-RA2 executable plus authored dimensions reported by assets; no game executable execution or fresh retail capture.",
+  "input_sha256": "06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb",
+  "metadata_source_path": "/tmp/ra2-options-inspection/metadata.json",
+  "metadata_sha256": "be243091f7dad41d0a0fe1d43b23c4ff2d4bf2db4df59f6c260213db860de36f",
+  "coordinate_system": "Native nominal pixels unless explicitly marked DLU or conditional. SHP crop offsets and transparency determine actual visible ink.",
+  "asset_pointer_table": [
+    {
+      "name": "SIDEBTTN.SHP",
+      "string_pointer_table_va": "0x7f87d8",
+      "string_va": "0x7f889c",
+      "shape_global_va": "0xac0ff8"
+    },
+    {
+      "name": "BKGDSM.SHP",
+      "string_pointer_table_va": "0x7f87dc",
+      "string_va": "0x7f8890",
+      "shape_global_va": "0xac10c4"
+    },
+    {
+      "name": "BKGDMD.SHP",
+      "string_pointer_table_va": "0x7f87e0",
+      "string_va": "0x7f8884",
+      "shape_global_va": "0xac10bc"
+    },
+    {
+      "name": "BKGDLG.SHP",
+      "string_pointer_table_va": "0x7f87e4",
+      "string_va": "0x7f8878",
+      "shape_global_va": "0xac105c"
+    },
+    {
+      "name": "CREDITS.SHP",
+      "string_pointer_table_va": "0x7f87e8",
+      "string_va": "0x7f886c",
+      "shape_global_va": "0xac10f8"
+    },
+    {
+      "name": "TOP.SHP",
+      "string_pointer_table_va": "0x7f87ec",
+      "string_va": "0x7f8864",
+      "shape_global_va": "0xac0ff0"
+    },
+    {
+      "name": "RADAR.SHP",
+      "string_pointer_table_va": "0x7f87f0",
+      "string_va": "0x7f8858",
+      "shape_global_va": "0xac1070"
+    },
+    {
+      "name": "SIDE1.SHP",
+      "string_pointer_table_va": "0x7f87f4",
+      "string_va": "0x7f3dec",
+      "shape_global_va": "0xac1078"
+    },
+    {
+      "name": "SIDE2.SHP",
+      "string_pointer_table_va": "0x7f87f8",
+      "string_va": "0x7f3de0",
+      "shape_global_va": "0xac10ec"
+    },
+    {
+      "name": "SIDE2B.SHP",
+      "string_pointer_table_va": "0x7f87fc",
+      "string_va": "0x7f884c",
+      "shape_global_va": "0xac100c"
+    },
+    {
+      "name": "SIDE3.SHP",
+      "string_pointer_table_va": "0x7f8800",
+      "string_va": "0x7f3dd4",
+      "shape_global_va": "0xac1094"
+    },
+    {
+      "name": "ADDON.SHP",
+      "string_pointer_table_va": "0x7f8804",
+      "string_va": "0x7f3dc8",
+      "shape_global_va": "0xac1058"
+    },
+    {
+      "name": "LSPACER.SHP",
+      "string_pointer_table_va": "0x7f8808",
+      "string_va": "0x7f8840",
+      "shape_global_va": "0xac1048"
+    },
+    {
+      "name": "LENDCAP.SHP",
+      "string_pointer_table_va": "0x7f880c",
+      "string_va": "0x7f8834",
+      "shape_global_va": "0xac1098"
+    },
+    {
+      "name": "BTTNBKGD.SHP",
+      "string_pointer_table_va": "0x7f8810",
+      "string_va": "0x7f8824",
+      "shape_global_va": "0xac10a4"
+    },
+    {
+      "name": "RENDCAP.SHP",
+      "string_pointer_table_va": "0x7f8814",
+      "string_va": "0x7f8818",
+      "shape_global_va": "0xac10b0"
+    }
+  ],
+  "constant_table": {
+    "va": "0x7add68",
+    "dwords": [
+      640,
+      800,
+      1024,
+      480,
+      600,
+      768,
+      168,
+      32
+    ]
+  },
+  "mode": {
+    "flag": "BYTE[a3d298+3080] = BYTE[a40318]",
+    "set": "0x672de0 called by0x481db5 before dispatcher",
+    "get": "0x672f10",
+    "clear": "0x672e70 called after dispatcher loop",
+    "battle_owner_draw_mode": 2,
+    "shell_owner_draw_mode": 1
+  },
+  "sidebar": {
+    "x": "W - CREDITS.width",
+    "rowOrigin": "CREDITS.h + TOP.h + RADAR.h + SIDE1.h = 227",
+    "count": "trunc((H - rowOrigin - SIDE3.h) / SIDE2.h)",
+    "side3_y": "rowOrigin + count * SIDE2.h",
+    "addon_y": "side3_y + SIDE3.h",
+    "repeat_sizing_asset": "SIDE2.SHP",
+    "repeat_painted_asset": "SIDE2B.SHP",
+    "nominal_rectangles_800x600": [
+      {
+        "asset": "CREDITS.SHP",
+        "rect": [
+          632,
+          0,
+          168,
+          16
+        ]
+      },
+      {
+        "asset": "TOP.SHP",
+        "rect": [
+          632,
+          16,
+          168,
+          32
+        ]
+      },
+      {
+        "asset": "RADAR.SHP",
+        "rect": [
+          632,
+          48,
+          168,
+          110
+        ]
+      },
+      {
+        "asset": "SIDE1.SHP",
+        "rect": [
+          632,
+          158,
+          168,
+          69
+        ]
+      },
+      {
+        "asset": "SIDE2B.SHP",
+        "rect": [
+          632,
+          227,
+          168,
+          50
+        ]
+      },
+      {
+        "asset": "SIDE2B.SHP",
+        "rect": [
+          632,
+          277,
+          168,
+          50
+        ]
+      },
+      {
+        "asset": "SIDE2B.SHP",
+        "rect": [
+          632,
+          327,
+          168,
+          50
+        ]
+      },
+      {
+        "asset": "SIDE2B.SHP",
+        "rect": [
+          632,
+          377,
+          168,
+          50
+        ]
+      },
+      {
+        "asset": "SIDE2B.SHP",
+        "rect": [
+          632,
+          427,
+          168,
+          50
+        ]
+      },
+      {
+        "asset": "SIDE2B.SHP",
+        "rect": [
+          632,
+          477,
+          168,
+          50
+        ]
+      },
+      {
+        "asset": "SIDE3.SHP",
+        "rect": [
+          632,
+          527,
+          168,
+          26
+        ]
+      },
+      {
+        "asset": "ADDON.SHP",
+        "rect": [
+          632,
+          553,
+          168,
+          63
+        ],
+        "visible_height_if_viewport_clip": 47
+      }
+    ]
+  },
+  "background": {
+    "choice": "W==640 -> BKGDSM; W==800 -> BKGDMD; otherwise BKGDLG",
+    "origin": [
+      0,
+      0
+    ],
+    "rect_800x600": [
+      0,
+      0,
+      632,
+      568
+    ],
+    "frame": 0,
+    "draw_flags": "0x400 (no0x200 centering)",
+    "frame_crop_offsets": {
+      "BKGDMD_frame0": [
+        0,
+        0,
+        632,
+        568
+      ],
+      "SIDEBTTN_all_frames": [
+        0,
+        0,
+        125,
+        25
+      ],
+      "source": "Updated authored-dimensions-handoff.json from assets; no trim translation"
+    },
+    "palette_handoff": "uibkgd.pal; sidebar palette is separate"
+  },
+  "navigation_buttons": {
+    "size": [
+      125,
+      25
+    ],
+    "x": "W -147",
+    "y": "rowOrigin + trunc((original_relative_y + trunc(original_pixel_height/2) -198)/44)*25",
+    "back_y": "side3_y -25",
+    "back_rect_800x600": [
+      653,
+      502,
+      125,
+      25
+    ],
+    "resource181_ids": [
+      1313,
+      1310,
+      1311,
+      1312,
+      1314
+    ],
+    "resource3003_ids": [
+      1325,
+      1324
+    ],
+    "resource184_ids": [],
+    "conditional_example": {
+      "condition": "Windows creates initial controls using vertical base unit13, with usual MulDiv rounding; not independently observed",
+      "resource181_y": [
+        227,
+        252,
+        277,
+        302,
+        327
+      ],
+      "resource3003_y": [
+        227,
+        252
+      ],
+      "do_not_certify": "Raw DLU plus assumed font metrics is not observed native pixel evidence."
+    }
+  },
+  "content": {
+    "design_size": [
+      640,
+      480
+    ],
+    "formula": "(original_x + trunc((W-640)/2), original_y + trunc((H-480)/2), original_width, original_height)",
+    "translation_800x600": [
+      80,
+      60
+    ],
+    "applies_to": "Ordinary labels, sliders, checkboxes, playlist, Play/Stop that do not match special child routing."
+  },
+  "title1684": {
+    "formula": "(W - trunc((168-original_width)/2) - original_width, original_y, original_width, original_height)",
+    "post_adjustment": "Battle flag true bypasses shell title offsets at0x5e97d7."
+  },
+  "help1685": {
+    "formula": "(10, H-original_height-1, original_width, original_height)",
+    "resources_confirmed": [
+      181,
+      184,
+      3003
+    ]
+  },
+  "sidebttn_states": {
+    "normal": 0,
+    "pressed_selected": 1,
+    "timed_flash_phase": 2,
+    "hover": "No separate frame branch in examined selector; stays0 absent press/flash. Full retail hover text/cursor behavior not certified.",
+    "disabled": "Does not change SHP frame; idle0. WS_DISABLED selects separate text color. Exact RGB unresolved.",
+    "flash_trigger": "Custom0x4dc lParam1 starts1000ms Windows timer; WM_TIMER toggles phase; lParam!=1 stops and clears phase.",
+    "precedence": "selected frame1 overrides flash phase2",
+    "palette_handoff": "sidebar.pal",
+    "retail_flash_invocation_for_options": "Not established; do not automatically flash Options navigation."
+  },
+  "limitations": [
+    "Modified executable not certified clean retail",
+    "No intact native retail Options screenshot secured",
+    "No execution of game.exe",
+    "Windows initial font base units and final game text rasterization not measured",
+    "No absolute content or text-baseline acceptance",
+    "Nonstandard resolutions choose large background branch; do not infer scaling or tiling beyond observed code",
+    "Art dimensions accepted from asset owner; no duplicate MIX audit"
+  ],
+  "default_button_font": {
+    "literal_va": "0x7cf540",
+    "literal": "GAME.FNT",
+    "constructor": "0x432c90 ->0x431040",
+    "default_font_global": "0x84e9e8",
+    "child_font_field": "+0x64",
+    "button_text_use": "0x5f0d37 ->0x5fe020",
+    "scope": "Supports default native button font; no heading-specific/font-rasterization pixel certification",
+    "text_rectangle_offsets": {
+      "idle_left_top": [
+        0,
+        1
+      ],
+      "right_inset": 2,
+      "pressed_additional_left_top": [
+        2,
+        4
+      ]
+    },
+    "glyph_baseline": "unresolved"
+  }
+}

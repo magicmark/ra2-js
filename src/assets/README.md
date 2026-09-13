@@ -52,6 +52,13 @@ snow artwork and nonexistent optional vehicle parts are not required. Original
 filename aliases and multipart composition remain supported; generated artwork
 and substitute palettes/material lighting are absent.
 
+The animation/Options catalog contains 265 files. It also validates nine ground
+impact/vehicle-death SHPs against `anim.pal`, the consumed infantry sequences
+from `art.ini`, and the original Options backgrounds, three button frames and
+three PCX controls. PCX files carry their own 8-bit RGB palettes; the original
+SHP palettes use Westwood's 6-bit channels. Adding these files does not change
+the cache schema or the saved installer/MIX generation.
+
 Compatible cache versions are checked against those same requirements. A cache
 version change alone does not discard usable files. Missing or invalid selected
 artwork is rebuilt locally from saved MIX inputs, or from the saved installer if
@@ -83,13 +90,28 @@ storage removes them. No archive bytes are bundled with the application.
 - `getInfantryFrame(idOrFilename, exactFrame, side)` accesses authored SHP frames
   without the idle/walk index mapping, retaining matched shadows and anchors.
   GI deployed idle uses 292–299 and deployed fire uses 315–362.
+- `getInfantrySequence(id, action, facing, ageSeconds, side, nativeSpeedIndex)`
+  selects the authored sequence and native per-sequence interval. Firing and GI
+  deployment use event-relative ages supplied by the simulation. Walking uses
+  three logic ticks per frame; GI deployment uses its original 15 frames and
+  undeployment uses two. The parser rejects missing sequences and out-of-range
+  frames before the game becomes ready.
 - `getVehicleSprite(idOrFilename, hullFacing, turretFacing, side)` independently
   rotates the original hull and turret/barrel voxels in the same depth buffer.
   Facing keys normalize to 0–31, including negative inputs; only displayed
   combinations are rasterized and cached.
-- `getBuildingSprite(idOrFilename, simulationTime, side)` selects the original
+- `getBuildingSprite(idOrFilename, simulationTime, side, nativeSpeedIndex)` selects the original
   healthy idle/active animation loops from `art.ini`. Discrete frame combinations
   are cached; foundation anchors stay fixed and simulation pause stops motion.
+- `getAnimationDefinitions()` and `getInfantryAnimationDefinitions()` provide
+  validated frame counts and raw logic-tick intervals to the simulation.
+  `getAnimationSprite(id, ageSeconds, capturedTicksPerFrame)` returns the
+  original impact/death frame. Active effects keep their captured interval;
+  newly created normalized effects use the selected native speed index.
+- `getDialogAsset(name, frame, side)` supplies `DIALOG_ASSET_FRAMES`: original
+  small/medium/large Options backgrounds, `options-button` frames 0–2, checked
+  and unchecked boxes, and the slider thumb. Button frame 1 is pressed; frame 2
+  is the native timer-flash state. Full frame crop positions are preserved.
 - `getUIAsset(name, frame = 0, side = 0)` returns original sidebar SHPs with the
   matching faction palette. Names are stored separately per side because the
   original Allied and Soviet MIX archives reuse the same filenames.
@@ -130,3 +152,11 @@ described and demonstrated by these upstream references:
 
 No original game archives or runtime asset files are bundled. Verification
 screenshots may show rendered original artwork.
+
+Animation cadence and selection are grounded in the supplied executable and
+original `art.ini`; see [native animation evidence](../../docs/NATIVE_ANIMATION_REFERENCE.md)
+and [burst/death evidence](../../docs/NATIVE_BURST_DEATH_REFERENCE.md). The renderer
+does not substitute procedural shot tracers, smoke rings or death explosions
+for unsourced artwork. Projectile flight, infantry/building death sequences,
+special translucent blending, debris and water-specific impacts remain separate
+parity work.

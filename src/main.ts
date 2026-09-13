@@ -4,7 +4,7 @@ import { GameAudio } from './game/Audio';
 import { Renderer } from './render/Renderer';
 import { Controls, detectMobile } from './input/Controls';
 import { UI } from './ui/UI';
-import { AssetManager, DEFAULT_ASSET_URL, HUD_ASSET_FRAMES, assetSourceUrl } from './assets/AssetManager';
+import { AssetManager, DEFAULT_ASSET_URL, HUD_ASSET_FRAMES, DIALOG_ASSET_FRAMES, assetSourceUrl } from './assets/AssetManager';
 import { requestPersistentAssetStorage } from './assets/AssetDownload';
 
 const game=new Game(),audio=new GameAudio(),assets=new AssetManager();
@@ -25,6 +25,26 @@ const ui=new UI(game,{
   getPlanning:()=>controls?.planning??false,
   onTargetLines:enabled=>{renderer.targetLines=enabled;},
   getTargetLines:()=>renderer?.targetLines??true,
+  onSpeed:speed=>game.setGameSpeed(speed),
+  onPause:paused=>{game.state.paused=paused;},
+  onScrollRate:value=>controls.setScrollRate(value),
+  getScrollRate:()=>controls?.scrollRate??1,
+  onEffectsVolume:value=>{audio.effectsVolume=Math.max(0,Math.min(10,value));},
+  getEffectsVolume:()=>audio.effectsVolume,
+  onPreviewSound:()=>audio.acknowledge(),
+  onAbort:()=>{
+    battleStarted=false;game.restart();controls.cancelPlacement();controls.setMode('select');renderer.camera.center(16,42);
+    ui.setLoading(true);progress(assets.status);
+  },
+  getBindings:()=>controls?.getBindings()??[],
+  inspectBinding:(command,key)=>controls.inspectBinding(command,key),
+  onAssignBinding:(command,key)=>controls.assignBinding(command,key),
+  onResetBindings:()=>controls.resetBindings(),
+  getBattlefieldTooltip:(x,y)=>{
+    if(!battleStarted||!assets.ready)return null;
+    const entity=renderer.pick(x,y);if(!entity)return null;
+    const def=game.defs[entity.type];return{id:entity.id,title:def.name,description:def.description};
+  },
   onRadar:(x,y,modifiers)=>controls.radarOrder(x,y,modifiers),
   getCameraView:()=>[[0,0],[renderer.camera.width,0],[renderer.camera.width,renderer.camera.height],[0,renderer.camera.height]].map(([x,y])=>renderer.camera.world(x,y)),
   onSound:enabled=>{audio.enabled=enabled;if(enabled)audio.acknowledge();},
@@ -118,6 +138,7 @@ function installCameos(){
   requireOriginals();
   ui.setFont(assets.getFont());
   ui.setCursors(assets.getCursors());
+  game.setAnimationDefinitions(assets.getAnimationDefinitions(),assets.getInfantryAnimationDefinitions());
   for(const def of Object.values(game.defs)){
     const sprite=assets.getCameo(def.id);
     if(!sprite)throw new Error(`Missing original cameo: ${def.name}. Load complete game files to continue.`);
@@ -137,5 +158,10 @@ function installSidebar(){
     if(!sprite)throw new Error(`Missing original interface artwork: ${name}, frame ${frame}.`);
     const key=frame===32?'radar-online':frame===1?`${name}-active`:frame===2?`${name}-empty`:name;
     ui.setChrome(key,sprite.source.toDataURL());
+  }
+  for(const [name,frames] of Object.entries(DIALOG_ASSET_FRAMES))for(const frame of frames){
+    const sprite=assets.getDialogAsset(name,frame);
+    if(!sprite)throw new Error(`Missing original interface artwork: ${name}, frame ${frame}.`);
+    ui.setChrome(frame?`${name}-frame${frame}`:name,sprite.source.toDataURL());
   }
 }

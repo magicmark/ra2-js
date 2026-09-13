@@ -2,7 +2,10 @@ import { definitions, isBuilding } from './definitions';
 import { createMap, MAP_SIZE } from './map';
 import { findPath } from './pathfinding';
 import { turnFacing, type FacingTurn } from './facing';
-import type { Category, Entity, GameAPI, GameState, Side, UnitDef, Vec2 } from './types';
+import { nativeGameSpeedIndex } from './timing';
+import { NATIVE_EFFECT_TIMINGS, NATIVE_INFANTRY_TIMINGS } from './combat';
+import { nativeNormalizedInterval } from '../assets/NativeAnimation';
+import type { AnimationDefinition, Category, Entity, GameAPI, GameState, InfantryAnimationDefinition, Side, UnitDef, Vec2 } from './types';
 
 const CATEGORIES: Category[] = ['structures', 'defenses', 'infantry', 'vehicles'];
 // One simulation second represents 30 authored logic frames; speed scales the
@@ -28,6 +31,8 @@ interface UnitMemory {
   turningBeforeMove?: boolean;
   avoidancePoint?: Vec2;
   detourRetryAt?: number;
+  fireIntentAt?: number;
+  burstIndex?: number;
 }
 export interface GameOptions { ai?: boolean }
 
@@ -48,6 +53,9 @@ export class Game implements GameAPI {
   private repairs = new Set<number>();
   private blocked = new Uint8Array(MAP_SIZE * MAP_SIZE);
   private vision: Uint8Array[] = [];
+  private effectAnimations = structuredClone(NATIVE_EFFECT_TIMINGS);
+  private infantryAnimations = structuredClone(NATIVE_INFANTRY_TIMINGS);
+  private combatRandomState = 0x524132;
 
   constructor(options: GameOptions = {}) {
     this.aiEnabled = options.ai !== false;
@@ -55,8 +63,22 @@ export class Game implements GameAPI {
   }
 
   get interpolation(): number { return clamp(this.accumulator / STEP, 0, 1); }
+  get nativeGameSpeedIndex(): number { return nativeGameSpeedIndex(this.state.speed); }
+  setGameSpeed(speed: number): void { if (Number.isFinite(speed)) this.state.speed = clamp(speed, .25, 4); }
+  setAnimationDefinitions(effects: Record<string, AnimationDefinition>, infantry: Record<string, InfantryAnimationDefinition>): void {
+    const valid = (definition: AnimationDefinition, allowEmpty = false) => definition && Number.isInteger(definition.frames) && definition.frames >= (allowEmpty ? 0 : 1)
+      && Number.isInteger(definition.ticksPerFrame) && definition.ticksPerFrame >= (allowEmpty ? 0 : 1);
+    for (const [name, definition] of Object.entries(effects)) if (!valid(definition)) throw new Error(`Invalid original animation timing: ${name}`);
+    for (const [name, definition] of Object.entries(infantry)) {
+      if (!definition || !Number.isInteger(definition.fireFrame) || definition.fireFrame < 0 || !definition.sequences
+        || Object.values(definition.sequences).some(sequence => !valid(sequence, true))) throw new Error(`Invalid original infantry timing: ${name}`);
+    }
+    this.effectAnimations = structuredClone(Object.fromEntries(Object.entries(effects).map(([name, definition]) => [name.toUpperCase(), definition])));
+    this.infantryAnimations = structuredClone(Object.fromEntries(Object.entries(infantry).map(([name, definition]) => [name.toLowerCase(), definition])));
+  }
 
   restart(): void {
+    const speed = Number.isFinite(this.state?.speed) ? clamp(this.state.speed, .25, 4) : 1;
     this.nextId = 1;
     this.nextEventId = 1;
     this.accumulator = 0;
@@ -64,6 +86,7 @@ export class Game implements GameAPI {
     this.aiTimer = 2;
     this.nextAttack = 100;
     this.commandFeedbackTicks = 0;
+    this.combatRandomState = 0x524132;
     this.wave = 0;
     this.memories.clear();
     this.repairs.clear();
@@ -74,7 +97,7 @@ export class Game implements GameAPI {
     this.state = {
       width: MAP_SIZE, height: MAP_SIZE, tiles: createMap(), entities: [],
       sides: [side(0, 'allied', 'Allied Command', '#2269d4'), side(1, 'soviet', 'Soviet AI', '#ff1919')],
-      time: 0, paused: false, speed: 1, winner: null, effects: [], events: [],
+      time: 0, paused: false, speed, winner: null, effects: [], events: [],
       fog: new Uint8Array(MAP_SIZE * MAP_SIZE), explored: new Uint8Array(MAP_SIZE * MAP_SIZE),
     };
     this.vision = [this.state.fog, new Uint8Array(MAP_SIZE * MAP_SIZE)];
@@ -274,6 +297,7 @@ export class Game implements GameAPI {
       entity.path = [];
       entity.order = 'guard';
       entity.targetId = null;
+      if (!entity.deployment) entity.infantryAnimation = undefined;
       this.memories.set(entity.id, { repath: 0, stuck: 0, idleTimer: 0, holdPosition: true });
     }
   }
@@ -287,7 +311,7 @@ export class Game implements GameAPI {
     for (const entity of this.commandable(ids, 0)) {
       if (this.defs[entity.type].deployedRange === undefined) continue;
       this.stop([entity.id]);
-      entity.deployed = !entity.deployed;
+      this.beginDeployment(entity, !entity.deployed);
       entity.anim = 0;
     }
   }
@@ -375,7 +399,7 @@ export class Game implements GameAPI {
     this.updateQueues(dt);
     if (this.aiEnabled && this.aiTimer <= 0) { this.aiTimer = 2.5; this.updateAI(); }
     for (const effect of this.state.effects) effect.life -= dt;
-    this.state.effects = this.state.effects.filter(effect => effect.life > 0);
+    this.state.effects = this.state.effects.filter(effect => effect.life > 1e-9);
     // Entity removals are deferred so combat during a frame has stable iteration.
     for (const entity of [...this.state.entities]) {
       if (entity.hp <= 0) continue;
@@ -385,6 +409,7 @@ export class Game implements GameAPI {
       const def = this.defs[entity.type];
       entity.anim += dt;
       entity.cooldown = Math.max(0, entity.cooldown - dt - 1e-10);
+      this.updateInfantryAnimation(entity);
       const memory = this.memory(entity);
       memory.repath -= dt;
       memory.idleTimer -= dt;
@@ -481,7 +506,8 @@ export class Game implements GameAPI {
       const index = Math.floor(target.y) * this.state.width + Math.floor(target.x);
       assigned.add(index);
       entity.order = 'move';
-      entity.deployed = false;
+      if (entity.deployed) this.beginDeployment(entity, false);
+      else if (!entity.deployment) entity.infantryAnimation = undefined;
       entity.targetId = null;
       entity.path = this.path(entity, target);
       this.memories.set(entity.id, { destination: target, attackMove, repath: 1, stuck: 0, idleTimer: 0, turningBeforeMove: !moving && !!this.defs[entity.type].rot });
@@ -490,7 +516,7 @@ export class Game implements GameAPI {
 
   private moveEntity(entity: Entity, dt: number): void {
     const memory = this.memory(entity), def = this.defs[entity.type];
-    if (entity.deployed) return;
+    if (entity.deployed || entity.deployment) return;
     if (memory.avoidancePoint && !entity.path.includes(memory.avoidancePoint)) memory.avoidancePoint = undefined;
     if (!entity.path.length) {
       if (entity.order === 'move' && memory.destination) {
@@ -705,21 +731,21 @@ export class Game implements GameAPI {
 
   private tickCombat(entity: Entity, _dt: number): void {
     const def = this.defs[entity.type], memory = this.memory(entity);
+    if (entity.deployment) return;
     const range = entity.deployed ? def.deployedRange ?? def.range : def.range;
     const damage = entity.deployed ? def.deployedDamage ?? def.damage : def.damage;
     const fireRate = entity.deployed ? def.deployedFireRate ?? def.fireRate : def.fireRate;
     const verses = entity.deployed ? def.deployedVerses ?? def.verses : def.verses;
     if (memory.groundTarget) {
       const to = memory.groundTarget, center = this.center(entity);
+      if (distance(center, to) > range) this.cancelFireIntent(entity, memory);
       if (distance(center, to) <= range) {
         entity.path = [];
         const aim = Math.atan2(to.y - center.y, to.x - center.x);
         if (def.turret) memory.turretAim = aim; else memory.heading = aim;
         if (entity.cooldown <= 0 && this.isAimed(entity, aim)) {
-          entity.cooldown = fireRate;
-          this.state.effects.push({ kind: 'shot', ...center, to, life: 0.16, maxLife: 0.16, side: entity.side });
           const hit = this.state.entities.find(e => e.id !== entity.id && e.hp > 0 && this.distanceToEntity(to, e) < 0.5);
-          if (hit) this.damageTarget(entity, hit, damage, verses);
+          this.fireProjectile(entity, to, hit, damage, verses, fireRate);
         }
       } else if (!isBuilding(def) && !entity.deployed && memory.repath <= 0) {
         const target = this.nearestOpen(to, entity.id, undefined, 8);
@@ -731,7 +757,12 @@ export class Game implements GameAPI {
     let target = entity.targetId === null ? undefined : this.state.entities.find(other => other.id === entity.targetId && other.hp > 0 && (memory.forceFire || other.side !== entity.side));
     // Straight move orders are obeyed; attack-move is the explicit engage option.
     if (entity.order === 'move' && !memory.attackMove) return;
+    if (!target && entity.targetId !== null) {
+      this.cancelFireIntent(entity, memory);
+      entity.targetId = null;
+    }
     if (target && !this.visibleTo(target, entity.side)) {
+      this.cancelFireIntent(entity, memory);
       entity.targetId = null;
       target = undefined;
       entity.path = [];
@@ -745,10 +776,12 @@ export class Game implements GameAPI {
       entity.targetId = target?.id ?? null;
     }
     if (!target) {
+      this.cancelFireIntent(entity, memory);
       if (entity.order === 'attack') entity.order = 'guard';
       return;
     }
     const d = this.distanceToEntity(this.center(entity), target);
+    if (d > range) this.cancelFireIntent(entity, memory);
     if (entity.type === 'engineer' && isBuilding(this.defs[target.type]) && d <= 0.9) {
       target.side = entity.side;
       target.selected = false;
@@ -767,17 +800,75 @@ export class Game implements GameAPI {
       const aim = Math.atan2(to.y - center.y, to.x - center.x);
       if (def.turret) memory.turretAim = aim; else memory.heading = aim;
       if (entity.cooldown > 0 || damage <= 0 || !this.isAimed(entity, aim)) return;
-      entity.cooldown = fireRate;
-      this.damageTarget(entity, target, damage * (def.burst ?? 1), verses);
-      this.state.effects.push({ kind: 'shot', ...center, to, life: 0.16, maxLife: 0.16, side: entity.side });
+      this.fireProjectile(entity, to, target, damage, verses, fireRate);
       if (target.hp <= 0) entity.targetId = null;
     } else if (!isBuilding(def) && !def.harvester && !entity.deployed && !memory.holdPosition && memory.repath <= 0) {
+      this.cancelFireIntent(entity, memory);
       // Guard units pursue within their sight but do not run across the map.
       if (entity.order !== 'attack' && d > def.sight + 1) { entity.targetId = null; return; }
       const firingPoint = this.nearestFiringPosition(entity, target, entity.type === 'engineer' ? 0.7 : range * 0.85);
       if (firingPoint) entity.path = this.path(entity, firingPoint, true);
       memory.repath = 0.8;
     }
+  }
+
+  private cancelFireIntent(entity: Entity, memory: UnitMemory): void {
+    memory.fireIntentAt = undefined;
+    if (!entity.deployment && entity.infantryAnimation && ['FireUp', 'FireFly', 'DeployedFire'].includes(entity.infantryAnimation.sequence)) entity.infantryAnimation = undefined;
+  }
+
+  private animationInterval(definition: AnimationDefinition): number {
+    return definition.normalized ? nativeNormalizedInterval(definition.ticksPerFrame, this.nativeGameSpeedIndex) : definition.ticksPerFrame;
+  }
+  private beginDeployment(entity: Entity, target: boolean): void {
+    entity.deployed = target;
+    entity.deployment = { startedAt: this.state.time, target };
+    entity.infantryAnimation = { sequence: target ? 'Deploy' : 'Undeploy', startedAt: this.state.time };
+  }
+  private updateInfantryAnimation(entity: Entity): void {
+    if (!entity.infantryAnimation) return;
+    const { sequence, startedAt } = entity.infantryAnimation;
+    const definition = this.infantryAnimations[this.defs[entity.type].sprite]?.sequences[sequence];
+    if (!definition) throw new Error(`Missing original infantry timing: ${entity.type} ${sequence}`);
+    if (this.state.time + 1e-9 < startedAt + definition.frames * this.animationInterval(definition) * STEP) return;
+    entity.infantryAnimation = undefined;
+    if (sequence === 'Deploy' || sequence === 'Undeploy') entity.deployment = undefined;
+  }
+  private randomCombatValue(): number {
+    // Stable match randomness for reproducible simulation; this does not claim
+    // the original executable's seed or complete PRNG stream.
+    let value = this.combatRandomState;
+    value ^= value << 13; value ^= value >>> 17; value ^= value << 5;
+    this.combatRandomState = value >>> 0;
+    return this.combatRandomState;
+  }
+  private randomCombatFrames(min: number, max: number): number { return min + this.randomCombatValue() % (max - min + 1); }
+  private addAnimation(animation: string, point: Vec2, side: number, kind: 'impact' | 'explosion', damage?: number): void {
+    const name = animation.toUpperCase(), definition = this.effectAnimations[name];
+    if (!definition) throw new Error(`Missing original animation timing: ${name}`);
+    const animationTicksPerFrame = this.animationInterval(definition), life = definition.frames * animationTicksPerFrame * STEP;
+    this.state.effects.push({ kind, ...point, side, animation: name, animationTicksPerFrame, startedAt: this.state.time, life, maxLife: life, damage });
+  }
+  private fireProjectile(entity: Entity, to: Vec2, target: Entity | undefined, damage: number, verses: number[] | undefined, fireRate: number): void {
+    const def = this.defs[entity.type], memory = this.memory(entity);
+    if (def.category === 'infantry') {
+      const sequence = entity.deployed ? 'DeployedFire' : entity.type === 'rocketeer' ? 'FireFly' : 'FireUp';
+      const infantry = this.infantryAnimations[def.sprite], definition = infantry?.sequences[sequence];
+      if (!definition) throw new Error(`Missing original infantry timing: ${def.sprite} ${sequence}`);
+      if (memory.fireIntentAt === undefined) {
+        memory.fireIntentAt = this.state.time;
+        entity.infantryAnimation = { sequence, startedAt: this.state.time };
+      }
+      if (this.state.time + 1e-9 < memory.fireIntentAt + infantry.fireFrame * this.animationInterval(definition) * STEP) return;
+      memory.fireIntentAt = undefined;
+    }
+    entity.firedAt = this.state.time;
+    const burst = def.burst ?? 1, nextBurstIndex = (memory.burstIndex ?? 0) + 1;
+    entity.cooldown = nextBurstIndex < burst ? this.randomCombatFrames(3, 5) * STEP : fireRate + this.randomCombatFrames(0, 2) * STEP;
+    memory.burstIndex = nextBurstIndex % burst;
+    this.state.effects.push({ kind: 'shot', ...this.center(entity), to: { ...to }, life: .16, maxLife: .16, side: entity.side, startedAt: this.state.time, damage });
+    if (target) this.damageTarget(entity, target, damage, verses);
+    if (def.impact) this.addAnimation(def.impact, to, entity.side, 'impact', damage);
   }
 
   private isAimed(entity: Entity, target: number): boolean {
@@ -899,7 +990,9 @@ export class Game implements GameAPI {
 
   private removeEntity(entity: Entity, explosion: boolean): void {
     if (explosion) {
-      this.state.effects.push({ kind: 'explosion', ...this.center(entity), life: 0.65, maxLife: 0.65, side: entity.side });
+      const choices = this.defs[entity.type].deathAnimations;
+      if (choices?.length) this.addAnimation(choices[this.randomCombatValue() % choices.length], this.center(entity), entity.side, 'explosion');
+      else this.state.effects.push({ kind: 'explosion', ...this.center(entity), life: 0.65, maxLife: 0.65, side: entity.side });
       if (entity.side === 0) this.notify(`${this.defs[entity.type].name} lost`, 'warning');
     }
     this.state.entities = this.state.entities.filter(e => e.id !== entity.id);

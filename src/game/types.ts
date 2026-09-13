@@ -7,6 +7,7 @@ export interface UnitDef {
   description: string; sprite: string; cameo: string; faction: 'allied' | 'soviet' | 'both';
   harvester?: boolean; capacity?: number; producer?: Category[];
   armor?: string; verses?: number[]; burst?: number;
+  impact?: string; deathAnimations?: string[];
   deployedDamage?: number; deployedRange?: number; deployedFireRate?: number; deployedVerses?: number[];
   crusher?: boolean; nativeSpeed?: number; rot?: number; turret?: boolean;
 }
@@ -16,6 +17,9 @@ export interface Entity extends Vec2 {
   order: 'idle' | 'move' | 'attack' | 'harvest' | 'return' | 'guard';
   cargo: number; harvestTimer: number; selected: boolean;
   rally?: Vec2; anim: number; deployed?: boolean;
+  firedAt?: number;
+  infantryAnimation?: { sequence: string; startedAt: number };
+  deployment?: { startedAt: number; target: boolean };
   previous?: Vec2; previousFacing?: number; turretFacing?: number; previousTurretFacing?: number;
 }
 export interface Tile { terrain: 'grass' | 'water' | 'rock' | 'road' | 'sand'; ore: number; variant: number }
@@ -25,7 +29,12 @@ export interface Side {
   money: number; power: number; powerUsed: number; kills: number;
   queues: Record<Category, BuildItem[]>; defeated: boolean;
 }
-export interface Effect extends Vec2 { kind: 'shot' | 'explosion' | 'order' | 'smoke'; life: number; maxLife: number; to?: Vec2; side?: number }
+export interface AnimationDefinition { frames: number; ticksPerFrame: number; normalized?: boolean }
+export interface InfantryAnimationDefinition { sequences: Record<string, AnimationDefinition>; fireFrame: number }
+export interface Effect extends Vec2 {
+  kind: 'shot' | 'impact' | 'explosion' | 'order' | 'smoke'; life: number; maxLife: number; to?: Vec2; side?: number;
+  animation?: string; animationTicksPerFrame?: number; startedAt?: number; damage?: number;
+}
 export interface GameEvent { id: number; text: string; kind: 'info' | 'warning' | 'success'; time: number }
 export interface GameState {
   width: number; height: number; tiles: Tile[]; entities: Entity[]; sides: Side[];
@@ -35,6 +44,9 @@ export interface GameState {
 export interface GameAPI {
   state: GameState; defs: Record<string, UnitDef>;
   readonly interpolation: number;
+  readonly nativeGameSpeedIndex: number;
+  setGameSpeed(speed: number): void;
+  setAnimationDefinitions(effects: Record<string, AnimationDefinition>, infantry: Record<string, InfantryAnimationDefinition>): void;
   commandPath(id: number): { points: Vec2[]; attack: boolean } | undefined;
   tick(dt: number): void;
   build(type: string, side?: number): boolean;

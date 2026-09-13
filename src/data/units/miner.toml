@@ -2,6 +2,7 @@
 [units.miner]
 name = "Chrono Miner"
 category = "vehicles"
+deathAnimations = ["TWLT070", "S_BANG48", "S_BRNL58", "S_CLSN58", "S_TUMU60"]
 faction = "allied"
 cost = 1400
 buildTime = 29.4

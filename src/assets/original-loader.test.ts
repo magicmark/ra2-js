@@ -2,9 +2,10 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { IDBFactory } from 'fake-indexeddb';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AssetManager, HUD_ASSET_FRAMES } from './AssetManager';
-import { CATALOG, NESTED_MIXES, UI_FILES, UI_HASH_FILES, theaterNames, wantedFiles } from './catalog';
-import { MixArchive } from './formats';
+import { AssetManager, DIALOG_ASSET_FRAMES, HUD_ASSET_FRAMES } from './AssetManager';
+import { CATALOG, DIALOG_PCX_FILES, DIALOG_SHAPE_FILES, EFFECT_ANIMATIONS, NESTED_MIXES, UI_FILES, UI_HASH_FILES, theaterNames, wantedFiles } from './catalog';
+import { MixArchive, ShpFile, decodePalette } from './formats';
+import { assetCache, archiveStageKey } from './AssetDownload';
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
@@ -55,7 +56,7 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('strict loader with actual original 
   afterEach(() => vi.unstubAllGlobals());
 
   it('validates every required original and reopens its cache without network or extraction', async () => {
-    expect(originals.length).toBeGreaterThanOrEqual(240);
+    expect(originals.length).toBeGreaterThanOrEqual(265);
     const manager = new AssetManager();
     await manager.importFiles([new File(['local MIX fixture'], 'ra2.mix')]);
     expect(manager.error).toBeNull(); expect(manager.status.phase).toBe('ready');
@@ -72,6 +73,57 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('strict loader with actual original 
     const reopened = new AssetManager();
     expect(await reopened.initialize()).toBe('ready'); expect(reopened.cacheWarning).toBeNull();
     expect(network).not.toHaveBeenCalled(); expect(worker).toHaveBeenCalledTimes(1);
+  }, 60_000);
+
+  it('renders the authored infantry phases, every impact frame, and native dialog pixels', async () => {
+    const manager = new AssetManager(); await manager.importFiles([new File(['fixture'], 'ra2.mix')]);
+    expect(manager.ready, manager.error ?? '').toBe(true);
+    expect(manager.getInfantrySequence('gi', 'Deploy', 7, 14 / 30)).toBe(manager.getInfantryFrame('gi', 314));
+    expect(manager.getInfantrySequence('gi', 'FireUp', 3, 1 / 30)).toBe(manager.getInfantryFrame('gi', 183));
+    expect(manager.getInfantrySequence('rock', 'Hover', 0, 2 / 30, 0, 2)).toBe(manager.getInfantryFrame('rock', 292));
+    expect(manager.getInfantrySequence('rock', 'Hover', 0, 2 / 30, 0, 6)).toBe(manager.getInfantryFrame('rock', 294));
+    const definitions = manager.getAnimationDefinitions();
+    const palette = decodePalette(originals.find(file => file.name === 'anim.pal')!.bytes);
+    for (const name of EFFECT_ANIMATIONS) {
+      const shape = new ShpFile(originals.find(file => file.name === `${name}.shp`)!.bytes);
+      expect(definitions[name].frames, name).toBe(shape.frameCount);
+      for (let index = 0; index < shape.frameCount; index++) {
+        const art = manager.getAnimationSprite(name, index / 30, 1)!, frame = shape.frame(index);
+        expect(art, `${name} frame ${index}`).not.toBeNull();
+        const colorIndex = frame.pixels.findIndex(pixel => pixel > 0);
+        if (colorIndex >= 0) {
+          const rgb = palette.subarray(frame.pixels[colorIndex] * 3, frame.pixels[colorIndex] * 3 + 3);
+          expect(Array.from((art.source as unknown as TestCanvas).pixels.subarray(colorIndex * 4, colorIndex * 4 + 4))).toEqual([...rgb, 255]);
+        }
+      }
+    }
+    expect(manager.getAnimationOpacity('htrkpuff')).toBe(.5);
+    for (const [name, frames] of Object.entries(DIALOG_ASSET_FRAMES)) for (const frame of frames) expect(manager.getDialogAsset(name, frame), `${name} ${frame}`).not.toBeNull();
+    const background = manager.getDialogAsset('options-medium')!;
+    expect([background.width, background.height]).toEqual([632, 568]);
+    const check = manager.getDialogAsset('options-checkbox-on')!;
+    expect([check.width, check.height]).toEqual([18, 18]);
+    expect(Array.from((check.source as unknown as TestCanvas).pixels.subarray(0, 4))).toEqual([255, 0, 0, 255]);
+  }, 60_000);
+
+  it('reselects newly required originals locally without discarding archive generations', async () => {
+    await new AssetManager().importFiles([new File(['fixture'], 'ra2.mix')]);
+    const source = '/asset-source', previous = await assetCache<any>(source);
+    const added = new Set(['anim.pal', ...EFFECT_ANIMATIONS.map(name => `${name}.shp`), ...Object.values(DIALOG_PCX_FILES),
+      ...[0, 1].flatMap(side => [`side${side}/uibkgd.pal`, ...DIALOG_SHAPE_FILES.map(name => `side${side}/${name}.shp`)])]);
+    const oldFiles = previous.files.filter((file: AssetFile) => !added.has(file.name));
+    expect(oldFiles).toHaveLength(242);
+    await assetCache(source, { ...previous, files: oldFiles });
+    const key = archiveStageKey(source, 'mix');
+    const saved = { version: 1, id: 'existing-original-MIX-generation', saved: 123, files: [{ name: 'ra2.mix', blob: new Blob(['actual-original-selection-worker-fixture']) }] };
+    await assetCache(key, saved);
+    worker.mockClear(); network.mockClear();
+    const recovered = new AssetManager(); expect(await recovered.initialize()).toBe('ready');
+    expect(network).not.toHaveBeenCalled(); expect(worker).toHaveBeenCalledOnce();
+    expect((await assetCache<any>(key)).id).toBe(saved.id);
+    expect((await assetCache<any>(source)).files).toHaveLength(originals.length);
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(network).not.toHaveBeenCalled(); expect(worker).toHaveBeenCalledOnce();
   }, 60_000);
 
   it.each(['foundation', 'turret', 'animation'] as const)('rejects missing authored %s files even though the base models exist', async kind => {

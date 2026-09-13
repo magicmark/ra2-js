@@ -1,0 +1,29 @@
+# Original combat animation browser verification
+
+Recorded 2026-09-13 against immutable `http://omarky:4205/`, main bundle `index-2MgjThs6.js`, SHA-256 `c0b065542af8fb70f03742dce9001e2aa241edefeaceb46473f6dfb400308c25`. Its provenance records 240 passing tests, one optional diagnostic skip, and a successful production build. The [source audit](../docs/NATIVE_ANIMATION_REFERENCE.md) distinguishes proven timing from remaining combat reconstruction limits.
+
+The isolated browser context used the snapshot's exact 265 selected-original fixture, SHA-256 `0cee038b7a1651e91fbaa20490caef78dafa3267b47ab9c23711399dbfecbaf3`. After seeding that visual fixture and reloading, the normal source gate reported 265 originals ready at simulation time zero. A native click on Continue started the game. Archive requests were blocked in the isolated page and remained zero throughout. This selected-file setup verifies runtime presentation; the asset owner's separate tests cover actual download and MIX cache recovery.
+
+## Method
+
+Seven bounded scenarios ran through the existing automatic game loop. Setup retained both Construction Yards, made a small grass arena, spawned the supported actor and a passive target, and centered the camera at zoom 2. Scenario setup also disabled AI and selected the actor. These setup operations are explicitly diagnostic. Deploy and Undeploy used native `D` key input. Other engagements used the public `orderAttack` command after setup.
+
+Observers forwarded the original simulation step, renderer, deployment method and infantry-sprite lookup unchanged. They recorded every completed logic step and the actual sprite requests made by presentation frames. No manual simulation ticks or replacement art were used. Each scenario used the Slowest setting (1/3 multiplier, native index 6) to allow pose inspection. The viewport was 1024×768, DPR 1 and CPU throttling 1×. Sparse software-rendered presentation frames are not a retail speed or fluidity calibration.
+
+At each observation bound, a diagnostic pause stopped later updates. An already-running catch-up loop could complete another one or two steps before the pause took effect. Accordingly, the final render time can exceed the last recorded step; the artifact records both rather than treating every render label as an exact logic-frame number. All observers were restored afterward, and the page remains paused.
+
+## Results
+
+| Scenario | Recorded logic result | Original-art observation |
+| --- | --- | --- |
+| Native GI Deploy | Deploy starts at time 0; transition ends at frame 15; DeployedFire starts at 15 and fires at 17. No movement during the transition. | Early upright/crouching and later sandbag/deployed poses are distinct original frames. |
+| Native GI Undeploy | Undeploy remains active at frame 1 and ends at frame 2; fresh FireUp starts at 2 and fires at 4. | The renderer requested Undeploy during the transition, then FireUp and Ready. |
+| GI firing | Intent at frame 1, actual fire at frame 3; PIFFPIFF receives base damage 15. | Authored FireUp frames and original impact are visible. |
+| Conscript firing | Intent at frame 1, actual fire at frame 7, preserving all six elapsed firing ticks. | The captured last firing pose precedes the shot; logical Value 6 is not clamped to rendered frame 5. |
+| Rocketeer firing | FireFly intent at frame 1, actual fire at frame 3; PIFFPIFF receives base damage 25. | The renderer requested the authored FireFly sequence, then Hover. |
+| IFV burst | Four 25-damage shots at frames 1, 4, 56 and 61. Intra-burst gaps are 3 and 5; the intervening reload is 52. | Each projectile creates XGRYSML2. Distinct overlapping original impact events appear; no aggregate 50-damage impact is selected. |
+| Ordinary vehicle death | The Grizzly's first shot emits S_CLSN22 and kills the staged low-HP Rhino; its death selects S_BANG48. | The Rhino disappears and the original expanding explosion frames render at its position. |
+
+The [complete event and sprite-request trace](artifacts/gameplay/native-combat-4205.json) contains 162 recorded logic steps and 78 presentation observations. The [contact sheet](artifacts/gameplay/native-combat-4205-contact.png) contains crops of actual rendered frames, with labels outside the crops. The trace SHA-256 is `c7416f57934c6e6391487e3b5573497d9e7bcee6a724353aa699273430020dd7`.
+
+No new runtime defect was found in these scenarios. This does not establish complete retail combat parity: projectile flight remains instantaneous, infantry/building deaths and special death branches are incomplete, terrain-specific impacts and native translucency/lighting remain limited, and the project uses its own deterministic random stream. The existing movement verification and the coordinator's native Keyboard/Options verification cover separate behaviors.

@@ -1,0 +1,155 @@
+{
+  "side": [
+    {
+      "name": "credits",
+      "width": 168,
+      "height": 16,
+      "frames": 1
+    },
+    {
+      "name": "top",
+      "width": 168,
+      "height": 32,
+      "frames": 1
+    },
+    {
+      "name": "radar",
+      "width": 168,
+      "height": 110,
+      "frames": 33
+    },
+    {
+      "name": "side1",
+      "width": 168,
+      "height": 69,
+      "frames": 1
+    },
+    {
+      "name": "side2",
+      "width": 168,
+      "height": 50,
+      "frames": 1
+    },
+    {
+      "name": "side3",
+      "width": 168,
+      "height": 26,
+      "frames": 1
+    },
+    {
+      "name": "bkgdsm",
+      "width": 472,
+      "height": 448,
+      "frames": 1
+    },
+    {
+      "name": "bkgdmd",
+      "width": 632,
+      "height": 568,
+      "frames": 1,
+      "crops": [
+        {
+          "frame": 0,
+          "x": 0,
+          "y": 0,
+          "width": 632,
+          "height": 568
+        }
+      ]
+    },
+    {
+      "name": "bkgdlg",
+      "width": 856,
+      "height": 736,
+      "frames": 1
+    },
+    {
+      "name": "sidebttn",
+      "width": 125,
+      "height": 25,
+      "frames": 3,
+      "crops": [
+        {
+          "frame": 0,
+          "x": 0,
+          "y": 0,
+          "width": 125,
+          "height": 25
+        },
+        {
+          "frame": 1,
+          "x": 0,
+          "y": 0,
+          "width": 125,
+          "height": 25
+        },
+        {
+          "frame": 2,
+          "x": 0,
+          "y": 0,
+          "width": 125,
+          "height": 25
+        }
+      ]
+    },
+    {
+      "name": "bottom",
+      "width": 168,
+      "height": 63,
+      "frames": 1
+    }
+  ],
+  "pcx": [
+    {
+      "name": "cce_i",
+      "bytes": 1302,
+      "width": 18,
+      "height": 18,
+      "firstPixel": 108,
+      "firstColor": [
+        255,
+        0,
+        0
+      ],
+      "zeroColor": [
+        255,
+        0,
+        255
+      ]
+    },
+    {
+      "name": "cue_i",
+      "bytes": 1376,
+      "width": 18,
+      "height": 18,
+      "firstPixel": 108,
+      "firstColor": [
+        255,
+        0,
+        0
+      ],
+      "zeroColor": [
+        255,
+        0,
+        255
+      ]
+    },
+    {
+      "name": "trakgrip",
+      "bytes": 1198,
+      "width": 12,
+      "height": 22,
+      "firstPixel": 155,
+      "firstColor": [
+        162,
+        0,
+        0
+      ],
+      "zeroColor": [
+        255,
+        0,
+        255
+      ]
+    }
+  ]
+}

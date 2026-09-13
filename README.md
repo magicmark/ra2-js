@@ -21,6 +21,19 @@ npm run preview
 
 Preview serves the production build on `0.0.0.0:4173` and also allows `omarky`.
 
+## Cloudflare deployment
+
+The existing Workers Builds integration runs `npx wrangler deploy` on pushes to
+`main`. The checked-in `wrangler.jsonc` runs `npm run build` and publishes only
+`dist`; Wrangler is pinned in the lockfile. This avoids interactive framework
+setup during CI. The browser still downloads game archives directly with CORS.
+
+Validate deployment locally without publishing:
+
+```sh
+npx wrangler deploy --dry-run
+```
+
 ## Game assets
 
 The explicit-startup correction is verified in [STARTUP_E2E.md](tests/STARTUP_E2E.md): a real native-Enter remote download, browser extraction, committed cache, new-page and hard-reload reuse, and manual alternate-source recovery. The later [originals-only verification](tests/ORIGINALS_ONLY_E2E.md) proves actual 221-file extraction, cached Continue, and fail-closed behavior for incomplete originals. Generated artwork and the fallback play action are removed.
@@ -43,7 +56,7 @@ The source can be configured in any of these ways:
 
 - Set `VITE_ASSET_URL` before starting Vite or building the application.
 - Open `/?asset_url=` followed by a URL-encoded same-origin path or CORS-enabled URL.
-- Enter an archive URL on the first-launch screen or in **Options → Game Assets**, then press **Enter** or **Load / Retry**. The source is remembered in this browser.
+- Enter an archive URL on the first-launch screen or in **Options → Game Files**, then press **Enter** or **Load / Retry**. The source is remembered in this browser.
 - Import the downloaded installer, a ZIP containing the MIX files, or the installation's `ra2.mix` and `language.mix` together.
 
 A custom remote source must permit CORS. Its URL is requested as entered, without a proxy or an automatic alternative source. Static hosting needs no asset proxy; `VITE_ASSET_URL` can select another CORS-enabled source. No original game archives or runtime asset files are bundled; verification screenshots may show rendered game artwork.
@@ -79,7 +92,7 @@ Choose a production category in the sidebar and left-click a card to queue an it
 | Production categories | Q / W / E / R |
 | Options / pause | Options button; Escape cancels an active mode first, otherwise opens Options |
 
-The native 168-pixel Allied sidebar uses the original radar, repair/sell buttons, category controls, 60 × 48 cameos, and metallic frame. The radar activates with a powered Airforce Command. Clicking it issues an order for selected units, or centers the camera when nothing is selected. The command bar contains Team 1, Team 2, Type Select, Deploy, Guard and Planning. Options pause the battle and include sound, game speed, restart, game files and a field manual. [Gameplay controls and timing evidence](docs/GAMEPLAY_PARITY.md) records additional keys and current reconstruction limits.
+The native 168-pixel Allied sidebar uses the original radar, repair/sell buttons, category controls, 60 × 48 cameos, and metallic frame. The radar activates with a powered Airforce Command. Clicking it issues an order for selected units, or centers the camera when nothing is selected. The command bar contains Team 1, Team 2, Type Select, Deploy, Guard and Planning. Options pause the battle. Game Controls contains speed, scroll rate, target lines, tooltips, effects volume, and remapping for 19 core commands; preferences survive reload. Game Files, Briefing, and Abort Mission remain available from the pause menu. [Gameplay controls and timing evidence](docs/GAMEPLAY_PARITY.md) records additional keys and current reconstruction limits.
 
 Touch controls activate for mobile user agents and coarse touch devices. Use `?force_mobile=1` to force them on any device. **Select** supports tapping units and dragging selection boxes; tap terrain to command selected units. **Pan** drags the camera. **Attack** issues an attack-move command, and **Stop** holds selected units in place. Pinch to zoom, drag with two fingers to pan, and use **Build** to open the production drawer. Tap **Select** to cancel building placement while retaining the completed structure. The mobile selection panel provides repair/sell actions for owned buildings.
 
@@ -106,4 +119,4 @@ The regular suite runs without original game files. An additional integration te
 RA2_ASSET_DIR=/path/to/extracted/mixes npm test
 ```
 
-The [latest integration checkpoint](tests/FINAL_CHECKPOINT_VERIFICATION.md) records the current test/build results. [Native UI verification](tests/NATIVE_UI_VERIFICATION.md), [native gameplay verification](tests/NATIVE_GAMEPLAY_VERIFICATION.md), and the independent [retail video review](docs/VIDEO_PARITY_REVIEW.md) distinguish verified behavior from remaining differences. The earlier [fidelity](tests/FIDELITY_VERIFICATION.md), [asset](tests/ASSET_VERIFICATION.md), [desktop](tests/DESKTOP_VERIFICATION.md) and [mobile](tests/MOBILE_VERIFICATION.md) reports preserve their original build snapshots. Mobile checks use Chromium device emulation and touch-event tests; physical iOS/Android hardware was unavailable.
+The [animation and Options checkpoint](tests/NATIVE_ANIMATION_OPTIONS_VERIFICATION.md) records 240 passing tests, the production build, and the real 242-to-265 artwork-cache upgrade without another download or installer extraction. The [earlier checkpoint](tests/FINAL_CHECKPOINT_VERIFICATION.md) preserves its 210-test source snapshot. [Native UI verification](tests/NATIVE_UI_VERIFICATION.md), [native gameplay verification](tests/NATIVE_GAMEPLAY_VERIFICATION.md), and the independent [retail video review](docs/VIDEO_PARITY_REVIEW.md) distinguish verified behavior from remaining differences. The earlier [fidelity](tests/FIDELITY_VERIFICATION.md), [asset](tests/ASSET_VERIFICATION.md), [desktop](tests/DESKTOP_VERIFICATION.md) and [mobile](tests/MOBILE_VERIFICATION.md) reports preserve their original build snapshots. Mobile checks use Chromium device emulation and touch-event tests; physical iOS/Android hardware was unavailable.

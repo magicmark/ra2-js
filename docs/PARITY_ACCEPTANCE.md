@@ -33,10 +33,26 @@ The independent [localhost check](../tests/artifacts/direct-cors-legacy-localhos
 records a ready cached hard reload and native Continue with zero fetches, workers
 or writes after that URL change.
 
-The [latest integration checkpoint](../tests/FINAL_CHECKPOINT_VERIFICATION.md)
+The [previous integration checkpoint](../tests/FINAL_CHECKPOINT_VERIFICATION.md)
 passed **210 tests and the production build**, with one optional diagnostic
 skipped. It includes the stopped-collision-reroute turn gate found during the
 [final movement review](../tests/FINAL_MOVEMENT_VERIFICATION.md).
+
+The [animation/Options checkpoint](../tests/NATIVE_ANIMATION_OPTIONS_VERIFICATION.md)
+passes **240 tests and the production build**, with one optional diagnostic
+skipped. It adds original infantry firing/deployment poses, individual IFV burst
+events, ground impacts and ordinary vehicle explosions, corrected normalized
+animation timing, original-art pause panels, persisted Options preferences, and
+19 remappable core commands. The actual saved 242-file catalog upgrades to 265
+from existing MIX files; hard reload and native Continue perform zero downloads,
+workers or writes.
+
+Remaining parity includes projectile travel, infantry/building death sequences,
+native translucent effect blending, original music/voice/effects, Load/Save/Delete,
+Show Hidden markers, full modifier remapping, and clean-retail Options typography
+and interior pixel placement. The fastest browser speed is capped at 4× instead
+of native unlimited speed. The supplied executable's static evidence is qualified
+as modified base RA2, not certified clean retail.
 
 ## Reference and ownership
 

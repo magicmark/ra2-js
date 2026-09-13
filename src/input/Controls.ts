@@ -2,6 +2,8 @@ import { isBuilding } from '../game/definitions';
 import type { Category, Entity, GameAPI, Vec2 } from '../game/types';
 import type { NativeCursorName } from '../assets/NativeCursor';
 import type { Renderer } from '../render/Renderer';
+import { BINDING_DEFAULTS, type BindingId, type BindingInfo, type BindingResult } from './bindings';
+export { GAME_SPEED_STEPS, SCROLL_RATE_STEPS, type BindingId, type BindingInfo, type BindingResult } from './bindings';
 
 export type ControlMode = 'select' | 'pan' | 'attack' | 'repair' | 'sell';
 export type ControlCommand = 'team1' | 'team2' | 'type' | 'deploy' | 'guard' | 'planning';
@@ -37,10 +39,12 @@ export class Controls {
   private waypointOrders = new Map<number, Vec2[]>();
   private planningMode = false;
   private scrollMultiplier = 1;
+  private bindings = new Map<BindingId, string>(BINDING_DEFAULTS.map(binding => [binding.id, binding.defaultKey.toLowerCase()]));
   private state: GameAPI['state'];
 
   constructor(readonly renderer: Renderer, readonly game: GameAPI, readonly mobile: boolean, readonly callbacks: ControlCallbacks) {
     this.state = game.state;
+    this.loadBindings();
     const canvas = renderer.canvas;
     canvas.addEventListener('contextmenu', e => e.preventDefault());
     canvas.addEventListener('pointerdown', e => this.down(e));
@@ -57,7 +61,7 @@ export class Controls {
     window.addEventListener('keydown', e => this.key(e));
     window.addEventListener('keyup', e => {
       const key = e.key.toLowerCase(); this.keys.delete(key); this.trackModifiers(e); this.updateCursor();
-      if (key === 'z' && !this.planningMode) this.commitWaypoints();
+      if (key === this.bindings.get('planning') && !this.planningMode) this.commitWaypoints();
     });
     window.addEventListener('blur', () => { this.keys.clear(); this.waypointOrders.clear(); this.cancelGesture(); this.hover = null; this.modifiers = { ctrl: false, shift: false, alt: false }; this.updateCursor(); });
   }
@@ -82,6 +86,52 @@ export class Controls {
   get scrollRate(): number { return this.scrollMultiplier; }
   setScrollRate(multiplier: number): void {
     if (Number.isFinite(multiplier)) this.scrollMultiplier = Math.max(.25, Math.min(3, multiplier));
+  }
+  getBindings(): BindingInfo[] {
+    return BINDING_DEFAULTS.map(binding => ({ ...binding, key: this.bindings.get(binding.id)?.toUpperCase() ?? null }));
+  }
+  inspectBinding(id: string, value: string): BindingResult {
+    if (!BINDING_DEFAULTS.some(binding => binding.id === id)) return { ok: false, reason: 'Unknown command.' };
+    const key = value.trim().toLowerCase();
+    if (!/^[a-z?]$/.test(key)) return { ok: false, reason: 'Choose a letter A–Z or ?. Team, bookmark, navigation, and browser keys stay reserved.' };
+    const conflict = BINDING_DEFAULTS.find(binding => binding.id !== id && this.bindings.get(binding.id) === key);
+    return { ok: true, ...(conflict ? { conflict: { id: conflict.id, label: conflict.label } } : {}) };
+  }
+  assignBinding(id: string, value: string): BindingResult {
+    const result = this.inspectBinding(id, value);
+    if (!result.ok) return result;
+    if (result.conflict) this.bindings.delete(result.conflict.id);
+    this.bindings.set(id as BindingId, value.trim().toLowerCase());
+    this.keys.clear(); this.waypointOrders.clear();
+    this.saveBindings();
+    return { ...result, ...(result.conflict ? { replaced: result.conflict.id } : {}) };
+  }
+  resetBindings(): void {
+    this.bindings = new Map(BINDING_DEFAULTS.map(binding => [binding.id, binding.defaultKey.toLowerCase()]));
+    this.keys.clear(); this.waypointOrders.clear();
+    this.saveBindings();
+  }
+  private loadBindings(): void {
+    try {
+      if (typeof localStorage === 'undefined') return;
+      const saved = JSON.parse(localStorage.getItem('ra2-keyboard-bindings:v1') ?? 'null');
+      if (saved?.version !== 1 || !saved.bindings || typeof saved.bindings !== 'object') return;
+      const restored = new Map<BindingId, string>(), seen = new Set<string>();
+      for (const binding of BINDING_DEFAULTS) {
+        const value: unknown = saved.bindings[binding.id];
+        if (value === null) continue;
+        if (typeof value !== 'string' || !/^[a-z?]$/.test(value) || seen.has(value)) return;
+        restored.set(binding.id, value); seen.add(value);
+      }
+      this.bindings = restored;
+    } catch { /* Browser storage may be disabled; native defaults remain usable. */ }
+  }
+  private saveBindings(): void {
+    try {
+      if (typeof localStorage === 'undefined') return;
+      localStorage.setItem('ra2-keyboard-bindings:v1', JSON.stringify({ version: 1,
+        bindings: Object.fromEntries(BINDING_DEFAULTS.map(binding => [binding.id, this.bindings.get(binding.id) ?? null])) }));
+    } catch { /* Binding changes remain active for this session without storage. */ }
   }
   get cursor(): NativeCursorName {
     if (!this.enabled() || this.mobile || !this.hover) return 'default';
@@ -262,7 +312,7 @@ export class Controls {
     } else { this.select([]); return; }
     this.callbacks.ack(); if (this.mode === 'attack') this.setMode('select');
   }
-  get planning(): boolean { return this.planningMode || this.keys.has('z'); }
+  get planning(): boolean { const key = this.bindings.get('planning'); return this.planningMode || (key !== undefined && this.keys.has(key)); }
 
   private queueWaypoint(ids: number[], point: Vec2): void {
     for (const id of ids) {
@@ -321,32 +371,33 @@ export class Controls {
     if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(key)) e.preventDefault();
     if (e.repeat) return;
     const ids = this.ids();
+    const command = [...this.bindings].find(([, binding]) => binding === key)?.[0];
     if (key === 'escape') { e.preventDefault(); if (this.renderer.placement || this.mode !== 'select') this.setMode('select'); else { this.keys.clear(); this.callbacks.options?.(); } }
-    else if (key === 's') { this.game.stop(ids); this.callbacks.toast('Units stopped.'); }
-    else if (key === 'g') this.executeCommand('guard');
-    else if (key === 'x') { this.game.scatter(ids); this.callbacks.ack(); }
-    else if (key === 'd') this.executeCommand('deploy');
-    else if (key === 'k' || key === 'l') { const mode = key === 'k' ? 'repair' : 'sell'; this.setMode(this.mode === mode ? 'select' : mode); }
-    else if (key === 'p') { this.select(this.ownUnits().map(e => e.id)); this.callbacks.ack(); }
-    else if (key === 't') this.executeCommand('type', { shift: e.shiftKey });
-    else if (key === 'm') {
+    else if (command === 'stop') { this.game.stop(ids); this.callbacks.toast('Units stopped.'); }
+    else if (command === 'guard') this.executeCommand('guard');
+    else if (command === 'scatter') { this.game.scatter(ids); this.callbacks.ack(); }
+    else if (command === 'deploy') this.executeCommand('deploy');
+    else if (command === 'repair' || command === 'sell') this.setMode(this.mode === command ? 'select' : command);
+    else if (command === 'selectAll') { this.select(this.ownUnits().map(e => e.id)); this.callbacks.ack(); }
+    else if (command === 'selectType') this.executeCommand('type', { shift: e.shiftKey });
+    else if (command === 'next') {
       const units = this.ownUnits().sort((a, b) => a.id - b.id);
       const next = units.find(unit => unit.id > (ids.at(-1) ?? -1)) ?? units[0];
       if (next) this.select([next.id]);
-    } else if (key === 'n') {
+    } else if (command === 'previous') {
       const previous = this.selectionHistory.pop(); if (previous) this.game.select(previous);
-    } else if (key === 'u') {
+    } else if (command === 'health') {
       const units = this.ownUnits();
       for (let attempt = 0; attempt < 3; attempt++) {
         const band = this.healthBand; this.healthBand = (this.healthBand + 1) % 3;
         const members = units.filter(e => (e.hp / e.maxHp > .5 ? 0 : e.hp / e.maxHp > .25 ? 1 : 2) === band);
         if (members.length) { this.select(members.map(e => e.id)); break; }
       }
-    } else if (key === 'f') { this.followId = this.followId === ids[0] ? null : ids[0] ?? null; }
-    else if (key === 'h') {
+    } else if (command === 'follow') { this.followId = this.followId === ids[0] ? null : ids[0] ?? null; }
+    else if (command === 'home') {
       const yard = this.game.state.entities.find(e => e.side === 0 && e.type === 'conyard');
       if (yard) { const [w, h] = this.game.defs[yard.type].footprint; this.followId = null; this.renderer.camera.center(yard.x + w / 2, yard.y + h / 2); }
-    } else if (['q', 'w', 'e', 'r'].includes(key)) this.callbacks.category?.(({ q: 'structures', w: 'defenses', e: 'infantry', r: 'vehicles' } as Record<string, Category>)[key]);
+    } else if (command === 'structures' || command === 'defenses' || command === 'infantry' || command === 'vehicles') this.callbacks.category?.(command);
     else if (/^f[1-4]$/.test(key)) {
       e.preventDefault(); const camera = this.renderer.camera;
       if (ctrl) { this.bookmarks.set(key, { x: camera.x, y: camera.y }); this.callbacks.toast(`Bookmark ${key.toUpperCase()} set.`); }
@@ -356,7 +407,7 @@ export class Controls {
       this.selectGroup(key, ctrl, e.shiftKey);
     } else if (key === '+' || key === '=' || key === '-') {
       this.renderer.camera.setZoom(this.renderer.camera.zoom * (key === '-' ? .85 : 1.15)); this.callbacks.zoom(this.renderer.camera.zoom);
-    } else if (key === '?') this.callbacks.briefing?.();
+    } else if (command === 'briefing') this.callbacks.briefing?.();
   }
   private centerSelection(): void {
     const entities = this.game.state.entities.filter(e => e.selected && e.side === 0);

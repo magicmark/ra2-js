@@ -31,7 +31,10 @@ export function theaterNames(name: string): string[] {
   return /^[gn]a/i.test(name) ? [name[0] + 't' + name.slice(2), name, name[0] + 'g' + name.slice(2)] : [name];
 }
 export const NESTED_MIXES = ['ra2.mix', 'language.mix', 'cache.mix', 'local.mix', 'conquer.mix', 'generic.mix', 'neutral.mix', 'isogen.mix', 'isotemp.mix', 'temperat.mix', 'tem.mix', 'cameo.mix', 'cameomd.mix', 'sidec01.mix', 'sidec02.mix', 'sidec03.mix', 'sidecd01.mix', 'sidecd02.mix'];
-export const UI_FILES = ['sidebar.pal', ...['top', 'credits', 'tabs', 'radar', 'side1', 'side2', 'side2b', 'side3', 'tab00', 'tab01', 'tab02', 'tab03', 'sell', 'repair', 'power', 'powerp'].map(name => name + '.shp')];
+export const EFFECT_ANIMATIONS = ['piffpiff', 's_clsn22', 'xgrysml2', 'htrkpuff', 'twlt070', 's_bang48', 's_brnl58', 's_clsn58', 's_tumu60'];
+export const DIALOG_SHAPE_FILES = ['bkgdsm', 'bkgdmd', 'bkgdlg', 'sidebttn'];
+export const DIALOG_PCX_FILES = { 'options-checkbox-on': 'cce_i.pcx', 'options-checkbox-off': 'cue_i.pcx', 'options-slider-thumb': 'trakgrip.pcx' };
+export const UI_FILES = ['sidebar.pal', 'uibkgd.pal', ...['top', 'credits', 'tabs', 'radar', 'side1', 'side2', 'side2b', 'side3', 'tab00', 'tab01', 'tab02', 'tab03', 'sell', 'repair', 'power', 'powerp', ...DIALOG_SHAPE_FILES].map(name => name + '.shp')];
 // Descriptive aliases for the original ADDON, DIPLOBTN, OPTBTN, R-UP and R-DN
 // sidebar artwork, addressed by their original MIX identifiers.
 export const UI_HASH_FILES = {
@@ -43,7 +46,7 @@ export const UI_HASH_FILES = {
   'command-background.shp': 0x26034352, 'command-left.shp': 0x593cbe20, 'command-right.shp': 0xbc1580c2,
 };
 export function wantedFiles(): Set<string> {
-  const names = new Set(['unittem.pal', 'unitsno.pal', 'isotem.pal', 'temperat.pal', 'cameo.pal', 'voxels.vpl', 'art.ini', 'rules.ini', 'game.fnt', 'mouse.shp', 'mousepal.pal']);
+  const names = new Set(['unittem.pal', 'unitsno.pal', 'isotem.pal', 'temperat.pal', 'cameo.pal', 'anim.pal', 'voxels.vpl', 'art.ini', 'rules.ini', 'game.fnt', 'mouse.shp', 'mousepal.pal', ...Object.values(DIALOG_PCX_FILES), ...EFFECT_ANIMATIONS.map(name => name + '.shp')]);
   for (const spec of Object.values(CATALOG)) {
     for (const name of [spec.sprite, ...(spec.overlays ?? []), ...(spec.bib ? [spec.bib] : []), ...(spec.turret ? [spec.turret] : [])]) for (const variant of theaterNames(name)) {
       names.add(`${variant}.shp`); names.add(`${variant}.vxl`); names.add(`${variant}.hva`);

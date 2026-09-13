@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="670" viewBox="0 0 1160 670" role="img" aria-labelledby="title desc">
+<title id="title">Source-derived Options geometry at 800 by 600</title>
+<desc id="desc">Synthetic diagram of modified base-RA2 static placement plus authored asset dimensions. Solid sidebar origins and Back rectangle are derived; dashed action slots have unresolved button-to-row mapping. Interior controls omitted because Windows font mapping is unobserved. Not a retail screenshot.</desc>
+<rect width="1160" height="670" fill="#f7f8fb"/>
+<g font-family="sans-serif" fill="#18243a"><text x="12" y="22" font-size="16">STATIC DERIVATION · native 800×600 coordinate space · NOT A RETAIL CAPTURE</text></g>
+<g transform="translate(12 40)">
+<rect width="800" height="600" fill="#fff" stroke="#18243a"/>
+<rect width="632" height="568" fill="#eef2f7" stroke="#7790aa"/>
+<g font-family="sans-serif" font-size="16" fill="#334b63"><text x="24" y="45">BKGDMD canvas (0,0,632,568)</text><text x="24" y="75">Frame 0 crop has zero offset</text><text x="24" y="180">Interior controls: initial Windows pixels + (80,60)</text><text x="24" y="207">Keep initial width/height; no proportional scaling</text><text x="24" y="252">Exact interior rectangles and text baselines unverified</text><text x="24" y="294">GAME.FNT supported as default button font</text><text x="24" y="321">Raw template font does not certify rendered typography</text></g>
+<rect x="632" y="0" width="168" height="16" fill="#d7e6f4" stroke="#617c98"/>
+<text x="636" y="14" font-family="sans-serif" font-size="11" fill="#18243a">CREDITS y=0</text>
+<rect x="632" y="16" width="168" height="32" fill="#c3d8ec" stroke="#617c98"/>
+<text x="636" y="31" font-family="sans-serif" font-size="11" fill="#18243a">TOP y=16</text>
+<rect x="632" y="48" width="168" height="110" fill="#aac5df" stroke="#617c98"/>
+<text x="636" y="63" font-family="sans-serif" font-size="11" fill="#18243a">RADAR y=48</text>
+<rect x="632" y="158" width="168" height="69" fill="#bfd5e8" stroke="#617c98"/>
+<text x="636" y="173" font-family="sans-serif" font-size="11" fill="#18243a">SIDE1 y=158</text>
+<rect x="632" y="227" width="168" height="50" fill="#d7e6f4" stroke="#617c98"/>
+<rect x="632" y="277" width="168" height="50" fill="#c3d8ec" stroke="#617c98"/>
+<rect x="632" y="327" width="168" height="50" fill="#aac5df" stroke="#617c98"/>
+<rect x="632" y="377" width="168" height="50" fill="#bfd5e8" stroke="#617c98"/>
+<rect x="632" y="427" width="168" height="50" fill="#d7e6f4" stroke="#617c98"/>
+<rect x="632" y="477" width="168" height="50" fill="#c3d8ec" stroke="#617c98"/>
+<rect x="632" y="527" width="168" height="26" fill="#aac5df" stroke="#617c98"/>
+<text x="636" y="542" font-family="sans-serif" font-size="11" fill="#18243a">SIDE3 y=527</text>
+<rect x="632" y="553" width="168" height="47" fill="#bfd5e8" stroke="#617c98"/>
+<text x="636" y="568" font-family="sans-serif" font-size="11" fill="#18243a">ADDON y=553</text>
+<rect x="653" y="227" width="125" height="25" fill="#fff" fill-opacity=".5" stroke="#7659a4" stroke-dasharray="4 3"/><text x="659" y="244" font-family="sans-serif" font-size="11" fill="#533777">row slot n=0</text>
+<rect x="653" y="252" width="125" height="25" fill="#fff" fill-opacity=".5" stroke="#7659a4" stroke-dasharray="4 3"/><text x="659" y="269" font-family="sans-serif" font-size="11" fill="#533777">row slot n=1</text>
+<rect x="653" y="277" width="125" height="25" fill="#fff" fill-opacity=".5" stroke="#7659a4" stroke-dasharray="4 3"/><text x="659" y="294" font-family="sans-serif" font-size="11" fill="#533777">row slot n=2</text>
+<rect x="653" y="302" width="125" height="25" fill="#fff" fill-opacity=".5" stroke="#7659a4" stroke-dasharray="4 3"/><text x="659" y="319" font-family="sans-serif" font-size="11" fill="#533777">row slot n=3</text>
+<rect x="653" y="327" width="125" height="25" fill="#fff" fill-opacity=".5" stroke="#7659a4" stroke-dasharray="4 3"/><text x="659" y="344" font-family="sans-serif" font-size="11" fill="#533777">row slot n=4</text>
+<rect x="653" y="352" width="125" height="25" fill="#fff" fill-opacity=".5" stroke="#7659a4" stroke-dasharray="4 3"/><text x="659" y="369" font-family="sans-serif" font-size="11" fill="#533777">row slot n=5</text>
+<rect x="653" y="502" width="125" height="25" fill="#253e58" stroke="#0b1623"/><text x="660" y="519" font-family="sans-serif" font-size="11" fill="white">Back / Resume</text>
+<rect x="0" y="568" width="632" height="32" fill="#d5dce5" stroke="#617c98"/><text x="12" y="589" font-family="sans-serif" font-size="12" fill="#18243a">Left footer allocation y=568, h=32; help x=10, y=H−h−1</text>
+</g>
+<g font-family="sans-serif" fill="#18243a">
+<text x="834" y="60" font-size="13">Established from source + art</text>
+<text x="834" y="89" font-size="13">Sidebar x=632, width=168</text>
+<text x="834" y="118" font-size="13">Repeat origin y=227</text>
+<text x="834" y="147" font-size="13">SIDE2B painted every 50 px</text>
+<text x="834" y="176" font-size="13">SIDE3 y=527; ADDON y=553</text>
+<text x="834" y="205" font-size="13">Back (653,502,125,25)</text>
+<text x="834" y="253" font-size="13">Action rows remain conditional</text>
+<text x="834" y="282" font-size="13">n = trunc((pixelCenter−198)/44)</text>
+<text x="834" y="311" font-size="13">y = 227 + 25n</text>
+<text x="834" y="340" font-size="13">Dashed boxes are row slots only</text>
+<text x="834" y="369" font-size="13">No certified per-button mapping</text>
+<text x="834" y="417" font-size="13">SIDEBTTN frames</text>
+<text x="834" y="446" font-size="13">0 normal / idle disabled</text>
+<text x="834" y="475" font-size="13">1 pressed</text>
+<text x="834" y="504" font-size="13">2 explicit timed flash phase</text>
+<text x="834" y="533" font-size="13">No separate hover frame proven</text>
+<text x="834" y="581" font-size="13">Modified EXE: .detour / xwis.dll</text>
+<text x="834" y="610" font-size="13">Clean retail pixel acceptance open</text>
+</g>
+</svg>

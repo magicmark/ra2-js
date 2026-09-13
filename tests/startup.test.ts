@@ -4,10 +4,11 @@ const harness = vi.hoisted(() => ({ assets: {} as any, game: {} as any, renderer
 vi.mock('../src/game/Game', () => ({ Game: class { constructor() { return harness.game; } } }));
 vi.mock('../src/game/Audio', () => ({ GameAudio: class {} }));
 vi.mock('../src/render/Renderer', () => ({ Renderer: class { constructor() { return harness.renderer; } } }));
-vi.mock('../src/input/Controls', () => ({ detectMobile: () => false, Controls: class { tick() {} } }));
+vi.mock('../src/input/Controls', () => ({ detectMobile: () => false, Controls: class { tick() {} cancelPlacement() {} setMode() {} } }));
 vi.mock('../src/assets/AssetManager', () => ({
   DEFAULT_ASSET_URL: 'https://example.test/game.exe', assetSourceUrl: (url: string) => url,
   HUD_ASSET_FRAMES: { side1: [0], radar: [32], tab00: [1, 2] },
+  DIALOG_ASSET_FRAMES: { 'options-medium': [0], 'options-button': [0, 1, 2] },
   AssetManager: class { constructor() { return harness.assets; } },
 }));
 vi.mock('../src/ui/UI', () => ({ UI: class {
@@ -24,7 +25,9 @@ beforeEach(() => {
   vi.resetModules(); harness.loading = true; harness.status = {}; harness.modal = false; harness.runtimeError = '';
   harness.game = { defs: {}, state: { time: 0, speed: 1, events: [], effects: [] } };
   harness.game.tick = vi.fn((dt: number) => { harness.game.state.time += dt; });
-  harness.renderer = { camera: { zoom: 1 }, render: vi.fn() };
+  harness.game.setAnimationDefinitions = vi.fn();
+  harness.game.restart = vi.fn(() => { harness.game.state.time = 0; });
+  harness.renderer = { camera: { zoom: 1, center: vi.fn() }, render: vi.fn() };
   const ready = async (options: any) => {
     harness.assets.ready = true;
     harness.assets.status = { phase: 'ready', message: 'Saved files restored.', loaded: 1, total: 1 };
@@ -32,6 +35,9 @@ beforeEach(() => {
     return 'ready';
   };
   harness.assets = { ready: false, status: { phase: 'cache' }, initialize: vi.fn(ready), download: vi.fn(ready), importFiles: vi.fn((_files: unknown, options: unknown) => ready(options)), getFont: () => ({}), getCursors: () => ({}), getUIAsset: vi.fn(() => ({ source: { toDataURL: () => 'data:image/png;base64,fixture' } })) };
+  harness.assets.getDialogAsset=harness.assets.getUIAsset;
+  harness.assets.getAnimationDefinitions=()=>({piffpiff:{frames:12,ticksPerFrame:1}});
+  harness.assets.getInfantryAnimationDefinitions=()=>({});
   vi.stubGlobal('navigator', { storage: { persist: vi.fn(async () => false) } });
   vi.stubGlobal('window', {});
   vi.stubGlobal('document', { querySelector: () => ({}), hidden: false, addEventListener: (_name: string, callback: () => void) => { harness.visibility = callback; } });
@@ -46,6 +52,7 @@ describe('startup authorization', () => {
     await import('../src/main'); await settle();
     expect(harness.assets.initialize).toHaveBeenCalledOnce();
     expect(harness.assets.getUIAsset).toHaveBeenCalled();
+    expect(harness.game.setAnimationDefinitions).toHaveBeenCalledWith({piffpiff:{frames:12,ticksPerFrame:1}},{});
     expect(harness.assets.download).not.toHaveBeenCalled();
     expect(navigator.storage.persist).not.toHaveBeenCalled();
     harness.frame(performance.now() + 100);
@@ -72,6 +79,24 @@ describe('startup authorization', () => {
     harness.actions.onAssetImport([{ name: 'ra2.mix' }]); await settle();
     expect(navigator.storage.persist).toHaveBeenCalledOnce();
     expect(harness.assets.importFiles).toHaveBeenCalledOnce();
+    expect(harness.loading).toBe(false);
+  });
+
+  it('aborts to the cached source gate and requires another explicit Continue without restoring or importing files', async () => {
+    await import('../src/main'); await settle();
+    harness.actions.onAssetRetry('https://example.test/game.exe'); await settle();
+    harness.frame(performance.now() + 100);
+    expect(harness.game.state.time).toBeGreaterThan(0);
+    harness.actions.onAbort();
+    expect(harness.game.restart).toHaveBeenCalledOnce();
+    expect(harness.loading).toBe(true);
+    expect(harness.status.ready).toBe(true);
+    harness.frame(performance.now() + 200);
+    expect(harness.game.state.time).toBe(0);
+    expect(harness.assets.initialize).toHaveBeenCalledOnce();
+    expect(harness.assets.download).toHaveBeenCalledOnce();
+    expect(harness.assets.importFiles).not.toHaveBeenCalled();
+    harness.actions.onAssetRetry('https://example.test/game.exe'); await settle();
     expect(harness.loading).toBe(false);
   });
 

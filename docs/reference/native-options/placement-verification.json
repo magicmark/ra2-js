@@ -1,0 +1,66 @@
+{
+  "method": "Bounded static objdump and raw-byte checks; no game.exe execution. Authored dimensions/crops supplied by assets owner.",
+  "source_sha256": "06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb",
+  "source_is_modified": true,
+  "clean_retail_pixel_acceptance": false,
+  "disassembly_spans_checked": 32,
+  "excerpt_bytes_match_source": true,
+  "excerpt_ranges_fully_covered_by_complete_instructions": true,
+  "no_invalid_or_partial_instructions": true,
+  "formula_arithmetic_and_zero_crop_offsets_checked": true,
+  "json_and_svg_well_formed": true,
+  "local_report_links_exist": true,
+  "prior_committed_evidence_hashes_unchanged": true,
+  "schematic_visually_reviewed": "Own isolated Chrome context ra2-video-review-placement-diagram, page10; documentation SVG only.",
+  "runtime_tests_run": false,
+  "runtime_test_reason": "Evidence-only task; no runtime, tests, rules, catalog, server or cache changes.",
+  "unresolved": [
+    "Initial Windows font base units and per-action row indices",
+    "Exact interior control rectangles",
+    "Final glyph baselines, heading-specific font and RGB appearance",
+    "Intact clean-retail Options screenshot/navigation"
+  ],
+  "files": {
+    "05-battle-layout-mode.asm": {
+      "bytes": 22100,
+      "sha256": "e4c518268e0ff7a04ff9dd33df80560b189863c1ae160b424de42484f17bb8ef"
+    },
+    "06-control-placement.asm": {
+      "bytes": 208865,
+      "sha256": "3f50f6655d9c4c72ff10f2dfa8e80fcb45ba22f44c190ba5a587d6fa29268b7b"
+    },
+    "07-sidebar-composition.asm": {
+      "bytes": 55522,
+      "sha256": "b69a52e51400033f8e8a1a222ba6bb266c371c5e41b2617d42f34b818145cfd1"
+    },
+    "08-sidebar-button-states.asm": {
+      "bytes": 45359,
+      "sha256": "80b2ebac006d919f3ae03d513fc5a84a92d7a6fa412647fb0885c7465333ff40"
+    },
+    "09-default-button-font.asm": {
+      "bytes": 16355,
+      "sha256": "c3ed5fc7563921d9c5c35c2b1569de7a6e5ae5a781630ff30932062b2b5903fd"
+    },
+    "authored-dimensions-handoff.json": {
+      "bytes": 2390,
+      "sha256": "be243091f7dad41d0a0fe1d43b23c4ff2d4bf2db4df59f6c260213db860de36f"
+    },
+    "placement-excerpt-ranges.json": {
+      "bytes": 9946,
+      "sha256": "024f32f1c7a014a92fb11a8302f4b508c2b9074b8eb7271e4c2b7f41877fc8c8"
+    },
+    "placement-formulas.json": {
+      "bytes": 9549,
+      "sha256": "ff542381c3282bf502e841173b1b05b2284a75f24c0885ab10ebc290a3505891"
+    },
+    "battle-layout-800x600.svg": {
+      "bytes": 5986,
+      "sha256": "63f03a24d40185ad959cfcc7be35d9a67b26a230e0da617cec3bcb41bd93eff3"
+    }
+  },
+  "report": {
+    "path": "docs/OPTIONS_NATIVE_REFERENCE.md",
+    "bytes": 22198,
+    "sha256": "452d2a58f09a1fda720fd2e7222f2b022e032dfa65dff7e216319b2b7c8291fc"
+  }
+}

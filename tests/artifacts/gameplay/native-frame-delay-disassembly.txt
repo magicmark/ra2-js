@@ -1,0 +1,104 @@
+Static native frame-delay excerpts; supplied modified game.exe, SHA256 06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb.
+IAT at0x79a524 maps to WINMM.dll!timeGetTime (objdump -p); time helper shifts milliseconds right four.
+
+  53fcb0:	a1 98 d2 a3 00       	mov    eax,ds:0xa3d298
+  53fcb5:	85 c0                	test   eax,eax
+  53fcb7:	0f 84 1a 03 00 00    	je     0x53ffd7
+  53fcbd:	83 f8 05             	cmp    eax,0x5
+  53fcc0:	0f 84 48 03 00 00    	je     0x54000e
+
+  53ffd7:	a0 84 0d a4 00       	mov    al,ds:0xa40d84
+  53ffdc:	84 c0                	test   al,al
+  53ffde:	75 2e                	jne    0x54000e
+  53ffe0:	8d 4c 24 14          	lea    ecx,[esp+0x14]
+  53ffe4:	c7 05 18 0b a4 00 02 	mov    DWORD PTR ds:0xa40b18,0x2
+  53ffeb:	00 00 00
+  53ffee:	e8 3d a4 15 00       	call   0x69a430
+  53fff3:	a3 90 99 83 00       	mov    ds:0x839990,eax
+  53fff8:	8b 44 24 14          	mov    eax,DWORD PTR [esp+0x14]
+  53fffc:	b9 02 00 00 00       	mov    ecx,0x2
+  540001:	a3 94 99 83 00       	mov    ds:0x839994,eax
+  540006:	89 0d 98 99 83 00    	mov    DWORD PTR ds:0x839998,ecx
+  54000c:	eb 24                	jmp    0x540032
+  54000e:	8b 35 18 0b a4 00    	mov    esi,DWORD PTR ds:0xa40b18
+  540014:	8d 4c 24 14          	lea    ecx,[esp+0x14]
+  540018:	e8 13 a4 15 00       	call   0x69a430
+  54001d:	8b 4c 24 14          	mov    ecx,DWORD PTR [esp+0x14]
+  540021:	a3 90 99 83 00       	mov    ds:0x839990,eax
+  540026:	89 0d 94 99 83 00    	mov    DWORD PTR ds:0x839994,ecx
+  54002c:	89 35 98 99 83 00    	mov    DWORD PTR ds:0x839998,esi
+
+  540960:	8b 0d 90 99 83 00    	mov    ecx,DWORD PTR ds:0x839990
+  540966:	83 ec 18             	sub    esp,0x18
+  540969:	53                   	push   ebx
+  54096a:	55                   	push   ebp
+  54096b:	83 cb ff             	or     ebx,0xffffffff
+  54096e:	33 ed                	xor    ebp,ebp
+  540970:	56                   	push   esi
+  540971:	8b 35 98 99 83 00    	mov    esi,DWORD PTR ds:0x839998
+  540977:	3b cb                	cmp    ecx,ebx
+  540979:	74 1c                	je     0x540997
+  54097b:	b9 94 99 83 00       	mov    ecx,0x839994
+  540980:	e8 ab 9a 15 00       	call   0x69a430
+  540985:	8b 0d 90 99 83 00    	mov    ecx,DWORD PTR ds:0x839990
+  54098b:	2b c1                	sub    eax,ecx
+  54098d:	3b c6                	cmp    eax,esi
+  54098f:	7d 04                	jge    0x540995
+  540991:	2b f0                	sub    esi,eax
+  540993:	eb 02                	jmp    0x540997
+  540995:	33 f6                	xor    esi,esi
+  540997:	a1 98 d2 a3 00       	mov    eax,ds:0xa3d298
+  54099c:	57                   	push   edi
+  54099d:	8b 3d 1c 03 a4 00    	mov    edi,DWORD PTR ds:0xa4031c
+  5409a3:	03 fe                	add    edi,esi
+  5409a5:	3b c5                	cmp    eax,ebp
+  5409a7:	89 3d 1c 03 a4 00    	mov    DWORD PTR ds:0xa4031c,edi
+  5409ad:	0f 84 01 01 00 00    	je     0x540ab4
+  5409b3:	83 f8 05             	cmp    eax,0x5
+  5409b6:	0f 84 f8 00 00 00    	je     0x540ab4
+
+  540ab4:	8b 35 98 99 83 00    	mov    esi,DWORD PTR ds:0x839998
+  540aba:	3b cb                	cmp    ecx,ebx
+  540abc:	74 16                	je     0x540ad4
+  540abe:	b9 94 99 83 00       	mov    ecx,0x839994
+  540ac3:	e8 68 99 15 00       	call   0x69a430
+  540ac8:	2b 05 90 99 83 00    	sub    eax,DWORD PTR ds:0x839990
+  540ace:	3b c6                	cmp    eax,esi
+  540ad0:	7d 69                	jge    0x540b3b
+  540ad2:	2b f0                	sub    esi,eax
+  540ad4:	3b f5                	cmp    esi,ebp
+  540ad6:	74 63                	je     0x540b3b
+  540ad8:	e8 f3 56 f5 ff       	call   0x4961d0
+  540add:	8b 3d e4 a1 79 00    	mov    edi,DWORD PTR ds:0x79a1e4
+  540ae3:	8b 0d 90 99 83 00    	mov    ecx,DWORD PTR ds:0x839990
+  540ae9:	8b 35 98 99 83 00    	mov    esi,DWORD PTR ds:0x839998
+  540aef:	3b cb                	cmp    ecx,ebx
+  540af1:	74 18                	je     0x540b0b
+  540af3:	b9 94 99 83 00       	mov    ecx,0x839994
+  540af8:	e8 33 99 15 00       	call   0x69a430
+  540afd:	8b 0d 90 99 83 00    	mov    ecx,DWORD PTR ds:0x839990
+  540b03:	2b c1                	sub    eax,ecx
+  540b05:	3b c6                	cmp    eax,esi
+  540b07:	7d 32                	jge    0x540b3b
+  540b09:	2b f0                	sub    esi,eax
+  540b0b:	3b f5                	cmp    esi,ebp
+  540b0d:	74 2c                	je     0x540b3b
+  540b0f:	8b 35 98 99 83 00    	mov    esi,DWORD PTR ds:0x839998
+  540b15:	3b cb                	cmp    ecx,ebx
+  540b17:	74 1d                	je     0x540b36
+  540b19:	b9 94 99 83 00       	mov    ecx,0x839994
+  540b1e:	e8 0d 99 15 00       	call   0x69a430
+  540b23:	2b 05 90 99 83 00    	sub    eax,DWORD PTR ds:0x839990
+  540b29:	3b c6                	cmp    eax,esi
+  540b2b:	7d 07                	jge    0x540b34
+  540b2d:	2b f0                	sub    esi,eax
+  540b2f:	56                   	push   esi
+  540b30:	ff d7                	call   edi
+  540b32:	eb af                	jmp    0x540ae3
+  540b34:	33 f6                	xor    esi,esi
+  540b36:	56                   	push   esi
+  540b37:	ff d7                	call   edi
+
+  69a430:	ff 15 24 a5 79 00    	call   DWORD PTR ds:0x79a524
+  69a436:	c1 e8 04             	shr    eax,0x4
+  69a439:	c3                   	ret

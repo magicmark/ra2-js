@@ -8,6 +8,7 @@ buildTime = 12.6
 hp = 125
 speed = 3.1
 damage = 25
+impact = "PIFFPIFF"
 range = 5
 fireRate = 1.0
 sight = 8

@@ -1,0 +1,49 @@
+{
+  "executable": {
+    "bytes": 4497680,
+    "sha256": "06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb",
+    "provenance": "Modified supplied base-RA2 executable with .detour and xwis.dll; static inspection only; not clean-retail certification"
+  },
+  "infantryVtable": "0x7a3540",
+  "playAnimSlot": "0x4dc",
+  "playAnim": "0x504740",
+  "sequenceTable": {
+    "address": "0x7a3474",
+    "entries": 38,
+    "recordBytes": 4,
+    "rateByte": 3
+  },
+  "fireFrameTypeRead": {
+    "iniKey": "FireUp",
+    "typeOffset": "0xb9c",
+    "range": "0x50a8d3..0x50a8f0"
+  },
+  "updateOrder": [
+    {
+      "callsite": "0x503161",
+      "callee": "0x507530",
+      "operation": "FiringAI compares animation Value with FireUp at 0x507775"
+    },
+    {
+      "callsite": "0x50316f",
+      "callee": "0x5078b0",
+      "operation": "Sequence end compares animation Value >= sequence Count at 0x5078da"
+    }
+  ],
+  "conscript": {
+    "renderedFireUpFrameIndices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "logicalFiringValue": 6,
+    "note": "FiringAI executes before end-of-sequence handling; no clamp to rendered frame 5"
+  },
+  "excerpt": {
+    "path": "native-infantry-timing-disassembly.txt",
+    "sha256": "d3ed9869957da45f7d17b84b07a9ac250ac1b1cd555068dda43dc0a4cad9621a"
+  }
+}

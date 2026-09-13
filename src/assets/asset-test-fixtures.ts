@@ -42,6 +42,14 @@ export function testShape(frameCount = 1): Uint8Array {
   return bytes;
 }
 
+export function testPcx(): Uint8Array {
+  const bytes = new Uint8Array(128 + 2 + 769), data = new DataView(bytes.buffer);
+  bytes.set([10, 5, 1, 8]); bytes[65] = 1; data.setUint16(66, 2, true);
+  bytes[128] = 10; bytes[129] = 0; bytes[130] = 12;
+  bytes.set([255, 0, 255], 131); bytes.set([252, 124, 28], 131 + 30);
+  return bytes;
+}
+
 export function testCursorShape(frameCount = 450): Uint8Array {
   const bytes = testShape(frameCount), data = new DataView(bytes.buffer);
   data.setUint16(2, 55, true); data.setUint16(4, 43, true);

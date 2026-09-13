@@ -21,7 +21,21 @@ Local verification: `CI=true npx --no-install wrangler deploy --dry-run`
 exited successfully, ran the custom build, and required no bindings or setup
 prompts. All five output hashes still match the immutable 4205 build in
 [the animation checkpoint](artifacts/native-animation-build.json).
-The real push-triggered CI result is recorded below once completed.
+Real push verification: commit `e3f6468` triggered build
+`610029a8-2f0f-4eb1-9ebf-5a9845787ef8`; the GitHub
+`Workers Builds: ra2-js` check completed with **success**. This proves the existing
+Cloudflare trigger deploys the committed configuration without dashboard edits.
+The successful log confirms deployment at `https://ra2-js.markl.workers.dev`
+with version `f5cb46fd-475e-4b6c-829c-085ee104256b`. This first CI repair
+publishes the previously committed gameplay snapshot; the Options/animation
+follow-up is verified and committed separately.
+Project environment types also generated successfully with `--include-runtime=false`;
+there are no application Worker bindings.
+
+[Production browser smoke](artifacts/cloudflare-first-deploy-smoke.json) confirms
+the public site loads the committed bundle with an editable prefilled CORS URL,
+visible gate and simulation time zero. The isolated page recorded zero archive
+attempts, workers or JavaScript errors without submission.
 
 Configuration references: [static assets](https://developers.cloudflare.com/workers/static-assets/get-started/),
 [Wrangler custom builds](https://developers.cloudflare.com/workers/wrangler/custom-builds/),

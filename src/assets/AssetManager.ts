@@ -1,9 +1,12 @@
-import { CATALOG, theaterNames, type AssetSpec } from './catalog';
+import { CATALOG, DIALOG_PCX_FILES, DIALOG_SHAPE_FILES, EFFECT_ANIMATIONS, theaterNames, type AssetSpec } from './catalog';
 import { decodeHva, decodePalette, decodeTmp, decodeVpl, decodeVxl, ShpFile, type IndexedFrame, type VoxelLimb } from './formats';
 import { RA2_NORMALS } from './voxelNormals';
 import { buildingLoopFrame, buildingLoops, type BuildingLoop } from './buildingAnimations';
 import { NativeFont } from './NativeFont';
 import { NativeCursors } from './NativeCursor';
+import { decodePcx } from './Pcx';
+import { nativeAnimationInterval, nativeAnimationFrame, NATIVE_SPEED_INDEX, readArtSections, type NativeAnimationDefinition } from './NativeAnimation';
+import { infantryArt, infantrySequenceFrame, type InfantryArt } from './InfantryAnimation';
 
 import { AssetDownload, InvalidArchiveError, assetCache, assetCacheKey, assetSourceUrl, selectedAssetCacheKeys, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL, type ArchiveInput, type ArchiveResume, type SavedArchive } from './AssetDownload';
 export { assetCacheKey, assetSourceUrl, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL } from './AssetDownload';
@@ -25,6 +28,10 @@ export const HUD_ASSET_FRAMES: Readonly<Record<string, readonly number[]>> = {
 export const REQUIRED_TERRAIN = ['clear01', 'water01', 'proad01', 'proad02', 'proad03', 'ruff01', 'green01',
   ...Array.from({ length: 15 }, (_, i) => `glat${String(i + 1).padStart(2, '0')}`),
   ...Array.from({ length: 15 }, (_, i) => `clat${String(i + 1).padStart(2, '0')}`)];
+export const DIALOG_ASSET_FRAMES: Readonly<Record<string, readonly number[]>> = {
+  'options-small': [0], 'options-medium': [0], 'options-large': [0],
+  'options-button': [0, 1, 2], 'options-checkbox-on': [0], 'options-checkbox-off': [0], 'options-slider-thumb': [0],
+};
 interface AssetFile { name: string; bytes: Uint8Array }
 interface CacheEntry { version: number; files: AssetFile[]; saved: number }
 interface PreparedVoxel { x: number; y: number; z: number; color: number; nx: number; ny: number; nz: number; turret: boolean }
@@ -101,11 +108,15 @@ export class AssetManager {
   private sprites = new Map<string, Sprite | null>();
   private voxelModels = new Map<string, PreparedVoxel[]>();
   private buildingLoops = new Map<string, BuildingLoop>();
+  private art = readArtSections(undefined);
+  private effectDefinitions: Record<string, NativeAnimationDefinition> = {};
+  private infantry = new Map<string, InfantryArt>();
   private buildingAnchors = new Map<string, number>();
   private unitPalette: Uint8Array = new Uint8Array(768);
   private cameoPalette: Uint8Array = new Uint8Array(768);
   private terrainPalette: Uint8Array = new Uint8Array(768);
   private orePalette: Uint8Array = new Uint8Array(768);
+  private animationPalette: Uint8Array = new Uint8Array(768);
   private sidebarPalettes: Uint8Array[] = [];
   private voxelLighting: Uint8Array = new Uint8Array();
   private preparingRun?: number;
@@ -342,13 +353,17 @@ export class AssetManager {
       this.report('decode', 'Decoding original sprites, palettes and vehicle voxels…');
       if (run !== this.run) throw new Error('Asset loading cancelled');
       this.files = new Map(files.map(f => [f.name.toLowerCase(), f.bytes])); this.shapes.clear(); this.sprites.clear(); this.voxelModels.clear(); this.buildingAnchors.clear();
+      this.art = readArtSections(this.requiredFile('art.ini'));
       this.buildingLoops = buildingLoops(this.requiredFile('art.ini'));
+      this.effectDefinitions = {};
+      this.infantry.clear();
       this.font = this.decodeFile('game.fnt', bytes => new NativeFont(bytes));
       this.cursors = this.decodeFile('mouse.shp', bytes => new NativeCursors(bytes, this.requiredFile('mousepal.pal')));
       this.unitPalette = this.decodeFile('unittem.pal', decodePalette);
       this.cameoPalette = this.decodeFile('cameo.pal', decodePalette);
       this.terrainPalette = this.decodeFile('isotem.pal', decodePalette);
       this.orePalette = this.decodeFile('temperat.pal', decodePalette);
+      this.animationPalette = this.decodeFile('anim.pal', decodePalette);
       this.sidebarPalettes = [this.decodeFile('side0/sidebar.pal', decodePalette)];
       this.voxelLighting = this.decodeFile('voxels.vpl', bytes => {
         const levels = decodeVpl(bytes);
@@ -364,6 +379,20 @@ export class AssetManager {
           }
         });
       }
+      this.decodeFile('side0/uibkgd.pal', decodePalette);
+      for (const name of DIALOG_SHAPE_FILES) this.decodeFile(`side0/${name}.shp`, bytes => {
+        const shape = new ShpFile(bytes);
+        for (let frame = 0; frame < (name === 'sidebttn' ? 3 : 1); frame++) {
+          if (frame >= shape.frameCount) throw new Error(`Missing frame ${frame}`);
+          shape.frame(frame);
+        }
+      });
+      for (const name of Object.values(DIALOG_PCX_FILES)) this.decodeFile(name, decodePcx);
+      for (const name of EFFECT_ANIMATIONS) {
+        const shape = this.validateShape(name), art = this.art.get(name), ticksPerFrame = nativeAnimationInterval(Number(art?.rate ?? 900));
+        if (!ticksPerFrame) throw new Error(`Invalid original animation Rate: ${name}`);
+        this.effectDefinitions[name] = { frames: shape.frameCount, ticksPerFrame, normalized: /^(yes|true|1)$/i.test(art?.normalized ?? '') };
+      }
       // The renderer can select each authored road segment and terrain edge.
       // Mask 15 is never selected for an edge: at least one neighbor differs.
       for (const name of REQUIRED_TERRAIN) this.decodeFile(`${name}.tem`, bytes => {
@@ -377,6 +406,14 @@ export class AssetManager {
           this.decodeFile(`${spec.sprite}.vxl`, decodeVxl);
           this.decodeFile(`${spec.sprite}.hva`, decodeHva);
         } else this.validateShape(spec.sprite);
+        if (spec.kind === 'infantry') {
+          const definition = infantryArt(this.art, spec.sprite), shape = this.shape(spec.sprite)!;
+          const bodyFrames = shape.frameCount > 1 && shape.frameCount % 2 === 0 ? shape.frameCount / 2 : shape.frameCount;
+          for (const [action, sequence] of Object.entries(definition.sequences)) {
+            if (sequence.start + sequence.stride * 7 + sequence.frames > bodyFrames) throw new Error(`Invalid original infantry frames: ${spec.sprite}.${action}`);
+          }
+          this.infantry.set(spec.sprite, definition);
+        }
         if (name === 'gi') this.validateShape(spec.sprite, Array.from({ length: 71 }, (_, i) => 292 + i));
         this.validateShape(spec.cameo, [0]);
         if (spec.bib) this.validateShape(spec.bib);
@@ -433,6 +470,56 @@ export class AssetManager {
     result.getContext('2d')!.drawImage(paint(image, this.sidebarPalettes[side] ?? this.decodeFile(`side${side}/sidebar.pal`, decodePalette)), image.x, image.y);
     const value = sprite(result, 0, 0); this.sprites.set(key, value); return value;
   }
+  /** Native dialog artwork, separate from sidebar palette and frame conventions. */
+  getDialogAsset(name: string, frame = 0, side = 0): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    if (!DIALOG_ASSET_FRAMES[name]?.includes(frame)) return null;
+    const key = `dialog:${side}:${name}:${frame}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const pcxFile = DIALOG_PCX_FILES[name as keyof typeof DIALOG_PCX_FILES];
+    let result: HTMLCanvasElement;
+    if (pcxFile) {
+      const image = this.decodeFile(pcxFile, decodePcx);
+      result = paint({ ...image, x: 0, y: 0, canvasWidth: image.width, canvasHeight: image.height }, image.palette);
+    } else {
+      const filename = ({ 'options-small': 'bkgdsm', 'options-medium': 'bkgdmd', 'options-large': 'bkgdlg', 'options-button': 'sidebttn' } as Record<string, string>)[name];
+      const shape = this.decodeFile(`side${side}/${filename}.shp`, bytes => new ShpFile(bytes)), image = shape.frame(frame);
+      const palette = name === 'options-button' ? this.decodeFile(`side${side}/sidebar.pal`, decodePalette) : this.decodeFile(`side${side}/uibkgd.pal`, decodePalette);
+      result = canvas(shape.width, shape.height);
+      result.getContext('2d')!.drawImage(paint(image, palette), image.x, image.y);
+    }
+    const value = sprite(result, 0, 0); this.sprites.set(key, value); return value;
+  }
+  getAnimationDefinitions(): Record<string, NativeAnimationDefinition> {
+    return Object.fromEntries(Object.entries(this.effectDefinitions).map(([name, definition]) => [name, { ...definition }]));
+  }
+  getInfantryAnimationDefinitions(): Record<string, { sequences: Record<string, NativeAnimationDefinition>; fireFrame: number }> {
+    return Object.fromEntries([...this.infantry].map(([name, definition]) => [name, {
+      fireFrame: definition.fireFrame,
+      sequences: Object.fromEntries(Object.entries(definition.sequences).map(([action, sequence]) => [action, { frames: sequence.frames, ticksPerFrame: sequence.ticksPerFrame, normalized: sequence.normalized }])),
+    }]));
+  }
+  getInfantrySequence(name: string, action: string, facing: number, ageSeconds: number, side = 0, speedIndex = NATIVE_SPEED_INDEX): Sprite | null {
+    const spec = this.spec(name); if (!spec) return null;
+    const sequence = this.infantry.get(spec.sprite)?.sequences[action]; if (!sequence) return null;
+    return this.getInfantryFrame(name, infantrySequenceFrame(sequence, action, facing, ageSeconds, speedIndex), side);
+  }
+  /** Non-looping original impact/death SHP, using its own animation palette. */
+  getAnimationSprite(name: string, ageSeconds: number, ticksPerFrame?: number): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    name = name.toLowerCase();
+    const definition = this.effectDefinitions[name]; if (!definition) return null;
+    const timing = ticksPerFrame === undefined ? definition : { ...definition, ticksPerFrame, normalized: false };
+    const index = nativeAnimationFrame(timing, ageSeconds), key = `animation:${name}:${index}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const shape = this.shape(name); if (!shape) return null;
+    const frame = shape.frame(index), result = sprite(paint(frame, this.animationPalette), shape.width / 2 - frame.x, shape.height / 2 - frame.y);
+    this.sprites.set(key, result); return result;
+  }
+  getAnimationOpacity(name: string): number {
+    const value = Number(this.art.get(name.toLowerCase())?.translucency ?? 0);
+    return Number.isFinite(value) ? 1 - Math.max(0, Math.min(100, value)) / 100 : 1;
+  }
   getSprite(name: string, frame = 0, side = 0): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;
     name = name.toLowerCase().replace(/\.(shp|vxl)$/, '');
@@ -479,14 +566,14 @@ export class AssetManager {
     } catch (error) { this.diagnostics.push(`${name} frame ${frame}: ${error instanceof Error ? error.message : String(error)}`); }
     this.sprites.set(key, result); return result;
   }
-  getBuildingSprite(name: string, time = 0, side = 0): Sprite | null {
+  getBuildingSprite(name: string, time = 0, side = 0, speedIndex = NATIVE_SPEED_INDEX): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;
     const spec = this.spec(name);
     if (!spec || spec.kind !== 'building' || spec.turret) return this.getSprite(name, 0, side);
     const shape = this.shape(spec.sprite); if (!shape) return null;
     const frames = (spec.overlays ?? []).map(name => {
       const overlay = this.shape(name);
-      return overlay ? buildingLoopFrame(this.buildingLoops.get(name), time, overlay.frameCount > 1 && overlay.frameCount % 2 === 0 ? overlay.frameCount / 2 : overlay.frameCount) : 0;
+      return overlay ? buildingLoopFrame(this.buildingLoops.get(name), time, overlay.frameCount > 1 && overlay.frameCount % 2 === 0 ? overlay.frameCount / 2 : overlay.frameCount, speedIndex) : 0;
     });
     if (frames.every(frame => frame === 0)) return this.getSprite(name, 0, side);
     // The key contains discrete loop frames, never elapsed time. Once the

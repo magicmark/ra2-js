@@ -1,0 +1,80 @@
+{
+  "executable": {
+    "bytes": 4497680,
+    "sha256": "06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb",
+    "provenance": "Modified supplied base-RA2 executable with .detour and xwis.dll; static inspection only; not clean-retail certification"
+  },
+  "strings": {
+    "0x7fc920": "Burst",
+    "0x7dae30": "ROF",
+    "0x7d3850": "Explosion",
+    "0x7e8c20": "Explodes"
+  },
+  "unitVtable": {
+    "address": "0x7addf8",
+    "rearmSlot": "0x2ec",
+    "resolvedFunction": "0x6c9c00"
+  },
+  "ranges": [
+    {
+      "description": "burst/ROF INI member writes",
+      "start": "0x7333d1",
+      "endInclusive": "0x733439"
+    },
+    {
+      "description": "rearm branch and timer interval",
+      "start": "0x6c9cae",
+      "endInclusive": "0x6c9d34"
+    },
+    {
+      "description": "shot increment, timer, then modulo",
+      "start": "0x6cb950",
+      "endInclusive": "0x6cb998"
+    },
+    {
+      "description": "inclusive random range helper",
+      "start": "0x6388a0",
+      "endInclusive": "0x63894a"
+    },
+    {
+      "description": "Explosion INI parse and list assignment",
+      "start": "0x6dc2d6",
+      "endInclusive": "0x6dc3af"
+    },
+    {
+      "description": "Explodes INI flag",
+      "start": "0x6db088",
+      "endInclusive": "0x6db09c"
+    },
+    {
+      "description": "vehicle explosion list selection and construction",
+      "start": "0x6fd3a0",
+      "endInclusive": "0x6fd466"
+    }
+  ],
+  "excerpt": {
+    "path": "native-burst-death-disassembly.txt",
+    "sha256": "fd4649f513a83e7e1c188caa59eba6642e813cb6393dbbf7ebf52b34d92e8e87"
+  },
+  "burst": {
+    "defaultGroundInterShotTicks": [
+      3,
+      4,
+      5
+    ],
+    "fullReloadExtraTicks": [
+      0,
+      1,
+      2
+    ],
+    "note": "Values from inclusive RNG calls; full reload also applies weapon ROF, house and veterancy logic; aircraft overrides and projectile flight are separate"
+  },
+  "vehicleDeath": {
+    "listOffset": "0x644",
+    "itemsOffset": "0x648",
+    "countOffset": "0x654",
+    "selector": "Raw scenario random value modulo list length",
+    "override": "Explodes flag at type+0xae2 or veterancy ability10 can choose final list entry; ammo predicate applies",
+    "limits": "Building/infantry deaths, debris, water, collateral damage, exact retail palette/translucency and playback not established here"
+  }
+}

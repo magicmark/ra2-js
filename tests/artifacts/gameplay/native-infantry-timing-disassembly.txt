@@ -1,0 +1,227 @@
+Supplied RA2 executable infantry sequence timing (static read only).
+
+SHA256 06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb
+
+Infantry vtable 0x7a3540 slot0x4dc -> PlayAnim 0x504740.
+
+Packed per-sequence record at0x7a3474 has rate in byte3; sequence names at0x7daf60.
+
+ 0 Ready            rate=0 normalized=False
+
+ 1 Guard            rate=0 normalized=False
+
+ 2 Prone            rate=6 normalized=False
+
+ 3 Walk             rate=3 normalized=False
+
+ 4 FireUp           rate=1 normalized=False
+
+ 5 Down             rate=1 normalized=False
+
+ 6 Crawl            rate=1 normalized=False
+
+ 7 Up               rate=1 normalized=False
+
+ 8 FireProne        rate=1 normalized=False
+
+ 9 Idle1            rate=3 normalized=True
+
+10 Idle2            rate=3 normalized=True
+
+11 Die1             rate=1 normalized=False
+
+12 Die2             rate=1 normalized=False
+
+13 Die3             rate=1 normalized=False
+
+14 Die4             rate=1 normalized=False
+
+15 Die5             rate=1 normalized=False
+
+16 Tread            rate=3 normalized=False
+
+17 Swim             rate=1 normalized=False
+
+18 WetIdle1         rate=3 normalized=True
+
+19 WetIdle2         rate=3 normalized=True
+
+20 WetDie1          rate=1 normalized=False
+
+21 WetDie2          rate=1 normalized=False
+
+22 WetAttack        rate=1 normalized=False
+
+23 Hover            rate=2 normalized=True
+
+24 Fly              rate=1 normalized=False
+
+25 Tumble           rate=1 normalized=False
+
+26 FireFly          rate=1 normalized=False
+
+27 Deploy           rate=1 normalized=False
+
+28 Deployed         rate=1 normalized=False
+
+29 DeployedFire     rate=1 normalized=False
+
+30 DeployedIdle     rate=1 normalized=False
+
+31 Undeploy         rate=1 normalized=False
+
+32 Cheer            rate=3 normalized=True
+
+33 Paradrop         rate=1 normalized=False
+
+34 AirDeathStart    rate=3 normalized=False
+
+35 AirDeathFalling  rate=1 normalized=False
+
+36 AirDeathFinish   rate=3 normalized=False
+
+37 Panic            rate=4 normalized=False
+
+
+/tmp/ra2-engine-reference/game.exe:     file format pei-i386
+
+
+Disassembly of section .text:
+
+005049b7 <.text+0x1039b7>:
+  5049b7:	83 ff 09             	cmp    edi,0x9
+  5049ba:	89 be ac 05 00 00    	mov    DWORD PTR [esi+0x5ac],edi
+  5049c0:	74 19                	je     0x5049db
+  5049c2:	83 ff 0a             	cmp    edi,0xa
+  5049c5:	74 14                	je     0x5049db
+  5049c7:	83 ff 12             	cmp    edi,0x12
+  5049ca:	74 0f                	je     0x5049db
+  5049cc:	83 ff 13             	cmp    edi,0x13
+  5049cf:	74 0a                	je     0x5049db
+  5049d1:	83 ff 17             	cmp    edi,0x17
+  5049d4:	74 05                	je     0x5049db
+  5049d6:	83 ff 20             	cmp    edi,0x20
+  5049d9:	75 2c                	jne    0x504a07
+  5049db:	33 c0                	xor    eax,eax
+  5049dd:	b9 18 0b a4 00       	mov    ecx,0xa40b18
+  5049e2:	8a 04 bd 77 34 7a 00 	mov    al,BYTE PTR [edi*4+0x7a3477]
+  5049e9:	50                   	push   eax
+  5049ea:	e8 71 4d 0d 00       	call   0x5d9760
+  5049ef:	8b 0d 2c 0d a4 00    	mov    ecx,DWORD PTR ds:0xa40d2c
+  5049f5:	8d 96 e4 00 00 00    	lea    edx,[esi+0xe4]
+  5049fb:	89 8e e4 00 00 00    	mov    DWORD PTR [esi+0xe4],ecx
+  504a01:	8b 4c 24 14          	mov    ecx,DWORD PTR [esp+0x14]
+  504a05:	eb 1f                	jmp    0x504a26
+  504a07:	8b 0d 2c 0d a4 00    	mov    ecx,DWORD PTR ds:0xa40d2c
+  504a0d:	33 c0                	xor    eax,eax
+  504a0f:	8a 04 bd 77 34 7a 00 	mov    al,BYTE PTR [edi*4+0x7a3477]
+  504a16:	8d 96 e4 00 00 00    	lea    edx,[esi+0xe4]
+  504a1c:	89 8e e4 00 00 00    	mov    DWORD PTR [esi+0xe4],ecx
+  504a22:	8b 4c 24 14          	mov    ecx,DWORD PTR [esp+0x14]
+  504a26:	89 4a 04             	mov    DWORD PTR [edx+0x4],ecx
+  504a29:	89 42 08             	mov    DWORD PTR [edx+0x8],eax
+  504a2c:	89 86 f0 00 00 00    	mov    DWORD PTR [esi+0xf0],eax
+
+
+
+/tmp/ra2-engine-reference/game.exe:     file format pei-i386
+
+
+Disassembly of section .text:
+
+0050a8d3 <.text+0x1098d3>:
+  50a8d3:	8b 96 9c 0b 00 00    	mov    edx,DWORD PTR [esi+0xb9c]
+  50a8d9:	b9 f0 97 83 00       	mov    ecx,0x8397f0
+  50a8de:	52                   	push   edx
+  50a8df:	68 30 b1 7d 00       	push   0x7db130
+  50a8e4:	57                   	push   edi
+  50a8e5:	88 86 0b 0c 00 00    	mov    BYTE PTR [esi+0xc0b],al
+  50a8eb:	e8 00 2f 00 00       	call   0x50d7f0
+  50a8f0:	89 86 9c 0b 00 00    	mov    DWORD PTR [esi+0xb9c],eax
+
+
+
+/tmp/ra2-engine-reference/game.exe:     file format pei-i386
+
+
+Disassembly of section .text:
+
+0050314f <.text+0x10214f>:
+  50314f:	c8 7d 06 2b          	enter  0x67d,0x2b
+  503153:	c1 85 c0 75 07 c6 86 	rol    DWORD PTR [ebp-0x39f88a40],0x86
+  50315a:	c2 05 00             	ret    0x5
+  50315d:	00 00                	add    BYTE PTR [eax],al
+  50315f:	8b ce                	mov    ecx,esi
+  503161:	e8 ca 43 00 00       	call   0x507530
+  503166:	8a 46 7d             	mov    al,BYTE PTR [esi+0x7d]
+  503169:	84 c0                	test   al,al
+  50316b:	74 15                	je     0x503182
+  50316d:	8b ce                	mov    ecx,esi
+  50316f:	e8 3c 47 00 00       	call   0x5078b0
+  503174:	8a 46 7d             	mov    al,BYTE PTR [esi+0x7d]
+  503177:	84 c0                	test   al,al
+
+
+
+/tmp/ra2-engine-reference/game.exe:     file format pei-i386
+
+
+Disassembly of section .text:
+
+0050774b <.text+0x10674b>:
+  50774b:	8b 85 a8 05 00 00    	mov    eax,DWORD PTR [ebp+0x5a8]
+  507751:	8a 95 c3 05 00 00    	mov    dl,BYTE PTR [ebp+0x5c3]
+  507757:	84 d2                	test   dl,dl
+  507759:	8b 88 9c 0b 00 00    	mov    ecx,DWORD PTR [eax+0xb9c]
+  50775f:	74 06                	je     0x507767
+  507761:	8b 88 a0 0b 00 00    	mov    ecx,DWORD PTR [eax+0xba0]
+  507767:	8a 85 7d 05 00 00    	mov    al,BYTE PTR [ebp+0x57d]
+  50776d:	84 c0                	test   al,al
+  50776f:	0f 84 2a 01 00 00    	je     0x50789f
+  507775:	39 8d e0 00 00 00    	cmp    DWORD PTR [ebp+0xe0],ecx
+  50777b:	0f 85 1e 01 00 00    	jne    0x50789f
+  507781:	8b 8d 28 02 00 00    	mov    ecx,DWORD PTR [ebp+0x228]
+  507787:	8b 45 00             	mov    eax,DWORD PTR [ebp+0x0]
+  50778a:	51                   	push   ecx
+  50778b:	8b cd                	mov    ecx,ebp
+  50778d:	ff 90 b8 02 00 00    	call   DWORD PTR [eax+0x2b8]
+  507793:	8b 55 00             	mov    edx,DWORD PTR [ebp+0x0]
+  507796:	8b f0                	mov    esi,eax
+  507798:	8b 85 28 02 00 00    	mov    eax,DWORD PTR [ebp+0x228]
+  50779e:	6a 01                	push   0x1
+  5077a0:	56                   	push   esi
+  5077a1:	50                   	push   eax
+  5077a2:	8b cd                	mov    ecx,ebp
+  5077a4:	ff 92 68 03 00 00    	call   DWORD PTR [edx+0x368]
+  5077aa:	85 c0                	test   eax,eax
+  5077ac:	75 15                	jne    0x5077c3
+  5077ae:	8b 85 28 02 00 00    	mov    eax,DWORD PTR [ebp+0x228]
+  5077b4:	8b 55 00             	mov    edx,DWORD PTR [ebp+0x0]
+  5077b7:	56                   	push   esi
+  5077b8:	50                   	push   eax
+  5077b9:	8b cd                	mov    ecx,ebp
+  5077bb:	ff 92 74 03 00 00    	call   DWORD PTR [edx+0x374]
+
+
+
+/tmp/ra2-engine-reference/game.exe:     file format pei-i386
+
+
+Disassembly of section .text:
+
+005078b0 <.text+0x1068b0>:
+  5078b0:	83 ec 1c             	sub    esp,0x1c
+  5078b3:	53                   	push   ebx
+  5078b4:	56                   	push   esi
+  5078b5:	8b f1                	mov    esi,ecx
+  5078b7:	57                   	push   edi
+  5078b8:	8b 86 ac 05 00 00    	mov    eax,DWORD PTR [esi+0x5ac]
+  5078be:	83 f8 ff             	cmp    eax,0xffffffff
+  5078c1:	74 21                	je     0x5078e4
+  5078c3:	8b 8e a8 05 00 00    	mov    ecx,DWORD PTR [esi+0x5a8]
+  5078c9:	8b be e0 00 00 00    	mov    edi,DWORD PTR [esi+0xe0]
+  5078cf:	8b d0                	mov    edx,eax
+  5078d1:	8b 89 98 0b 00 00    	mov    ecx,DWORD PTR [ecx+0xb98]
+  5078d7:	c1 e2 04             	shl    edx,0x4
+  5078da:	3b 7c 11 04          	cmp    edi,DWORD PTR [ecx+edx*1+0x4]
+  5078de:	0f 8c 4a 02 00 00    	jl     0x507b2e
