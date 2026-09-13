@@ -1,0 +1,16 @@
+# Original rules.ini [GAREFN]; timing uses the documented 30-frame reference clock.
+[units.refinery]
+name = "Ore Refinery"
+category = "structures"
+faction = "allied"
+cost = 2000
+buildTime = 42.0
+hp = 1000
+footprint = [4, 3]
+power = -50
+requires = ["power"]
+sight = 6
+sprite = "garefn"
+cameo = "reficon"
+description = "Processes ore into credits. Includes a free Chrono Miner."
+armor = "wood"

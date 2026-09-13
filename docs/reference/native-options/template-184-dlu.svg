@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="884" height="716" viewBox="-8 -36 442 358">
+<title>PE resource 184: template in dialog units, not a screenshot</title>
+<rect x="-8" y="-36" width="442" height="358" fill="#f5f6fa"/>
+<style>text{font-family:monospace;font-size:6px;fill:#17233a}.hidden{stroke-dasharray:3 2}</style>
+<text x="0" y="-22" style="font-size:10px;font-weight:bold">Resource 184: raw DLU template</text>
+<text x="0" y="-11" style="font-size:7px">NOT native pixels or retail artwork. Runtime repositions controls.</text>
+<rect x="0" y="0" width="426" height="295" fill="white" stroke="#8290a5" stroke-width=".6"/>
+<rect x="318" y="257" width="108" height="23" fill="#eaf2ff" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="320" y="265">1670: Back</text>
+<rect x="318" y="1" width="108" height="10" fill="#f8fafc" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="320" y="8.0">1684: SoundOptions</text>
+<rect x="105" y="28" width="175" height="13" fill="#f8fafc" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="107" y="36">1327: slider</text>
+<rect x="105" y="50" width="175" height="13" fill="#f8fafc" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="107" y="58">1330: slider</text>
+<rect x="9" y="27" width="90" height="15" fill="#f8fafc" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="11" y="35">MusicVolume</text>
+<rect x="9" y="49" width="90" height="15" fill="#f8fafc" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="11" y="57">SoundVolume</text>
+<rect x="105" y="97" width="175" height="99" fill="#f8fafc" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="107" y="105">1328: ListBox</text>
+<rect x="29" y="214" width="83" height="15" fill="#eaf2ff" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="31" y="222">1329: Play</text>
+<rect x="197" y="214" width="83" height="15" fill="#eaf2ff" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="199" y="222">1333: Stop</text>
+<rect x="9" y="71" width="90" height="15" fill="#f8fafc" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="11" y="79">VoiceVolume</text>
+<rect x="105" y="72" width="175" height="13" fill="#f8fafc" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="107" y="80">1334: slider</text>
+<rect x="29" y="155" width="70" height="14" fill="#eaf2ff" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="31" y="163">1331: Shuffle</text>
+<rect x="29" y="182" width="70" height="14" fill="#eaf2ff" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="31" y="190">1332: Repeat</text>
+<rect x="10" y="282" width="303" height="12" fill="#f8fafc" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="12" y="290.0">1685: Help / blank</text>
+<text x="0" y="307" style="font-size:7px">426 × 295 dialog units. Outlines/fonts here are schematic only.</text>
+<text x="0" y="318" style="font-size:7px">Amber dashed: hidden + disabled in template. IDs identify exact JSON rows.</text>
+</svg>

@@ -1,0 +1,50 @@
+{
+  "method": "Read-only PE parsing, bounded objdump, template RVA/size cross-check with llvm-readobj; no PE execution.",
+  "source_sha256": "06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb",
+  "selected_template_count": 9,
+  "selected_templates_exact_byte_consumption": true,
+  "json_and_svg_well_formed": true,
+  "local_report_links_exist": true,
+  "disassembly_spans_end_on_instruction_boundaries": true,
+  "reviewed_schematic_in_isolated_browser": "template-3003-dlu.svg, own context ra2-video-review-pe-diagrams",
+  "native_pixel_acceptance": false,
+  "files": {
+    "01-options-navigation.asm": {
+      "bytes": 8011,
+      "sha256": "d4689d3f3ff72bfba88f1a110614efd8d404384513cff84de9a0bb0d890e3463"
+    },
+    "02-controls-state.asm": {
+      "bytes": 14842,
+      "sha256": "3d14a8611d57242b0d2123aef02d14b4cf4ea64af5922fd7ee10009c69e97096"
+    },
+    "03-sound-state.asm": {
+      "bytes": 8476,
+      "sha256": "102f11bb5a8780a20076899a83f5454bf65017fd60880f84b26cd3b57324a716"
+    },
+    "04-resource-and-placement.asm": {
+      "bytes": 10675,
+      "sha256": "90378f4074428784757d7ee1944ecd791f6618a5814fb15a3848409f5569816d"
+    },
+    "selected-dialogs.json": {
+      "bytes": 72019,
+      "sha256": "2d4acc987a392451f77efd82fb196a032b0d63cabdea3c1df7662d44c90f9e47"
+    },
+    "speed-scroll-label-tables.json": {
+      "bytes": 1618,
+      "sha256": "feb11fbdd55d6272dd19096e4fa25f37261a47ce2f5ad9686be44f8e37df873f"
+    },
+    "template-181-dlu.svg": {
+      "bytes": 2164,
+      "sha256": "1c68a5bd3fcbeaba0aa8d93b100456e743c41541a820d6d6c85df684a06d8832"
+    },
+    "template-184-dlu.svg": {
+      "bytes": 3032,
+      "sha256": "43bfbe28cbd6c1b8fab7bd7d5efd193047b370ad6e750be30eaf922c92801756"
+    },
+    "template-3003-dlu.svg": {
+      "bytes": 3542,
+      "sha256": "4585b465db22ab97469b60ba745067751445b7f214ff4db910e68c9d3c5a3ba6"
+    }
+  },
+  "text_normalization": "Trailing spaces removed from objdump text for repository whitespace checks; addresses, opcode bytes and instructions unchanged."
+}

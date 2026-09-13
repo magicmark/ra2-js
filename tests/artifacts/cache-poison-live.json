@@ -1,0 +1,107 @@
+{
+  "date": "2026-09-13",
+  "method": "Previously real default-URL downloaded origin http://omarky:5173, same private QA context live-staged-assets-20260913. Exact historical artwork-rejection markers injected into existing archive-stage metadata; selected game.fnt removed. Original installer/MIX Blobs retained. Archive fetch blocked during recovery and final reload/Continue.",
+  "injection": {
+    "at": "2026-09-13T19:53:08.329Z",
+    "selectedBefore": 242,
+    "selectedAfter": 241,
+    "rejected": "Missing original asset: game.fnt. Download or import a complete copy of the game.",
+    "generation": "1789325286975-bt79y3w22hj",
+    "saved": 1789325286975,
+    "installerBytes": 206530229,
+    "mixBytes": 335011496
+  },
+  "recovered": {
+    "at": "2026-09-13T19:55:57.713Z",
+    "url": "http://omarky:5173/",
+    "ready": true,
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets ready · 242 files saved in this browser",
+      "loaded": 1,
+      "total": 1
+    },
+    "files": 242,
+    "time": 0,
+    "gate": true,
+    "button": "Continue",
+    "probe": {
+      "started": "2026-09-13T19:53:34.048Z",
+      "fetches": [],
+      "workers": [
+        {
+          "url": "http://omarky:5173/src/assets/extract.worker.ts?worker_file&type=module",
+          "at": 2511.199999999255
+        }
+      ],
+      "workerMessages": [
+        {
+          "at": 3687.800000000745,
+          "kind": "progress",
+          "message": "Indexing language.mix…"
+        },
+        {
+          "at": 3787.900000002235,
+          "kind": "progress",
+          "message": "Indexing ra2.mix…"
+        },
+        {
+          "at": 4815.699999999255,
+          "kind": "complete",
+          "files": 242,
+          "bytes": 8590736
+        }
+      ],
+      "submits": [],
+      "cacheWrites": [
+        {
+          "at": 6880.10000000149,
+          "state": "complete",
+          "completedAt": 7125.199999999255
+        }
+      ]
+    },
+    "blocked": [],
+    "resources": [
+      "http://omarky:5173/node_modules/7z-wasm/7zz.wasm?import&url"
+    ]
+  },
+  "cleanup": "Original rejection metadata restored and test backup removed after recovery; repaired selected cache retained.",
+  "hardReload": {
+    "at": "2026-09-13T20:02:54.850Z",
+    "ready": true,
+    "files": 242,
+    "time": 0,
+    "gate": true,
+    "label": "Continue",
+    "fetches": 0,
+    "workers": 0,
+    "writes": 0,
+    "blocked": 0
+  },
+  "nativeContinue": {
+    "at": "2026-09-13T20:03:28.566Z",
+    "url": "http://omarky:5173/",
+    "ready": true,
+    "phase": "ready",
+    "files": 242,
+    "time": 7.233333333333317,
+    "gate": false,
+    "probe": {
+      "started": "2026-09-13T20:02:41.501Z",
+      "fetches": [],
+      "workers": [],
+      "workerMessages": [],
+      "submits": [
+        {
+          "id": "startup-source-form",
+          "trusted": true,
+          "at": 35662.199999999255
+        }
+      ],
+      "cacheWrites": []
+    },
+    "blocked": []
+  },
+  "limits": "Injected state is a controlled reproduction of the exact bug reproduced by failing tests, not a claim that this healthy origin was currently poisoned. The initial inspector cache-enumeration call lost its Promise; passive recovery counters and subsequent state were captured separately. The wasm?import&url resource is a Vite JavaScript URL wrapper; worker messages prove MIX indexing only."
+}

@@ -1,0 +1,245 @@
+{
+  "date": "2026-09-13T19:17:15.538Z",
+  "origin": "http://omarky:4195",
+  "profile": "/tmp/ra2-persistent-browser-0yRM4D",
+  "method": "Actual local installer imported through native file input into a regular persistent Chromium profile, then full browser close and reopen using the same profile. Archive HTTP is blocked throughout; no remote installer transfer.",
+  "runs": [
+    {
+      "pid": 117453,
+      "cold": {
+        "ready": false,
+        "status": {
+          "phase": "awaiting-source",
+          "message": "Confirm the archive URL and press Enter to download game assets.",
+          "loaded": 0
+        },
+        "gameTime": 0,
+        "gateVisible": true,
+        "submitLabel": "Download & play",
+        "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+        "probe": {
+          "fetches": [],
+          "workers": [],
+          "writes": []
+        },
+        "entries": [],
+        "bundle": [
+          "http://omarky:4195/assets/index-Dmkn-4BL.js"
+        ]
+      },
+      "loaded": {
+        "ready": true,
+        "status": {
+          "phase": "ready",
+          "message": "Original game assets ready · 234 files saved in this browser",
+          "loaded": 1,
+          "total": 1
+        },
+        "gameTime": 1.7666666666666688,
+        "gateVisible": false,
+        "submitLabel": "Continue",
+        "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+        "probe": {
+          "fetches": [],
+          "workers": [
+            "http://omarky:4195/assets/extract.worker-BXixVNhY.js"
+          ],
+          "writes": [
+            {
+              "key": [
+                "archive-stage-v1",
+                "/asset-source",
+                "download"
+              ],
+              "files": 1
+            },
+            {
+              "key": [
+                "archive-stage-v1",
+                "/asset-source",
+                "mix-pending"
+              ],
+              "files": 2
+            },
+            {
+              "key": "/asset-source",
+              "files": 234
+            },
+            {
+              "key": [
+                "archive-stage-v1",
+                "/asset-source",
+                "mix"
+              ],
+              "files": 2
+            },
+            {
+              "key": [
+                "archive-stage-v1",
+                "/asset-source",
+                "installer"
+              ],
+              "files": 1
+            }
+          ]
+        },
+        "entries": [
+          {
+            "key": "/asset-source",
+            "version": 8,
+            "files": 234,
+            "bytes": 8219384
+          },
+          {
+            "key": [
+              "archive-stage-v1",
+              "/asset-source",
+              "installer"
+            ],
+            "version": 1,
+            "files": 1,
+            "bytes": 206530229,
+            "names": [
+              "ra2-multiplayer.exe"
+            ]
+          },
+          {
+            "key": [
+              "archive-stage-v1",
+              "/asset-source",
+              "mix"
+            ],
+            "version": 1,
+            "files": 2,
+            "bytes": 335011496,
+            "names": [
+              "language.mix",
+              "ra2.mix"
+            ]
+          }
+        ],
+        "bundle": [
+          "http://omarky:4195/assets/index-Dmkn-4BL.js"
+        ]
+      },
+      "blockedArchiveRequests": []
+    },
+    {
+      "pid": 117944,
+      "reopened": {
+        "ready": true,
+        "status": {
+          "phase": "ready",
+          "message": "Original game assets loaded from this browser.",
+          "loaded": 1,
+          "total": 1
+        },
+        "gameTime": 0,
+        "gateVisible": true,
+        "submitLabel": "Continue",
+        "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+        "probe": {
+          "fetches": [],
+          "workers": [],
+          "writes": []
+        },
+        "entries": [
+          {
+            "key": "/asset-source",
+            "version": 8,
+            "files": 234,
+            "bytes": 8219384
+          },
+          {
+            "key": [
+              "archive-stage-v1",
+              "/asset-source",
+              "installer"
+            ],
+            "version": 1,
+            "files": 1,
+            "bytes": 206530229,
+            "names": [
+              "ra2-multiplayer.exe"
+            ]
+          },
+          {
+            "key": [
+              "archive-stage-v1",
+              "/asset-source",
+              "mix"
+            ],
+            "version": 1,
+            "files": 2,
+            "bytes": 335011496,
+            "names": [
+              "language.mix",
+              "ra2.mix"
+            ]
+          }
+        ],
+        "bundle": [
+          "http://omarky:4195/assets/index-Dmkn-4BL.js"
+        ]
+      },
+      "continued": {
+        "ready": true,
+        "status": {
+          "phase": "ready",
+          "message": "Original game assets loaded from this browser.",
+          "loaded": 1,
+          "total": 1
+        },
+        "gameTime": 1.6666666666666685,
+        "gateVisible": false,
+        "submitLabel": "Continue",
+        "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+        "probe": {
+          "fetches": [],
+          "workers": [],
+          "writes": []
+        },
+        "entries": [
+          {
+            "key": "/asset-source",
+            "version": 8,
+            "files": 234,
+            "bytes": 8219384
+          },
+          {
+            "key": [
+              "archive-stage-v1",
+              "/asset-source",
+              "installer"
+            ],
+            "version": 1,
+            "files": 1,
+            "bytes": 206530229,
+            "names": [
+              "ra2-multiplayer.exe"
+            ]
+          },
+          {
+            "key": [
+              "archive-stage-v1",
+              "/asset-source",
+              "mix"
+            ],
+            "version": 1,
+            "files": 2,
+            "bytes": 335011496,
+            "names": [
+              "language.mix",
+              "ra2.mix"
+            ]
+          }
+        ],
+        "bundle": [
+          "http://omarky:4195/assets/index-Dmkn-4BL.js"
+        ]
+      },
+      "blockedArchiveRequests": []
+    }
+  ],
+  "pass": true
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "name": "piffpiff",
+    "frames": 12,
+    "width": 28,
+    "height": 28,
+    "archive": "ra2.mix/conquer.mix"
+  },
+  {
+    "name": "s_clsn22",
+    "frames": 13,
+    "width": 148,
+    "height": 158,
+    "archive": "ra2.mix/conquer.mix"
+  },
+  {
+    "name": "xgrysml2",
+    "frames": 13,
+    "width": 148,
+    "height": 158,
+    "archive": "ra2.mix/conquer.mix"
+  },
+  {
+    "name": "htrkpuff",
+    "frames": 15,
+    "width": 56,
+    "height": 62,
+    "archive": "ra2.mix/conquer.mix"
+  },
+  {
+    "name": "twlt070",
+    "frames": 26,
+    "width": 186,
+    "height": 196,
+    "archive": "ra2.mix/conquer.mix"
+  },
+  {
+    "name": "s_bang48",
+    "frames": 23,
+    "width": 148,
+    "height": 200,
+    "archive": "ra2.mix/conquer.mix"
+  },
+  {
+    "name": "s_brnl58",
+    "frames": 10,
+    "width": 148,
+    "height": 158,
+    "archive": "ra2.mix/conquer.mix"
+  },
+  {
+    "name": "s_clsn58",
+    "frames": 21,
+    "width": 182,
+    "height": 156,
+    "archive": "ra2.mix/conquer.mix"
+  },
+  {
+    "name": "s_tumu60",
+    "frames": 21,
+    "width": 182,
+    "height": 156,
+    "archive": "ra2.mix/conquer.mix"
+  }
+]

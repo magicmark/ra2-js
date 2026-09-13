@@ -1,0 +1,17 @@
+# Original rules.ini [NAHAND]; timing uses the documented 30-frame reference clock.
+[units.barracks_soviet]
+name = "Barracks"
+category = "structures"
+faction = "soviet"
+cost = 500
+buildTime = 10.5
+hp = 500
+footprint = [2, 2]
+power = -10
+requires = ["power_soviet"]
+producer = ["infantry"]
+sight = 6
+sprite = "nahand"
+cameo = "handicon"
+description = "Trains Soviet infantry."
+armor = "steel"

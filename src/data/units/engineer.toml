@@ -1,0 +1,19 @@
+# Original rules.ini [ENGINEER]; integer Speed/ROF use the documented 30-frame reference clock.
+[units.engineer]
+name = "Engineer"
+category = "infantry"
+faction = "allied"
+cost = 500
+buildTime = 10.5
+hp = 75
+speed = 1.171875
+damage = 0
+range = 0.9
+fireRate = 1.0
+sight = 4
+requires = ["barracks"]
+sprite = "engineer"
+cameo = "engnicon"
+description = "Order onto an enemy building to capture it. Consumed on capture."
+armor = "none"
+nativeSpeed = 4

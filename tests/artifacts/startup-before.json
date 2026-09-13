@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Script ran on page and returned:\n```json\n{\"probe\":{\"started\":\"2026-09-13T17:35:43.010Z\",\"fetches\":[{\"url\":\"/asset-source\",\"at\":1208.9000000003725}],\"workers\":[],\"submits\":[]},\"status\":{\"phase\":\"download\",\"message\":\"Downloading assets · 19.3 / 197.0 MB\",\"loaded\":20215875,\"total\":206530229},\"source\":\"/asset-source\",\"location\":\"http://omarky:5173/\"}\n```"
+    }
+  ]
+}

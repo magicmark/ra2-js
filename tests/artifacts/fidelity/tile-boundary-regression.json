@@ -1,0 +1,3608 @@
+{
+  "verified": "2026-09-13",
+  "rendererSha256": "eea70006b63a8f4dabfb6629597427d8cee7bbcd06331d0733f8bbd7be998b4c",
+  "glSha256": "a22937d2f9dd076a70ce92eaad2da7882b5ae539590bd531ebba487d9c162805",
+  "oracle": "Full-frame hidden scenes are strictly black; partial exploration permits only hardware subpixel-grid classification uncertainty at a revealed boundary.",
+  "results": [
+    {
+      "devicePixelRatio": 1,
+      "forceMedium": false,
+      "subpixelBits": 4,
+      "passed": true,
+      "rows": [
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 295536,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 6561,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 295536,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 6561,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 295536,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 6561,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 295536,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 6561,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 283872,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 15309,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 283872,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 15309,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 283872,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 15309,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 283872,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 15309,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 274800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 18225,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 275503,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 18225,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 275703,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 18225,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 274800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 18225,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 243303,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 42525,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 243103,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 42525,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 243103,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 42525,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 243303,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 42525,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 260544,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 26244,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 266430,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 24759,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 267214,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 24353,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 260544,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 26244,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 220558,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 59345,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 219774,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 59751,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 219774,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 59751,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 220558,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 59345,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 249600,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 32400,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 261846,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 27744,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 262966,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 27044,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 249691,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 32400,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 205366,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 70244,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 204337,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 70944,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 204246,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 70944,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 205457,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 70244,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 232592,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 42848,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 257016,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 30208,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 258872,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 28904,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 234896,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 42668,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 184264,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 86036,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 184712,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 87160,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 182408,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 87340,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 186568,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 85856,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 217794,
+          "rasterBoundaryPixels": 156,
+          "wrongCore": 0,
+          "corePixels": 53604,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 254556,
+          "rasterBoundaryPixels": 6,
+          "wrongCore": 0,
+          "corePixels": 30336,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 257596,
+          "rasterBoundaryPixels": 156,
+          "wrongCore": 0,
+          "corePixels": 28076,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 222978,
+          "rasterBoundaryPixels": 75,
+          "wrongCore": 0,
+          "corePixels": 51228,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 168190,
+          "rasterBoundaryPixels": 312,
+          "wrongCore": 0,
+          "corePixels": 99932,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 170334,
+          "rasterBoundaryPixels": 81,
+          "wrongCore": 0,
+          "corePixels": 99816,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 165150,
+          "rasterBoundaryPixels": 6,
+          "wrongCore": 0,
+          "corePixels": 102192,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 173374,
+          "rasterBoundaryPixels": 75,
+          "wrongCore": 0,
+          "corePixels": 97556,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 195864,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 72936,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 253736,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 21424,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 258216,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 18624,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 213784,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 55016,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 146880,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 121920,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 160320,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 108480,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 142400,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 126400,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 164800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 104000,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 194116,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 67004,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 253244,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 17020,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 258684,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 14028,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 215556,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 45753,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 145600,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 115520,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 161600,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 99540,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 140160,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 120960,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 307200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 167040,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 94249,
+          "total": 307200
+        }
+      ]
+    },
+    {
+      "devicePixelRatio": 2,
+      "forceMedium": false,
+      "subpixelBits": 4,
+      "passed": true,
+      "rows": [
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1182144,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 26244,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1182144,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 26244,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1182144,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 26244,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1182144,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 26244,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1135488,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 61236,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1135488,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 61236,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1135488,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 61236,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1135488,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 61236,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1099200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 72900,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1102013,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 72900,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1102813,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 72900,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1099200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 72900,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 973213,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 170100,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 972413,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 170100,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 972413,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 170100,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 973213,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 170100,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1042176,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 104976,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1065938,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 98926,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1068626,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 97534,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1042176,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 104976,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 882002,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 237502,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 879314,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 238894,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 879314,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 238894,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 882002,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 237502,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 998400,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 129600,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1047384,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 110976,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1051864,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 108176,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 998792,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 129600,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 821464,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 280976,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 817376,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 283776,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 816984,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 283776,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 821856,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 280976,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 930368,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 171396,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1028064,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 120834,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1035488,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 115618,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 939584,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 170674,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 737056,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 344146,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 738848,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 348640,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 729632,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 349362,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 746272,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 343424,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 871176,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 214416,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1018824,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 120900,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1029768,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 112764,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 891912,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 204912,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 672144,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 400188,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 681936,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 398820,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 661200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 408324,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 692880,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 390684,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 783458,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 291742,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1014942,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 85698,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1032862,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 74498,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 855138,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 220062,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 587520,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 487680,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 641280,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 433920,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 569600,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 505600,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 659200,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 416000,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 776465,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 268015,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1012975,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 68081,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 1034735,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 56113,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 862225,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 183012,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            0,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 582400,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 462080,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            128,
+            64
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 646400,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 398161,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            64,
+            0
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 560640,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 483840,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": false,
+          "leaked": 0,
+          "hiddenPixels": 1228800,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "edge": [
+            64,
+            128
+          ],
+          "partial": true,
+          "leaked": 0,
+          "hiddenPixels": 668160,
+          "rasterBoundaryPixels": 0,
+          "wrongCore": 0,
+          "corePixels": 376996,
+          "total": 1228800
+        }
+      ]
+    }
+  ]
+}

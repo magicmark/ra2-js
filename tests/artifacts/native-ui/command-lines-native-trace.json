@@ -1,0 +1,325 @@
+{
+  "source": "Frozen live5173, matches4199 checkpoint source",
+  "staging": "Production QA real tick remained frozen for captures. Existing Grizzly selected by native canvas click. Camera centered on move destination22.5,44.5 then existing enemyConscript17 relocated to23.5,42.5 and targettile revealed for native attack click. Original prototype tick advanced24+1 logic steps to verify expiry. Source25tick basis is documented by gameplay owner, not inferred from screenshot timing.",
+  "trace": [
+    {
+      "step": "Camera staging on original Grizzly6 before native selection",
+      "time": 26.20000000000046,
+      "selected": false,
+      "order": "guard",
+      "targetId": null,
+      "feedbackTicks": 0,
+      "tank": {
+        "x": 19.5,
+        "y": 41.5
+      },
+      "targetLines": true
+    },
+    {
+      "step": "Native canvas click selects Grizzly6",
+      "time": 26.20000000000046,
+      "selected": true,
+      "order": "guard",
+      "targetId": null,
+      "feedbackTicks": 25,
+      "tank": {
+        "x": 19.5,
+        "y": 41.5
+      },
+      "targetLines": true
+    },
+    {
+      "step": "Native left canvas click issues Move; original green feedback line",
+      "time": 26.20000000000046,
+      "selected": true,
+      "order": "move",
+      "targetId": null,
+      "feedbackTicks": 25,
+      "path": {
+        "points": [
+          {
+            "x": 22.5,
+            "y": 44.5
+          }
+        ],
+        "attack": false
+      },
+      "tank": {
+        "x": 19.5,
+        "y": 41.5
+      },
+      "targetLines": true
+    },
+    {
+      "step": "Camera staging before native enemy-target click",
+      "time": 26.20000000000046,
+      "selected": true,
+      "order": "move",
+      "targetId": null,
+      "feedbackTicks": 25,
+      "path": {
+        "points": [
+          {
+            "x": 22.5,
+            "y": 44.5
+          }
+        ],
+        "attack": false
+      },
+      "tank": {
+        "x": 19.5,
+        "y": 41.5
+      },
+      "targetLines": true
+    },
+    {
+      "step": "Native enemy click issues Attack; red target line to Conscript17",
+      "time": 26.20000000000046,
+      "selected": true,
+      "order": "attack",
+      "targetId": 17,
+      "feedbackTicks": 25,
+      "path": {
+        "points": [
+          {
+            "x": 23.5,
+            "y": 42.5
+          }
+        ],
+        "attack": true
+      },
+      "tank": {
+        "x": 19.5,
+        "y": 41.5
+      },
+      "targetLines": true
+    },
+    {
+      "step": "Real simulation advanced24 logic ticks; shared feedback gate has1tick left",
+      "time": 27.0000000000005,
+      "selected": true,
+      "order": "attack",
+      "targetId": 17,
+      "feedbackTicks": 1,
+      "path": {
+        "points": [
+          {
+            "x": 23.5,
+            "y": 42.5
+          }
+        ],
+        "attack": true
+      },
+      "tank": {
+        "x": 19.5,
+        "y": 41.5
+      },
+      "targetLines": true
+    },
+    {
+      "step": "Real simulation advanced25th tick; line expires while tank remains selected and attacking",
+      "time": 27.033333333333836,
+      "selected": true,
+      "order": "attack",
+      "targetId": 17,
+      "feedbackTicks": 0,
+      "tank": {
+        "x": 19.5,
+        "y": 41.5
+      },
+      "targetLines": true
+    }
+  ],
+  "requests": [],
+  "inputs": [
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Shift",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "F10",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "contextmenu",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {},
+      "id": ""
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {},
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Escape",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {},
+      "id": ""
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {},
+      "id": "game-canvas"
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {
+        "build": "barracks"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Shift",
+      "trusted": true,
+      "target": {
+        "build": "barracks"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Tab",
+      "trusted": true,
+      "target": {
+        "build": "barracks"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Shift",
+      "trusted": true,
+      "target": {
+        "build": "refinery"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Tab",
+      "trusted": true,
+      "target": {
+        "build": "refinery"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Shift",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "F10",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "contextmenu",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Shift",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "F10",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "contextmenu",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {},
+      "id": "game-canvas"
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {},
+      "id": "game-canvas"
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {},
+      "id": "game-canvas"
+    }
+  ]
+}

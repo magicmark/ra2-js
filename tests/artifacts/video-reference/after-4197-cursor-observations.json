@@ -1,0 +1,134 @@
+{
+  "method": "Programmatic pointer events through existing canvas handlers; sampled applied CSS artwork. Browser screenshots omit system pointer.",
+  "out": [
+    {
+      "test": {
+        "name": "move",
+        "ctrl": false,
+        "shift": false
+      },
+      "point": {
+        "x": 376,
+        "y": 405
+      },
+      "samples": [
+        {
+          "wall": 223818.80000000075,
+          "semantic": "move",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 223982.69999999925,
+          "semantic": "move",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 224264.69999999925,
+          "semantic": "move",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 224511.1000000015,
+          "semantic": "move",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 224784.90000000224,
+          "semantic": "move",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 225185.6000000015,
+          "semantic": "move",
+          "hotspot": " 28 21, none"
+        }
+      ]
+    },
+    {
+      "test": {
+        "name": "force-attack",
+        "ctrl": true,
+        "shift": false
+      },
+      "point": {
+        "x": 376,
+        "y": 405
+      },
+      "samples": [
+        {
+          "wall": 225406,
+          "semantic": "attack",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 225662.69999999925,
+          "semantic": "attack",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 225830.6000000015,
+          "semantic": "attack",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 226028.6000000015,
+          "semantic": "attack",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 226248.19999999925,
+          "semantic": "attack",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 226440.1000000015,
+          "semantic": "attack",
+          "hotspot": " 28 21, none"
+        }
+      ]
+    },
+    {
+      "test": {
+        "name": "attack-move",
+        "ctrl": true,
+        "shift": true
+      },
+      "point": {
+        "x": 376,
+        "y": 405
+      },
+      "samples": [
+        {
+          "wall": 226739.90000000224,
+          "semantic": "attackmove",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 226980.6000000015,
+          "semantic": "attackmove",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 227300.6000000015,
+          "semantic": "attackmove",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 227572.69999999925,
+          "semantic": "attackmove",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 227865.30000000075,
+          "semantic": "attackmove",
+          "hotspot": " 28 21, none"
+        },
+        {
+          "wall": 228262.40000000224,
+          "semantic": "attackmove",
+          "hotspot": " 28 21, none"
+        }
+      ]
+    }
+  ]
+}

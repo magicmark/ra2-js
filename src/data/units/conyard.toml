@@ -1,0 +1,16 @@
+# Original rules.ini [GACNST]; timing uses the documented 30-frame reference clock.
+[units.conyard]
+name = "Construction Yard"
+category = "structures"
+faction = "both"
+cost = 3000
+buildTime = 63.0
+hp = 1000
+footprint = [4, 4]
+power = 0
+sight = 8
+producer = ["structures", "defenses"]
+sprite = "gacnst"
+cameo = "acnsicon"
+description = "The heart of your base. Constructs structures and defenses."
+armor = "concrete"

@@ -1,0 +1,72 @@
+Supplied RA2 executable action-line evidence (static, never executed).
+SHA-256: 06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb
+FileVersion/ProductVersion 1.08; unmodified retail provenance is not established.
+Unit vtable 0x7addf8; DrawActionLines slot 0x3cc points to 0x4ca8b0.
+Global timer: start frame 0xac0178; interval 0xac0180; current logic frame 0xa40d2c.
+Setter 0x6d7990 is called at 0x49be60,0x49bfed,0x49c0ee,0x6f60ba.
+
+== Unit vtable base from its constructor ==
+006fa46e <.text+0x2f946e>:
+  6fa46e:	c7 06 f8 dd 7a 00    	mov    DWORD PTR [esi],0x7addf8
+
+== DrawActionLines skips expired timer unless forced ==
+004ca8b9 <.text+0xc98b9>:
+  4ca8b9:	8b be 28 02 00 00    	mov    edi,DWORD PTR [esi+0x228]
+  4ca8bf:	85 ff                	test   edi,edi
+  4ca8c1:	75 0e                	jne    0x4ca8d1
+  4ca8c3:	8b 86 94 04 00 00    	mov    eax,DWORD PTR [esi+0x494]
+  4ca8c9:	85 c0                	test   eax,eax
+  4ca8cb:	0f 84 a7 02 00 00    	je     0x4cab78
+  4ca8d1:	8a 44 24 38          	mov    al,BYTE PTR [esp+0x38]
+  4ca8d5:	84 c0                	test   al,al
+  4ca8d7:	75 2a                	jne    0x4ca903
+  4ca8d9:	8b 15 78 01 ac 00    	mov    edx,DWORD PTR ds:0xac0178
+  4ca8df:	a1 80 01 ac 00       	mov    eax,ds:0xac0180
+  4ca8e4:	83 fa ff             	cmp    edx,0xffffffff
+  4ca8e7:	74 12                	je     0x4ca8fb
+  4ca8e9:	8b 0d 2c 0d a4 00    	mov    ecx,DWORD PTR ds:0xa40d2c
+  4ca8ef:	2b ca                	sub    ecx,edx
+  4ca8f1:	3b c8                	cmp    ecx,eax
+  4ca8f3:	0f 8d 7f 02 00 00    	jge    0x4cab78
+  4ca8f9:	2b c1                	sub    eax,ecx
+  4ca8fb:	85 c0                	test   eax,eax
+  4ca8fd:	0f 8e 75 02 00 00    	jle    0x4cab78
+
+== Shared timer reset to 25 logic frames ==
+006d7990 <.text+0x2d6990>:
+  6d7990:	a1 2c 0d a4 00       	mov    eax,ds:0xa40d2c
+  6d7995:	b9 19 00 00 00       	mov    ecx,0x19
+  6d799a:	a3 78 01 ac 00       	mov    ds:0xac0178,eax
+  6d799f:	8b 44 24 f8          	mov    eax,DWORD PTR [esp-0x8]
+  6d79a3:	83 ec 0c             	sub    esp,0xc
+  6d79a6:	a3 7c 01 ac 00       	mov    ds:0xac017c,eax
+  6d79ab:	89 0d 80 01 ac 00    	mov    DWORD PTR ds:0xac0180,ecx
+  6d79b1:	83 c4 0c             	add    esp,0xc
+  6d79b4:	c3                   	ret
+
+== Ordinary selected-unit rendering calls Force=false ==
+006a4fad <.text+0x2a3fad>:
+  6a4fad:	8a 44 24 13          	mov    al,BYTE PTR [esp+0x13]
+  6a4fb1:	84 c0                	test   al,al
+  6a4fb3:	75 70                	jne    0x6a5025
+  6a4fb5:	8a 46 77             	mov    al,BYTE PTR [esi+0x77]
+  6a4fb8:	84 c0                	test   al,al
+  6a4fba:	74 69                	je     0x6a5025
+  6a4fbc:	a0 10 71 7f 00       	mov    al,ds:0x7f7110
+  6a4fc1:	84 c0                	test   al,al
+  6a4fc3:	74 0e                	je     0x6a4fd3
+  6a4fc5:	8b 06                	mov    eax,DWORD PTR [esi]
+  6a4fc7:	6a 00                	push   0x0
+  6a4fc9:	6a 00                	push   0x0
+  6a4fcb:	8b ce                	mov    ecx,esi
+  6a4fcd:	ff 90 cc 03 00 00    	call   DWORD PTR [eax+0x3cc]
+
+== Selection/group handler refreshes timer ==
+006f60b2 <.text+0x2f50b2>:
+  6f60b2:	5d                   	pop    ebp
+  6f60b3:	c6 05 d6 88 7d 00 01 	mov    BYTE PTR ds:0x7d88d6,0x1
+  6f60ba:	e8 d1 18 fe ff       	call   0x6d7990
+  6f60bf:	5f                   	pop    edi
+  6f60c0:	5e                   	pop    esi
+  6f60c1:	83 c4 10             	add    esp,0x10
+  6f60c4:	c3                   	ret

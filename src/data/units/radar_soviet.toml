@@ -1,0 +1,16 @@
+# Original rules.ini [NARADR]; timing uses the documented 30-frame reference clock.
+[units.radar_soviet]
+name = "Radar Tower"
+category = "structures"
+faction = "soviet"
+cost = 1000
+buildTime = 21.0
+hp = 1000
+footprint = [2, 2]
+power = -50
+requires = ["refinery_soviet"]
+sight = 10
+sprite = "naradr"
+cameo = "nradicon"
+description = "Long-range Soviet reconnaissance and technology."
+armor = "wood"

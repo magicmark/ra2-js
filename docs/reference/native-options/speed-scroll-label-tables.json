@@ -1,0 +1,80 @@
+{
+  "source_sha256": "06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb",
+  "tables": {
+    "0x7d83c0": [
+      {
+        "index": 0,
+        "string_va": "0x7d8490",
+        "key": "TXT_SLOWEST"
+      },
+      {
+        "index": 1,
+        "string_va": "0x7d8484",
+        "key": "TXT_SLOWER"
+      },
+      {
+        "index": 2,
+        "string_va": "0x7d8478",
+        "key": "TXT_SLOW"
+      },
+      {
+        "index": 3,
+        "string_va": "0x7d846c",
+        "key": "TXT_MEDIUM"
+      },
+      {
+        "index": 4,
+        "string_va": "0x7d8460",
+        "key": "TXT_FAST"
+      },
+      {
+        "index": 5,
+        "string_va": "0x7d8454",
+        "key": "TXT_FASTER"
+      },
+      {
+        "index": 6,
+        "string_va": "0x7d8448",
+        "key": "TXT_FASTEST"
+      }
+    ],
+    "0x7d83dc": [
+      {
+        "index": 0,
+        "string_va": "0x7d8490",
+        "key": "TXT_SLOWEST"
+      },
+      {
+        "index": 1,
+        "string_va": "0x7d8484",
+        "key": "TXT_SLOWER"
+      },
+      {
+        "index": 2,
+        "string_va": "0x7d8478",
+        "key": "TXT_SLOW"
+      },
+      {
+        "index": 3,
+        "string_va": "0x7d846c",
+        "key": "TXT_MEDIUM"
+      },
+      {
+        "index": 4,
+        "string_va": "0x7d8460",
+        "key": "TXT_FAST"
+      },
+      {
+        "index": 5,
+        "string_va": "0x7d8454",
+        "key": "TXT_FASTER"
+      },
+      {
+        "index": 6,
+        "string_va": "0x7d8448",
+        "key": "TXT_FASTEST"
+      }
+    ]
+  },
+  "note": "Both tables list slider positions 0..6; not a mapping to measured real-time FPS."
+}

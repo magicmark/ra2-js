@@ -1,0 +1,28 @@
+{
+  "observedAt": "2026-09-13T20:18:41Z",
+  "method": "HEAD",
+  "requestOrigin": "http://omarky:5173",
+  "bodyBytesDownloaded": 0,
+  "originalDownload": {
+    "url": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "status": 302,
+    "accessControlAllowOrigin": null,
+    "redirect": "https://ia800408.us.archive.org/32/items/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "finalStatus": 200,
+    "finalAccessControlAllowOrigin": null,
+    "contentLength": 206530229
+  },
+  "officialCorsEndpoint": {
+    "url": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "status": 200,
+    "contentLength": 206530229,
+    "accessControlAllowOrigin": "http://omarky:5173",
+    "accessControlAllowCredentials": "true",
+    "accessControlAllowMethods": "GET, POST, OPTIONS",
+    "accessControlAllowHeaders": "Accept-Encoding,Accept-Language,Authorization,Baggage,Cache-Control,Content-Length,Content-Range,DNT,Pragma,Range,Sentry-Trace,X-Requested-With",
+    "vary": "Origin",
+    "lastModified": "Fri, 03 Dec 2021 07:14:03 GMT"
+  },
+  "endpointReference": "https://github.com/internetarchive/dweb-mirror/blob/master/URL_MAPPING.md",
+  "scope": "Live response-header inspection with curl -I -L. No installer body transfer, browser fetch, archive-content equivalence, extraction, or caching is established by this artifact. Those require the separately recorded application/browser checks."
+}

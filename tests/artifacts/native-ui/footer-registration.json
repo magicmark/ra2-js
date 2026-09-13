@@ -1,0 +1,98 @@
+{
+  "viewport": [
+    800,
+    600
+  ],
+  "reference": "allied-snow.jpg retail 800x600; correction measured independently in docs/VIDEO_PARITY_REVIEW.md",
+  "baseline": "/tmp/ra2-ui242-desktop.png from immutable4197",
+  "current": "live5173 source after footer CSS correction",
+  "buttonCenters": [
+    57,
+    109,
+    161,
+    213,
+    265,
+    317
+  ],
+  "hitboxes": [
+    {
+      "x": 31,
+      "y": 570,
+      "width": 52,
+      "height": 32
+    },
+    {
+      "x": 83,
+      "y": 570,
+      "width": 52,
+      "height": 32
+    },
+    {
+      "x": 135,
+      "y": 570,
+      "width": 52,
+      "height": 32
+    },
+    {
+      "x": 187,
+      "y": 570,
+      "width": 52,
+      "height": 32
+    },
+    {
+      "x": 239,
+      "y": 570,
+      "width": 52,
+      "height": 32
+    },
+    {
+      "x": 291,
+      "y": 570,
+      "width": 52,
+      "height": 32
+    }
+  ],
+  "artworkOffset": [
+    1,
+    -2
+  ],
+  "footerHeight": 30,
+  "exactBeforeAfterIconDisplacement": [
+    {
+      "command": "team1",
+      "dx": 1,
+      "dy": -2,
+      "score": 0
+    },
+    {
+      "command": "team2",
+      "dx": 1,
+      "dy": -2,
+      "score": 0
+    },
+    {
+      "command": "type",
+      "dx": 1,
+      "dy": -2,
+      "score": 0
+    },
+    {
+      "command": "deploy",
+      "dx": 1,
+      "dy": -2,
+      "score": 0
+    },
+    {
+      "command": "guard",
+      "dx": 1,
+      "dy": -2,
+      "score": 0
+    },
+    {
+      "command": "planning",
+      "dx": 1,
+      "dy": -2,
+      "score": 0
+    }
+  ]
+}

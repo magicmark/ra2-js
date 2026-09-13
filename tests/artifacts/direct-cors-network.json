@@ -1,0 +1,802 @@
+{
+  "checked": "2026-09-13",
+  "site": "http://omarky:5173",
+  "context": "direct-cors-full-20260913",
+  "source": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+  "rangeProbe": {
+    "checked": "2026-09-13T20:23:36.448Z",
+    "status": 200,
+    "type": "cors",
+    "responseUrl": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "contentLength": 206530229,
+    "firstBytes": [
+      77,
+      90,
+      144,
+      0,
+      3,
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0,
+      255,
+      255,
+      0,
+      0
+    ],
+    "receivedChunkBytes": 18287,
+    "bodyCancelled": true,
+    "note": "Server ignored Range; cancelled first readable body chunk. Separate from full application download."
+  },
+  "sourceHashes": {
+    "AssetDownload": "115f4338c202bfe7b33e58b4f60f45da4f9461d35fbf7fb0de7b9ef40736b14c",
+    "AssetManager": "03354c5788ae887ce9e79e393709cda1e55f3e8a367de58ff4ca1a721524ae8d",
+    "worker": "7f8865c5935092de4623222d28f08a953883f70ad28d2207522bc3400dbe85fa",
+    "UI": "8616da8a81546ffaca9f725b779d5535155785ed3d7b280c82ab21fe135b25ec",
+    "main": "5f026a13800cd511730044420f501eda40576bcbfcc7b720dc081fb94fec60ac",
+    "vite": "b062000e24b30ee6cc70112a286d6ee33b4d5148632f5bc05272270c8f2dc764"
+  },
+  "cold": {
+    "observed": "2026-09-13T20:26:05.152Z",
+    "elapsed": 75041.80000000075,
+    "status": {
+      "phase": "awaiting-source",
+      "message": "Confirm the archive URL and press Enter to download game assets.",
+      "loaded": 0
+    },
+    "ready": false,
+    "time": 0,
+    "source": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "probe": {
+      "started": "2026-09-13T20:24:50.530Z",
+      "fetches": [],
+      "workers": [],
+      "workerMessages": [],
+      "submits": [],
+      "cacheWrites": []
+    },
+    "resources": []
+  },
+  "complete": {
+    "observed": "2026-09-13T20:28:27.493Z",
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets ready · 242 files saved in this browser",
+      "loaded": 1,
+      "total": 1
+    },
+    "ready": true,
+    "warning": null,
+    "time": 15.499999999999956,
+    "gateHidden": true,
+    "source": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "probe": {
+      "started": "2026-09-13T20:24:50.530Z",
+      "fetches": [
+        {
+          "url": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+          "at": 85903.89999999851,
+          "status": 200,
+          "responseUrl": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+          "headersAt": 86224.19999999925
+        }
+      ],
+      "workers": [
+        {
+          "url": "http://omarky:5173/src/assets/extract.worker.ts?worker_file&type=module",
+          "at": 127328.80000000075
+        }
+      ],
+      "workerMessages": [
+        {
+          "at": 127915.89999999851,
+          "kind": "progress",
+          "message": "Opening installer with 7-Zip WebAssembly…"
+        },
+        {
+          "at": 128118.89999999851,
+          "kind": "progress",
+          "message": "Extracting game MIX files. The installer is never executed."
+        },
+        {
+          "at": 128221,
+          "kind": "progress",
+          "message": "Extracting archive: /input/source.exe"
+        },
+        {
+          "at": 184239.19999999925,
+          "kind": "progress",
+          "message": "[7-Zip progress output, 6468 characters]"
+        },
+        {
+          "at": 184242.69999999925,
+          "kind": "progress",
+          "message": "Files: 2"
+        },
+        {
+          "at": 184492.5,
+          "kind": "progress",
+          "message": "Indexing language.mix…"
+        },
+        {
+          "at": 184567.59999999776,
+          "kind": "progress",
+          "message": "Indexing ra2.mix…"
+        },
+        {
+          "at": 185040.59999999776,
+          "kind": "mix",
+          "files": 2,
+          "bytes": 335011496
+        },
+        {
+          "at": 186145.69999999925,
+          "kind": "complete",
+          "files": 242,
+          "bytes": 8590736
+        }
+      ],
+      "submits": [
+        {
+          "id": "startup-source-form",
+          "trusted": true,
+          "at": 85783.59999999776
+        }
+      ],
+      "cacheWrites": [
+        {
+          "at": 127315.19999999925,
+          "state": "complete",
+          "completedAt": 127325.30000000075
+        },
+        {
+          "at": 185050,
+          "state": "complete",
+          "completedAt": 185100.69999999925
+        },
+        {
+          "at": 188673.5,
+          "state": "complete",
+          "completedAt": 188878.3999999985
+        },
+        {
+          "at": 188891.19999999925,
+          "state": "complete",
+          "completedAt": 188955.80000000075
+        },
+        {
+          "at": 188961.59999999776,
+          "state": "complete",
+          "completedAt": 188964.19999999925
+        },
+        {
+          "at": 188971,
+          "state": "complete",
+          "completedAt": 188980.8999999985
+        },
+        {
+          "at": 188988.3999999985,
+          "state": "complete",
+          "completedAt": 188996.30000000075
+        }
+      ]
+    },
+    "cache": [
+      {
+        "key": "/asset-source",
+        "version": 8,
+        "saved": 1789331278773,
+        "files": 242,
+        "bytes": 8590736
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "installer"
+        ],
+        "version": 1,
+        "id": "1789331217418-dnhtvo1w8yb",
+        "saved": 1789331217418,
+        "files": 1,
+        "bytes": 206530229,
+        "archiveFiles": [
+          {
+            "name": "Red-Alert-2-Multiplayer.exe",
+            "bytes": 206530229
+          }
+        ]
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "mix"
+        ],
+        "version": 1,
+        "id": "1789331217418-dnhtvo1w8yb",
+        "saved": 1789331217418,
+        "files": 2,
+        "bytes": 335011496,
+        "archiveFiles": [
+          {
+            "name": "language.mix",
+            "bytes": 53116040
+          },
+          {
+            "name": "ra2.mix",
+            "bytes": 281895456
+          }
+        ]
+      }
+    ]
+  },
+  "idle": {
+    "observed": "2026-09-13T20:29:21.039Z",
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets ready · 242 files saved in this browser",
+      "loaded": 1,
+      "total": 1
+    },
+    "ready": true,
+    "warning": null,
+    "time": 49.93333333333306,
+    "gateHidden": true,
+    "source": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "probe": {
+      "started": "2026-09-13T20:24:50.530Z",
+      "fetches": [
+        {
+          "url": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+          "at": 85903.89999999851,
+          "status": 200,
+          "responseUrl": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+          "headersAt": 86224.19999999925
+        }
+      ],
+      "workers": [
+        {
+          "url": "http://omarky:5173/src/assets/extract.worker.ts?worker_file&type=module",
+          "at": 127328.80000000075
+        }
+      ],
+      "workerMessages": [
+        {
+          "at": 127915.89999999851,
+          "kind": "progress",
+          "message": "Opening installer with 7-Zip WebAssembly…"
+        },
+        {
+          "at": 128118.89999999851,
+          "kind": "progress",
+          "message": "Extracting game MIX files. The installer is never executed."
+        },
+        {
+          "at": 128221,
+          "kind": "progress",
+          "message": "Extracting archive: /input/source.exe"
+        },
+        {
+          "at": 184239.19999999925,
+          "kind": "progress",
+          "message": "[7-Zip progress output, 6468 characters]"
+        },
+        {
+          "at": 184242.69999999925,
+          "kind": "progress",
+          "message": "Files: 2"
+        },
+        {
+          "at": 184492.5,
+          "kind": "progress",
+          "message": "Indexing language.mix…"
+        },
+        {
+          "at": 184567.59999999776,
+          "kind": "progress",
+          "message": "Indexing ra2.mix…"
+        },
+        {
+          "at": 185040.59999999776,
+          "kind": "mix",
+          "files": 2,
+          "bytes": 335011496
+        },
+        {
+          "at": 186145.69999999925,
+          "kind": "complete",
+          "files": 242,
+          "bytes": 8590736
+        }
+      ],
+      "submits": [
+        {
+          "id": "startup-source-form",
+          "trusted": true,
+          "at": 85783.59999999776
+        }
+      ],
+      "cacheWrites": [
+        {
+          "at": 127315.19999999925,
+          "state": "complete",
+          "completedAt": 127325.30000000075
+        },
+        {
+          "at": 185050,
+          "state": "complete",
+          "completedAt": 185100.69999999925
+        },
+        {
+          "at": 188673.5,
+          "state": "complete",
+          "completedAt": 188878.3999999985
+        },
+        {
+          "at": 188891.19999999925,
+          "state": "complete",
+          "completedAt": 188955.80000000075
+        },
+        {
+          "at": 188961.59999999776,
+          "state": "complete",
+          "completedAt": 188964.19999999925
+        },
+        {
+          "at": 188971,
+          "state": "complete",
+          "completedAt": 188980.8999999985
+        },
+        {
+          "at": 188988.3999999985,
+          "state": "complete",
+          "completedAt": 188996.30000000075
+        }
+      ]
+    },
+    "cache": [
+      {
+        "key": "/asset-source",
+        "version": 8,
+        "saved": 1789331278773,
+        "files": 242,
+        "bytes": 8590736
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "installer"
+        ],
+        "version": 1,
+        "id": "1789331217418-dnhtvo1w8yb",
+        "saved": 1789331217418,
+        "files": 1,
+        "bytes": 206530229,
+        "archiveFiles": [
+          {
+            "name": "Red-Alert-2-Multiplayer.exe",
+            "bytes": 206530229
+          }
+        ]
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "mix"
+        ],
+        "version": 1,
+        "id": "1789331217418-dnhtvo1w8yb",
+        "saved": 1789331217418,
+        "files": 2,
+        "bytes": 335011496,
+        "archiveFiles": [
+          {
+            "name": "language.mix",
+            "bytes": 53116040
+          },
+          {
+            "name": "ra2.mix",
+            "bytes": 281895456
+          }
+        ]
+      }
+    ]
+  },
+  "hardReload": {
+    "observed": "2026-09-13T20:30:27.572Z",
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets loaded from this browser.",
+      "loaded": 1,
+      "total": 1
+    },
+    "ready": true,
+    "warning": null,
+    "time": 0,
+    "gateHidden": false,
+    "source": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "probe": {
+      "started": "2026-09-13T20:29:47.386Z",
+      "fetches": [],
+      "workers": [],
+      "workerMessages": [],
+      "submits": [],
+      "cacheWrites": []
+    },
+    "blocked": [],
+    "cache": [
+      {
+        "key": "/asset-source",
+        "version": 8,
+        "saved": 1789331278773,
+        "files": 242,
+        "bytes": 8590736
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "installer"
+        ],
+        "version": 1,
+        "id": "1789331217418-dnhtvo1w8yb",
+        "saved": 1789331217418,
+        "files": 1,
+        "bytes": 206530229,
+        "archiveFiles": [
+          {
+            "name": "Red-Alert-2-Multiplayer.exe",
+            "bytes": 206530229
+          }
+        ]
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "mix"
+        ],
+        "version": 1,
+        "id": "1789331217418-dnhtvo1w8yb",
+        "saved": 1789331217418,
+        "files": 2,
+        "bytes": 335011496,
+        "archiveFiles": [
+          {
+            "name": "language.mix",
+            "bytes": 53116040
+          },
+          {
+            "name": "ra2.mix",
+            "bytes": 281895456
+          }
+        ]
+      }
+    ]
+  },
+  "nativeContinue": {
+    "observed": "2026-09-13T20:31:13.461Z",
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets loaded from this browser.",
+      "loaded": 1,
+      "total": 1
+    },
+    "ready": true,
+    "warning": null,
+    "time": 16.333333333333304,
+    "gateHidden": true,
+    "source": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "probe": {
+      "started": "2026-09-13T20:29:47.386Z",
+      "fetches": [],
+      "workers": [],
+      "workerMessages": [],
+      "submits": [
+        {
+          "id": "startup-source-form",
+          "trusted": true,
+          "at": 50193.199999999255
+        }
+      ],
+      "cacheWrites": []
+    },
+    "blocked": [],
+    "cache": [
+      {
+        "key": "/asset-source",
+        "version": 8,
+        "saved": 1789331278773,
+        "files": 242,
+        "bytes": 8590736
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "installer"
+        ],
+        "version": 1,
+        "id": "1789331217418-dnhtvo1w8yb",
+        "saved": 1789331217418,
+        "files": 1,
+        "bytes": 206530229,
+        "archiveFiles": [
+          {
+            "name": "Red-Alert-2-Multiplayer.exe",
+            "bytes": 206530229
+          }
+        ]
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "mix"
+        ],
+        "version": 1,
+        "id": "1789331217418-dnhtvo1w8yb",
+        "saved": 1789331217418,
+        "files": 2,
+        "bytes": 335011496,
+        "archiveFiles": [
+          {
+            "name": "language.mix",
+            "bytes": 53116040
+          },
+          {
+            "name": "ra2.mix",
+            "bytes": 281895456
+          }
+        ]
+      }
+    ]
+  },
+  "legacyRemoteCache": {
+    "provenance": "Existing live context from historical proxy remote download, no import/seed/clear for this test",
+    "reload": {
+      "observed": "2026-09-13T20:29:37.350Z",
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "ready": true,
+      "warning": null,
+      "time": 0,
+      "gateHidden": false,
+      "source": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "probe": {
+        "started": "2026-09-13T20:28:59.293Z",
+        "fetches": [],
+        "workers": [],
+        "workerMessages": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "blocked": [],
+      "cache": [
+        {
+          "key": "/asset-source",
+          "version": 8,
+          "saved": 1789329220551,
+          "files": 242,
+          "bytes": 8590736
+        },
+        {
+          "key": [
+            "archive-stage-v1",
+            "/asset-source",
+            "installer"
+          ],
+          "version": 1,
+          "id": "1789325286975-bt79y3w22hj",
+          "saved": 1789325286975,
+          "files": 1,
+          "bytes": 206530229,
+          "archiveFiles": [
+            {
+              "name": "Red-Alert-2-Multiplayer.exe",
+              "bytes": 206530229
+            }
+          ]
+        },
+        {
+          "key": [
+            "archive-stage-v1",
+            "/asset-source",
+            "mix"
+          ],
+          "version": 1,
+          "id": "1789325286975-bt79y3w22hj",
+          "saved": 1789325286975,
+          "files": 2,
+          "bytes": 335011496,
+          "archiveFiles": [
+            {
+              "name": "language.mix",
+              "bytes": 53116040
+            },
+            {
+              "name": "ra2.mix",
+              "bytes": 281895456
+            }
+          ]
+        }
+      ]
+    },
+    "nativeContinue": {
+      "observed": "2026-09-13T20:31:02.620Z",
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "ready": true,
+      "warning": null,
+      "time": 22.500000000000277,
+      "gateHidden": true,
+      "source": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "probe": {
+        "started": "2026-09-13T20:28:59.293Z",
+        "fetches": [],
+        "workers": [],
+        "workerMessages": [],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 78232.90000000224
+          }
+        ],
+        "cacheWrites": []
+      },
+      "blocked": [],
+      "cache": [
+        {
+          "key": "/asset-source",
+          "version": 8,
+          "saved": 1789329220551,
+          "files": 242,
+          "bytes": 8590736
+        },
+        {
+          "key": [
+            "archive-stage-v1",
+            "/asset-source",
+            "installer"
+          ],
+          "version": 1,
+          "id": "1789325286975-bt79y3w22hj",
+          "saved": 1789325286975,
+          "files": 1,
+          "bytes": 206530229,
+          "archiveFiles": [
+            {
+              "name": "Red-Alert-2-Multiplayer.exe",
+              "bytes": 206530229
+            }
+          ]
+        },
+        {
+          "key": [
+            "archive-stage-v1",
+            "/asset-source",
+            "mix"
+          ],
+          "version": 1,
+          "id": "1789325286975-bt79y3w22hj",
+          "saved": 1789325286975,
+          "files": 2,
+          "bytes": 335011496,
+          "archiveFiles": [
+            {
+              "name": "language.mix",
+              "bytes": 53116040
+            },
+            {
+              "name": "ra2.mix",
+              "bytes": 281895456
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "limits": "MCP context page reload/Continue proof; actual browser-process persistence was verified separately in cache-poison-browser-restart.json, before this URL-routing-only change.",
+  "customSourceFailure": {
+    "environment": "DevTools Offline after page initialization; intentional exact outgoing URL check, no remote content claim",
+    "networkRequest": "GET https://copies.example/my-ra2.zip?edition=mine [net::ERR_INTERNET_DISCONNECTED]",
+    "initial": {
+      "observed": "2026-09-13T20:34:34.367Z",
+      "status": {
+        "phase": "error",
+        "message": "Asset download could not reach the server. Retry, use a CORS-enabled asset URL, or import the installer / MIX files.",
+        "loaded": 0
+      },
+      "error": "Asset download could not reach the server. Retry, use a CORS-enabled asset URL, or import the installer / MIX files.",
+      "ready": false,
+      "time": 0,
+      "gateHidden": false,
+      "source": "https://copies.example/my-ra2.zip?edition=mine",
+      "probe": {
+        "started": "2026-09-13T20:32:19.015Z",
+        "fetches": [
+          {
+            "url": "https://copies.example/my-ra2.zip?edition=mine",
+            "at": 110589.29999999702,
+            "error": "TypeError: Failed to fetch"
+          }
+        ],
+        "workers": [],
+        "workerMessages": [],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 110467.79999999702
+          }
+        ],
+        "cacheWrites": []
+      }
+    },
+    "idle": {
+      "observed": "2026-09-13T20:35:23.391Z",
+      "status": {
+        "phase": "error",
+        "message": "Asset download could not reach the server. Retry, use a CORS-enabled asset URL, or import the installer / MIX files.",
+        "loaded": 0
+      },
+      "ready": false,
+      "time": 0,
+      "gateHidden": false,
+      "source": "https://copies.example/my-ra2.zip?edition=mine",
+      "probe": {
+        "started": "2026-09-13T20:32:19.015Z",
+        "fetches": [
+          {
+            "url": "https://copies.example/my-ra2.zip?edition=mine",
+            "at": 110589.29999999702,
+            "error": "TypeError: Failed to fetch"
+          }
+        ],
+        "workers": [],
+        "workerMessages": [],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 110467.79999999702
+          }
+        ],
+        "cacheWrites": []
+      }
+    }
+  },
+  "productionCold": {
+    "observed": "2026-09-13T20:41:50.179Z",
+    "elapsed": 30952.900000002235,
+    "status": {
+      "phase": "awaiting-source",
+      "message": "Confirm the archive URL and press Enter to download game assets.",
+      "loaded": 0
+    },
+    "error": null,
+    "ready": false,
+    "time": 0,
+    "gateHidden": false,
+    "source": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "scripts": [
+      "http://omarky:4199/assets/index-BMccL90Q.js"
+    ],
+    "archiveOrWorkerResources": []
+  }
+}

@@ -1,0 +1,1904 @@
+{
+  "date": "2026-09-13",
+  "browser": "Chrome DevTools native browser, real WebGL readPixels",
+  "viewport": [
+    640,
+    480
+  ],
+  "beforeDpr1": [
+    {
+      "zoom": 0.75,
+      "cracked": 6526
+    },
+    {
+      "zoom": 0.9,
+      "cracked": 7542
+    },
+    {
+      "zoom": 1,
+      "cracked": 0
+    },
+    {
+      "zoom": 1.15,
+      "cracked": 4583
+    },
+    {
+      "zoom": 1.3,
+      "cracked": 4326
+    }
+  ],
+  "after": [
+    {
+      "devicePixelRatio": 1,
+      "forceMedium": false,
+      "passed": true,
+      "checks": {
+        "tileMutation": true,
+        "tileRestored": true,
+        "assetRefresh": true,
+        "hiddenTerrain": true,
+        "mapBoundary": true,
+        "repeatedRestartsAndImports": true
+      },
+      "rows": [
+        {
+          "zoom": 0.45,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        }
+      ]
+    },
+    {
+      "devicePixelRatio": 1.25,
+      "forceMedium": false,
+      "passed": true,
+      "checks": {
+        "tileMutation": true,
+        "tileRestored": true,
+        "assetRefresh": true,
+        "hiddenTerrain": true,
+        "mapBoundary": true,
+        "repeatedRestartsAndImports": true
+      },
+      "rows": [
+        {
+          "zoom": 0.45,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 480000
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 480000
+        }
+      ]
+    },
+    {
+      "devicePixelRatio": 1.5,
+      "forceMedium": false,
+      "passed": true,
+      "checks": {
+        "tileMutation": true,
+        "tileRestored": true,
+        "assetRefresh": true,
+        "hiddenTerrain": true,
+        "mapBoundary": true,
+        "repeatedRestartsAndImports": true
+      },
+      "rows": [
+        {
+          "zoom": 0.45,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 691200
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 691200
+        }
+      ]
+    },
+    {
+      "devicePixelRatio": 2,
+      "forceMedium": false,
+      "passed": true,
+      "checks": {
+        "tileMutation": true,
+        "tileRestored": true,
+        "assetRefresh": true,
+        "hiddenTerrain": true,
+        "mapBoundary": true,
+        "repeatedRestartsAndImports": true
+      },
+      "rows": [
+        {
+          "zoom": 0.45,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        }
+      ]
+    },
+    {
+      "devicePixelRatio": 1,
+      "forceMedium": true,
+      "passed": true,
+      "checks": {
+        "tileMutation": true,
+        "tileRestored": true,
+        "assetRefresh": true,
+        "hiddenTerrain": true,
+        "mapBoundary": true,
+        "repeatedRestartsAndImports": true
+      },
+      "rows": [
+        {
+          "zoom": 0.45,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 307200
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 307200
+        }
+      ]
+    },
+    {
+      "devicePixelRatio": 2,
+      "forceMedium": true,
+      "passed": true,
+      "checks": {
+        "tileMutation": true,
+        "tileRestored": true,
+        "assetRefresh": true,
+        "hiddenTerrain": true,
+        "mapBoundary": true,
+        "repeatedRestartsAndImports": true
+      },
+      "rows": [
+        {
+          "zoom": 0.45,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.45,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.65,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.75,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 0.9,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.15,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.3,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 1.5,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64,
+            64
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            64.173,
+            64.291
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        },
+        {
+          "zoom": 2.4,
+          "camera": [
+            65.07,
+            64.3
+          ],
+          "incorrect": 0,
+          "total": 1228800
+        }
+      ]
+    }
+  ]
+}

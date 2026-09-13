@@ -1,0 +1,28 @@
+{
+  "snapshot": "http://omarky:4195",
+  "main": "index-Dmkn-4BL.js",
+  "catalogFiles": 234,
+  "method": "Actual browser original-VXL 256 facing pairs, then repeat the same pairs; diagnostic presentation only, not a native movement measurement.",
+  "sampledPairs": 256,
+  "first": {
+    "milliseconds": 1588.5999999996275,
+    "newSpriteCacheEntries": 254,
+    "newAtlasTextures": 1
+  },
+  "repeat": {
+    "milliseconds": 3.099999999627471,
+    "newSpriteCacheEntries": 0,
+    "newAtlasTextures": 0
+  },
+  "cache": {
+    "keys": [
+      "vehicle:gtnk:1:0:0",
+      "vehicle:gtnk:2:0:0",
+      "vehicle:gtnk:3:0:0"
+    ],
+    "composites": 248,
+    "rgbaBytes": 1853220
+  },
+  "extraAtlasRGBABytes": 16777216,
+  "limits": "RGBA totals exclude canvas and driver overhead. Diagnostic enumeration is not a gameplay FPS claim."
+}

@@ -1,0 +1,631 @@
+import { CATALOG, theaterNames, type AssetSpec } from './catalog';
+import { decodeHva, decodePalette, decodeTmp, decodeVpl, decodeVxl, ShpFile, type IndexedFrame, type VoxelLimb } from './formats';
+import { RA2_NORMALS } from './voxelNormals';
+import { buildingLoopFrame, buildingLoops, type BuildingLoop } from './buildingAnimations';
+import { NativeFont } from './NativeFont';
+import { NativeCursors } from './NativeCursor';
+
+import { AssetDownload, InvalidArchiveError, assetCache, assetCacheKey, assetSourceUrl, selectedAssetCacheKeys, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL, type ArchiveInput, type ArchiveResume, type SavedArchive } from './AssetDownload';
+export { assetCacheKey, assetSourceUrl, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL } from './AssetDownload';
+
+export interface Sprite { source: HTMLCanvasElement; width: number; height: number; anchorX: number; anchorY: number; offsetX: number; offsetY: number }
+export interface AssetProgress { phase: 'cache' | 'awaiting-source' | 'download' | 'extract' | 'decode' | 'ready' | 'error'; loaded: number; total?: number; message: string }
+export type AssetRestoreResult = 'ready' | 'missing' | 'invalid' | 'unavailable' | 'cancelled';
+export interface AssetOptions { url?: string; onProgress?: (progress: AssetProgress) => void; forceRefresh?: boolean }
+/** Original sidebar frames consumed by the supported Allied interface. */
+export const HUD_ASSET_FRAMES: Readonly<Record<string, readonly number[]>> = {
+  side1: [0], side2: [0], side2b: [0], side3: [0], top: [0], credits: [0], tabs: [0],
+  radar: [0, 32], repair: [0, 1], sell: [0, 1], tab00: [0, 1, 2], tab01: [0, 1, 2],
+  tab02: [0, 1, 2], tab03: [0, 1, 2], bottom: [0], 'menu-left': [0, 1], 'menu-right': [0, 1],
+  'scroll-up': [0, 1, 2], 'scroll-down': [0, 1, 2],
+  'command-team1': [0, 1], 'command-team2': [0, 1], 'command-type': [0, 1],
+  'command-deploy': [0, 1], 'command-guard': [0, 1], 'command-planning': [0, 1],
+  'command-background': [0], 'command-left': [0, 1, 2], 'command-right': [0],
+};
+export const REQUIRED_TERRAIN = ['clear01', 'water01', 'proad01', 'proad02', 'proad03', 'ruff01', 'green01',
+  ...Array.from({ length: 15 }, (_, i) => `glat${String(i + 1).padStart(2, '0')}`),
+  ...Array.from({ length: 15 }, (_, i) => `clat${String(i + 1).padStart(2, '0')}`)];
+interface AssetFile { name: string; bytes: Uint8Array }
+interface CacheEntry { version: number; files: AssetFile[]; saved: number }
+interface PreparedVoxel { x: number; y: number; z: number; color: number; nx: number; ny: number; nz: number; turret: boolean }
+const CACHE_VERSION = 8;
+// Multiplayer DarkBlue, DarkRed, Gold and DarkGreen from rules.ini [Colors].
+// Westwood uses HSV values in 0..255, with a nonlinear remap ramp.
+const SIDE_COLORS = [[153, 214, 212], [0, 230, 255], [41, 240, 230], [81, 200, 210]];
+const SIDE_REMAPS = SIDE_COLORS.map(([h, s, v]) => Array.from({ length: 16 }, (_, index) => {
+  const hue = h / 255 * 6, saturation = s / 255 * Math.sin(index * Math.PI / 67.5 + Math.PI / 3.6);
+  const value = v * Math.cos(index * 7 * Math.PI / 270 + Math.PI / 9), chroma = value * saturation;
+  const secondary = chroma * (1 - Math.abs(hue % 2 - 1)), low = value - chroma;
+  const rgb = hue < 1 ? [chroma, secondary, 0] : hue < 2 ? [secondary, chroma, 0] : hue < 3 ? [0, chroma, secondary] : hue < 4 ? [0, secondary, chroma] : hue < 5 ? [secondary, 0, chroma] : [chroma, 0, secondary];
+  return rgb.map(channel => Math.max(0, channel + low));
+}));
+const idleFrames: Record<string, [number, number]> = { gi: [0, 1], cons: [0, 1], engineer: [0, 1], rock: [292, 6] };
+
+function canvas(width: number, height: number): HTMLCanvasElement {
+  const result = document.createElement('canvas'); result.width = Math.max(1, width); result.height = Math.max(1, height); return result;
+}
+function sprite(source: HTMLCanvasElement, anchorX: number, anchorY: number): Sprite {
+  return { source, width: source.width, height: source.height, anchorX, anchorY, offsetX: -anchorX, offsetY: -anchorY };
+}
+function trimSprite(value: Sprite): Sprite {
+  const { source, width, height, anchorX, anchorY } = value, ctx = source.getContext('2d')!;
+  const image = ctx.getImageData(0, 0, width, height);
+  let left = width, right = -1, top = height, bottom = -1;
+  for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) if (image.data[(y * width + x) * 4 + 3]) {
+    left = Math.min(left, x); right = Math.max(right, x); top = Math.min(top, y); bottom = Math.max(bottom, y);
+  }
+  if (right < left || (left === 0 && right === width - 1 && top === 0 && bottom === height - 1)) return value;
+  const result = canvas(right - left + 1, bottom - top + 1), target = result.getContext('2d')!, pixels = target.createImageData(result.width, result.height);
+  for (let y = 0; y < result.height; y++) pixels.data.set(image.data.subarray(((y + top) * width + left) * 4, ((y + top) * width + right + 1) * 4), y * result.width * 4);
+  target.putImageData(pixels, 0, 0);
+  return sprite(result, anchorX - left, anchorY - top);
+}
+function paint(frame: IndexedFrame, palette: Uint8Array, side = -1): HTMLCanvasElement {
+  const result = canvas(frame.width, frame.height), ctx = result.getContext('2d')!;
+  if (!frame.width || !frame.height) return result;
+  const image = ctx.createImageData(frame.width, frame.height);
+  for (let i = 0; i < frame.pixels.length; i++) {
+    const index = frame.pixels[i]; if (!index) continue;
+    const c = index * 3, p = i * 4;
+    if (side >= 0 && index >= 16 && index <= 31) {
+      const color = SIDE_REMAPS[side % SIDE_REMAPS.length][index - 16];
+      for (let ch = 0; ch < 3; ch++) image.data[p + ch] = color[ch];
+    } else { image.data[p] = palette[c]; image.data[p + 1] = palette[c + 1]; image.data[p + 2] = palette[c + 2]; }
+    image.data[p + 3] = index === 1 && side >= 0 ? 120 : 255;
+  }
+  ctx.putImageData(image, 0, 0); return result;
+}
+function shadow(frame: IndexedFrame): HTMLCanvasElement {
+  const result = canvas(frame.width, frame.height), ctx = result.getContext('2d')!;
+  if (!frame.width || !frame.height) return result;
+  const image = ctx.createImageData(frame.width, frame.height);
+  for (let i = 0; i < frame.pixels.length; i++) if (frame.pixels[i]) image.data[i * 4 + 3] = 105;
+  ctx.putImageData(image, 0, 0); return result;
+}
+export class AssetManager {
+  ready = false;
+  error: string | null = null;
+  status: AssetProgress = { phase: 'cache', loaded: 0, message: 'Preparing game assets…' };
+  source = '';
+  cacheWarning: string | null = null;
+  cacheResult: AssetRestoreResult | null = null;
+  private cacheProblem = '';
+  private cachedArtworkFiles = 0;
+  private readonly storageWarnings = new Map<string, string>();
+  private readonly archiveMemory = new Map<string, SavedArchive>();
+  readonly diagnostics: string[] = [];
+  private files = new Map<string, Uint8Array>();
+  private font: NativeFont | null = null;
+  private cursors: NativeCursors | null = null;
+  private shapes = new Map<string, ShpFile>();
+  private sprites = new Map<string, Sprite | null>();
+  private voxelModels = new Map<string, PreparedVoxel[]>();
+  private buildingLoops = new Map<string, BuildingLoop>();
+  private buildingAnchors = new Map<string, number>();
+  private unitPalette: Uint8Array = new Uint8Array(768);
+  private cameoPalette: Uint8Array = new Uint8Array(768);
+  private terrainPalette: Uint8Array = new Uint8Array(768);
+  private orePalette: Uint8Array = new Uint8Array(768);
+  private sidebarPalettes: Uint8Array[] = [];
+  private voxelLighting: Uint8Array = new Uint8Array();
+  private preparingRun?: number;
+  private progress?: AssetOptions['onProgress'];
+  private controller?: AbortController;
+  private worker?: Worker;
+  private run = 0;
+  private pendingReject?: (reason: Error) => void;
+  private active?: { key: string; downloading: boolean; promise: Promise<AssetRestoreResult> };
+
+  private report(phase: AssetProgress['phase'], message: string, loaded = 0, total?: number): void {
+    this.status = { phase, message, loaded, total }; this.progress?.(this.status);
+  }
+  /** Opening a page can only restore saved assets. It never authorizes a download. */
+  initialize(options: AssetOptions = {}): Promise<AssetRestoreResult> { return this.start(options, false); }
+  /** Call only after explicit source submission. Repeated submissions share a run. */
+  async download(options: AssetOptions = {}): Promise<void> { await this.start(options, true); }
+  private start(options: AssetOptions, downloading: boolean): Promise<AssetRestoreResult> {
+    const source = assetSourceUrl(options.url || DEFAULT_ASSET_URL), key = assetCacheKey(source);
+    if (this.active?.key === key && (this.active.downloading || !downloading)) return this.active.promise;
+    if (!options.forceRefresh && !this.active && this.ready && this.status.phase === 'ready' && key === assetCacheKey(this.source)) {
+      this.progress = options.onProgress;
+      this.report('ready', this.status.message, 1, 1);
+      return Promise.resolve('ready');
+    }
+    this.cancel(); const run = this.run;
+    this.source = source; this.progress = options.onProgress; this.error = null; this.storageWarnings.clear(); this.cacheWarning = null; this.cacheResult = null; this.cacheProblem = ''; this.cachedArtworkFiles = 0; this.ready = false;
+    const promise = this.runLoad(run, source, downloading, options.forceRefresh ?? false);
+    const active = { key, downloading, promise }; this.active = active;
+    void promise.then(() => { if (this.active === active) this.active = undefined; });
+    return promise;
+  }
+  private async restore(run: number, source: string): Promise<AssetRestoreResult> {
+    this.report('cache', 'Preparing saved game files…');
+    const keys = selectedAssetCacheKeys(source);
+    let result: AssetRestoreResult = 'missing';
+    for (const candidate of keys) {
+      let entry: CacheEntry | undefined;
+      try { entry = await assetCache<CacheEntry>(candidate); }
+      catch (error) {
+        if (run !== this.run) return 'cancelled';
+        this.storageWarning('selected-read', `Browser asset cache unavailable: ${error instanceof Error ? error.message : String(error)}`);
+        return 'unavailable';
+      }
+      if (run !== this.run) return 'cancelled';
+      if (!entry) continue;
+      this.cachedArtworkFiles = Math.max(this.cachedArtworkFiles, Array.isArray(entry.files) ? entry.files.length : 0);
+      // Versions 6/7 added optional artwork, not a new representation. Validate
+      // existing v5 gameplay files instead of redownloading 197 MiB on a UI update.
+      if (!Number.isInteger(entry.version) || entry.version < 5 || entry.version > CACHE_VERSION) {
+        this.cacheProblem = `Unsupported saved asset version ${entry.version}`;
+        this.diagnostics.push(`Saved asset cache ${candidate} has unsupported version ${entry.version}`);
+        result = 'invalid'; continue;
+      }
+      try {
+        await this.prepare(entry.files, run);
+        if (run !== this.run) return 'cancelled';
+        this.storageWarning('selected-read', null);
+        this.report('ready', 'Original game assets loaded from this browser.', 1, 1);
+        return 'ready';
+      } catch (error) {
+        if (run !== this.run) return 'cancelled';
+        this.ready = false; result = 'invalid';
+        this.cacheProblem = error instanceof Error ? error.message : String(error);
+        this.diagnostics.push(`Saved game assets at ${candidate} are invalid: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
+    return result;
+  }
+  private async runLoad(run: number, source: string, downloading: boolean, forceRefresh = false): Promise<AssetRestoreResult> {
+    try {
+      // Only the explicit artwork update action bypasses a usable saved cache.
+      // The existing entry stays intact until the replacement validates/commits.
+      const restored = downloading && forceRefresh ? 'missing' : await this.restore(run, source);
+      if (run !== this.run) return 'cancelled';
+      this.cacheResult = restored;
+      if (restored === 'ready') return restored;
+      const archives = this.archiveDownload(run, source);
+      let local = forceRefresh ? undefined : await archives.resume();
+      if (run !== this.run) return 'cancelled';
+      if (local) for (let attempt = 0; attempt < 2; attempt++) {
+        this.report('cache', `Preparing saved game files from ${local.stage.startsWith('mix') ? 'extracted MIX archives' : 'the completed installer'}…`);
+        try {
+          await this.load(local.files, run, archives, local);
+          this.cacheResult = this.ready ? 'ready' : 'cancelled';
+          return this.cacheResult;
+        } catch (error) {
+          if (run !== this.run) return 'cancelled';
+          if (attempt === 0 && error instanceof InvalidArchiveError) {
+            const alternative = await archives.resume();
+            if (run !== this.run) return 'cancelled';
+            if (alternative && (alternative.stage !== local.stage || alternative.id !== local.id)) {
+              local = alternative; continue;
+            }
+          }
+          this.cacheProblem = error instanceof Error ? error.message : String(error);
+          this.cacheResult = 'invalid';
+          if (downloading) throw error;
+          this.report('awaiting-source', `${this.cacheProblem} Press Enter to retry using saved work, or choose another source.`);
+          return 'invalid';
+        }
+      }
+      if (!downloading) {
+        this.ready = false;
+        const message = restored === 'invalid' && this.cachedArtworkFiles > 0
+          ? `Your ${this.cachedArtworkFiles} saved artwork files are still here, but this artwork-only cache does not include the original installer or MIX archives. ${this.cacheProblem.replace(' Download or import a complete copy of the game.', '')} Import your existing installer once, or confirm the archive URL and press Enter to save a reusable archive for future updates.`
+          : restored === 'invalid' ? `${this.cacheProblem} Confirm the archive URL and press Enter to download complete game assets.`
+          : restored === 'unavailable' ? 'Browser storage is unavailable. Confirm the archive URL and press Enter to download for this session.'
+          : 'Confirm the archive URL and press Enter to download game assets.';
+        this.report('awaiting-source', message);
+        return restored;
+      }
+      this.controller = new AbortController();
+      const downloaded = await archives.download(this.controller.signal, (message, loaded, total) => {
+        if (run === this.run) this.report('download', message, loaded, total);
+      });
+      if (run !== this.run) return 'cancelled';
+      await this.load(downloaded.files, run, archives, downloaded);
+      return run === this.run && this.ready ? 'ready' : 'cancelled';
+    } catch (error) { if (run === this.run) this.fail(error); return run === this.run ? 'invalid' : 'cancelled'; }
+  }
+  private storageWarning(stage: string, message: string | null): void {
+    if (message) this.storageWarnings.set(stage, message); else this.storageWarnings.delete(stage);
+    this.cacheWarning = [...this.storageWarnings.values()].join(' · ') || null;
+  }
+  private archiveDownload(run: number, source: string): AssetDownload {
+    return new AssetDownload(source, () => run === this.run, (stage, message) => {
+      if (run === this.run) this.storageWarning(stage, message);
+    }, this.archiveMemory);
+  }
+  async importFiles(files: FileList | File[], options: AssetOptions = {}): Promise<void> {
+    this.cancel(); const run = this.run; this.error = null; this.storageWarnings.clear(); this.cacheWarning = null; this.ready = false;
+    this.source = assetSourceUrl(options.url || this.source || DEFAULT_ASSET_URL); this.progress = options.onProgress ?? this.progress;
+    const archives = this.archiveDownload(run, this.source);
+    try {
+      const inputs = Array.from(files, file => ({ name: file.name, blob: file }));
+      if (!inputs.length) throw new Error('Choose the Red Alert 2 installer, or ra2.mix and language.mix.');
+      const input = await archives.remember(inputs);
+      if (run === this.run) await this.load(inputs, run, archives, input);
+    } catch (error) { if (run === this.run) this.fail(error); }
+  }
+  cancel(): void {
+    this.active = undefined;
+    if (this.status.phase !== 'ready') this.ready = false;
+    this.run++; this.controller?.abort(); this.controller = undefined;
+    this.worker?.terminate(); this.worker = undefined;
+    this.pendingReject?.(new Error('Asset loading cancelled')); this.pendingReject = undefined;
+  }
+  async clearCache(): Promise<void> {
+    const key = assetCacheKey(this.source || DEFAULT_ASSET_URL);
+    await assetCache(key, null);
+    await this.archiveDownload(this.run, this.source || DEFAULT_ASSET_URL).clear();
+    for (const alias of selectedAssetCacheKeys(this.source)) if (alias !== key) await assetCache(alias, null);
+  }
+  private fail(error: unknown): void {
+    this.ready = false;
+    this.error = error instanceof Error ? error.message : String(error);
+    if (/Failed to fetch|NetworkError|Load failed/i.test(this.error)) this.error = 'Asset download could not reach the server. Retry, use a CORS-enabled asset URL, or import the installer / MIX files.';
+    this.report('error', this.error);
+  }
+  private async load(files: ArchiveInput[], run: number, archives: AssetDownload, input: ArchiveResume): Promise<void> {
+    if (!files.length) throw new Error('Choose the Red Alert 2 installer, or ra2.mix and language.mix.');
+    const phase = input.stage.startsWith('mix') ? 'cache' : 'extract';
+    this.report(phase, input.stage.startsWith('mix') ? 'Preparing saved game files from MIX archives…' : 'Opening the saved installer in the browser…');
+    if (run !== this.run) return;
+    let staged = input.stage.startsWith('mix') ? archives.extracted(input, files) : Promise.resolve();
+    try {
+      const selected = await new Promise<AssetFile[]>((resolve, reject) => {
+        this.pendingReject = reject;
+        const worker = new Worker(new URL('./extract.worker.ts', import.meta.url), { type: 'module' }); this.worker = worker;
+        worker.onmessage = ({ data }) => {
+          if (run !== this.run) return;
+          if (data.kind === 'progress') this.report(phase, data.message);
+          if (data.kind === 'mix') staged = staged.then(() => archives.extracted(input, data.files));
+          if (data.kind === 'error') {
+            worker.terminate(); this.worker = undefined; this.pendingReject = undefined;
+            reject(data.invalidArchive ? new InvalidArchiveError(data.message) : new Error(data.message));
+          }
+          if (data.kind === 'complete') {
+            this.diagnostics.splice(0, this.diagnostics.length, ...data.archives.map((a: { name: string; entries: number; encrypted: boolean }) => `${a.name}: ${a.entries} files${a.encrypted ? ' (encrypted index)' : ''}`));
+            worker.terminate(); this.worker = undefined; this.pendingReject = undefined; resolve(data.files);
+          }
+        };
+        worker.onerror = event => { if (run !== this.run) return; worker.terminate(); this.worker = undefined; this.pendingReject = undefined; reject(new Error(event.message || 'Browser archive extractor failed')); };
+        worker.postMessage({ files, includeMixStage: !input.stage.startsWith('mix') });
+      });
+      await staged;
+      if (run !== this.run) return;
+      await this.prepare(selected, run);
+      if (run !== this.run) return;
+      // Save the small ready-to-render cache even if large archive writes hit quota.
+      try {
+        await assetCache(assetCacheKey(this.source), { version: CACHE_VERSION, files: selected, saved: Date.now() }, () => run === this.run);
+        if (run === this.run) { this.storageWarning('selected-read', null); this.storageWarning('selected', null); }
+      } catch (error) { if (run === this.run) this.storageWarning('selected', `Assets loaded; browser storage could not save selected artwork: ${error instanceof Error ? error.message : String(error)}`); }
+      await archives.complete(input);
+      if (run === this.run) this.report('ready', `Original game assets ready · ${selected.length} files${this.cacheWarning ? ' · cache unavailable for some stages' : ' saved in this browser'}`, 1, 1);
+    } catch (error) {
+      await staged;
+      // Artwork selection/decoding belongs to the current catalog, not to the
+      // container. A catalog bug must never invalidate completed downloads or
+      // extracted MIX files; a later corrected build can reselect them locally.
+      if (run === this.run && error instanceof InvalidArchiveError) {
+        await archives.reject(input, error instanceof Error ? error.message : String(error));
+      }
+      throw error;
+    }
+  }
+  private requiredFile(name: string): Uint8Array {
+    const bytes = this.files.get(name);
+    if (!bytes?.length) throw new Error(`Missing original asset: ${name}. Download or import a complete copy of the game.`);
+    return bytes;
+  }
+  private decodeFile<T>(name: string, decode: (bytes: Uint8Array) => T): T {
+    const bytes = this.requiredFile(name);
+    try { return decode(bytes); }
+    catch (error) { throw new Error(`Invalid original asset ${name}: ${error instanceof Error ? error.message : String(error)}`); }
+  }
+  private validateShape(name: string, frames?: readonly number[]): ShpFile {
+    try {
+      const shape = this.shape(name);
+      if (!shape) throw new Error(`Missing ${name}.shp (or theater alias)`);
+      for (const frame of frames ?? Array.from({ length: shape.frameCount }, (_, i) => i)) {
+        if (frame >= shape.frameCount) throw new Error(`Missing frame ${frame}`);
+        shape.frame(frame);
+      }
+      return shape;
+    } catch (error) { throw new Error(`Invalid original sprite ${name}: ${error instanceof Error ? error.message : String(error)}`); }
+  }
+  private async prepare(files: AssetFile[], run = this.run): Promise<void> {
+    this.ready = false; this.preparingRun = run;
+    let validated = false;
+    try {
+      this.report('decode', 'Decoding original sprites, palettes and vehicle voxels…');
+      if (run !== this.run) throw new Error('Asset loading cancelled');
+      this.files = new Map(files.map(f => [f.name.toLowerCase(), f.bytes])); this.shapes.clear(); this.sprites.clear(); this.voxelModels.clear(); this.buildingAnchors.clear();
+      this.buildingLoops = buildingLoops(this.requiredFile('art.ini'));
+      this.font = this.decodeFile('game.fnt', bytes => new NativeFont(bytes));
+      this.cursors = this.decodeFile('mouse.shp', bytes => new NativeCursors(bytes, this.requiredFile('mousepal.pal')));
+      this.unitPalette = this.decodeFile('unittem.pal', decodePalette);
+      this.cameoPalette = this.decodeFile('cameo.pal', decodePalette);
+      this.terrainPalette = this.decodeFile('isotem.pal', decodePalette);
+      this.orePalette = this.decodeFile('temperat.pal', decodePalette);
+      this.sidebarPalettes = [this.decodeFile('side0/sidebar.pal', decodePalette)];
+      this.voxelLighting = this.decodeFile('voxels.vpl', bytes => {
+        const levels = decodeVpl(bytes);
+        if (levels.length !== 32 * 256) throw new Error('All 32 material lighting levels are required');
+        return levels;
+      });
+      for (const [name, frames] of Object.entries(HUD_ASSET_FRAMES)) {
+        this.decodeFile(`side0/${name}.shp`, bytes => {
+          const shape = new ShpFile(bytes);
+          for (const frame of frames) {
+            if (frame >= shape.frameCount) throw new Error(`Missing frame ${frame}`);
+            shape.frame(frame);
+          }
+        });
+      }
+      // The renderer can select each authored road segment and terrain edge.
+      // Mask 15 is never selected for an edge: at least one neighbor differs.
+      for (const name of REQUIRED_TERRAIN) this.decodeFile(`${name}.tem`, bytes => {
+        const frames = name === 'proad03' ? 9 : name.startsWith('proad') ? 3 : /^(glat|clat)/.test(name) ? 1 : 6;
+        for (let frame = 0; frame < frames; frame++) decodeTmp(bytes, frame);
+      });
+      if (this.files.has('water02.tem')) this.decodeFile('water02.tem', bytes => { for (let frame = 0; frame < 6; frame++) decodeTmp(bytes, frame); });
+      let done = 0;
+      for (const [name, spec] of Object.entries(CATALOG)) {
+        if (spec.kind === 'vehicle') {
+          this.decodeFile(`${spec.sprite}.vxl`, decodeVxl);
+          this.decodeFile(`${spec.sprite}.hva`, decodeHva);
+        } else this.validateShape(spec.sprite);
+        if (name === 'gi') this.validateShape(spec.sprite, Array.from({ length: 71 }, (_, i) => 292 + i));
+        this.validateShape(spec.cameo, [0]);
+        if (spec.bib) this.validateShape(spec.bib);
+        for (const overlay of spec.overlays ?? []) this.validateShape(overlay);
+        if (spec.turret) { this.decodeFile(`${spec.turret}.vxl`, decodeVxl); this.decodeFile(`${spec.turret}.hva`, decodeHva); }
+        if (!this.getSprite(name, 0, spec.sprite.startsWith('n') ? 1 : 0)) throw new Error(`Cannot render original sprite: ${spec.sprite}`);
+        if (!this.getCameo(name)) throw new Error(`Cannot render original cameo: ${spec.cameo}`);
+        this.report('decode', `Decoding ${name.replaceAll('_', ' ')}…`, ++done, Object.keys(CATALOG).length);
+        await new Promise(resolve => setTimeout(resolve, 0));
+        if (run !== this.run) throw new Error('Asset loading cancelled');
+      }
+      for (let variant = 0; variant < 6; variant++) { this.validateShape(`tib${String(variant + 1).padStart(2, '0')}`, [8]); if (!this.getOverlay('ore', variant)) throw new Error(`Cannot render original ore variant ${variant}`); }
+      for (let variant = 0; variant < 8; variant++) { this.validateShape(`tree${String(variant + 1).padStart(2, '0')}`); if (!this.getOverlay('tree', variant)) throw new Error(`Cannot render original tree variant ${variant}`); }
+      validated = true;
+    } finally {
+      if (this.preparingRun === run) this.preparingRun = undefined;
+      if (run === this.run) this.ready = validated;
+    }
+  }
+  private spec(name: string): AssetSpec | undefined {
+    name = name.toLowerCase().replace(/\.(shp|vxl)$/, '');
+    return CATALOG[name] ?? Object.values(CATALOG).find(s => s.sprite === name || s.cameo === name || theaterNames(s.sprite).includes(name));
+  }
+  private shape(name: string): ShpFile | undefined {
+    // Terrain scenery is SHP data with a theater extension, distinct from the
+    // TMP terrain templates which also use .tem and are decoded separately.
+    const candidate = theaterNames(name).flatMap(n => [n + '.shp', n + '.tem']).find(n => this.files.has(n)); if (!candidate) return;
+    let shape = this.shapes.get(candidate);
+    if (!shape) { shape = new ShpFile(this.files.get(candidate)!); this.shapes.set(candidate, shape); }
+    return shape;
+  }
+  getFont(): NativeFont {
+    if (!this.font) throw new Error('Missing original asset: game.fnt');
+    return this.font;
+  }
+  getCursors(): NativeCursors {
+    if (!this.cursors) throw new Error('Missing original asset: mouse.shp');
+    return this.cursors;
+  }
+  getCameo(name: string): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    const spec = this.spec(name), file = spec?.cameo ?? name.toLowerCase().replace(/\.shp$/, ''), key = `cameo:${file}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const shape = this.shape(file); if (!shape) { this.sprites.set(key, null); return null; }
+    const frame = shape.frame(0), image = paint(frame, this.cameoPalette), result = sprite(image, 0, 0);
+    this.sprites.set(key, result); return result;
+  }
+  getUIAsset(name: string, frame = 0, side = 0): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    const filename = name.toLowerCase().replace(/\.shp$/, ''), key = `ui:${side}:${filename}:${frame}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const bytes = this.files.get(`side${side}/${filename}.shp`); if (!bytes) return null;
+    const shape = new ShpFile(bytes), image = shape.frame(frame), result = canvas(shape.width, shape.height);
+    result.getContext('2d')!.drawImage(paint(image, this.sidebarPalettes[side] ?? this.decodeFile(`side${side}/sidebar.pal`, decodePalette)), image.x, image.y);
+    const value = sprite(result, 0, 0); this.sprites.set(key, value); return value;
+  }
+  getSprite(name: string, frame = 0, side = 0): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    name = name.toLowerCase().replace(/\.(shp|vxl)$/, '');
+    const spec = this.spec(name); if (!spec) return this.getDecoration(name, frame);
+    frame = spec.kind === 'infantry' ? Math.max(0, Math.floor(frame)) : ((Math.floor(frame) % 32) + 32) % 32;
+    const key = `${spec.sprite}:${spec.kind === 'building' && !spec.turret ? 0 : frame % (spec.kind === 'infantry' ? 56 : 32)}:${side}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    let result: Sprite | null = null;
+    try {
+      if (spec.kind === 'vehicle') result = this.renderVehicle(spec.sprite, frame % 32, side);
+      else {
+        const shape = this.shape(spec.sprite);
+        if (shape) {
+          if (spec.kind === 'building') result = this.renderBuilding(shape, spec, side, frame);
+          else {
+            const [start, stride] = idleFrames[spec.sprite] ?? [0, 1];
+            const index = frame < 8 ? start + frame * stride : (spec.sprite === 'rock' ? 292 : 8) + (frame % 8) * 6 + Math.floor((frame - 8) / 8) % 6;
+            return this.getInfantryFrame(spec.sprite, index, side);
+          }
+        }
+      }
+    } catch (error) { this.diagnostics.push(`${name}: ${error instanceof Error ? error.message : String(error)}`); }
+    if (result) result = trimSprite(result);
+    this.sprites.set(key, result); return result;
+  }
+  /** Exact authored SHP frame, with matching shadow and a stable ground anchor. */
+  getInfantryFrame(name: string, frame: number, side = 0): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    const spec = this.spec(name);
+    if (spec?.kind !== 'infantry' || !Number.isInteger(frame) || frame < 0) return null;
+    const key = `infantry:${spec.sprite}:${frame}:${side}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    let result: Sprite | null = null;
+    try {
+      const shape = this.shape(spec.sprite);
+      if (!shape) return null;
+      const hasShadow = shape.frameCount > 1 && shape.frameCount % 2 === 0;
+      if (frame >= shape.frameCount / (hasShadow ? 2 : 1)) return null;
+      const image = shape.frame(frame), lift = spec.sprite === 'rock' ? 26 : 0;
+      const source = canvas(shape.width, shape.height + lift), ctx = source.getContext('2d')!;
+      if (hasShadow) { const shade = shape.frame(frame + shape.frameCount / 2); ctx.drawImage(shadow(shade), shade.x, shade.y + lift); }
+      ctx.drawImage(paint(image, this.unitPalette, side), image.x, image.y);
+      result = trimSprite(sprite(source, shape.width / 2, shape.height / 2 + lift));
+    } catch (error) { this.diagnostics.push(`${name} frame ${frame}: ${error instanceof Error ? error.message : String(error)}`); }
+    this.sprites.set(key, result); return result;
+  }
+  getBuildingSprite(name: string, time = 0, side = 0): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    const spec = this.spec(name);
+    if (!spec || spec.kind !== 'building' || spec.turret) return this.getSprite(name, 0, side);
+    const shape = this.shape(spec.sprite); if (!shape) return null;
+    const frames = (spec.overlays ?? []).map(name => {
+      const overlay = this.shape(name);
+      return overlay ? buildingLoopFrame(this.buildingLoops.get(name), time, overlay.frameCount > 1 && overlay.frameCount % 2 === 0 ? overlay.frameCount / 2 : overlay.frameCount) : 0;
+    });
+    if (frames.every(frame => frame === 0)) return this.getSprite(name, 0, side);
+    // The key contains discrete loop frames, never elapsed time. Once the
+    // finite set repeats its canvases/textures are reused on every later loop.
+    const key = `building:${spec.sprite}:${side}:${frames.join(',')}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const result = trimSprite(this.renderBuilding(shape, spec, side, 0, frames));
+    this.sprites.set(key, result); return result;
+  }
+  /** Hull and turret use independent, quantized original VXL orientations. */
+  getVehicleSprite(name: string, hull: number, turret: number, side = 0): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    const spec = this.spec(name); if (spec?.kind !== 'vehicle') return null;
+    hull = ((Math.round(hull) % 32) + 32) % 32; turret = ((Math.round(turret) % 32) + 32) % 32;
+    if (hull === turret) return this.getSprite(name, hull, side);
+    // Floating point angles never become cache keys: each model/side has at
+    // most 32×32 authored facing combinations, created only when displayed.
+    const key = `vehicle:${spec.sprite}:${hull}:${turret}:${side}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const rendered = this.renderVehicle(spec.sprite, hull, side, true, turret);
+    const result = rendered ? trimSprite(rendered) : null; this.sprites.set(key, result); return result;
+  }
+  private renderBuilding(shape: ShpFile, spec: AssetSpec, side: number, facing: number, overlayFrames: number[] = []): Sprite {
+    const result = canvas(shape.width, shape.height), ctx = result.getContext('2d')!;
+    const layers = [{ shape: spec.bib ? this.shape(spec.bib) : undefined, frame: 0 }, { shape, frame: 0 }, ...(spec.overlays ?? []).map((name, index) => ({ shape: this.shape(name), frame: overlayFrames[index] ?? 0 }))].filter((layer): layer is { shape: ShpFile; frame: number } => !!layer.shape);
+    const draw = ({ shape: s, frame: index }: { shape: ShpFile; frame: number }, isShadow = false) => {
+      const frame = s.frame(index + (isShadow ? s.frameCount / 2 : 0));
+      ctx.drawImage(isShadow ? shadow(frame) : paint(frame, this.unitPalette, side), frame.x + (shape.width - s.width) / 2, frame.y + (shape.height - s.height) / 2);
+    };
+    for (const layer of layers) if (layer.shape.frameCount > 1 && layer.shape.frameCount % 2 === 0) draw(layer, true);
+    for (const layer of layers) draw(layer);
+    // Ground origin is the centre of the isometric foundation diamond.
+    const foundation = spec.footprint ?? [2, 2], pixels = ctx.getImageData(0, 0, result.width, result.height).data;
+    let bottom = result.height - 1;
+    // Some source canvases (notably the Soviet barracks) have a large empty
+    // footer. The painted foundation, rather than the canvas, defines ground.
+    while (bottom > 0) {
+      let painted = false;
+      for (let x = 0; x < result.width; x++) if (pixels[(bottom * result.width + x) * 4 + 3] > 128) { painted = true; break; }
+      if (painted) break; bottom--;
+    }
+    // Loading prepares frame zero first. Keep that foundation origin for all
+    // animation frames even when a flag/shadow changes its painted bounds.
+    const anchorY = this.buildingAnchors.get(spec.sprite) ?? bottom + 5 - (foundation[0] + foundation[1]) * 7.5;
+    this.buildingAnchors.set(spec.sprite, anchorY);
+    if (spec.turret) {
+      const turret = this.renderVehicle(spec.turret, facing % 32, side, false);
+      if (turret) ctx.drawImage(turret.source, result.width / 2 - turret.anchorX, anchorY - turret.anchorY);
+    }
+    return sprite(result, result.width / 2, anchorY);
+  }
+  getTerrain(terrain: string, variant = 0): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    const names = /^(proad|green|ruff|sandy|glat|clat)\d+$/.test(terrain) ? [terrain] : terrain === 'water' ? ['water01', 'water02'] : terrain === 'road' ? ['pave01'] : terrain === 'sand' ? ['green01', 'sand01', 'rough01'] : terrain === 'rock' ? ['ruff01', 'rough01', 'rough02'] : ['clear01'];
+    const available = names.filter(name => this.files.has(name + '.tem'));
+    const name = available[terrain === 'sand' || terrain === 'rock' ? 0 : variant % available.length], key = `terrain:${name}:${variant % 16}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const bytes = this.files.get(name + '.tem'); if (!bytes) return null;
+    try { const frame = decodeTmp(bytes, variant), result = sprite(paint(frame, this.terrainPalette), 30, 15); this.sprites.set(key, result); return result; }
+    catch { return null; }
+  }
+  getDecoration(name: string, frame = 0): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    const key = `decoration:${name}:${frame}`; if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const shape = this.shape(name); if (!shape) return null;
+    const isOre = /^(tib|gem)\d/.test(name);
+    const image = shape.frame(frame), groundY = shape.height / 2 + (isOre ? 15 : 0);
+    const palette = isOre ? this.orePalette : /^tree\d/.test(name) ? this.terrainPalette : this.unitPalette;
+    let result: Sprite;
+    if (/^tree\d/.test(name) && shape.frameCount > 1 && shape.frameCount % 2 === 0) {
+      const source = canvas(shape.width, shape.height), ctx = source.getContext('2d')!, shade = shape.frame(frame + shape.frameCount / 2);
+      ctx.drawImage(shadow(shade), shade.x, shade.y); ctx.drawImage(paint(image, palette), image.x, image.y);
+      result = sprite(source, shape.width / 2, groundY);
+    } else result = sprite(paint(image, palette), shape.width / 2 - image.x, groundY - image.y);
+    this.sprites.set(key, result); return result;
+  }
+  getOverlay(kind: 'ore' | 'tree', variant = 0): Sprite | null {
+    return this.getDecoration(kind === 'ore' ? `tib${String(variant % 6 + 1).padStart(2, '0')}` : `tree${String(variant % 8 + 1).padStart(2, '0')}`, kind === 'ore' ? 8 : 0);
+  }
+  private vehicleModel(name: string): PreparedVoxel[] {
+    if (this.voxelModels.has(name)) return this.voxelModels.get(name)!;
+    const result: PreparedVoxel[] = [];
+    for (const part of [name, name + 'tur', name + 'barl']) {
+      const bytes = this.files.get(part + '.vxl'); if (!bytes) continue;
+      const transforms = this.decodeFile(part + '.hva', decodeHva);
+      for (const limb of decodeVxl(bytes)) this.prepareLimb(limb, transforms.get(limb.name), result, part !== name);
+    }
+    this.voxelModels.set(name, result); return result;
+  }
+  private prepareLimb(limb: VoxelLimb, transform: number[] | undefined, result: PreparedVoxel[], turret = false): void {
+    const [sx, sy, sz] = limb.size, b = limb.bounds, scale = [(b[3] - b[0]) / sx, (b[4] - b[1]) / sy, (b[5] - b[2]) / sz];
+    for (const v of limb.voxels) {
+      let x = b[0] + (v.x + .5) * scale[0], y = b[1] + (v.y + .5) * scale[1], z = b[2] + (v.z + .5) * scale[2];
+      const n = v.normal * 3;
+      let nx = RA2_NORMALS[n] ?? 0, ny = RA2_NORMALS[n + 1] ?? 0, nz = RA2_NORMALS[n + 2] ?? 1;
+      if (transform) {
+        const t = transform;
+        [x, y, z] = [t[0] * x + t[1] * y + t[2] * z + t[3] * scale[0] * limb.scale, t[4] * x + t[5] * y + t[6] * z + t[7] * scale[1] * limb.scale, t[8] * x + t[9] * y + t[10] * z + t[11] * scale[2] * limb.scale];
+        [nx, ny, nz] = [t[0] * nx + t[1] * ny + t[2] * nz, t[4] * nx + t[5] * ny + t[6] * nz, t[8] * nx + t[9] * ny + t[10] * nz];
+      }
+      // VXL's lateral axis is opposite the map's. Transform normals along with
+      // geometry; their authored indices carry the tank's beveled armor detail.
+      result.push({ x, y: -y, z, color: v.color, nx, ny: -ny, nz, turret });
+    }
+  }
+  private renderVehicle(name: string, facing: number, side: number, castShadow = true, turretFacing = facing): Sprite | null {
+    const model = this.vehicleModel(name); if (!model.length) return null;
+    const size = 144, result = canvas(size, size), ctx = result.getContext('2d')!, output = ctx.createImageData(size, size), depth = new Float32Array(size * size).fill(-Infinity);
+    const angle = facing / 32 * Math.PI * 2, cs = Math.cos(angle), sn = Math.sin(angle), center = size / 2, ground = size / 2 + 12;
+    const turretAngle = turretFacing / 32 * Math.PI * 2, tcs = Math.cos(turretAngle), tsn = Math.sin(turretAngle);
+    if (castShadow) for (const voxel of model) {
+      const cosine = voxel.turret ? tcs : cs, sine = voxel.turret ? tsn : sn;
+      const x = voxel.x * cosine - voxel.y * sine, y = voxel.x * sine + voxel.y * cosine;
+      const px = Math.round(center + (x - y) * Math.SQRT1_2 + voxel.z * .55), py = Math.round(ground + (x + y) * Math.SQRT1_2 * .5 + voxel.z * .15);
+      if (px >= 0 && py >= 0 && px < size && py < size) output.data[(py * size + px) * 4 + 3] = 105;
+    }
+    for (const voxel of model) {
+      const cosine = voxel.turret ? tcs : cs, sine = voxel.turret ? tsn : sn;
+      const x = voxel.x * cosine - voxel.y * sine, y = voxel.x * sine + voxel.y * cosine, z = voxel.z;
+      const px = Math.round(center + (x - y) * .7071), py = Math.round(ground + (x + y) * .35355 - z * .866), distance = x + y + z * .8165;
+      const nx = voxel.nx * cosine - voxel.ny * sine, ny = voxel.nx * sine + voxel.ny * cosine;
+      // VPL encodes the material response (including metallic highlights).
+      // Scaling the source RGB loses those highlights and flattens tank armor.
+      // Retail light direction reconstructed by ThomasSneddon's VXL renderer;
+      // Y is flipped here with the model's lateral axis, not Z. Overhead light
+      // sends most roof normals into VPL's white specular band.
+      const diffuse = Math.max(0, nx * .2013022 + ny * .9101138 - voxel.nz * .3621709);
+      const halfDot = nx * .178224 + ny * .805757 + voxel.nz * .564725;
+      const specular = Math.max(0, halfDot / (3 - 2 * halfDot));
+      const level = Math.min(31, Math.floor(16 * (diffuse + specular)));
+      const c = this.voxelLighting[level * 256 + voxel.color], remap = c >= 16 && c <= 31, p = c * 3;
+      const color = remap ? SIDE_REMAPS[side % SIDE_REMAPS.length][c - 16] : [this.unitPalette[p], this.unitPalette[p + 1], this.unitPalette[p + 2]];
+      // A projected voxel covers one native pixel. The old 2x2 stamp overwrote
+      // neighboring armor/track detail with the same color and thickened guns.
+      if (px < 0 || py < 0 || px >= size || py >= size) continue;
+      const index = py * size + px; if (depth[index] > distance) continue; depth[index] = distance;
+      for (let ch = 0; ch < 3; ch++) output.data[index * 4 + ch] = color[ch];
+      output.data[index * 4 + 3] = 255;
+    }
+    ctx.putImageData(output, 0, 0); return sprite(result, center, ground);
+  }
+}

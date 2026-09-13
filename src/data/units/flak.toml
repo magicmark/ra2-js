@@ -1,0 +1,23 @@
+# Original rules.ini [HTK]; integer Speed/ROF use the documented 30-frame reference clock.
+[units.flak]
+name = "Flak Track"
+category = "vehicles"
+faction = "soviet"
+cost = 500
+buildTime = 10.5
+hp = 180
+speed = 2.34375
+damage = 25
+range = 5
+fireRate = 1.3333333333333333
+sight = 8
+requires = ["warfactory_soviet"]
+sprite = "htk"
+cameo = "htkicon"
+description = "Fast Soviet support vehicle with a rapid-fire flak cannon."
+armor = "heavy"
+nativeSpeed = 8
+crusher = true
+verses = [1.5, 1.0, 0.5, 0.6, 0.1, 0.1, 0.3, 0.2, 0.1, 1.0, 1.0]
+rot = 5
+turret = true

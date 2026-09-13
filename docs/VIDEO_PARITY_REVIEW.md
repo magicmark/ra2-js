@@ -1,0 +1,77 @@
+# Retail video and native UI review
+
+Independent, read-only review by `ra2-video-review`, 2026-09-13. Runtime files, rules, tests and servers were not changed. This report covers immutable **4197**, with earlier **4191 / 4195 / 4196** evidence preserved under [video-reference](../tests/artifacts/video-reference/REVIEW.md).
+
+## Result and remaining work
+
+**4197 resolves the observed fresh-order tank sliding failure.** Fresh 90° and 180° orders now rotate a stationary hull before translating along its heading. Infantry health-bar geometry and the Allied resource-counter glyph position also match the native reference. This is a bounded improvement, not certification of total retail parity.
+
+| Priority | Remaining discrepancy or acceptance limit | Concrete next action |
+| --- | --- | --- |
+| 1 | **Order lines are missing in 4197.** A selected tank at screen `(316,285)` receives a destination at `(316,435)`; only destination chevrons appear. The full [canvas capture](../tests/artifacts/video-reference/after-4197-order-feedback.png) and immutable renderer agree. Retail footage shows transient unit-to-destination lines. | Render temporary green move / red target lines with moving unit endpoints. Do not substitute the A* route. The recorded green visibility window is about 0.77s, not an established engine timer. |
+| 2 | **Group traffic and moving bends are not fully certified.** Retail troops locally queue, thread around tanks and spread unevenly. The final browser check here isolates turns from rest; it does not cover every new detour, bottleneck or arrival condition. | Retain a crowded obstacle test, opposing traffic test and an already-moving bend. Reject indefinite oscillation, persistent overlap, lateral sliding, and stopping at every cell. Numerical retail speeds, collision radii and acceleration remain uncalibrated. |
+| 3 | **Six command icons are offset by `−1px X, +2px Y` relative to the native still.** All six independent icon crops best align when 4197 artwork moves **+1px right, −2px up**. | Register the 52×32 button artwork at `x=32+52n, y=568` for 800×600, instead of current `x=31+52n, y=570`. Recheck strip ends and clipping. This measures artwork placement, not a claim that the tactical viewport must change. |
+| 4 | **Options / pause UI remains custom**, with a centered `FIELD SETTINGS` dialog, GENERAL / GAME ASSETS / FIELD MANUAL tabs and browser controls. Correct retail in-battle geometry was not secured. | Obtain a sound native-resolution in-battle Options reference before geometry acceptance. Do not use the broken forum 12625 layout, shell Options, YR, mods or CnCNet launcher screens as the baseline. |
+| 5 | **Cursor cadence, hotspot registration, command disabled states and all production states remain partly unverified against retail.** | Preserve original art and contextual mappings; capture disabled/pressed command states and production Ready / On Hold / tab flash in the final build. Do not call a source-defined 100ms cursor frame duration a retail measurement. |
+
+## Evidence and provenance
+
+- **Contiguous retail recording:** [The C&C Strategist, Soviet Mission 2: Hostile Shore](https://www.dailymotion.com/video/x8vlwj6). The bounded downloaded segment is source **00:50–02:20**, stored only at `/tmp/ra2-video-review/soviet-m2-0050-0220.mp4`: 1920×1080, 60 encoded frames/s, 90.016667s, 5401 frames, approximately 24MiB. The uploader identifies base RA2 and the visible campaign is consistent with that description. Executable version and game-speed setting are not shown. Adjacent frames, including repeats, were inspected; no timing claim is based on YouTube storyboards.
+- **Native 800×600 Allied still:** [screens.16bit.pl / image 5](https://screens.16bit.pl/red-alert-2/5.jpg), locally `/tmp/ra2-references/allied-snow.jpg`. Used for pixel geometry, with JPEG palette limits. The sidebar is 168px wide, beginning at x632; cameos are 60×48. Video sidebar dimensions are scaled and are not native pixel dimensions.
+- **Final browser:** `http://omarky:4197/`, isolated context `ra2-video-review-final-242`, native zoom 1, 800×600, DPR 1. Bundle `index-CzD4K9G2.js`, SHA-256 `b95698e588c778be4adb63a145256a0e0eb42c2fafc0f679b7596b61f527695e`. [Saved provenance](../tests/artifacts/video-reference/after-4197-provenance.json).
+- The authorized selected-art fixture contained **242 originals / 8,590,736 decoded bytes**, seeded only into this context's IndexedDB `/asset-source`, version 8. Reload and native Enter succeeded with **zero installer-fetch or extraction-worker attempts**. Installer/worker guards were installed after seeding. This is visual-test bootstrap evidence, **not installer/download/cache E2E proof**; the coordinator owns that separate evidence.
+- Browser rendering uses ANGLE / SwiftShader software rendering. Image sampling was sparse and must not be used as a hardware frame-rate claim.
+
+## Fresh turns and independent turret
+
+The default Grizzly begins at `(19.5,41.5)`. Both tests issue a public move command to `(24.5,46.5)`, whose initial path heading is +45°. The 90° case starts with the normal −45° hull. The 180° case explicitly stages a −135° hull/turret facing at the same stationary position. Facing staging, public Stop/Move commands, selection and camera centering happen only in the reviewer's browser; simulation subsequently advances through the application's normal animation loop.
+
+| Test | Actual rendered observations | Separate per-step browser observation |
+| --- | --- | --- |
+| 90° | Anchor remains `(316,285)` at observed sim 0.167s and 0.400s; hull changes −45° → −7.5° → +45°. At 0.667s it moves in the +45° direction. [Captured poses](../tests/artifacts/video-reference/after-4197-turn-90.png). | Hull alignment at sim **0.400s**, first translation **0.433333s**; zero displacement before alignment. |
+| 180° | Anchor stays `(316,285)` through the observed 0.733s pose; multiple hull orientations precede aligned translation at observed 1.000s. [Captured poses](../tests/artifacts/video-reference/after-4197-turn-180.png). | Hull alignment at sim **0.833333s**, first translation **0.866667s**; zero displacement before alignment. |
+| Stationary aim | Force-attacking an in-range friendly Power Plant leaves hull −45° and position `(19.5,41.5)` unchanged; turret reaches +225°. | [Final turret samples](../tests/artifacts/video-reference/after-4197-turret.json). |
+
+[Rendered-sample telemetry](../tests/artifacts/video-reference/after-4197-motion.json) is distinct from [per-step observations](../tests/artifacts/video-reference/after-4197-step-observations.json). For the latter, a temporary page-local observer called the original step exactly once, then recorded state; it was restored after each run. No manual simulation stepping or speed changes were used. These are **our simulation times**, not retail wall-time calibration.
+
+In the retail footage, **01:45.800–01:46.783** shows a selected Rhino rotating from rest before departing southwest. Its tracked health-bar anchor remains unchanged through source **01:46.416667**. [All adjacent frames](../tests/artifacts/video-reference/retail-stationary-turn-0145.800-0146.783.png), [anchor measurements](../tests/artifacts/video-reference/retail-stationary-turn-tracking.json). **01:32.800–01:33.783** separately shows a moving bend with changing hull orientation and independent gun aim. These examples support stationary fresh turns and continuous moving bends; they do not establish a universal angle threshold or turn radius.
+
+The supplied [YRpp FacingStruct implementation](https://raw.githubusercontent.com/Phobos-developers/YRpp/master/GeneralStructures.h) is engine-extension source for **Yuri's Revenge**, not direct RA2 retail footage. Its ROT5 duration of 12 logic frames for 90° / 25 for 180° is consistent with the final implementation's measured logic counts. Unknown retail game speed prevents converting the recording's 60fps playback into those logic counts. No acceleration value was inferred.
+
+## Native UI measurements
+
+- **Infantry pips:** final 4197 outer frame `(307,253)`–`(324,256)` is **18×4**, surrounding **16×2** alternating fill pixels. Retail still `(340,117)`–`(357,120)` has the same dimensions and pattern. Current bright/dark greens are `(79,196,82)` / `(0,99,0)` and frame `(227,255,255)`; central retail JPEG pixels are close, but exact palette parity cannot be established from JPEG. Oversized mobile-unit corner brackets are removed. [Measured comparison](../tests/artifacts/video-reference/after-4196-native-pips-comparison.png) was captured in 4196; the same dimensions were rechecked in 4197. Native tank-bar width and damaged-state palette are not certified by the scaled video.
+- **Counter:** final `3739` visible glyphs occupy **x704–726, y6–14**, a **23×9** extent matching the native still. Original bitmap foreground is `(184,208,232)` with black shadow and no comma. [Native crop comparison](../tests/artifacts/video-reference/after-4197-credits-comparison.png). Frozen 4196 was yellow and two pixels too high; those are historical findings, resolved in 4197.
+- **Commands:** correct six original icons and labels now correspond to Team 1, Team 2, Type Select, Deploy, Guard and Planning. A native click activated Planning artwork and `aria-pressed`; collapse left a 28×30 handle. [Strip comparison and active state](../tests/artifacts/video-reference/after-4196-command-comparison.png). Final 4197 retains the measured small registration offset described above. Each icon's 31×21 crop independently favored translation `(1,−2)` when tested over dx −3…3 / dy −4…2. Earlier reports of a 30px strip described the visible band and did not establish registration of the 32px source artwork.
+- **Cursors:** programmatic pointer events through the existing canvas handlers produced `move`, `attack` for Ctrl, and `attackmove` for Ctrl+Shift. Applied CSS changed through distinct original **55×43** image frames with declared `(28,21)` hotspots. [Applied artwork samples](../tests/artifacts/video-reference/after-4197-applied-cursor-frames.png), [semantic observations](../tests/artifacts/video-reference/after-4197-cursor-observations.json), [native still move cursor crop](../tests/artifacts/video-reference/retail-move-cursor-8x.png). Browser screenshots exclude the system pointer; these are exports of the actually applied CSS images, not screenshot proof of OS pointer positioning. Retail animation cadence and exact hotspot alignment remain unmeasured.
+
+## Other contiguous footage observations
+
+| Source time | Observed constraint |
+| --- | --- |
+| **01:39.100–01:40.083** | Standing/firing infantry enter walking poses and thread past a tank cluster. [Adjacent frames A](../tests/artifacts/video-reference/retail-walk-start-0139.100-0139.583.png), [B](../tests/artifacts/video-reference/retail-walk-start-0139.600-0140.083.png). Actual displacement should drive walk animation. Explicit Stop-key and arrival-to-idle latency remain unmeasured. |
+| **01:39.267–01:40.033** | Green unit-to-destination lines are fully visible through approximately 01:40.017 and absent by 01:40.033, while selection remains. About 0.77s is the observed window, not an exact timer. Red lines around **01:33.9–01:34.3** disappear with selection clearing, so they do not establish independent expiry. |
+| **01:41.5–01:42.9; 01:47–01:52** | Unequal group spacing and local waiting around units / the palm gap. No numerical collision envelope is established. |
+| **01:38.4–01:38.6; 01:48–01:52** | Battlefield scrolls beneath fixed UI. No scroll velocity or easing curve is calibrated. |
+| **02:03–02:19** | Tesla Reactor production reduces credits progressively while a radial overlay advances; yellow Ready and a flashing category follow. [Recording crops](../tests/artifacts/video-reference/retail-production-0203-0219.jpg). Progressive payment and bitmap labels were reported integrated; their complete final-build sequence was not independently rerun in this pass. |
+
+## Options reference limit
+
+The [MobyGames retail Options listing](https://www.mobygames.com/game/2544/command-conquer-red-alert-2/screenshots/windows/14417/) dates its 800×600 screenshot to **April 10, 2001**, but fetching the image page returned HTTP 403 and the independent browser encountered a human-verification gate. Its pixels were not observed and are not a geometry reference.
+
+The additional [forum 10627 image](https://forums.cncnet.org/topic/10627-red-alert-2-game-speed-fixes-dont-work/) was downloaded and inspected: its 1280×720 composition has a large black gap between the background panel and sidebar. It is also unsuitable for native layout acceptance. Forum 12625 remains explicitly rejected as broken. Main-menu Options and mod/YR references were not substituted. [Actual 4197 custom Options capture](../tests/artifacts/video-reference/after-4197-options.png), opened with the native Options button, records the existing UI only.
+
+## Bounded final acceptance
+
+- [x] Fresh 90° / 180° turn-before-translation in 4197; independent stationary turret retained.
+- [x] Native infantry bar dimensions and alternating fill; oversized mobile brackets removed.
+- [x] Original bitmap counter glyph extent, position and Allied color family.
+- [x] Six native command identities; Planning active state and collapse exercised.
+- [x] Original contextual cursor images applied and changing in the browser.
+- [ ] Temporary unit-to-destination / target lines, including cancellation and selection behavior.
+- [ ] Command-art registration correction; remaining pressed/disabled states.
+- [ ] Crowded detours, moving bends, blocked infantry, explicit Stop and arrival transitions in the final native browser build.
+- [ ] Complete final production / Ready / On Hold / queue and category-flash sequence.
+- [ ] Sound native in-battle Options reference and resulting geometry / text parity.
+
+Absolute retail movement speeds, acceleration, ROT-to-playback timing, cursor cadence, hotspot alignment and universal group-collision behavior remain outside this evidence's calibration.

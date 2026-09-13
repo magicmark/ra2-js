@@ -1,0 +1,15 @@
+# Original rules.ini [GAPOWR]; timing uses the documented 30-frame reference clock.
+[units.power]
+name = "Power Plant"
+category = "structures"
+faction = "allied"
+cost = 800
+buildTime = 16.8
+hp = 750
+footprint = [2, 2]
+power = 200
+sight = 4
+sprite = "gapowr"
+cameo = "powricon"
+description = "Generates 200 power. Low power slows all production."
+armor = "wood"

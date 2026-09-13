@@ -1,0 +1,43 @@
+Supplied RA2 executable Speed parser (static analysis, never executed)
+Source: game.exe inside local /tmp/ra2-multiplayer.exe
+SHA-256: 06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb
+PE version resource: FileVersion/ProductVersion 1.08; CompanyName Westwood Studios
+NSIS entry date: 2011-09-07. This does not establish unmodified retail provenance.
+Speed string: 0x7d381c. Integer INI reader: 0x50d7f0.
+Result: min(255, trunc(clamp(integer Speed, 0, 100) * 256 / 100)).
+The imul 0x51eb851f + sar5 + sign correction implements signed division by100.
+At 30 logic frames/sec and256 leptons/cell, world speed=internal Speed*30/256.
+
+
+/tmp/ra2-engine-reference/game.exe:     file format pei-i386
+
+
+Disassembly of section .text:
+
+006dcbee <.text+0x2dbbee>:
+  6dcbee:	68 1c 38 7d 00       	push   0x7d381c
+  6dcbf3:	53                   	push   ebx
+  6dcbf4:	8b ce                	mov    ecx,esi
+  6dcbf6:	89 85 5c 05 00 00    	mov    DWORD PTR [ebp+0x55c],eax
+  6dcbfc:	e8 ef 0b e3 ff       	call   0x50d7f0
+  6dcc01:	83 f8 ff             	cmp    eax,0xffffffff
+  6dcc04:	74 3b                	je     0x6dcc41
+  6dcc06:	83 f8 64             	cmp    eax,0x64
+  6dcc09:	7c 05                	jl     0x6dcc10
+  6dcc0b:	b8 64 00 00 00       	mov    eax,0x64
+  6dcc10:	33 c9                	xor    ecx,ecx
+  6dcc12:	85 c0                	test   eax,eax
+  6dcc14:	0f 9e c1             	setle  cl
+  6dcc17:	49                   	dec    ecx
+  6dcc18:	23 c8                	and    ecx,eax
+  6dcc1a:	b8 1f 85 eb 51       	mov    eax,0x51eb851f
+  6dcc1f:	c1 e1 08             	shl    ecx,0x8
+  6dcc22:	f7 e9                	imul   ecx
+  6dcc24:	c1 fa 05             	sar    edx,0x5
+  6dcc27:	8b c2                	mov    eax,edx
+  6dcc29:	c1 e8 1f             	shr    eax,0x1f
+  6dcc2c:	03 d0                	add    edx,eax
+  6dcc2e:	81 fa ff 00 00 00    	cmp    edx,0xff
+  6dcc34:	7c 05                	jl     0x6dcc3b
+  6dcc36:	ba ff 00 00 00       	mov    edx,0xff
+  6dcc3b:	89 95 a0 05 00 00    	mov    DWORD PTR [ebp+0x5a0],edx

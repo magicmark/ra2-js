@@ -1,0 +1,274 @@
+{
+  "source": "index-CzD4K9G2.js",
+  "originalFiles": 242,
+  "offline": true,
+  "deployKey": [
+    {
+      "id": 7,
+      "type": "gi",
+      "deployed": true
+    }
+  ],
+  "deployButton": [
+    {
+      "id": 7,
+      "type": "gi",
+      "deployed": false
+    }
+  ],
+  "teamRecall": [
+    7
+  ],
+  "typeButton": [
+    {
+      "id": 7,
+      "type": "gi"
+    },
+    {
+      "id": 8,
+      "type": "gi"
+    },
+    {
+      "id": 9,
+      "type": "gi"
+    },
+    {
+      "id": 10,
+      "type": "gi"
+    }
+  ],
+  "planningButtonOn": true,
+  "planningButtonOff": false,
+  "calls": [
+    {
+      "name": "orderWaypoints",
+      "args": [
+        [
+          7
+        ],
+        [
+          {
+            "x": 23.5,
+            "y": 43.5
+          }
+        ]
+      ]
+    },
+    {
+      "name": "orderWaypoints",
+      "args": [
+        [
+          8
+        ],
+        [
+          {
+            "x": 23.5,
+            "y": 43.5
+          }
+        ]
+      ]
+    },
+    {
+      "name": "orderWaypoints",
+      "args": [
+        [
+          9
+        ],
+        [
+          {
+            "x": 23.5,
+            "y": 43.5
+          }
+        ]
+      ]
+    },
+    {
+      "name": "orderWaypoints",
+      "args": [
+        [
+          10
+        ],
+        [
+          {
+            "x": 23.5,
+            "y": 43.5
+          }
+        ]
+      ]
+    },
+    {
+      "name": "guard",
+      "args": [
+        [
+          7,
+          8,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "stop",
+      "args": [
+        [
+          7,
+          8,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "guard",
+      "args": [
+        [
+          7,
+          8
+        ]
+      ]
+    },
+    {
+      "name": "stop",
+      "args": [
+        [
+          7,
+          8
+        ]
+      ]
+    }
+  ],
+  "queuedBeforeCommit": {
+    "planning": true,
+    "calls": [],
+    "units": [
+      {
+        "id": 7,
+        "order": "guard",
+        "path": 0
+      },
+      {
+        "id": 8,
+        "order": "guard",
+        "path": 0
+      },
+      {
+        "id": 9,
+        "order": "guard",
+        "path": 0
+      },
+      {
+        "id": 10,
+        "order": "guard",
+        "path": 0
+      }
+    ]
+  },
+  "afterCommit": {
+    "planning": false,
+    "calls": [
+      {
+        "name": "orderWaypoints",
+        "args": [
+          [
+            7
+          ],
+          [
+            {
+              "x": 23.5,
+              "y": 43.5
+            }
+          ]
+        ]
+      },
+      {
+        "name": "orderWaypoints",
+        "args": [
+          [
+            8
+          ],
+          [
+            {
+              "x": 23.5,
+              "y": 43.5
+            }
+          ]
+        ]
+      },
+      {
+        "name": "orderWaypoints",
+        "args": [
+          [
+            9
+          ],
+          [
+            {
+              "x": 23.5,
+              "y": 43.5
+            }
+          ]
+        ]
+      },
+      {
+        "name": "orderWaypoints",
+        "args": [
+          [
+            10
+          ],
+          [
+            {
+              "x": 23.5,
+              "y": 43.5
+            }
+          ]
+        ]
+      },
+      {
+        "name": "guard",
+        "args": [
+          [
+            7,
+            8,
+            9
+          ]
+        ]
+      },
+      {
+        "name": "stop",
+        "args": [
+          [
+            7,
+            8,
+            9
+          ]
+        ]
+      },
+      {
+        "name": "guard",
+        "args": [
+          [
+            7,
+            8
+          ]
+        ]
+      },
+      {
+        "name": "stop",
+        "args": [
+          [
+            7,
+            8
+          ]
+        ]
+      }
+    ],
+    "time": 145.43333333332765
+  },
+  "final": {
+    "time": 145.43333333332765,
+    "winner": null,
+    "selected": [
+      7,
+      8
+    ],
+    "optionsOpen": true,
+    "archiveRequests": []
+  }
+}

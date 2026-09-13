@@ -1,0 +1,24 @@
+# Original rules.ini [E1]; integer Speed/ROF use the documented 30-frame reference clock.
+[units.gi]
+name = "G.I."
+category = "infantry"
+faction = "allied"
+cost = 200
+buildTime = 4.2
+hp = 125
+speed = 1.171875
+damage = 15
+range = 4
+fireRate = 0.6666666666666666
+sight = 5
+requires = ["barracks"]
+sprite = "gi"
+cameo = "giicon"
+description = "Deploy with D for a longer-range heavy machine gun. Deploy again to move."
+armor = "none"
+nativeSpeed = 4
+verses = [1.0, 0.8, 0.7, 0.5, 0.25, 0.25, 0.75, 0.5, 0.25, 1.0, 1.0]
+deployedDamage = 15
+deployedRange = 5
+deployedVerses = [1.0, 1.0, 0.7, 0.6, 0.4, 0.4, 0.75, 0.5, 0.25, 1.0, 1.0]
+deployedFireRate = 0.5

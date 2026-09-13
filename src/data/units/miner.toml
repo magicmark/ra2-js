@@ -1,0 +1,21 @@
+# Original rules.ini [CMIN]; integer Speed/ROF use the documented 30-frame reference clock.
+[units.miner]
+name = "Chrono Miner"
+category = "vehicles"
+faction = "allied"
+cost = 1400
+buildTime = 29.4
+hp = 1000
+speed = 1.171875
+damage = 0
+sight = 4
+harvester = true
+capacity = 500
+requires = ["warfactory", "refinery"]
+sprite = "cmin"
+cameo = "ahrvicon"
+description = "Automatically finds ore and returns it to the nearest refinery."
+armor = "medium"
+nativeSpeed = 4
+crusher = true
+rot = 5

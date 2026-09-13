@@ -1,0 +1,94 @@
+{
+  "verifiedDate": "2026-09-13",
+  "environment": "Chromium, http://omarky:5173/, same browser context/profile storage",
+  "scope": "Original installer import, new page, HTTP-cache-bypassed reload; browser process was not restarted",
+  "seed": {
+    "url": "http://omarky:5173/?cache_audit=1",
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets ready · 126 files saved in this browser",
+      "loaded": 1,
+      "total": 1
+    },
+    "ready": true,
+    "error": null,
+    "cacheWarning": null,
+    "cache": {
+      "key": "/asset-source",
+      "version": 5,
+      "saved": 1789320292477,
+      "count": 126,
+      "bytes": 4897139
+    },
+    "sprites": 48,
+    "painted": 200860,
+    "fingerprint": "1281b0cb",
+    "audit": {
+      "fetches": [
+        "/asset-source"
+      ],
+      "workers": [
+        "http://omarky:5173/src/assets/extract.worker.ts?worker_file&type=module"
+      ]
+    },
+    "resources": [
+      "http://omarky:5173/src/assets/extract.worker.ts?worker_file&type=module",
+      "http://omarky:5173/node_modules/.vite/deps/7z-wasm.js?v=6a5e0d2a",
+      "http://omarky:5173/node_modules/7z-wasm/7zz.wasm?import&url"
+    ]
+  },
+  "newPage": {
+    "url": "http://omarky:5173/",
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets loaded from this browser.",
+      "loaded": 1,
+      "total": 1
+    },
+    "ready": true,
+    "error": null,
+    "cacheWarning": null,
+    "cache": {
+      "key": "/asset-source",
+      "version": 5,
+      "saved": 1789320292477,
+      "count": 126,
+      "bytes": 4897139
+    },
+    "sprites": 48,
+    "painted": 200860,
+    "fingerprint": "1281b0cb",
+    "audit": {
+      "fetches": [],
+      "workers": []
+    },
+    "resources": []
+  },
+  "reload": {
+    "url": "http://omarky:5173/",
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets loaded from this browser.",
+      "loaded": 1,
+      "total": 1
+    },
+    "ready": true,
+    "error": null,
+    "cacheWarning": null,
+    "cache": {
+      "key": "/asset-source",
+      "version": 5,
+      "saved": 1789320292477,
+      "count": 126,
+      "bytes": 4897139
+    },
+    "sprites": 48,
+    "painted": 200860,
+    "fingerprint": "1281b0cb",
+    "audit": {
+      "fetches": [],
+      "workers": []
+    },
+    "resources": []
+  }
+}

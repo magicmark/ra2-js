@@ -1,0 +1,23 @@
+# Original rules.ini [HTNK]; integer Speed/ROF use the documented 30-frame reference clock.
+[units.rhino]
+name = "Rhino Tank"
+category = "vehicles"
+faction = "soviet"
+cost = 900
+buildTime = 18.9
+hp = 400
+speed = 1.7578125
+damage = 90
+range = 5.75
+fireRate = 2.1666666666666665
+sight = 8
+requires = ["warfactory_soviet"]
+sprite = "htnk"
+cameo = "htnkicon"
+description = "Heavily armored Soviet main battle tank."
+armor = "heavy"
+nativeSpeed = 6
+crusher = true
+verses = [0.25, 0.25, 0.25, 0.75, 1.0, 1.0, 0.65, 0.45, 0.6, 0.6, 1.0]
+rot = 5
+turret = true

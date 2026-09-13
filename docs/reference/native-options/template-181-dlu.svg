@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="884" height="716" viewBox="-8 -36 442 358">
+<title>PE resource 181: template in dialog units, not a screenshot</title>
+<rect x="-8" y="-36" width="442" height="358" fill="#f5f6fa"/>
+<style>text{font-family:monospace;font-size:6px;fill:#17233a}.hidden{stroke-dasharray:3 2}</style>
+<text x="0" y="-22" style="font-size:10px;font-weight:bold">Resource 181: raw DLU template</text>
+<text x="0" y="-11" style="font-size:7px">NOT native pixels or retail artwork. Runtime repositions controls.</text>
+<rect x="0" y="0" width="426" height="295" fill="white" stroke="#8290a5" stroke-width=".6"/>
+<rect x="318" y="257" width="108" height="23" fill="#eaf2ff" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="320" y="265">1670: ResumeMission</text>
+<rect x="318" y="122" width="108" height="23" fill="#eaf2ff" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="320" y="130">1313: GameControls</text>
+<rect x="318" y="149" width="108" height="23" fill="#eaf2ff" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="320" y="157">1310: LoadGame</text>
+<rect x="318" y="230" width="108" height="23" fill="#eaf2ff" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="320" y="238">1314: AbortMission</text>
+<rect x="318" y="176" width="108" height="23" fill="#eaf2ff" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="320" y="184">1311: SaveGame</text>
+<rect x="318" y="1" width="108" height="10" fill="#f8fafc" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="320" y="8.0">1684: GameOptions</text>
+<rect x="10" y="282" width="303" height="12" fill="#f8fafc" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="12" y="290.0">1685: Help / blank</text>
+<rect x="317" y="203" width="108" height="23" fill="#eaf2ff" stroke="#6884a7" stroke-width=".5" class="visible"/>
+<text x="319" y="211">1312: DeleteGame</text>
+<text x="0" y="307" style="font-size:7px">426 × 295 dialog units. Outlines/fonts here are schematic only.</text>
+<text x="0" y="318" style="font-size:7px">Amber dashed: hidden + disabled in template. IDs identify exact JSON rows.</text>
+</svg>

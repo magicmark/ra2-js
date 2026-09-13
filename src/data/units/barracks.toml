@@ -1,0 +1,17 @@
+# Original rules.ini [GAPILE]; timing uses the documented 30-frame reference clock.
+[units.barracks]
+name = "Barracks"
+category = "structures"
+faction = "allied"
+cost = 500
+buildTime = 10.5
+hp = 500
+footprint = [3, 2]
+power = -10
+requires = ["power"]
+producer = ["infantry"]
+sight = 5
+sprite = "gapile"
+cameo = "brrkicon"
+description = "Trains Allied infantry. Set its rally point with a move order."
+armor = "steel"

@@ -1,0 +1,636 @@
+{
+  "snapshot": {
+    "main": "index-BKSRLzUK.js",
+    "worker": "extract.worker-CriABOsy.js",
+    "catalog": 221,
+    "origin": "http://omarky:4191/",
+    "source": "http://omarky:4191/own-copy.exe",
+    "archiveBytes": 206530229,
+    "archiveSHA256": "5388c54d7d7b73060083563ff1926bca0d2663a76678b807e23e9a8d491441ce"
+  },
+  "historical217": [
+    {
+      "checkpoint": "cold-idle",
+      "observed": "2026-09-13T18:16:50.789Z",
+      "probe": {
+        "started": "2026-09-13T18:16:30.313Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "awaiting-source",
+        "message": "Confirm the archive URL and press Enter to download game assets.",
+        "loaded": 0
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": false,
+      "files": 0,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "button": "Download & play",
+      "rememberedSource": null,
+      "cache": [],
+      "resources": []
+    },
+    {
+      "checkpoint": "invalid-http-archive",
+      "observed": "2026-09-13T18:18:09.988Z",
+      "probe": {
+        "started": "2026-09-13T18:16:30.313Z",
+        "fetches": [
+          {
+            "url": "http://omarky:4191/invalid-archive.exe",
+            "at": 89780.79999999888,
+            "status": 200,
+            "responseUrl": "http://omarky:4191/invalid-archive.exe",
+            "headersAt": 89820.90000000037
+          }
+        ],
+        "workers": [
+          {
+            "url": "http://omarky:4191/assets/extract.worker-D1qBXRnc.js",
+            "at": 89829.69999999925
+          }
+        ],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 89722.19999999925
+          }
+        ],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "error",
+        "message": "No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix and language.mix.",
+        "loaded": 0
+      },
+      "error": "No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix and language.mix.",
+      "cacheWarning": null,
+      "ready": false,
+      "files": 0,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "http://omarky:4191/invalid-archive.exe",
+      "source": "http://omarky:4191/invalid-archive.exe",
+      "button": "Download & play",
+      "rememberedSource": "http://omarky:4191/invalid-archive.exe",
+      "cache": [],
+      "resources": [
+        {
+          "name": "http://omarky:4191/invalid-archive.exe",
+          "status": 200,
+          "startTime": 89785,
+          "duration": 31.299999998882413,
+          "decodedBodySize": 28,
+          "transferSize": 328
+        },
+        {
+          "name": "http://omarky:4191/assets/extract.worker-D1qBXRnc.js",
+          "status": 200,
+          "startTime": 89916.59999999963,
+          "duration": -33.30000000074506,
+          "decodedBodySize": 75840,
+          "transferSize": 29751
+        }
+      ]
+    },
+    {
+      "checkpoint": "invalid-archive-settled",
+      "observed": "2026-09-13T18:19:56.986Z",
+      "probe": {
+        "started": "2026-09-13T18:16:30.313Z",
+        "fetches": [
+          {
+            "url": "http://omarky:4191/invalid-archive.exe",
+            "at": 89780.79999999888,
+            "status": 200,
+            "responseUrl": "http://omarky:4191/invalid-archive.exe",
+            "headersAt": 89820.90000000037
+          }
+        ],
+        "workers": [
+          {
+            "url": "http://omarky:4191/assets/extract.worker-D1qBXRnc.js",
+            "at": 89829.69999999925
+          }
+        ],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 89722.19999999925
+          }
+        ],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "error",
+        "message": "No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix and language.mix.",
+        "loaded": 0
+      },
+      "error": "No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix and language.mix.",
+      "cacheWarning": null,
+      "ready": false,
+      "files": 0,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "http://omarky:4191/invalid-archive.exe",
+      "source": "http://omarky:4191/invalid-archive.exe",
+      "button": "Download & play",
+      "rememberedSource": "http://omarky:4191/invalid-archive.exe",
+      "cache": [],
+      "resources": [
+        {
+          "name": "http://omarky:4191/invalid-archive.exe",
+          "status": 200,
+          "startTime": 89785,
+          "duration": 31.299999998882413,
+          "decodedBodySize": 28,
+          "transferSize": 328
+        },
+        {
+          "name": "http://omarky:4191/assets/extract.worker-D1qBXRnc.js",
+          "status": 200,
+          "startTime": 89916.59999999963,
+          "duration": -33.30000000074506,
+          "decodedBodySize": 75840,
+          "transferSize": 29751
+        }
+      ]
+    }
+  ],
+  "observations": {
+    "strict221Cold": {
+      "observed": "2026-09-13T18:26:03.680Z",
+      "probe": {
+        "started": "2026-09-13T18:25:42.626Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "awaiting-source",
+        "message": "Confirm the archive URL and press Enter to download game assets.",
+        "loaded": 0
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": false,
+      "files": 0,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "button": "Download & play",
+      "rememberedSource": null,
+      "cache": [],
+      "resources": []
+    },
+    "strict221Extracting": {
+      "observed": "2026-09-13T18:30:09.325Z",
+      "probe": {
+        "started": "2026-09-13T18:25:42.626Z",
+        "fetches": [
+          {
+            "url": "http://omarky:4191/own-copy.exe",
+            "at": 240348.5,
+            "status": 200,
+            "responseUrl": "http://omarky:4191/own-copy.exe",
+            "headersAt": 240367.19999999925
+          }
+        ],
+        "workers": [
+          {
+            "url": "http://omarky:4191/assets/extract.worker-CriABOsy.js",
+            "at": 242629.40000000037
+          }
+        ],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 240324
+          }
+        ],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "extract",
+        "message": "Extracting archive: /input/source.exe",
+        "loaded": 0
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": false,
+      "files": 0,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "http://omarky:4191/own-copy.exe",
+      "source": "http://omarky:4191/own-copy.exe",
+      "button": "Download & play",
+      "rememberedSource": "http://omarky:4191/own-copy.exe",
+      "cache": [],
+      "resources": [
+        {
+          "name": "http://omarky:4191/own-copy.exe",
+          "status": 200,
+          "startTime": 240349.69999999925,
+          "duration": 1905.4000000003725,
+          "decodedBodySize": 206530229,
+          "transferSize": 206530529
+        },
+        {
+          "name": "http://omarky:4191/assets/extract.worker-CriABOsy.js",
+          "status": 200,
+          "startTime": 242725.09999999963,
+          "duration": -60.80000000074506,
+          "decodedBodySize": 75896,
+          "transferSize": 29782
+        }
+      ]
+    },
+    "strict221Progress": {
+      "observed": "2026-09-13T18:30:39.179Z",
+      "probe": {
+        "started": "2026-09-13T18:25:42.626Z",
+        "fetches": [
+          {
+            "url": "http://omarky:4191/own-copy.exe",
+            "at": 240348.5,
+            "status": 200,
+            "responseUrl": "http://omarky:4191/own-copy.exe",
+            "headersAt": 240367.19999999925
+          }
+        ],
+        "workers": [
+          {
+            "url": "http://omarky:4191/assets/extract.worker-CriABOsy.js",
+            "at": 242629.40000000037
+          }
+        ],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 240324
+          }
+        ],
+        "cacheWrites": [
+          {
+            "at": 290158.5999999996,
+            "state": "complete",
+            "completedAt": 290268.7999999989
+          }
+        ]
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets ready · 221 files saved in this browser",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 221,
+      "gateVisible": false,
+      "gameTime": 4.449999999999992,
+      "sourceInput": "http://omarky:4191/own-copy.exe",
+      "source": "http://omarky:4191/own-copy.exe",
+      "button": "Continue",
+      "rememberedSource": "http://omarky:4191/own-copy.exe",
+      "cache": [
+        {
+          "key": "http://omarky:4191/own-copy.exe",
+          "version": 8,
+          "files": 221,
+          "bytes": 6594581,
+          "saved": 1789324232735
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://omarky:4191/own-copy.exe",
+          "status": 200,
+          "startTime": 240349.69999999925,
+          "duration": 1905.4000000003725,
+          "decodedBodySize": 206530229,
+          "transferSize": 206530529
+        },
+        {
+          "name": "http://omarky:4191/assets/extract.worker-CriABOsy.js",
+          "status": 200,
+          "startTime": 242725.09999999963,
+          "duration": -60.80000000074506,
+          "decodedBodySize": 75896,
+          "transferSize": 29782
+        }
+      ]
+    },
+    "strict221Ready": {
+      "observed": "2026-09-13T18:31:01.904Z",
+      "probe": {
+        "started": "2026-09-13T18:25:42.626Z",
+        "fetches": [
+          {
+            "url": "http://omarky:4191/own-copy.exe",
+            "at": 240348.5,
+            "status": 200,
+            "responseUrl": "http://omarky:4191/own-copy.exe",
+            "headersAt": 240367.19999999925
+          }
+        ],
+        "workers": [
+          {
+            "url": "http://omarky:4191/assets/extract.worker-CriABOsy.js",
+            "at": 242629.40000000037
+          }
+        ],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 240324
+          }
+        ],
+        "cacheWrites": [
+          {
+            "at": 290158.5999999996,
+            "state": "complete",
+            "completedAt": 290268.7999999989
+          }
+        ]
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets ready · 221 files saved in this browser",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 221,
+      "gateVisible": false,
+      "gameTime": 17.500000000000114,
+      "sourceInput": "http://omarky:4191/own-copy.exe",
+      "source": "http://omarky:4191/own-copy.exe",
+      "button": "Continue",
+      "rememberedSource": "http://omarky:4191/own-copy.exe",
+      "cache": [
+        {
+          "key": "http://omarky:4191/own-copy.exe",
+          "version": 8,
+          "files": 221,
+          "bytes": 6594581,
+          "saved": 1789324232735
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://omarky:4191/own-copy.exe",
+          "status": 200,
+          "startTime": 240349.69999999925,
+          "duration": 1905.4000000003725,
+          "decodedBodySize": 206530229,
+          "transferSize": 206530529
+        },
+        {
+          "name": "http://omarky:4191/assets/extract.worker-CriABOsy.js",
+          "status": 200,
+          "startTime": 242725.09999999963,
+          "duration": -60.80000000074506,
+          "decodedBodySize": 75896,
+          "transferSize": 29782
+        }
+      ]
+    },
+    "strict221Reopen": {
+      "observed": "2026-09-13T18:31:39.829Z",
+      "probe": {
+        "started": "2026-09-13T18:31:31.789Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 221,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "http://omarky:4191/own-copy.exe",
+      "source": "http://omarky:4191/own-copy.exe",
+      "button": "Continue",
+      "rememberedSource": "http://omarky:4191/own-copy.exe",
+      "cache": [
+        {
+          "key": "http://omarky:4191/own-copy.exe",
+          "version": 8,
+          "files": 221,
+          "bytes": 6594581,
+          "saved": 1789324232735
+        }
+      ],
+      "resources": []
+    },
+    "strict221HardReload": {
+      "observed": "2026-09-13T18:32:11.780Z",
+      "probe": {
+        "started": "2026-09-13T18:32:03.812Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 221,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "http://omarky:4191/own-copy.exe",
+      "source": "http://omarky:4191/own-copy.exe",
+      "button": "Continue",
+      "rememberedSource": "http://omarky:4191/own-copy.exe",
+      "cache": [
+        {
+          "key": "http://omarky:4191/own-copy.exe",
+          "version": 8,
+          "files": 221,
+          "bytes": 6594581,
+          "saved": 1789324232735
+        }
+      ],
+      "resources": []
+    },
+    "strict221Continue": {
+      "observed": "2026-09-13T18:32:25.724Z",
+      "probe": {
+        "started": "2026-09-13T18:32:03.812Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 13889.599999999627
+          }
+        ],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 221,
+      "gateVisible": false,
+      "gameTime": 4.6499999999999915,
+      "sourceInput": "http://omarky:4191/own-copy.exe",
+      "source": "http://omarky:4191/own-copy.exe",
+      "button": "Continue",
+      "rememberedSource": "http://omarky:4191/own-copy.exe",
+      "cache": [
+        {
+          "key": "http://omarky:4191/own-copy.exe",
+          "version": 8,
+          "files": 221,
+          "bytes": 6594581,
+          "saved": 1789324232735
+        }
+      ],
+      "resources": []
+    },
+    "strict221Damaged": {
+      "observed": "2026-09-13T18:33:39.968Z",
+      "probe": {
+        "started": "2026-09-13T18:33:35.036Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "awaiting-source",
+        "message": "Missing original asset: unittem.pal. Download or import a complete copy of the game. Confirm the archive URL and press Enter to download complete game assets.",
+        "loaded": 0
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": false,
+      "files": 220,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "http://omarky:4191/own-copy.exe",
+      "source": "http://omarky:4191/own-copy.exe",
+      "button": "Download & play",
+      "rememberedSource": "http://omarky:4191/own-copy.exe",
+      "cache": [
+        {
+          "key": "http://omarky:4191/own-copy.exe",
+          "version": 8,
+          "files": 220,
+          "bytes": 6593813,
+          "saved": 1789324232735
+        }
+      ],
+      "resources": []
+    },
+    "strict221Restored": {
+      "observed": "2026-09-13T18:34:09.588Z",
+      "probe": {
+        "started": "2026-09-13T18:34:03.692Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 221,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "http://omarky:4191/own-copy.exe",
+      "source": "http://omarky:4191/own-copy.exe",
+      "button": "Continue",
+      "rememberedSource": "http://omarky:4191/own-copy.exe",
+      "cache": [
+        {
+          "key": "http://omarky:4191/own-copy.exe",
+          "version": 8,
+          "files": 221,
+          "bytes": 6594581,
+          "saved": 1789324232735
+        }
+      ],
+      "resources": []
+    },
+    "strictUIBeforeScroll": {
+      "grid": {
+        "top": 0,
+        "height": 146,
+        "scroll": 148
+      },
+      "buttons": [
+        {
+          "action": "build-up",
+          "disabled": true
+        },
+        {
+          "action": "build-down",
+          "disabled": false
+        }
+      ]
+    },
+    "strictUIAfterScroll": {
+      "grid": {
+        "top": 2,
+        "height": 146,
+        "scroll": 148
+      },
+      "buttons": [
+        {
+          "action": "build-up",
+          "disabled": false
+        },
+        {
+          "action": "build-down",
+          "disabled": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,20 @@
+# Original rules.ini [NALASR]; timing uses the documented 30-frame reference clock.
+[units.sentry]
+name = "Sentry Gun"
+category = "defenses"
+faction = "soviet"
+cost = 500
+buildTime = 10.5
+hp = 400
+footprint = [1, 1]
+power = 0
+requires = ["barracks_soviet"]
+damage = 50
+range = 5.5
+fireRate = 0.8666666666666667
+sight = 7
+sprite = "nalasr"
+cameo = "plticon"
+description = "Automatic Soviet perimeter machine-gun defense."
+armor = "steel"
+verses = [1.0, 0.8, 0.7, 0.5, 0.25, 0.25, 0.75, 0.5, 0.25, 1.0, 1.0]

@@ -1,0 +1,34 @@
+{
+  "snapshot": "/tmp/ra2-startup-e2e-dist",
+  "url": "http://omarky:4187/",
+  "main": {
+    "file": "index-BGnmQ5kp.js",
+    "sha256": "c490bfc2d912592b9296f71306858bd4b9693fe2ab9bfb05796f6a35f97d7aa1"
+  },
+  "worker": {
+    "file": "extract.worker--rvRwKcK.js",
+    "sha256": "294152418acddff0b3e17d8ed4d415cb35f8ab9b92cbff29194180e67d7a25ce"
+  },
+  "wasm": {
+    "file": "7zz-CgkXYLdN.wasm",
+    "sha256": "e16c6997e2eaa89575c0dd1f305074be629c3f4d87246244d37fd19debc8a285"
+  },
+  "sourceHashesAtCopy": {
+    "src/main.ts": "5edaf75a382f6020f4c2a68246cf5472546b80e8a9c0910d66f2778aa38aa271",
+    "src/assets/AssetManager.ts": "14a60e06db542c2e171773a1b810be4c770996d5a5bc18d69557e14724bab0c9",
+    "src/ui/UI.ts": "9b3c43eb66718da7d7aa8a40c506a376deffeb1fc9f43bce7086ddf727d6264d",
+    "vite.config.ts": "886ba7d3b7db52d9bc970cd26fdd32a138001bfc33a8128184069eec08b3c1c0"
+  },
+  "finalStartupBuild": {
+    "builtAt": "2026-09-13 17:56:04 UTC",
+    "file": "index-f4NNdRUN.js",
+    "sha256": "e59b19746ea274c55e743d39477d545b27842d28a669cb7f45e44b212c6472e3",
+    "sourceHashes": {
+      "src/main.ts": "5da4831f5f0a8ef284424ba105c6dd47d5afcf4eb9a261d7e7214cf00a410668",
+      "src/assets/AssetManager.ts": "bbf71722ca9d9fe7e0ee4d119e090c5863e189f79b1ce365f7277a9754a95981",
+      "src/ui/UI.ts": "1a1435bf3eb6a9d12efcac625a5bb23a15966ac7f5df1a7bfc71d24e9dd72e3a"
+    },
+    "workerUnchanged": true,
+    "wasmUnchanged": true
+  }
+}

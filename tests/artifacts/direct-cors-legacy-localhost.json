@@ -1,0 +1,37 @@
+{
+  "scope": "Existing localhost:5173 browser cache repaired in the earlier local-installer legacy upgrade; no seeding, importing, clearing or new download in this check. Hard reload installed passive fetch/Worker/IndexedDB.put counters and blocked any installer request. Native Enter used the cached ready assets with the new public CORS source. Gameplay was paused only after recording the successful Continue.",
+  "pass": true,
+  "reload": {
+    "at": "2026-09-13T20:28:27.700Z",
+    "url": "http://localhost:5173/",
+    "phase": "ready",
+    "ready": true,
+    "time": 0,
+    "source": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "gateHidden": false,
+    "label": "Continue",
+    "probe": {
+      "fetches": [],
+      "workers": [],
+      "writes": [],
+      "blocked": []
+    }
+  },
+  "continue": {
+    "at": "2026-09-13T20:29:05.222Z",
+    "url": "http://localhost:5173/",
+    "phase": "ready",
+    "ready": true,
+    "time": 26.166666666667126,
+    "error": null,
+    "cacheWarning": null,
+    "source": "https://archive.org/cors/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+    "gateHidden": true,
+    "probe": {
+      "fetches": [],
+      "workers": [],
+      "writes": [],
+      "blocked": []
+    }
+  }
+}

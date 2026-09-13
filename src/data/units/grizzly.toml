@@ -1,0 +1,23 @@
+# Original rules.ini [MTNK]; integer Speed/ROF use the documented 30-frame reference clock.
+[units.grizzly]
+name = "Grizzly Tank"
+category = "vehicles"
+faction = "allied"
+cost = 700
+buildTime = 14.7
+hp = 300
+speed = 1.9921875
+damage = 65
+range = 5
+fireRate = 2.0
+sight = 8
+requires = ["warfactory"]
+sprite = "gtnk"
+cameo = "gtnkicon"
+description = "Fast Allied battle tank. Reliable against armor and structures."
+armor = "heavy"
+nativeSpeed = 7
+crusher = true
+verses = [0.25, 0.25, 0.25, 0.75, 1.0, 1.0, 0.65, 0.45, 0.6, 0.6, 1.0]
+rot = 5
+turret = true

@@ -1,0 +1,20 @@
+# Original rules.ini [E2]; integer Speed/ROF use the documented 30-frame reference clock.
+[units.conscript]
+name = "Conscript"
+category = "infantry"
+faction = "soviet"
+cost = 100
+buildTime = 2.1
+hp = 125
+speed = 1.171875
+damage = 15
+range = 4
+fireRate = 0.8333333333333334
+sight = 5
+requires = ["barracks_soviet"]
+sprite = "cons"
+cameo = "e2icon"
+description = "Low-cost Soviet infantry. Dangerous in numbers."
+armor = "flak"
+nativeSpeed = 4
+verses = [1.0, 0.8, 0.7, 0.5, 0.25, 0.25, 0.75, 0.5, 0.25, 1.0, 1.0]

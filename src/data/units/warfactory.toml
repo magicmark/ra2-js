@@ -1,0 +1,17 @@
+# Original rules.ini [GAWEAP]; timing uses the documented 30-frame reference clock.
+[units.warfactory]
+name = "War Factory"
+category = "structures"
+faction = "allied"
+cost = 2000
+buildTime = 42.0
+hp = 1000
+footprint = [5, 3]
+power = -25
+requires = ["refinery", "barracks"]
+producer = ["vehicles"]
+sight = 4
+sprite = "gaweap"
+cameo = "gwepicon"
+description = "Produces armored vehicles and additional ore miners."
+armor = "wood"

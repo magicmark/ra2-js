@@ -1,0 +1,151 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+const harness = vi.hoisted(() => ({ assets: {} as any, game: {} as any, renderer: {} as any, actions: {} as any, status: {} as any, loading: true, modal: false, runtimeError: '', frame: (_now: number) => {}, visibility: () => {} }));
+vi.mock('../src/game/Game', () => ({ Game: class { constructor() { return harness.game; } } }));
+vi.mock('../src/game/Audio', () => ({ GameAudio: class {} }));
+vi.mock('../src/render/Renderer', () => ({ Renderer: class { constructor() { return harness.renderer; } } }));
+vi.mock('../src/input/Controls', () => ({ detectMobile: () => false, Controls: class { tick() {} } }));
+vi.mock('../src/assets/AssetManager', () => ({
+  DEFAULT_ASSET_URL: 'https://example.test/game.exe', assetSourceUrl: (url: string) => url,
+  HUD_ASSET_FRAMES: { side1: [0], radar: [32], tab00: [1, 2] },
+  AssetManager: class { constructor() { return harness.assets; } },
+}));
+vi.mock('../src/ui/UI', () => ({ UI: class {
+  constructor(_game: unknown, actions: unknown) { harness.actions = actions; }
+  setLoading(value: boolean) { harness.loading = value; }
+  setAssetStatus(status: unknown) { harness.status = status; }
+  setAssetSource() {} setZoom() {} setCameo() {} setChrome() {} setFont() {} setCursors() {} setCursor() {} update() {}
+  isModalOpen() { return harness.modal; }
+  showRuntimeError(message: string) { harness.runtimeError = message; harness.loading = true; }
+} }));
+
+const settle = () => new Promise(resolve => setTimeout(resolve, 0));
+beforeEach(() => {
+  vi.resetModules(); harness.loading = true; harness.status = {}; harness.modal = false; harness.runtimeError = '';
+  harness.game = { defs: {}, state: { time: 0, speed: 1, events: [], effects: [] } };
+  harness.game.tick = vi.fn((dt: number) => { harness.game.state.time += dt; });
+  harness.renderer = { camera: { zoom: 1 }, render: vi.fn() };
+  const ready = async (options: any) => {
+    harness.assets.ready = true;
+    harness.assets.status = { phase: 'ready', message: 'Saved files restored.', loaded: 1, total: 1 };
+    options.onProgress?.(harness.assets.status);
+    return 'ready';
+  };
+  harness.assets = { ready: false, status: { phase: 'cache' }, initialize: vi.fn(ready), download: vi.fn(ready), importFiles: vi.fn((_files: unknown, options: unknown) => ready(options)), getFont: () => ({}), getCursors: () => ({}), getUIAsset: vi.fn(() => ({ source: { toDataURL: () => 'data:image/png;base64,fixture' } })) };
+  vi.stubGlobal('navigator', { storage: { persist: vi.fn(async () => false) } });
+  vi.stubGlobal('window', {});
+  vi.stubGlobal('document', { querySelector: () => ({}), hidden: false, addEventListener: (_name: string, callback: () => void) => { harness.visibility = callback; } });
+  vi.stubGlobal('location', { search: '' });
+  vi.stubGlobal('localStorage', { getItem: () => null, setItem: vi.fn() });
+  vi.stubGlobal('requestAnimationFrame', (frame: (now: number) => void) => { harness.frame = frame; return 1; });
+});
+afterEach(() => vi.unstubAllGlobals());
+
+describe('startup authorization', () => {
+  it('restores cached artwork while keeping the first-open gate and battle clock stopped', async () => {
+    await import('../src/main'); await settle();
+    expect(harness.assets.initialize).toHaveBeenCalledOnce();
+    expect(harness.assets.getUIAsset).toHaveBeenCalled();
+    expect(harness.assets.download).not.toHaveBeenCalled();
+    expect(navigator.storage.persist).not.toHaveBeenCalled();
+    harness.frame(performance.now() + 100);
+    expect(harness.loading).toBe(true);
+    expect(harness.game.state.time).toBe(0);
+    expect(harness.game.tick).not.toHaveBeenCalled();
+  });
+
+  it('starts battle only after explicit Continue and shares duplicate submissions', async () => {
+    await import('../src/main'); await settle();
+    harness.actions.onAssetRetry('https://example.test/game.exe');
+    harness.actions.onAssetRetry('https://example.test/game.exe');
+    await settle();
+    expect(harness.assets.download).toHaveBeenCalledOnce();
+    expect(navigator.storage.persist).toHaveBeenCalledOnce();
+    expect(harness.loading).toBe(false);
+    harness.frame(performance.now() + 100);
+    expect(harness.game.state.time).toBeGreaterThan(0);
+  });
+
+  it('does not wait for the browser persistence decision before entering with imported originals', async () => {
+    vi.mocked(navigator.storage.persist).mockImplementation(() => new Promise(() => {}));
+    await import('../src/main'); await settle();
+    harness.actions.onAssetImport([{ name: 'ra2.mix' }]); await settle();
+    expect(navigator.storage.persist).toHaveBeenCalledOnce();
+    expect(harness.assets.importFiles).toHaveBeenCalledOnce();
+    expect(harness.loading).toBe(false);
+  });
+
+  it('preserves visible frame time above 100ms and excludes hidden-tab elapsed time', async () => {
+    const clock = vi.spyOn(performance, 'now').mockReturnValue(0);
+    await import('../src/main'); await settle();
+    harness.actions.onAssetRetry('https://example.test/game.exe'); await settle();
+    harness.frame(200);
+    expect(harness.game.state.time).toBeCloseTo(.2);
+    Object.assign(document, { hidden: true });
+    harness.frame(10000);
+    expect(harness.game.state.time).toBeCloseTo(.2);
+    clock.mockReturnValue(10000);
+    Object.assign(document, { hidden: false }); harness.visibility();
+    harness.frame(10050);
+    expect(harness.game.state.time).toBeCloseTo(.25);
+    clock.mockRestore();
+  });
+
+  it('does not expose a fallback bypass and rejects incomplete original interface art', async () => {
+    harness.assets.getUIAsset.mockReturnValue(null);
+    await import('../src/main'); await settle();
+    expect(harness.actions).not.toHaveProperty('onFallback');
+    expect(harness.actions).not.toHaveProperty('onAssetUpdate');
+    expect(harness.status.error).toContain('Missing original interface artwork');
+    expect(harness.assets.download).not.toHaveBeenCalled();
+    harness.frame(performance.now() + 100);
+    expect(harness.loading).toBe(true);
+    expect(harness.game.state.time).toBe(0);
+  });
+
+  it('keeps the gate closed if rendering originals fails before the first battle frame', async () => {
+    await import('../src/main'); await settle();
+    harness.renderer.render.mockImplementation(() => { throw new Error('Missing original artwork: gi'); });
+    harness.actions.onAssetRetry('https://example.test/game.exe'); await settle();
+    expect(harness.status.error).toContain('Missing original artwork: gi');
+    expect(harness.loading).toBe(true);
+    harness.frame(performance.now() + 100);
+    expect(harness.game.state.time).toBe(0);
+    expect(harness.renderer.render).toHaveBeenCalledOnce();
+  });
+
+  it('stops a running battle while replacing assets and keeps it stopped after failure', async () => {
+    await import('../src/main'); await settle();
+    harness.actions.onAssetRetry('https://example.test/game.exe'); await settle();
+    harness.frame(performance.now() + 100);
+    const time = harness.game.state.time;
+    harness.assets.download.mockImplementation(async (options: any) => {
+      harness.assets.ready = false;
+      harness.assets.status = { phase: 'error', message: 'Invalid original archive.' };
+      options.onProgress(harness.assets.status);
+    });
+    harness.actions.onAssetRetry('https://example.test/bad.exe'); await settle();
+    harness.frame(performance.now() + 200);
+    expect(harness.loading).toBe(true);
+    expect(harness.game.state.time).toBe(time);
+    expect(harness.status.error).toBe('Invalid original archive.');
+    expect(harness.assets.download).toHaveBeenCalledTimes(2);
+  });
+
+  it('pauses for options without changing manual pause state and reports runtime faults without an archive remedy', async () => {
+    await import('../src/main'); await settle();
+    harness.actions.onAssetRetry('https://example.test/game.exe'); await settle();
+    harness.modal = true;
+    harness.frame(performance.now() + 100);
+    expect(harness.game.tick).not.toHaveBeenCalled();
+    harness.modal = false;
+    harness.game.tick.mockImplementation(() => { throw new Error('Path state invalid'); });
+    harness.frame(performance.now() + 200);
+    expect(harness.runtimeError).toBe('Path state invalid');
+    expect(harness.assets.ready).toBe(true);
+    expect(harness.status.error).toBeUndefined();
+    const calls = harness.game.tick.mock.calls.length;
+    harness.frame(performance.now() + 300);
+    expect(harness.game.tick).toHaveBeenCalledTimes(calls);
+  });
+});

@@ -1,0 +1,199 @@
+{
+  "date": "2026-09-13",
+  "url": "http://localhost:5173/",
+  "method": "Existing legacy browser context; imported already downloaded /tmp/ra2-multiplayer.exe through native file input. No installer network request. Then hard reload with archive fetches blocked.",
+  "before": {
+    "cacheKey": "/asset-source",
+    "version": 5,
+    "files": 126,
+    "bytes": 4897139,
+    "saved": 1789318725963,
+    "archiveStages": [],
+    "ready": false,
+    "missingOriginal": "game.fnt"
+  },
+  "importProbeObserved": {
+    "started": "2026-09-13T19:18:50.827Z",
+    "fetches": [],
+    "workers": [
+      "http://localhost:5173/src/assets/extract.worker.ts?worker_file&type=module"
+    ],
+    "writes": [
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "download"
+        ],
+        "files": 1
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "mix-pending"
+        ],
+        "files": 2
+      },
+      {
+        "key": "/asset-source",
+        "files": 240
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "mix"
+        ],
+        "files": 2
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "installer"
+        ],
+        "files": 1
+      }
+    ]
+  },
+  "committed": {
+    "at": "2026-09-13T19:26:16.055Z",
+    "url": "http://localhost:5173/",
+    "ready": true,
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets loaded from this browser.",
+      "loaded": 1,
+      "total": 1
+    },
+    "gameTime": 0,
+    "gateVisible": true,
+    "submitLabel": "Continue",
+    "entries": [
+      {
+        "key": "/asset-source",
+        "version": 8,
+        "saved": 1789327223722,
+        "files": 240,
+        "bytes": 8230168
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "installer"
+        ],
+        "version": 1,
+        "saved": 1789327161352,
+        "files": 1,
+        "bytes": 206530229,
+        "names": [
+          "ra2-multiplayer.exe"
+        ]
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "mix"
+        ],
+        "version": 1,
+        "saved": 1789327161352,
+        "files": 2,
+        "bytes": 335011496,
+        "names": [
+          "language.mix",
+          "ra2.mix"
+        ]
+      }
+    ]
+  },
+  "hardReload": {
+    "at": "2026-09-13T19:31:42.465Z",
+    "url": "http://localhost:5173/",
+    "ready": true,
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets loaded from this browser.",
+      "loaded": 1,
+      "total": 1
+    },
+    "time": 0,
+    "gateVisible": true,
+    "submitLabel": "Continue",
+    "probe": {
+      "fetches": [],
+      "workers": [],
+      "writes": [],
+      "blocked": []
+    }
+  },
+  "limits": "Import probe copied from observed browser output before development HMR replaced that document. Final hard-reload and native Continue probes captured directly to JSON during a stable runtime window. The browser inspector returned these captures after a delay. Actual remote-download evidence on omarky and complete browser-process restart evidence are separate artifacts.",
+  "nativeContinue": {
+    "at": "2026-09-13T19:31:57.807Z",
+    "url": "http://localhost:5173/",
+    "ready": true,
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets loaded from this browser.",
+      "loaded": 1,
+      "total": 1
+    },
+    "time": 7.266666666666651,
+    "gateVisible": false,
+    "probe": {
+      "fetches": [],
+      "workers": [],
+      "writes": [],
+      "blocked": []
+    }
+  },
+  "laterCatalogUpgrade": {
+    "at": "2026-09-13T19:39:58.484Z",
+    "url": "http://localhost:5173/",
+    "ready": true,
+    "status": {
+      "phase": "ready",
+      "message": "Original game assets loaded from this browser.",
+      "loaded": 1,
+      "total": 1
+    },
+    "warning": null,
+    "time": 0,
+    "entries": [
+      {
+        "key": "/asset-source",
+        "version": 8,
+        "saved": 1789327967321,
+        "files": 242,
+        "bytes": 8590736
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "installer"
+        ],
+        "version": 1,
+        "saved": 1789327161352,
+        "id": "1789327161352-s301f8hdsz9",
+        "files": 1,
+        "bytes": 206530229
+      },
+      {
+        "key": [
+          "archive-stage-v1",
+          "/asset-source",
+          "mix"
+        ],
+        "version": 1,
+        "saved": 1789327161352,
+        "id": "1789327161352-s301f8hdsz9",
+        "files": 2,
+        "bytes": 335011496
+      }
+    ],
+    "resources": []
+  }
+}

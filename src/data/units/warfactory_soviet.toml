@@ -1,0 +1,17 @@
+# Original rules.ini [NAWEAP]; timing uses the documented 30-frame reference clock.
+[units.warfactory_soviet]
+name = "War Factory"
+category = "structures"
+faction = "soviet"
+cost = 2000
+buildTime = 42.0
+hp = 1000
+footprint = [5, 3]
+power = -25
+requires = ["refinery_soviet", "barracks_soviet"]
+producer = ["vehicles"]
+sight = 4
+sprite = "naweap"
+cameo = "nwepicon"
+description = "Produces Soviet armor and War Miners."
+armor = "wood"

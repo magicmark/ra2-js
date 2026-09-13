@@ -1,0 +1,16 @@
+# Original rules.ini [NAREFN]; timing uses the documented 30-frame reference clock.
+[units.refinery_soviet]
+name = "Ore Refinery"
+category = "structures"
+faction = "soviet"
+cost = 2000
+buildTime = 42.0
+hp = 1000
+footprint = [4, 3]
+power = -50
+requires = ["power_soviet"]
+sight = 6
+sprite = "narefn"
+cameo = "nreficon"
+description = "Processes ore and includes a free War Miner."
+armor = "wood"

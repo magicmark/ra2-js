@@ -1,0 +1,101 @@
+Supplied RA2 executable animation evidence (static, never executed).
+Same binary/provenance as native-speed-disassembly.txt.
+SHA-256: 06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb
+FileVersion/ProductVersion 1.08; unmodified retail provenance is not established.
+
+GetAnimSpeed table at 0x7e8374 indexed by interval*8+GameSpeed:
+interval1: 2,2,1,1,1,1,1,1
+interval2: 3,3,3,2,2,2,1,1
+interval3: 5,4,4,3,3,2,2,1
+interval4: 7,6,5,4,4,4,3,2
+interval0 returns0 directly; >=5 returns trunc(interval*8/(GameSpeed+1)).
+
+== Default frame interval = 1 tick ==
+00424e5c <.text+0x23e5c>:
+  424e5c:	c7 86 78 02 00 00 01 	mov    DWORD PTR [esi+0x278],0x1
+  424e63:	00 00 00
+
+== Rate INI integer to frame interval ==
+004258d3 <.text+0x248d3>:
+  4258d3:	6a ff                	push   0xffffffff
+  4258d5:	68 5c ef 7c 00       	push   0x7cef5c
+  4258da:	57                   	push   edi
+  4258db:	8b cb                	mov    ecx,ebx
+  4258dd:	88 86 13 03 00 00    	mov    BYTE PTR [esi+0x313],al
+  4258e3:	e8 08 7f 0e 00       	call   0x50d7f0
+  4258e8:	8b c8                	mov    ecx,eax
+  4258ea:	83 f9 ff             	cmp    ecx,0xffffffff
+  4258ed:	74 16                	je     0x425905
+  4258ef:	85 c9                	test   ecx,ecx
+  4258f1:	7e 0a                	jle    0x4258fd
+  4258f3:	b8 84 03 00 00       	mov    eax,0x384
+  4258f8:	99                   	cdq
+  4258f9:	f7 f9                	idiv   ecx
+  4258fb:	eb 02                	jmp    0x4258ff
+  4258fd:	33 c0                	xor    eax,eax
+  4258ff:	89 86 78 02 00 00    	mov    DWORD PTR [esi+0x278],eax
+
+== Normalized selects options-dependent interval ==
+004224aa <.text+0x214aa>:
+  4224aa:	8b 8e b0 00 00 00    	mov    ecx,DWORD PTR [esi+0xb0]
+  4224b0:	8a 91 1e 03 00 00    	mov    dl,BYTE PTR [ecx+0x31e]
+  4224b6:	84 d2                	test   dl,dl
+  4224b8:	74 23                	je     0x4224dd
+  4224ba:	50                   	push   eax
+  4224bb:	b9 18 0b a4 00       	mov    ecx,0xa40b18
+  4224c0:	e8 9b 72 1b 00       	call   0x5d9760
+
+== GetAnimSpeed; interval >=5 uses integer division ==
+005d9760 <.text+0x1d8760>:
+  5d9760:	8b 44 24 04          	mov    eax,DWORD PTR [esp+0x4]
+  5d9764:	85 c0                	test   eax,eax
+  5d9766:	74 1b                	je     0x5d9783
+  5d9768:	8b 09                	mov    ecx,DWORD PTR [ecx]
+  5d976a:	83 f8 05             	cmp    eax,0x5
+  5d976d:	7d 0d                	jge    0x5d977c
+  5d976f:	8d 14 c1             	lea    edx,[ecx+eax*8]
+  5d9772:	8b 04 95 74 83 7e 00 	mov    eax,DWORD PTR [edx*4+0x7e8374]
+  5d9779:	c2 04 00             	ret    0x4
+  5d977c:	c1 e0 03             	shl    eax,0x3
+  5d977f:	99                   	cdq
+  5d9780:	41                   	inc    ecx
+  5d9781:	f7 f9                	idiv   ecx
+  5d9783:	c2 04 00             	ret    0x4
+
+== Normal impact AnimList selection (25 damage per list entry) ==
+0047f593 <.text+0x7e593>:
+  47f593:	8b 86 14 01 00 00    	mov    eax,DWORD PTR [esi+0x114]
+  47f599:	85 c0                	test   eax,eax
+  47f59b:	74 5b                	je     0x47f5f8
+  47f59d:	8a 8e 52 01 00 00    	mov    cl,BYTE PTR [esi+0x152]
+  47f5a3:	84 c9                	test   cl,cl
+  47f5a5:	74 24                	je     0x47f5cb
+  47f5a7:	8b 15 90 d2 a3 00    	mov    edx,DWORD PTR ds:0xa3d290
+  47f5ad:	48                   	dec    eax
+  47f5ae:	50                   	push   eax
+  47f5af:	6a 00                	push   0x0
+  47f5b1:	8d 8a 18 02 00 00    	lea    ecx,[edx+0x218]
+  47f5b7:	e8 e4 92 1b 00       	call   0x6388a0
+  47f5bc:	8b 8e 08 01 00 00    	mov    ecx,DWORD PTR [esi+0x108]
+  47f5c2:	5f                   	pop    edi
+  47f5c3:	5e                   	pop    esi
+  47f5c4:	8b 04 81             	mov    eax,DWORD PTR [ecx+eax*4]
+  47f5c7:	5b                   	pop    ebx
+  47f5c8:	c2 08 00             	ret    0x8
+  47f5cb:	8d 04 80             	lea    eax,[eax+eax*4]
+  47f5ce:	8d 44 80 ff          	lea    eax,[eax+eax*4-0x1]
+  47f5d2:	3b f8                	cmp    edi,eax
+  47f5d4:	7c 02                	jl     0x47f5d8
+  47f5d6:	8b f8                	mov    edi,eax
+  47f5d8:	b8 1f 85 eb 51       	mov    eax,0x51eb851f
+  47f5dd:	8b 8e 08 01 00 00    	mov    ecx,DWORD PTR [esi+0x108]
+  47f5e3:	f7 ef                	imul   edi
+  47f5e5:	c1 fa 03             	sar    edx,0x3
+  47f5e8:	8b c2                	mov    eax,edx
+  47f5ea:	5f                   	pop    edi
+  47f5eb:	c1 e8 1f             	shr    eax,0x1f
+  47f5ee:	03 d0                	add    edx,eax
+  47f5f0:	5e                   	pop    esi
+  47f5f1:	5b                   	pop    ebx
+  47f5f2:	8b 04 91             	mov    eax,DWORD PTR [ecx+edx*4]
+  47f5f5:	c2 08 00             	ret    0x8

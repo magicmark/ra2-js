@@ -1,0 +1,38 @@
+{
+  "date": "2026-09-13",
+  "url": "http://omarky:5173/",
+  "observation": "Existing browser page was downloading again while its earlier extracted cache remained present. No user submission was made by this audit before the observation.",
+  "runtime": {
+    "source": "/asset-source",
+    "phase": "download",
+    "message": "Downloading assets · 101.5 / 197.0 MB",
+    "loaded": 106411506,
+    "total": 206530229,
+    "ready": false,
+    "error": null,
+    "cacheWarning": null,
+    "diagnostics": []
+  },
+  "indexedDB": {
+    "database": "red-alert-command-assets",
+    "store": "assets",
+    "key": "/asset-source",
+    "version": 5,
+    "files": 126,
+    "bytes": 4897139,
+    "saved": 1789320292477
+  },
+  "network": {
+    "requestId": 591,
+    "method": "GET",
+    "url": "http://omarky:5173/asset-source",
+    "observedStatus": 206
+  },
+  "sourceEvidence": {
+    "firstReadCacheVersion": 6,
+    "subsequentConcurrentVersions": [7, 8],
+    "oldPolicy": "initialize required entry.version === CACHE_VERSION and automatically fetched after a mismatch or failed validation",
+    "terrainCompatibility": "New rock terrain lookup required ruff01.tem; the version 5 extractor selected rough01.tem/rough02.tem instead"
+  },
+  "limits": "This proves a repeated unrequested download after invalidation, not an infinite retry loop within one unchanged page. Versions 7 and 8 came from another concurrent writer. A later browser inspector request timed out, so this artifact makes no claim that the old profile was subsequently revalidated in-browser. Final real-download/reopen end-to-end verification is separate."
+}

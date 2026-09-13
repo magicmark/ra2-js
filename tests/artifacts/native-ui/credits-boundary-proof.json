@@ -1,0 +1,18 @@
+{
+  "rows": [
+    {
+      "stored": 3699.999999999982,
+      "storedUnchanged": true,
+      "label": "3700 credits",
+      "expectedText": "3700",
+      "originalGlyphPixelsMatch": true
+    },
+    {
+      "stored": 3699.99,
+      "storedUnchanged": true,
+      "label": "3699 credits",
+      "expectedText": "3699",
+      "originalGlyphPixelsMatch": true
+    }
+  ]
+}

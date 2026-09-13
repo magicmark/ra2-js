@@ -1,0 +1,26 @@
+{
+  "recordedAt": "2026-09-13T20:09:25.760499+00:00",
+  "tests": {
+    "command": "RA2_ASSET_DIR=/tmp/ra2-assets npm test",
+    "passed": 197,
+    "skipped": 1,
+    "files": 20,
+    "skip": "Optional movement diagnostic (RA2_MOVEMENT_DIAGNOSTICS unset)"
+  },
+  "build": {
+    "dist/assets/index-B1GxDnd_.css": "a62d00c28138dbb0cbe5fa13b369603b3a578ee65f0b9b91ab2c4208d7131d25",
+    "dist/assets/index-8Yu4Ff27.js": "929d2785b0835dea5f449b52746f9c997a967e0d0521bc8df4b0de4ce10c8b64",
+    "dist/assets/7zz-CgkXYLdN.wasm": "e16c6997e2eaa89575c0dd1f305074be629c3f4d87246244d37fd19debc8a285",
+    "dist/assets/extract.worker-D90MFsqW.js": "143df439620ce7ca90b89d27193d071d4f996ff956f62f791380097d8dd5c9b3"
+  },
+  "source": {
+    "src/main.ts": "070ce69ea954d4fac79aea7a45a8f13ad83a66b5067788d5cda59e998afaa29d",
+    "src/assets/AssetManager.ts": "d3bcab1b50911d35b1cf88a9cf229a07dc33d3f8a3a6dcdc38820005582fa7b9",
+    "src/assets/AssetDownload.ts": "4cf1992a469d66bfe92f1ecac656b03518e45827b53544cc5970acb4c0336874",
+    "src/assets/extract.worker.ts": "7f8865c5935092de4623222d28f08a953883f70ad28d2207522bc3400dbe85fa",
+    "src/ui/UI.ts": "5c0a7e432086d68e976c4dc2cb8d8e3247868fbdbc954c1799e74fb322a43c5e",
+    "vite.config.ts": "f92701db419ae24d47bb89fb9d797bf293f39f197efbf2e32b7538eb92f8e1b7"
+  },
+  "browserOrigin": "http://omarky:5173/",
+  "catalogFiles": 242
+}

@@ -1,0 +1,226 @@
+{
+  "date": "2026-09-13T20:00:35.828Z",
+  "origin": "http://omarky:5173",
+  "profile": "/tmp/ra2-poison-persistent-browser-7dxpeY",
+  "method": "Actual local installer imported through native file input into a regular persistent Chromium profile, then exact prior artwork-rejection markers injected into saved stages, full browser close/reopen for local recovery, and another process close/reopen for selected-cache reuse. Archive HTTP is blocked throughout; no remote installer transfer.",
+  "runs": [
+    {
+      "pid": 139715,
+      "cold": {
+        "ready": false,
+        "status": {
+          "phase": "awaiting-source",
+          "message": "Confirm the archive URL and press Enter to download game assets.",
+          "loaded": 0
+        },
+        "gameTime": 0,
+        "gateVisible": true,
+        "submitLabel": "Load & play",
+        "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+        "probe": {
+          "fetches": [],
+          "workers": [],
+          "writes": []
+        },
+        "entries": [],
+        "bundle": [
+          "http://omarky:5173/@vite/client",
+          "http://omarky:5173/src/main.ts?t=1789329582182"
+        ],
+        "resources": []
+      },
+      "loaded": {
+        "ready": true,
+        "status": {
+          "phase": "ready",
+          "message": "Original game assets ready · 242 files saved in this browser",
+          "loaded": 1,
+          "total": 1
+        },
+        "gameTime": 1.9666666666666694,
+        "gateVisible": false,
+        "submitLabel": "Continue",
+        "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+        "probe": {
+          "fetches": [],
+          "workers": [
+            "http://omarky:5173/src/assets/extract.worker.ts?worker_file&type=module"
+          ],
+          "writes": [
+            {
+              "key": [
+                "archive-stage-v1",
+                "/asset-source",
+                "download"
+              ],
+              "files": 1
+            },
+            {
+              "key": [
+                "archive-stage-v1",
+                "/asset-source",
+                "mix-pending"
+              ],
+              "files": 2
+            },
+            {
+              "key": "/asset-source",
+              "files": 242
+            },
+            {
+              "key": [
+                "archive-stage-v1",
+                "/asset-source",
+                "mix"
+              ],
+              "files": 2
+            },
+            {
+              "key": [
+                "archive-stage-v1",
+                "/asset-source",
+                "installer"
+              ],
+              "files": 1
+            }
+          ]
+        },
+        "entries": [
+          {
+            "key": "/asset-source",
+            "version": 8,
+            "files": 242,
+            "bytes": 8590736,
+            "saved": 1789329709147
+          },
+          {
+            "key": [
+              "archive-stage-v1",
+              "/asset-source",
+              "installer"
+            ],
+            "version": 1,
+            "files": 1,
+            "bytes": 206530229,
+            "names": [
+              "ra2-multiplayer.exe"
+            ],
+            "id": "1789329640984-2cv0wlehbom",
+            "saved": 1789329640984
+          },
+          {
+            "key": [
+              "archive-stage-v1",
+              "/asset-source",
+              "mix"
+            ],
+            "version": 1,
+            "files": 2,
+            "bytes": 335011496,
+            "names": [
+              "language.mix",
+              "ra2.mix"
+            ],
+            "id": "1789329640984-2cv0wlehbom",
+            "saved": 1789329640984
+          }
+        ],
+        "bundle": [
+          "http://omarky:5173/@vite/client",
+          "http://omarky:5173/src/main.ts?t=1789329582182"
+        ],
+        "resources": [
+          "http://omarky:5173/node_modules/.vite/deps/7z-wasm.js?v=e2cdd23a",
+          "http://omarky:5173/node_modules/7z-wasm/7zz.wasm?import&url"
+        ]
+      },
+      "injected": {
+        "marker": "Missing original asset: game.fnt. Download or import a complete copy of the game.",
+        "removedSelected": "game.fnt",
+        "archiveBytesChanged": false
+      },
+      "blockedArchiveRequests": []
+    },
+    {
+      "pid": 140365,
+      "recovered": {
+        "ready": true,
+        "status": {
+          "phase": "ready",
+          "message": "Original game assets ready · 242 files saved in this browser",
+          "loaded": 1,
+          "total": 1
+        },
+        "gameTime": 0,
+        "gateVisible": true,
+        "submitLabel": "Continue",
+        "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+        "probe": {
+          "fetches": [],
+          "workers": [
+            "http://omarky:5173/src/assets/extract.worker.ts?worker_file&type=module"
+          ],
+          "writes": [
+            {
+              "key": "/asset-source",
+              "files": 242
+            }
+          ]
+        },
+        "entries": [
+          {
+            "key": "/asset-source",
+            "version": 8,
+            "files": 242,
+            "bytes": 8590736,
+            "saved": 1789329734528
+          },
+          {
+            "key": [
+              "archive-stage-v1",
+              "/asset-source",
+              "installer"
+            ],
+            "version": 1,
+            "files": 1,
+            "bytes": 206530229,
+            "names": [
+              "ra2-multiplayer.exe"
+            ],
+            "id": "1789329640984-2cv0wlehbom",
+            "saved": 1789329640984,
+            "rejected": "Missing original asset: game.fnt. Download or import a complete copy of the game."
+          },
+          {
+            "key": [
+              "archive-stage-v1",
+              "/asset-source",
+              "mix"
+            ],
+            "version": 1,
+            "files": 2,
+            "bytes": 335011496,
+            "names": [
+              "language.mix",
+              "ra2.mix"
+            ],
+            "id": "1789329640984-2cv0wlehbom",
+            "saved": 1789329640984,
+            "rejected": "Missing original asset: game.fnt. Download or import a complete copy of the game."
+          }
+        ],
+        "bundle": [
+          "http://omarky:5173/@vite/client",
+          "http://omarky:5173/src/main.ts?t=1789329582182"
+        ],
+        "resources": [
+          "http://omarky:5173/node_modules/.vite/deps/7z-wasm.js?v=e2cdd23a",
+          "http://omarky:5173/node_modules/7z-wasm/7zz.wasm?import&url"
+        ]
+      },
+      "blockedArchiveRequests": []
+    }
+  ],
+  "pass": false,
+  "error": "Error: Timed out: window.__rts.game.state.time>0"
+}

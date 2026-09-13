@@ -1,0 +1,679 @@
+{
+  "observations": [
+    {
+      "checkpoint": "cold-idle",
+      "observed": "2026-09-13T17:42:32.370Z",
+      "probe": {
+        "started": "2026-09-13T17:42:18.994Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "awaiting-source",
+        "message": "Confirm the archive URL and press Enter to download game assets.",
+        "loaded": 0
+      },
+      "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "gateVisible": true,
+      "gameTime": 0,
+      "resources": [
+        {
+          "name": "http://omarky:4187/assets/index-BGnmQ5kp.js",
+          "decodedBodySize": 146159
+        },
+        {
+          "name": "http://omarky:4187/assets/index-2ZUY23ER.css",
+          "decodedBodySize": 55383
+        }
+      ]
+    },
+    {
+      "checkpoint": "remote-extraction-started",
+      "observed": "2026-09-13T17:43:43.715Z",
+      "probe": {
+        "started": "2026-09-13T17:42:18.994Z",
+        "fetches": [
+          {
+            "url": "/asset-source",
+            "at": 34297.20000000112,
+            "status": 200,
+            "responseUrl": "http://omarky:4187/asset-source",
+            "headersAt": 35054.40000000037
+          }
+        ],
+        "workers": [
+          {
+            "url": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+            "at": 67464.70000000112
+          }
+        ],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 34242.800000000745
+          }
+        ],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "extract",
+        "message": "Extracting archive: /input/source.exe",
+        "loaded": 0
+      },
+      "error": null,
+      "ready": false,
+      "gateVisible": true,
+      "gameTime": 0,
+      "files": 0,
+      "resources": [
+        {
+          "name": "http://omarky:4187/asset-source",
+          "status": 200,
+          "startTime": 34301,
+          "duration": 32553.599999999627,
+          "decodedBodySize": 206530229,
+          "transferSize": 206530529
+        },
+        {
+          "name": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+          "status": 200,
+          "startTime": 67794.30000000075,
+          "duration": -68.20000000111759,
+          "decodedBodySize": 75818,
+          "transferSize": 29721
+        }
+      ]
+    },
+    {
+      "checkpoint": "remote-ready-settled",
+      "observed": "2026-09-13T17:45:21.062Z",
+      "probe": {
+        "started": "2026-09-13T17:42:18.994Z",
+        "fetches": [
+          {
+            "url": "/asset-source",
+            "at": 34297.20000000112,
+            "status": 200,
+            "responseUrl": "http://omarky:4187/asset-source",
+            "headersAt": 35054.40000000037
+          }
+        ],
+        "workers": [
+          {
+            "url": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+            "at": 67464.70000000112
+          }
+        ],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 34242.800000000745
+          }
+        ],
+        "cacheWrites": [
+          {
+            "at": 125194.5,
+            "state": "complete",
+            "completedAt": 125336.40000000037
+          }
+        ]
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets ready · 211 files saved in this browser",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 211,
+      "gateVisible": false,
+      "gameTime": 20.85000000000016,
+      "sourceInput": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "button": "Continue",
+      "rememberedSource": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "cache": [
+        {
+          "key": "/asset-source",
+          "version": 8,
+          "files": 211,
+          "bytes": 6486549,
+          "saved": 1789321464018
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://omarky:4187/asset-source",
+          "status": 200,
+          "startTime": 34301,
+          "duration": 32553.599999999627,
+          "decodedBodySize": 206530229,
+          "transferSize": 206530529
+        },
+        {
+          "name": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+          "status": 200,
+          "startTime": 67794.30000000075,
+          "duration": -68.20000000111759,
+          "decodedBodySize": 75818,
+          "transferSize": 29721
+        }
+      ]
+    },
+    {
+      "checkpoint": "cached-new-page",
+      "observed": "2026-09-13T17:46:32.467Z",
+      "probe": {
+        "started": "2026-09-13T17:46:09.505Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 211,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "button": "Continue",
+      "rememberedSource": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "cache": [
+        {
+          "key": "/asset-source",
+          "version": 8,
+          "files": 211,
+          "bytes": 6486549,
+          "saved": 1789321464018
+        }
+      ],
+      "resources": []
+    },
+    {
+      "checkpoint": "cached-hard-reload",
+      "observed": "2026-09-13T17:47:04.135Z",
+      "probe": {
+        "started": "2026-09-13T17:46:43.594Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 211,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "button": "Continue",
+      "rememberedSource": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "cache": [
+        {
+          "key": "/asset-source",
+          "version": 8,
+          "files": 211,
+          "bytes": 6486549,
+          "saved": 1789321464018
+        }
+      ],
+      "resources": []
+    },
+    {
+      "checkpoint": "cached-native-continue",
+      "observed": "2026-09-13T17:47:44.599Z",
+      "probe": {
+        "started": "2026-09-13T17:46:43.594Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 53991.699999999255
+          }
+        ],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 211,
+      "gateVisible": false,
+      "gameTime": 1.7000000000000008,
+      "sourceInput": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "button": "Continue",
+      "rememberedSource": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "cache": [
+        {
+          "key": "/asset-source",
+          "version": 8,
+          "files": 211,
+          "bytes": 6486549,
+          "saved": 1789321464018
+        }
+      ],
+      "resources": []
+    },
+    {
+      "checkpoint": "alternate-error",
+      "observed": "2026-09-13T17:49:17.722Z",
+      "probe": {
+        "started": "2026-09-13T17:48:25.109Z",
+        "fetches": [
+          {
+            "url": "http://omarky:4187/invalid-archive.exe",
+            "at": 42157.90000000037,
+            "status": 200,
+            "responseUrl": "http://omarky:4187/invalid-archive.exe",
+            "headersAt": 42180
+          }
+        ],
+        "workers": [
+          {
+            "url": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+            "at": 42202.40000000037
+          }
+        ],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 42074.40000000037
+          }
+        ],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "error",
+        "message": "No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix and language.mix.",
+        "loaded": 0
+      },
+      "error": "No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix and language.mix.",
+      "cacheWarning": null,
+      "ready": false,
+      "files": 0,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "http://omarky:4187/invalid-archive.exe",
+      "source": "http://omarky:4187/invalid-archive.exe",
+      "button": "Download & play",
+      "rememberedSource": "http://omarky:4187/invalid-archive.exe",
+      "cache": [],
+      "resources": [
+        {
+          "name": "http://omarky:4187/invalid-archive.exe",
+          "status": 200,
+          "startTime": 42159.10000000149,
+          "duration": 24.59999999962747,
+          "decodedBodySize": 28,
+          "transferSize": 328
+        },
+        {
+          "name": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+          "status": 200,
+          "startTime": 42288.5,
+          "duration": -40.399999998509884,
+          "decodedBodySize": 75818,
+          "transferSize": 29721
+        }
+      ]
+    },
+    {
+      "checkpoint": "alternate-error-settled",
+      "observed": "2026-09-13T17:50:24.011Z",
+      "probe": {
+        "started": "2026-09-13T17:48:25.109Z",
+        "fetches": [
+          {
+            "url": "http://omarky:4187/invalid-archive.exe",
+            "at": 42157.90000000037,
+            "status": 200,
+            "responseUrl": "http://omarky:4187/invalid-archive.exe",
+            "headersAt": 42180
+          }
+        ],
+        "workers": [
+          {
+            "url": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+            "at": 42202.40000000037
+          }
+        ],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 42074.40000000037
+          }
+        ],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "error",
+        "message": "No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix and language.mix.",
+        "loaded": 0
+      },
+      "error": "No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix and language.mix.",
+      "cacheWarning": null,
+      "ready": false,
+      "files": 0,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "http://omarky:4187/invalid-archive.exe",
+      "source": "http://omarky:4187/invalid-archive.exe",
+      "button": "Download & play",
+      "rememberedSource": "http://omarky:4187/invalid-archive.exe",
+      "cache": [],
+      "resources": [
+        {
+          "name": "http://omarky:4187/invalid-archive.exe",
+          "status": 200,
+          "startTime": 42159.10000000149,
+          "duration": 24.59999999962747,
+          "decodedBodySize": 28,
+          "transferSize": 328
+        },
+        {
+          "name": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+          "status": 200,
+          "startTime": 42288.5,
+          "duration": -40.399999998509884,
+          "decodedBodySize": 75818,
+          "transferSize": 29721
+        }
+      ]
+    },
+    {
+      "checkpoint": "alternate-http-recovery",
+      "observed": "2026-09-13T17:52:16.134Z",
+      "probe": {
+        "started": "2026-09-13T17:48:25.109Z",
+        "fetches": [
+          {
+            "url": "http://omarky:4187/invalid-archive.exe",
+            "at": 42157.90000000037,
+            "status": 200,
+            "responseUrl": "http://omarky:4187/invalid-archive.exe",
+            "headersAt": 42180
+          },
+          {
+            "url": "http://omarky:4187/own-copy.exe",
+            "at": 145779.1000000015,
+            "status": 200,
+            "responseUrl": "http://omarky:4187/own-copy.exe",
+            "headersAt": 145808.5
+          }
+        ],
+        "workers": [
+          {
+            "url": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+            "at": 42202.40000000037
+          },
+          {
+            "url": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+            "at": 149875.40000000037
+          }
+        ],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 42074.40000000037
+          },
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 145698.70000000112
+          }
+        ],
+        "cacheWrites": [
+          {
+            "at": 211166.40000000037,
+            "state": "complete",
+            "completedAt": 211390.30000000075
+          }
+        ]
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets ready · 211 files saved in this browser",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 211,
+      "gateVisible": false,
+      "gameTime": 5.09999999999999,
+      "sourceInput": "http://omarky:4187/own-copy.exe",
+      "source": "http://omarky:4187/own-copy.exe",
+      "button": "Continue",
+      "rememberedSource": "http://omarky:4187/own-copy.exe",
+      "cache": [
+        {
+          "key": "http://omarky:4187/own-copy.exe",
+          "version": 8,
+          "files": 211,
+          "bytes": 6486549,
+          "saved": 1789321916105
+        }
+      ],
+      "resources": [
+        {
+          "name": "http://omarky:4187/invalid-archive.exe",
+          "status": 200,
+          "startTime": 42159.10000000149,
+          "duration": 24.59999999962747,
+          "decodedBodySize": 28,
+          "transferSize": 328
+        },
+        {
+          "name": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+          "status": 200,
+          "startTime": 42288.5,
+          "duration": -40.399999998509884,
+          "decodedBodySize": 75818,
+          "transferSize": 29721
+        },
+        {
+          "name": "http://omarky:4187/own-copy.exe",
+          "status": 200,
+          "startTime": 145780.90000000037,
+          "duration": 3619.5999999996275,
+          "decodedBodySize": 206530229,
+          "transferSize": 206530529
+        },
+        {
+          "name": "http://omarky:4187/assets/extract.worker--rvRwKcK.js",
+          "status": 200,
+          "startTime": 149978.30000000075,
+          "duration": -38.59999999962747,
+          "decodedBodySize": 75818,
+          "transferSize": 300
+        }
+      ]
+    },
+    {
+      "checkpoint": "latest-remembered-custom-cache",
+      "observed": "2026-09-13T17:57:01.786Z",
+      "probe": {
+        "started": "2026-09-13T17:56:43.624Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 211,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "http://omarky:4187/own-copy.exe",
+      "source": "http://omarky:4187/own-copy.exe",
+      "button": "Continue",
+      "rememberedSource": "http://omarky:4187/own-copy.exe",
+      "cache": [
+        {
+          "key": "http://omarky:4187/own-copy.exe",
+          "version": 8,
+          "files": 211,
+          "bytes": 6486549,
+          "saved": 1789321916105
+        }
+      ],
+      "resources": []
+    },
+    {
+      "checkpoint": "latest-default-hard-reload",
+      "observed": "2026-09-13T17:57:26.482Z",
+      "probe": {
+        "started": "2026-09-13T17:57:07.061Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 211,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "button": "Continue",
+      "rememberedSource": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "cache": [
+        {
+          "key": "/asset-source",
+          "version": 8,
+          "files": 211,
+          "bytes": 6486549,
+          "saved": 1789321464018
+        }
+      ],
+      "resources": []
+    },
+    {
+      "checkpoint": "latest-cached-native-continue",
+      "observed": "2026-09-13T17:58:02.591Z",
+      "probe": {
+        "started": "2026-09-13T17:57:07.061Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [
+          {
+            "id": "startup-source-form",
+            "trusted": true,
+            "at": 46983.5
+          }
+        ],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "ready",
+        "message": "Original game assets loaded from this browser.",
+        "loaded": 1,
+        "total": 1
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": true,
+      "files": 211,
+      "gateVisible": false,
+      "gameTime": 1.900000000000001,
+      "sourceInput": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "button": "Continue",
+      "rememberedSource": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "cache": [
+        {
+          "key": "/asset-source",
+          "version": 8,
+          "files": 211,
+          "bytes": 6486549,
+          "saved": 1789321464018
+        }
+      ],
+      "resources": []
+    },
+    {
+      "checkpoint": "latest-cold-idle",
+      "observed": "2026-09-13T17:59:28.750Z",
+      "probe": {
+        "started": "2026-09-13T17:58:31.067Z",
+        "fetches": [],
+        "workers": [],
+        "submits": [],
+        "cacheWrites": []
+      },
+      "status": {
+        "phase": "awaiting-source",
+        "message": "Confirm the archive URL and press Enter to download game assets.",
+        "loaded": 0
+      },
+      "error": null,
+      "cacheWarning": null,
+      "ready": false,
+      "files": 0,
+      "gateVisible": true,
+      "gameTime": 0,
+      "sourceInput": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "source": "https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe",
+      "button": "Download & play",
+      "rememberedSource": null,
+      "cache": [],
+      "resources": []
+    }
+  ],
+  "remoteNetworkRequests": {
+    "content": [
+      {
+        "type": "text",
+        "text": "## Network requests\nShowing 1-4 of 4 (Page 1 of 1).\nreqid=2 GET http://omarky:4187/assets/index-BGnmQ5kp.js [200]\nreqid=9 GET http://omarky:4187/asset-source [200]\nreqid=10 GET http://omarky:4187/assets/extract.worker--rvRwKcK.js [200]\nreqid=11 GET http://omarky:4187/assets/7zz-CgkXYLdN.wasm [200]"
+      }
+    ]
+  }
+}

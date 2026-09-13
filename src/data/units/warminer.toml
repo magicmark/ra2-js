@@ -1,0 +1,25 @@
+# Original rules.ini [HARV]; integer Speed/ROF use the documented 30-frame reference clock.
+[units.warminer]
+name = "War Miner"
+category = "vehicles"
+faction = "soviet"
+cost = 1400
+buildTime = 29.4
+hp = 1000
+speed = 1.171875
+damage = 30
+range = 5.5
+fireRate = 0.6666666666666666
+sight = 4
+harvester = true
+capacity = 1000
+requires = ["warfactory_soviet", "refinery_soviet"]
+sprite = "harv"
+cameo = "harvicon"
+description = "Armored ore collector with a defensive machine gun."
+armor = "medium"
+nativeSpeed = 4
+crusher = true
+verses = [1.0, 0.8, 0.7, 0.5, 0.2, 0.2, 0.2, 0.15, 0.1, 2.0, 1.0]
+rot = 5
+turret = true

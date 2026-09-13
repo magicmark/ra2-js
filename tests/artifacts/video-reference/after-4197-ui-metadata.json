@@ -1,0 +1,65 @@
+{
+  "creditsBox": {
+    "x": 704,
+    "y": 2,
+    "width": 24,
+    "height": 17,
+    "top": 2,
+    "right": 728,
+    "bottom": 19,
+    "left": 704
+  },
+  "cursorClass": "",
+  "network": {
+    "blockedFetch": [],
+    "workers": []
+  },
+  "viewport": [
+    800,
+    600
+  ],
+  "dpr": 1,
+  "nativeZoom": 1,
+  "creditsForegroundRGB": [
+    184,
+    208,
+    232
+  ],
+  "creditsGlyphBounds": [
+    704,
+    6,
+    726,
+    14
+  ],
+  "infantryHealthOuter": [
+    307,
+    253,
+    324,
+    256
+  ],
+  "infantryHealthInterior": [
+    16,
+    2
+  ],
+  "infantryFillRGB": [
+    [
+      79,
+      196,
+      82
+    ],
+    [
+      0,
+      99,
+      0
+    ]
+  ],
+  "infantryFrameRGB": [
+    227,
+    255,
+    255
+  ],
+  "commandArtworkCorrectionToReference": [
+    1,
+    -2
+  ]
+}

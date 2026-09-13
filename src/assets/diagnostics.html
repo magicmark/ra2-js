@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><title>Original asset diagnostics</title><style>body{font:14px monospace;background:#202622;color:#eee;margin:20px}button,input{margin:8px}canvas{display:block;max-width:100%;image-rendering:pixelated}pre{white-space:pre-wrap}</style></head>
+<body><h1>Original asset diagnostics</h1><p>Developer verification: import the original installer / MIX files or test the configured download and cache.</p><input id="files" type="file" multiple accept=".exe,.mix"><button id="download">Download / load cache</button><pre id="status">Ready for import</pre><canvas id="sheet"></canvas><pre id="checks"></pre>
+<script type="module">
+import {AssetManager} from './AssetManager.ts';
+import {CATALOG} from './catalog.ts';
+const assets=new AssetManager();window.assetAudit={assets};
+const progress=p=>document.querySelector('#status').textContent=JSON.stringify(p,null,2);
+async function finish(){
+ if(!assets.ready)return;
+ const sheet=document.querySelector('#sheet');sheet.width=1200;sheet.height=1900;const ctx=sheet.getContext('2d');ctx.fillStyle='#38443a';ctx.fillRect(0,0,sheet.width,sheet.height);ctx.font='14px monospace';const checks=[];
+ let i=0;for(const [name,spec] of Object.entries(CATALOG)){
+  const x=i%4*300,y=Math.floor(i/4)*280;ctx.fillStyle='#e5e8dc';ctx.fillText(name,x+12,y+20);const s=assets.getSprite(name,spec.kind==='vehicle'?4:0,spec.sprite.startsWith('n')||['rhino','flak','warminer','conscript'].includes(name)?1:0);const c=assets.getCameo(name);
+  if(s){ctx.drawImage(s.source,x+150-s.anchorX,y+195-s.anchorY);ctx.fillStyle='#7fffa4';ctx.fillRect(x+149,y+194,3,3);}if(c)ctx.drawImage(c.source,x+12,y+222);checks.push({name,sprite:!!s,cameo:!!c,size:s&&[s.width,s.height]});i++;
+ }
+ let x=20;for(const kind of ['grass','water','road','sand','rock']){const s=assets.getTerrain(kind,0);if(s)ctx.drawImage(s.source,x,1740);ctx.fillStyle='#fff';ctx.fillText(kind,x,1800);x+=200;}
+ document.querySelector('#checks').textContent=JSON.stringify({checks,diagnostics:assets.diagnostics,cacheWarning:assets.cacheWarning},null,2);window.assetAudit.checks=checks;
+}
+document.querySelector('#files').onchange=async e=>{await assets.importFiles(e.target.files,{onProgress:progress});await finish()};
+document.querySelector('#download').onclick=async()=>{await assets.download({onProgress:progress});await finish()};
+</script></body></html>

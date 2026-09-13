@@ -1,0 +1,61 @@
+export type Category = 'structures' | 'defenses' | 'infantry' | 'vehicles';
+export type Vec2 = { x: number; y: number };
+export interface UnitDef {
+  id: string; name: string; category: Category; cost: number; buildTime: number;
+  hp: number; speed: number; damage: number; range: number; fireRate: number;
+  sight: number; footprint: [number, number]; power: number; requires: string[];
+  description: string; sprite: string; cameo: string; faction: 'allied' | 'soviet' | 'both';
+  harvester?: boolean; capacity?: number; producer?: Category[];
+  armor?: string; verses?: number[]; burst?: number;
+  deployedDamage?: number; deployedRange?: number; deployedFireRate?: number; deployedVerses?: number[];
+  crusher?: boolean; nativeSpeed?: number; rot?: number; turret?: boolean;
+}
+export interface Entity extends Vec2 {
+  id: number; type: string; side: number; hp: number; maxHp: number;
+  facing: number; path: Vec2[]; targetId: number | null; cooldown: number;
+  order: 'idle' | 'move' | 'attack' | 'harvest' | 'return' | 'guard';
+  cargo: number; harvestTimer: number; selected: boolean;
+  rally?: Vec2; anim: number; deployed?: boolean;
+  previous?: Vec2; previousFacing?: number; turretFacing?: number; previousTurretFacing?: number;
+}
+export interface Tile { terrain: 'grass' | 'water' | 'rock' | 'road' | 'sand'; ore: number; variant: number }
+export interface BuildItem { id: number; type: string; progress: number; spent: number; ready: boolean; paused: boolean; blockedFunds?: boolean }
+export interface Side {
+  id: number; name: string; faction: 'allied' | 'soviet'; color: string;
+  money: number; power: number; powerUsed: number; kills: number;
+  queues: Record<Category, BuildItem[]>; defeated: boolean;
+}
+export interface Effect extends Vec2 { kind: 'shot' | 'explosion' | 'order' | 'smoke'; life: number; maxLife: number; to?: Vec2; side?: number }
+export interface GameEvent { id: number; text: string; kind: 'info' | 'warning' | 'success'; time: number }
+export interface GameState {
+  width: number; height: number; tiles: Tile[]; entities: Entity[]; sides: Side[];
+  time: number; paused: boolean; speed: number; winner: number | null;
+  effects: Effect[]; events: GameEvent[]; fog: Uint8Array; explored: Uint8Array;
+}
+export interface GameAPI {
+  state: GameState; defs: Record<string, UnitDef>;
+  readonly interpolation: number;
+  commandPath(id: number): { points: Vec2[]; attack: boolean } | undefined;
+  tick(dt: number): void;
+  build(type: string, side?: number): boolean;
+  cancelBuild(category: Category, side?: number, itemId?: number): void;
+  toggleBuildPause(category: Category, side?: number): void;
+  canBuild(type: string, side?: number): { ok: boolean; reason: string };
+  canPlace(type: string, x: number, y: number, side?: number): boolean;
+  place(type: string, x: number, y: number, side?: number): boolean;
+  select(ids: number[], additive?: boolean): void;
+  orderMove(ids: number[], x: number, y: number, attackMove?: boolean): void;
+  orderAttack(ids: number[], targetId: number, force?: boolean): void;
+  orderForceFire(ids: number[], x: number, y: number): void;
+  orderForceMove(ids: number[], x: number, y: number): void;
+  orderGuard(ids: number[], x: number, y: number, escortId?: number): void;
+  orderWaypoints(ids: number[], points: Vec2[]): void;
+  guard(ids: number[]): void;
+  scatter(ids: number[]): void;
+  deploy(ids: number[]): void;
+  orderHarvest(ids: number[], x: number, y: number): void;
+  stop(ids: number[]): void;
+  sell(id: number): boolean;
+  repair(id: number): boolean;
+  restart(): void;
+}

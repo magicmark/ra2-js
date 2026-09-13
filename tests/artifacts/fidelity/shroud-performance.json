@@ -1,0 +1,148 @@
+{
+  "recorded": "2026-09-13",
+  "scope": "Previously completed warmed renderer CPU measurements, saved without rerunning",
+  "environment": {
+    "cpuThrottle": 1,
+    "dpr": 1,
+    "canvas": [
+      1272,
+      1170
+    ],
+    "scene": "paused/restarted identical battlefield, warmed assets",
+    "renderer": "ANGLE Vulkan SwiftShader Device Subzero"
+  },
+  "before": {
+    "snapshot": "http://omarky:4197",
+    "bundle": "index-CzD4K9G2.js",
+    "frames": 60,
+    "mean": 78.82333333337058,
+    "min": 48.099999997764826,
+    "max": 441.80000000074506,
+    "calls": {
+      "drawTerrain": {
+        "n": 60,
+        "total": 337.49999997764826,
+        "max": 21
+      },
+      "drawEntity": {
+        "n": 600,
+        "total": 82.09999998658895,
+        "max": 9.300000000745058
+      },
+      "drawShroud": {
+        "n": 60,
+        "total": 3267.1000000163913,
+        "max": 113.80000000074506
+      }
+    },
+    "canvas": [
+      1272,
+      1170
+    ],
+    "zoom": 1
+  },
+  "after": {
+    "snapshot": "http://omarky:4198",
+    "bundle": "index-nfPqeOxC.js",
+    "frames": 60,
+    "calls": {
+      "drawTerrain": {
+        "n": 60,
+        "total": 362.9999999925494,
+        "max": 27.400000002235174
+      },
+      "drawEntity": {
+        "n": 600,
+        "total": 69.60000001266599,
+        "max": 3.400000002235174
+      },
+      "drawShroud": {
+        "n": 60,
+        "total": 273.6000000014901,
+        "max": 17.599999997764826
+      }
+    },
+    "ms": [
+      69.19999999925494,
+      23.199999999254942,
+      14.100000001490116,
+      28.599999997764826,
+      14.600000001490116,
+      14,
+      21.300000000745058,
+      12.899999998509884,
+      14.400000002235174,
+      11.299999997019768,
+      12.699999999254942,
+      12.400000002235174,
+      15,
+      11.799999997019768,
+      20.200000002980232,
+      22.199999999254942,
+      14.700000002980232,
+      19.099999997764826,
+      16.699999999254942,
+      16.900000002235174,
+      13.800000000745058,
+      9.899999998509884,
+      9.899999998509884,
+      9.900000002235174,
+      9.5,
+      9.800000000745058,
+      9.699999999254942,
+      11.600000001490116,
+      10.199999999254942,
+      10.199999999254942,
+      10.800000000745058,
+      11.599999997764826,
+      9.699999999254942,
+      10,
+      9.600000001490116,
+      9.5,
+      11.199999999254942,
+      9.699999999254942,
+      9.699999999254942,
+      10,
+      10.900000002235174,
+      20.800000000745058,
+      23.799999997019768,
+      26.300000000745058,
+      20.600000001490116,
+      22,
+      16.699999999254942,
+      19.399999998509884,
+      12.600000001490116,
+      11.199999999254942,
+      9.400000002235174,
+      9.899999998509884,
+      10,
+      14,
+      16.799999997019768,
+      15.400000002235174,
+      20.099999997764826,
+      14.600000001490116,
+      17.899999998509884,
+      27.300000000745058
+    ],
+    "mean": 15.521666666616996,
+    "min": 9.400000002235174,
+    "max": 69.19999999925494,
+    "canvas": [
+      1272,
+      1170
+    ],
+    "zoom": 1,
+    "url": "http://omarky:4198/",
+    "script": "http://omarky:4198/assets/index-nfPqeOxC.js",
+    "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)"
+  },
+  "firstAfterSummary": {
+    "meanRenderMs": 16.56,
+    "meanShroudMs": 4.4566666667,
+    "minMs": 8.7,
+    "maxMs": 38.3,
+    "note": "Earlier 60-frame sample retained as summary; repeat above contains individual samples."
+  },
+  "boundaryArtifact": "shroud-boundary-coalesced.json",
+  "limits": "CPU render-call timings in SwiftShader, not hardware GPU FPS; no claim of identical scheduler noise across samples."
+}

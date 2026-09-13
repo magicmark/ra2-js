@@ -1,0 +1,666 @@
+{
+  "source": "Current frozen live5173; same source as final4199 index-BMccL90Q.js",
+  "viewport": [
+    800,
+    600
+  ],
+  "artworkFiles": 242,
+  "staging": "Fresh scenario; income miners removed; player money5000/enemy0. Automatic game.tick replaced only in this isolated page; original prototype tick advanced in1/60s steps. Credits explicitly reset100 then4000 for shortage recovery. Camera centered on a valid placement site; all orders/buttons/keys used native browser tools.",
+  "requests": [],
+  "inputs": [
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Shift",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "F10",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "contextmenu",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {},
+      "id": ""
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {},
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Escape",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {},
+      "id": ""
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {},
+      "id": "game-canvas"
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "click",
+      "trusted": true,
+      "target": {
+        "build": "barracks"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Shift",
+      "trusted": true,
+      "target": {
+        "build": "barracks"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Tab",
+      "trusted": true,
+      "target": {
+        "build": "barracks"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Shift",
+      "trusted": true,
+      "target": {
+        "build": "refinery"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Tab",
+      "trusted": true,
+      "target": {
+        "build": "refinery"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Shift",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "F10",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "contextmenu",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "Shift",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "keydown",
+      "key": "F10",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    },
+    {
+      "type": "contextmenu",
+      "trusted": true,
+      "target": {
+        "build": "power"
+      },
+      "id": ""
+    }
+  ],
+  "trace": [
+    {
+      "step": "Scenario staging: restart, remove income miners, player5000/enemy0, real tick advanced only at checkpoints",
+      "time": 0,
+      "money": 5000,
+      "queue": [],
+      "focus": "game-canvas",
+      "cardSame": true,
+      "radial": "0deg",
+      "label": "",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Native Power Plant click: enqueue spends nothing",
+      "time": 0,
+      "money": 5000,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 0,
+          "spent": 0,
+          "ready": false,
+          "paused": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "0deg",
+      "label": "",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Real simulation advanced4.2s: quarter progress",
+      "time": 4.199999999999995,
+      "money": 4800.0000000000455,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 0.24999999999999933,
+          "spent": 200.0000000000002,
+          "ready": false,
+          "paused": false,
+          "blockedFunds": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "89.99999999999976deg",
+      "label": "",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Trusted context menu puts active portrait On Hold",
+      "time": 4.199999999999995,
+      "money": 4800.0000000000455,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 0.24999999999999933,
+          "spent": 200.0000000000002,
+          "ready": false,
+          "paused": true,
+          "blockedFunds": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "89.99999999999976deg",
+      "label": "On Hold",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Real simulation advanced3s while paused",
+      "time": 7.199999999999984,
+      "money": 4800.0000000000455,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 0.24999999999999933,
+          "spent": 200.0000000000002,
+          "ready": false,
+          "paused": true,
+          "blockedFunds": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "89.99999999999976deg",
+      "label": "On Hold",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Native left click resumes held active item",
+      "time": 7.199999999999984,
+      "money": 4800.0000000000455,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 0.24999999999999933,
+          "spent": 200.0000000000002,
+          "ready": false,
+          "paused": false,
+          "blockedFunds": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "89.99999999999976deg",
+      "label": "",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Real simulation advanced4.2s: half progress",
+      "time": 11.39999999999997,
+      "money": 4600.000000000091,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 0.49999999999999845,
+          "spent": 399.9999999999987,
+          "ready": false,
+          "paused": false,
+          "blockedFunds": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "179.99999999999943deg",
+      "label": "",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Scenario staging: set available credits100",
+      "time": 11.39999999999997,
+      "money": 100,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 0.49999999999999845,
+          "spent": 399.9999999999987,
+          "ready": false,
+          "paused": false,
+          "blockedFunds": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "179.99999999999943deg",
+      "label": "",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Real simulation advances until100 credits exhausted",
+      "time": 15.599999999999955,
+      "money": 0,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 0.6249999999999981,
+          "spent": 499.9999999999975,
+          "ready": false,
+          "paused": false,
+          "blockedFunds": true
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "224.99999999999932deg",
+      "label": "On Hold",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Scenario staging: restore4000 credits",
+      "time": 15.599999999999955,
+      "money": 4000,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 0.6249999999999981,
+          "spent": 499.9999999999975,
+          "ready": false,
+          "paused": false,
+          "blockedFunds": true
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "224.99999999999932deg",
+      "label": "On Hold",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Ready after automatic funds recovery, total800 spent",
+      "time": 22.000000000000252,
+      "money": 3699.9999999999823,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 1,
+          "spent": 799.9999999999937,
+          "ready": true,
+          "paused": false,
+          "blockedFunds": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "360deg",
+      "label": "Ready",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Native Ready click enters placement mode",
+      "time": 22.000000000000252,
+      "money": 3699.9999999999823,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 1,
+          "spent": 799.9999999999937,
+          "ready": true,
+          "paused": false,
+          "blockedFunds": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "360deg",
+      "label": "Ready",
+      "placement": "power",
+      "powerCount": 1
+    },
+    {
+      "step": "Native Escape cancels only placement, preserving completed paid item",
+      "time": 22.000000000000252,
+      "money": 3699.9999999999823,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 1,
+          "spent": 799.9999999999937,
+          "ready": true,
+          "paused": false,
+          "blockedFunds": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "360deg",
+      "label": "Ready",
+      "placement": null,
+      "powerCount": 1
+    },
+    {
+      "step": "Native Ready re-click retains paid item in placement mode",
+      "time": 22.000000000000252,
+      "money": 3699.9999999999823,
+      "queue": [
+        {
+          "id": 21,
+          "type": "power",
+          "progress": 1,
+          "spent": 799.9999999999937,
+          "ready": true,
+          "paused": false,
+          "blockedFunds": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "360deg",
+      "label": "Ready",
+      "placement": "power",
+      "powerCount": 1
+    },
+    {
+      "step": "Native canvas center click places completed Power Plant",
+      "time": 22.000000000000252,
+      "money": 3699.9999999999823,
+      "queue": [],
+      "focus": "game-canvas",
+      "cardSame": true,
+      "radial": "0deg",
+      "label": "",
+      "placement": null,
+      "powerCount": 2
+    },
+    {
+      "step": "Native Power and Barracks clicks create mixed queue with no upfront charge",
+      "time": 22.000000000000252,
+      "money": 3699.9999999999823,
+      "queue": [
+        {
+          "id": 24,
+          "type": "power",
+          "progress": 0,
+          "spent": 0,
+          "ready": false,
+          "paused": false
+        },
+        {
+          "id": 25,
+          "type": "barracks",
+          "progress": 0,
+          "spent": 0,
+          "ready": false,
+          "paused": false
+        }
+      ],
+      "focus": "barracks",
+      "cardSame": true,
+      "radial": "0deg",
+      "label": "",
+      "placement": null,
+      "powerCount": 2
+    },
+    {
+      "step": "Real simulation advanced4.2s on active Power, queued Barracks remains unspent",
+      "time": 26.20000000000046,
+      "money": 3499.9999999999704,
+      "queue": [
+        {
+          "id": 24,
+          "type": "power",
+          "progress": 0.24999999999999933,
+          "spent": 200.0000000000002,
+          "ready": false,
+          "paused": false,
+          "blockedFunds": false
+        },
+        {
+          "id": 25,
+          "type": "barracks",
+          "progress": 0,
+          "spent": 0,
+          "ready": false,
+          "paused": false
+        }
+      ],
+      "focus": "barracks",
+      "cardSame": true,
+      "radial": "89.99999999999976deg",
+      "label": "",
+      "placement": null,
+      "powerCount": 2
+    },
+    {
+      "step": "Native ShiftTab focus returns to Power; first context menu holds active item24",
+      "time": 26.20000000000046,
+      "money": 3499.9999999999704,
+      "queue": [
+        {
+          "id": 24,
+          "type": "power",
+          "progress": 0.24999999999999933,
+          "spent": 200.0000000000002,
+          "ready": false,
+          "paused": true,
+          "blockedFunds": false
+        },
+        {
+          "id": 25,
+          "type": "barracks",
+          "progress": 0,
+          "spent": 0,
+          "ready": false,
+          "paused": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "89.99999999999976deg",
+      "label": "On Hold",
+      "placement": null,
+      "powerCount": 2
+    },
+    {
+      "step": "Second native context menu cancels exact active Power24, refunds200, preserves Barracks25",
+      "time": 26.20000000000046,
+      "money": 3699.9999999999704,
+      "queue": [
+        {
+          "id": 25,
+          "type": "barracks",
+          "progress": 0,
+          "spent": 0,
+          "ready": false,
+          "paused": false
+        }
+      ],
+      "focus": "power",
+      "cardSame": true,
+      "radial": "0deg",
+      "label": "",
+      "placement": null,
+      "powerCount": 2
+    }
+  ],
+  "pulse": {
+    "classReady": true,
+    "uniqueFrames": 2,
+    "samples": [
+      {
+        "ms": 290401,
+        "frame": 0
+      },
+      {
+        "ms": 290548,
+        "frame": 0
+      },
+      {
+        "ms": 290686,
+        "frame": 0
+      },
+      {
+        "ms": 290853,
+        "frame": 0
+      },
+      {
+        "ms": 291085,
+        "frame": 0
+      },
+      {
+        "ms": 291223,
+        "frame": 1
+      },
+      {
+        "ms": 291361,
+        "frame": 1
+      },
+      {
+        "ms": 291511,
+        "frame": 1
+      },
+      {
+        "ms": 291638,
+        "frame": 0
+      },
+      {
+        "ms": 291777,
+        "frame": 0
+      },
+      {
+        "ms": 291893,
+        "frame": 0
+      },
+      {
+        "ms": 292130,
+        "frame": 1
+      },
+      {
+        "ms": 292246,
+        "frame": 1
+      }
+    ]
+  },
+  "placementSite": {
+    "x": 10,
+    "y": 36
+  }
+}

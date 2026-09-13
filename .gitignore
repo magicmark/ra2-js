@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.asset-cache/
+test-results/
+*.log
+
+# Local configuration and downloaded game archives stay out of the repository.
+.env
+.env.*
+!.env.example
+*.exe
+*.mix
+*.zip
+
+# Browser automation state and local editor/OS files.
+playwright-report/
+blob-report/
+.playwright/
+*.tsbuildinfo
+.DS_Store
+Thumbs.db

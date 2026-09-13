@@ -1,0 +1,189 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { Controls } from '../src/input/Controls';
+import { Camera } from '../src/render/Camera';
+import { Game } from '../src/game/Game';
+import type { Renderer } from '../src/render/Renderer';
+import type { Entity } from '../src/game/types';
+
+afterEach(() => vi.unstubAllGlobals());
+function fixture() {
+  const events = new EventTarget(); let settingsOpen = false, enabled = true;
+  vi.stubGlobal('window', events);
+  vi.stubGlobal('document', { documentElement: { classList: { contains: () => settingsOpen } }, body: { classList: { contains: () => false } } });
+  const canvas = Object.assign(new EventTarget(), { style: { cursor: '' }, focus: vi.fn(), setPointerCapture: vi.fn(), getBoundingClientRect: () => ({ left: 0, top: 0 }) });
+  const camera = new Camera();
+  const game = new Game({ ai: false }); let picked: Entity | undefined;
+  const renderer = { canvas, camera, placement: null, selectionBox: null, pick: () => picked, visible: (e: Entity) => e.x < 30, entityPoint: (e: Entity) => camera.screen(e.x, e.y) } as unknown as Renderer;
+  const callbacks = { toast: vi.fn(), zoom: vi.fn(), mode: vi.fn(), ack: vi.fn(), category: vi.fn(), options: vi.fn(), briefing: vi.fn(), cursor: vi.fn(), enabled: () => enabled };
+  const controls = new Controls(renderer, game, false, callbacks);
+  const key = (key: string, options: { kind?: string; ctrlKey?: boolean; shiftKey?: boolean; repeat?: boolean; type?: string } = {}) => {
+    const event = new Event(options.type ?? 'keydown', { cancelable: true });
+    const { type: _type, ...eventOptions } = options;
+    Object.assign(event, { key, repeat: false, ctrlKey: false, metaKey: false, altKey: false, shiftKey: false, ...eventOptions });
+    const kind = options.kind ?? 'button';
+    Object.defineProperty(event, 'target', { value: { closest: (selector: string) => (kind === 'button' ? selector === 'button' : kind === 'input' ? selector.includes('input') : kind === 'dialog' ? selector.includes('[role="dialog"]') : false) ? {} : null } });
+    events.dispatchEvent(event); return event;
+  };
+  const pointer = (type: string, x = 300, y = 300, options = {}) => {
+    const event = new Event(type, { cancelable: true });
+    Object.assign(event, { pointerId: 1, pointerType: 'mouse', clientX: x, clientY: y, button: 0, shiftKey: false, ctrlKey: false, altKey: false, ...options });
+    canvas.dispatchEvent(event);
+  };
+  const click = (entity?: Entity, options = {}) => { picked = entity; pointer('pointerdown', 300, 300, options); pointer('pointerup', 300, 300, options); };
+  return { game, controls, camera, renderer, callbacks, events, key, click, pointer, pick: (entity?: Entity) => { picked = entity; }, settings: (value: boolean) => { settingsOpen = value; }, enable: (value: boolean) => { enabled = value; } };
+}
+
+describe('retail mouse commands', () => {
+  it('centers an unselected radar click and sends selected radar commands with planning and modifiers', () => {
+    const { game, controls, camera } = fixture(); controls.radarOrder(25, 30); expect(camera.world(camera.width / 2, camera.height / 2)).toEqual({ x: 25, y: 30 });
+    const tank = game.state.entities.find(e => e.type === 'grizzly')!; game.select([tank.id]); const move = vi.spyOn(game, 'orderMove');
+    controls.radarOrder(22.5, 35.5, { ctrl: true, shift: true }); expect(move).toHaveBeenLastCalledWith([tank.id], 22.5, 35.5, true);
+    controls.executeCommand('planning'); const route = vi.spyOn(game, 'orderWaypoints'); controls.radarOrder(24, 35); expect(route).not.toHaveBeenCalled(); controls.executeCommand('planning'); expect(route).toHaveBeenCalledWith([tank.id], [{ x: 24, y: 35 }]);
+    controls.radarOrder(24, 35, { button: 2 }); expect(tank.selected).toBe(false);
+  });
+  it('uses left click to command; right click deselects or cancels without issuing a command', () => {
+    const { game, renderer, controls, click } = fixture();
+    const tank = game.state.entities.find(e => e.type === 'grizzly')!;
+    const move = vi.spyOn(game, 'orderMove');
+    click(tank); click(); expect(move).toHaveBeenCalledOnce();
+    const path = tank.path;
+    click(undefined, { button: 2 }); expect(tank.selected).toBe(false); expect(tank.path).toBe(path); expect(move).toHaveBeenCalledOnce();
+    game.select([tank.id]); controls.setPlacement('power');
+    click(undefined, { button: 2 }); expect(renderer.placement).toBeNull(); expect(tank.selected).toBe(true);
+  });
+  it('toggles selected units with Shift and deploys an already selected GI', () => {
+    const { game, click } = fixture(); const units = game.state.entities.filter(e => e.type === 'gi');
+    click(units[0]); click(units[1], { shiftKey: true }); expect(units[0].selected && units[1].selected).toBe(true);
+    click(units[0], { shiftKey: true }); expect(units[0].selected).toBe(false); expect(units[1].selected).toBe(true);
+    click(units[1]); expect(units[1].deployed).toBe(true); click(units[1]); expect(units[1].deployed).toBe(false);
+  });
+  it('routes attack-move, force fire, and force move modifiers before friendly selection', () => {
+    const { game, click } = fixture(); const tank = game.state.entities.find(e => e.type === 'grizzly')!; const friendly = game.state.entities.find(e => e.type === 'gi')!;
+    game.select([tank.id]);
+    const move = vi.spyOn(game, 'orderMove'), attack = vi.spyOn(game, 'orderAttack'), force = vi.spyOn(game, 'orderForceMove');
+    click(friendly, { ctrlKey: true, shiftKey: true }); expect(move).toHaveBeenLastCalledWith([tank.id], expect.any(Number), expect.any(Number), true);
+    click(friendly, { ctrlKey: true }); expect(attack).toHaveBeenLastCalledWith([tank.id], friendly.id, true); expect(friendly.selected).toBe(false);
+    click(friendly, { altKey: true }); expect(force).toHaveBeenCalledOnce();
+  });
+  it('right drag scrolls without deselecting and pointer cancellation cannot release an order', () => {
+    const { game, controls, camera, pointer, click } = fixture(); const tank = game.state.entities.find(e => e.type === 'grizzly')!;
+    click(tank); const x = camera.x;
+    pointer('pointerdown', 300, 300, { button: 2 }); pointer('pointermove', 350, 300, { button: 2 }); pointer('pointerup', 350, 300, { button: 2 });
+    expect(camera.x).toBeLessThan(x); expect(tank.selected).toBe(true);
+    const move = vi.spyOn(game, 'orderMove');
+    pointer('pointerdown'); pointer('pointercancel'); pointer('pointerup'); expect(move).not.toHaveBeenCalled();
+    controls.tick(.05);
+  });
+});
+
+describe('retail keyboard commands', () => {
+  it('adjusts continuous scroll speed while preserving direct dragging and modal suppression', () => {
+    const { controls, camera, key, pointer, settings } = fixture(), pan = vi.spyOn(camera, 'pan');
+    expect(controls.scrollRate).toBe(1);
+    key('ArrowLeft'); controls.tick(.1); expect(pan).toHaveBeenLastCalledWith(50, 0);
+    controls.setScrollRate(2); controls.tick(.1); expect(pan).toHaveBeenLastCalledWith(100, 0);
+    key('ArrowLeft', { type: 'keyup' }); pointer('pointermove', 1, 300); controls.tick(.1); expect(pan).toHaveBeenLastCalledWith(100, 0);
+    pointer('pointerdown', 300, 300, { button: 2 }); pointer('pointermove', 350, 300, { button: 2 }); pointer('pointerup', 350, 300, { button: 2 });
+    expect(pan).toHaveBeenLastCalledWith(50, 0);
+    controls.setScrollRate(99); expect(controls.scrollRate).toBe(3); controls.setScrollRate(NaN); expect(controls.scrollRate).toBe(3);
+    controls.setScrollRate(0); expect(controls.scrollRate).toBe(.25);
+    const calls = pan.mock.calls.length; key('ArrowLeft'); settings(true); controls.tick(.1); expect(pan).toHaveBeenCalledTimes(calls);
+  });
+  it('shares native command-bar actions with hotkeys, including initial team assignment, disbanding and persistent planning', () => {
+    const { game, controls, click } = fixture(); const unit = game.state.entities.find(e => e.type === 'gi')!;
+    game.select([unit.id]); controls.executeCommand('team1'); game.select([]); controls.executeCommand('team1'); expect(unit.selected).toBe(true);
+    controls.executeCommand('team1', { clear: true }); game.select([]); controls.executeCommand('team1'); expect(unit.selected).toBe(false);
+    game.select([unit.id]); controls.executeCommand('planning'); expect(controls.planning).toBe(true);
+    const route = vi.spyOn(game, 'orderWaypoints'); click(); expect(route).not.toHaveBeenCalled();
+    controls.executeCommand('planning'); expect(controls.planning).toBe(false); expect(route).toHaveBeenCalledOnce();
+    controls.executeCommand('deploy'); expect(unit.deployed).toBe(true);
+  });
+  it('maps P to all units, QWER tabs, Esc options, and leaves multiplayer A unassigned', () => {
+    const { game, controls, callbacks, key } = fixture();
+    key('a'); expect(controls.mode).toBe('select');
+    key('p'); expect(game.state.paused).toBe(false); expect(game.state.entities.filter(e => e.selected)).toHaveLength(6);
+    for (const k of ['q', 'w', 'e', 'r']) key(k);
+    expect(callbacks.category.mock.calls.flat()).toEqual(['structures', 'defenses', 'infantry', 'vehicles']);
+    key('Escape'); expect(callbacks.options).toHaveBeenCalledOnce();
+  });
+  it('selects the current type onscreen, then across the map on a second T', () => {
+    const { game, key } = fixture(); const units = game.state.entities.filter(e => e.type === 'gi'); units[3].x = 50;
+    game.select([units[0].id]); key('t'); expect(units.filter(e => e.selected)).toHaveLength(3);
+    key('t'); expect(units.filter(e => e.selected)).toHaveLength(4);
+  });
+  it('assigns and recalls teams and camera bookmarks with browser defaults suppressed', () => {
+    const { game, key, camera } = fixture(); const tank = game.state.entities.find(e => e.type === 'grizzly')!;
+    game.select([tank.id]); expect(key('1', { ctrlKey: true }).defaultPrevented).toBe(true); game.select([]); key('1'); expect(tank.selected).toBe(true);
+    camera.center(30, 30); const bookmark = { x: camera.x, y: camera.y };
+    expect(key('F1', { ctrlKey: true }).defaultPrevented).toBe(true); camera.center(15, 15); key('F1'); expect({ x: camera.x, y: camera.y }).toEqual(bookmark);
+  });
+  it('supports stop, guard, scatter, deploy, repair/sell modes, and follow', () => {
+    const { game, controls, key, camera, click } = fixture(); const unit = game.state.entities.find(e => e.type === 'gi')!;
+    game.select([unit.id]); game.orderMove([unit.id], 21, 38); key('s'); expect(unit.path).toHaveLength(0);
+    const guard = vi.spyOn(game, 'guard'); key('g'); expect(guard).toHaveBeenCalledWith([unit.id]);
+    key('d'); expect(unit.deployed).toBe(true); key('x'); expect(unit.deployed).toBe(false); expect(unit.path.length).toBeGreaterThan(0);
+    key('f'); unit.x = 22; unit.y = 35; unit.previous = { x: 22, y: 35 }; controls.tick(.05); expect(camera.world(camera.width / 2, camera.height / 2)).toEqual({ x: 22, y: 35 });
+    const power = game.state.entities.find(e => e.type === 'power')!; power.hp -= 100; const repair = vi.spyOn(game, 'repair');
+    key('k'); expect(controls.mode).toBe('repair'); click(power); expect(repair).toHaveBeenCalledWith(power.id);
+    key('l'); expect(controls.mode).toBe('sell'); key('Escape'); expect(controls.mode).toBe('select');
+  });
+  it('queues waypoints while Z is held and starts the route only on release', () => {
+    const { game, key, click } = fixture(); const unit = game.state.entities.find(e => e.type === 'grizzly')!; game.select([unit.id]);
+    const route = vi.spyOn(game, 'orderWaypoints'); key('z'); click(); click(); expect(route).not.toHaveBeenCalled(); expect(unit.path).toHaveLength(0);
+    key('z', { type: 'keyup' }); expect(route).toHaveBeenCalledWith([unit.id], [expect.any(Object), expect.any(Object)]);
+  });
+  it('cycles creation order, previous selection, and health bands', () => {
+    const { game, key } = fixture(); const units = game.state.entities.filter(e => e.type === 'gi');
+    game.select([units[0].id]); key('m'); expect(units[1].selected).toBe(true); key('n'); expect(units[0].selected).toBe(true);
+    units[0].hp = units[0].maxHp * .4; units[1].hp = units[1].maxHp * .2;
+    key('u'); expect(units[0].selected || units[1].selected).toBe(false);
+    key('u'); expect(units[0].selected).toBe(true); key('u'); expect(units[1].selected).toBe(true);
+  });
+  it('does not hijack text, modals, source gate, browser shortcuts, or button Space/Enter', () => {
+    const { game, controls, key, settings, enable } = fixture();
+    key('p', { kind: 'input' }); key('p', { kind: 'dialog' }); expect(game.state.entities.some(e => e.selected)).toBe(false);
+    settings(true); key('p'); settings(false); enable(false); key('p'); expect(game.state.entities.some(e => e.selected)).toBe(false);
+    enable(true); expect(key('r', { ctrlKey: true }).defaultPrevented).toBe(false); expect(key(' ').defaultPrevented).toBe(false); expect(key('Enter').defaultPrevented).toBe(false);
+    expect(controls.mode).toBe('select');
+  });
+  it('follows the interpolated presentation point between logic frames', () => {
+    const { game, controls, key, camera } = fixture(); const unit = game.state.entities.find(e => e.type === 'grizzly')!;
+    game.select([unit.id]); game.orderMove([unit.id], 22.5, 36.5); key('f'); game.tick(.05); controls.tick(.05);
+    const point = camera.world(camera.width / 2, camera.height / 2), alpha = game.interpolation;
+    expect(point.x).toBeCloseTo(unit.previous!.x + (unit.x - unit.previous!.x) * alpha, 8);
+    expect(point.y).toBeCloseTo(unit.previous!.y + (unit.y - unit.previous!.y) * alpha, 8);
+  });
+  it('resets stale groups and gestures on restart and suppresses camera scrolling while a modal is open', () => {
+    const { game, controls, key, camera, settings } = fixture(); const unit = game.state.entities.find(e => e.type === 'gi')!;
+    game.select([unit.id]); key('1', { ctrlKey: true }); game.restart(); controls.tick(.05); key('1'); expect(game.state.entities.some(e => e.selected)).toBe(false);
+    key('ArrowLeft'); const x = camera.x; settings(true); controls.tick(.1); expect(camera.x).toBe(x);
+    settings(false); controls.tick(.1); expect(camera.x).toBe(x);
+  });
+});
+
+
+describe('native contextual cursors', () => {
+  it('tracks selection, modifiers, terrain and real repair/sell eligibility without issuing orders', () => {
+    const { game, controls, pointer, camera, pick, callbacks, key } = fixture();
+    const tank = game.state.entities.find(e => e.type === 'grizzly')!, gi = game.state.entities.find(e => e.type === 'gi')!, power = game.state.entities.find(e => e.type === 'power')!;
+    camera.center(30.5, 30.5); game.state.tiles[30 * game.state.width + 30].terrain = 'grass';
+    pointer('pointermove', 500, 350); expect(controls.cursor).toBe('default');
+    game.select([tank.id]); controls.tick(0); expect(callbacks.cursor).toHaveBeenLastCalledWith('move');
+    const move = vi.spyOn(game, 'orderMove');
+    pointer('pointermove', 500, 350, { ctrlKey: true, shiftKey: true }); expect(controls.cursor).toBe('attackmove');
+    pointer('pointermove', 500, 350, { ctrlKey: true, altKey: true }); expect(controls.cursor).toBe('guard');
+    pointer('pointermove', 500, 350, { ctrlKey: true }); expect(controls.cursor).toBe('attack');
+    pointer('pointermove', 500, 350); game.state.tiles[30 * game.state.width + 30].terrain = 'water'; expect(controls.cursor).toBe('move-blocked');
+    pick(gi); game.select([gi.id]); expect(controls.cursor).toBe('deploy');
+    pick(power); controls.setMode('repair'); expect(controls.cursor).toBe('repair-blocked'); power.hp--; expect(controls.cursor).toBe('repair');
+    controls.setMode('sell'); expect(controls.cursor).toBe('sell'); pick(tank); expect(controls.cursor).toBe('sell-blocked');
+    expect(move).not.toHaveBeenCalled();
+    key('Escape'); pointer('pointerleave'); expect(callbacks.cursor).toHaveBeenLastCalledWith('default');
+  });
+  it('shows eight-direction scrolling and suppresses gameplay cursors behind dialogs and the source gate', () => {
+    const { controls, camera, pointer, settings, enable } = fixture(); camera.center(30, 30);
+    pointer('pointermove', 1, 1); expect(controls.cursor).toBe('scroll-nw');
+    camera.center(-3, -3); expect(controls.cursor).toBe('scroll-nw-blocked');
+    settings(true); expect(controls.cursor).toBe('default'); settings(false); enable(false); expect(controls.cursor).toBe('default');
+  });
+});

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#171b1b" />
+    <meta name="description" content="Command your base. Build your army. A browser-based real-time strategy battlefield inspired by Red Alert 2." />
+    <title>Red Alert II · Field Command</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23191d1d'/%3E%3Cpath d='M32 6l7 18 20 1-15 13 5 20-17-11-17 11 5-20L5 25l20-1z' fill='%23d64a40'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="app">
+      <main id="battlefield" aria-label="Interactive real-time strategy battlefield">
+        <canvas id="game-canvas" tabindex="0" aria-label="Battlefield. Left click to select or issue orders, drag to select a group, right click to cancel, and use the mouse wheel to zoom."></canvas>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

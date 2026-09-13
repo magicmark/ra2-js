@@ -1,0 +1,3028 @@
+{
+  "sha256": "06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb",
+  "size": 4497680,
+  "coff_timestamp": 991869933,
+  "image_base": "0x400000",
+  "sections": [
+    {
+      "name": ".text",
+      "rva": 4096,
+      "virtual_size": 3769805,
+      "raw": 4096,
+      "raw_size": 3772416
+    },
+    {
+      "name": ".rdata",
+      "rva": 3776512,
+      "virtual_size": 191542,
+      "raw": 3776512,
+      "raw_size": 192512
+    },
+    {
+      "name": ".data",
+      "rva": 3969024,
+      "virtual_size": 3553732,
+      "raw": 3969024,
+      "raw_size": 425984
+    },
+    {
+      "name": ".rsrc",
+      "rva": 7524352,
+      "virtual_size": 90040,
+      "raw": 4395008,
+      "raw_size": 90112
+    },
+    {
+      "name": ".detour",
+      "rva": 7614464,
+      "virtual_size": 9928,
+      "raw": 4485120,
+      "raw_size": 12288
+    }
+  ],
+  "source_description": "User-supplied /tmp/ra2-engine-reference/game.exe, statically read; never executed.",
+  "provenance_limit": "Base RA2 identity in embedded metadata, but .detour section and xwis.dll import establish modification. Not a certified clean retail executable or YRpp-derived layout.",
+  "embedded_version_strings": {
+    "ProductName": "Command & Conquer : Red Alert 2",
+    "FileVersion": "1.08",
+    "ProductVersion": "1.08",
+    "version_limit": "Embedded strings only, not a verified retail release number."
+  },
+  "coordinate_system": "Raw Windows dialog units, NOT screen pixels. Runtime code subsequently changes control rectangles.",
+  "resource_format_sources": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-dlgtemplate",
+    "https://learn.microsoft.com/en-us/windows/win32/dlgbox/dlgtemplateex",
+    "https://learn.microsoft.com/en-us/windows/win32/dlgbox/dlgitemtemplateex"
+  ],
+  "dialogs": [
+    {
+      "path": [
+        5,
+        163,
+        1033
+      ],
+      "rva": 7572200,
+      "offset": 4442856,
+      "size": 1134,
+      "codepage": 0,
+      "extended": true,
+      "style": "0x40000040",
+      "exstyle": "0x0",
+      "help_id": 0,
+      "rect_dlu": [
+        0,
+        0,
+        426,
+        295
+      ],
+      "menu": "",
+      "class": "",
+      "title": "",
+      "font": {
+        "point_size": 8,
+        "weight": 0,
+        "italic": 0,
+        "charset": 1,
+        "face": "MS Sans Serif"
+      },
+      "items": [
+        {
+          "id": 1670,
+          "rect_dlu": [
+            318,
+            257,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Back",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 68,
+          "file_offset": 4442924,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1684,
+          "rect_dlu": [
+            318,
+            1,
+            108,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:KeyboardOptions",
+          "style": "0x50020001",
+          "exstyle": "0x0",
+          "template_offset": 116,
+          "file_offset": 4442972,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            8,
+            35,
+            146,
+            9
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Category",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 188,
+          "file_offset": 4443044,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1223,
+          "rect_dlu": [
+            8,
+            50,
+            138,
+            146
+          ],
+          "class": {
+            "ordinal": 133
+          },
+          "title": "",
+          "style": "0x50000313",
+          "exstyle": "0x0",
+          "template_offset": 244,
+          "file_offset": 4443100,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "ComboBox"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            154,
+            35,
+            146,
+            8
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Commands",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 276,
+          "file_offset": 4443132,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1224,
+          "rect_dlu": [
+            154,
+            49,
+            146,
+            110
+          ],
+          "class": {
+            "ordinal": 131
+          },
+          "title": "",
+          "style": "0x50000153",
+          "exstyle": "0x0",
+          "template_offset": 332,
+          "file_offset": 4443188,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "ListBox"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            9,
+            200,
+            124,
+            9
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:PressShortcut",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 364,
+          "file_offset": 4443220,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1769,
+          "rect_dlu": [
+            8,
+            65,
+            138,
+            95
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Description",
+          "style": "0x50000007",
+          "exstyle": "0x0",
+          "template_offset": 432,
+          "file_offset": 4443288,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1227,
+          "rect_dlu": [
+            15,
+            76,
+            127,
+            42
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "",
+          "style": "0x50000000",
+          "exstyle": "0x20",
+          "template_offset": 496,
+          "file_offset": 4443352,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1229,
+          "rect_dlu": [
+            9,
+            212,
+            124,
+            14
+          ],
+          "class": "msctls_hotkey32",
+          "title": "HotKey1",
+          "style": "0x50800000",
+          "exstyle": "0x0",
+          "template_offset": 528,
+          "file_offset": 4443384,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_hotkey32"
+        },
+        {
+          "id": 1231,
+          "rect_dlu": [
+            154,
+            212,
+            83,
+            15
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Assign",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 604,
+          "file_offset": 4443460,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            9,
+            12,
+            292,
+            11
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:CustomizeKeyboard",
+          "style": "0x50000201",
+          "exstyle": "0x0",
+          "template_offset": 656,
+          "file_offset": 4443512,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            8,
+            233,
+            134,
+            11
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:CurAssignedTo",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 732,
+          "file_offset": 4443588,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1232,
+          "rect_dlu": [
+            154,
+            245,
+            83,
+            15
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:ResetAll",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 800,
+          "file_offset": 4443656,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1595,
+          "rect_dlu": [
+            8,
+            245,
+            138,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 856,
+          "file_offset": 4443712,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1596,
+          "rect_dlu": [
+            8,
+            182,
+            138,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 908,
+          "file_offset": 4443764,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            8,
+            170,
+            138,
+            11
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:CurrentShortcut",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 960,
+          "file_offset": 4443816,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1597,
+          "rect_dlu": [
+            154,
+            170,
+            146,
+            22
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000000",
+          "exstyle": "0x0",
+          "template_offset": 1032,
+          "file_offset": 4443888,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1685,
+          "rect_dlu": [
+            10,
+            282,
+            303,
+            12
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 1084,
+          "file_offset": 4443940,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        }
+      ],
+      "parsed_bytes": 1134,
+      "trailing_bytes": 0
+    },
+    {
+      "path": [
+        5,
+        181,
+        1033
+      ],
+      "rva": 7568264,
+      "offset": 4438920,
+      "size": 494,
+      "codepage": 0,
+      "extended": false,
+      "style": "0x40000040",
+      "exstyle": "0x0",
+      "help_id": null,
+      "rect_dlu": [
+        0,
+        0,
+        426,
+        295
+      ],
+      "menu": "",
+      "class": "",
+      "title": "",
+      "font": {
+        "point_size": 8,
+        "face": "MS Sans Serif"
+      },
+      "items": [
+        {
+          "id": 1670,
+          "rect_dlu": [
+            318,
+            257,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:ResumeMission",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 56,
+          "file_offset": 4438976,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1313,
+          "rect_dlu": [
+            318,
+            122,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:GameControls",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 116,
+          "file_offset": 4439036,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1310,
+          "rect_dlu": [
+            318,
+            149,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:LoadGame",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 176,
+          "file_offset": 4439096,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1314,
+          "rect_dlu": [
+            318,
+            230,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:AbortMission",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 228,
+          "file_offset": 4439148,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1311,
+          "rect_dlu": [
+            318,
+            176,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:SaveGame",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 288,
+          "file_offset": 4439208,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1684,
+          "rect_dlu": [
+            318,
+            1,
+            108,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:GameOptions",
+          "style": "0x50020001",
+          "exstyle": "0x0",
+          "template_offset": 340,
+          "file_offset": 4439260,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1685,
+          "rect_dlu": [
+            10,
+            282,
+            303,
+            12
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 396,
+          "file_offset": 4439316,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1312,
+          "rect_dlu": [
+            317,
+            203,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:DeleteGame",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 440,
+          "file_offset": 4439360,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        }
+      ],
+      "parsed_bytes": 494,
+      "trailing_bytes": 0
+    },
+    {
+      "path": [
+        5,
+        182,
+        1033
+      ],
+      "rva": 7573336,
+      "offset": 4443992,
+      "size": 312,
+      "codepage": 0,
+      "extended": false,
+      "style": "0x40000040",
+      "exstyle": "0x0",
+      "help_id": null,
+      "rect_dlu": [
+        0,
+        0,
+        426,
+        295
+      ],
+      "menu": "",
+      "class": "",
+      "title": "",
+      "font": {
+        "point_size": 8,
+        "face": "MS Sans Serif"
+      },
+      "items": [
+        {
+          "id": 1670,
+          "rect_dlu": [
+            318,
+            257,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:ResumeMission",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 56,
+          "file_offset": 4444048,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 65535,
+          "rect_dlu": [
+            44,
+            137,
+            230,
+            19
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:AskAbortMission",
+          "style": "0x50000201",
+          "exstyle": "0x0",
+          "template_offset": 116,
+          "file_offset": 4444108,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1737,
+          "rect_dlu": [
+            318,
+            122,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Blank",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 180,
+          "file_offset": 4444172,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1810,
+          "rect_dlu": [
+            318,
+            149,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Blank",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 224,
+          "file_offset": 4444216,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1685,
+          "rect_dlu": [
+            10,
+            282,
+            303,
+            12
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 268,
+          "file_offset": 4444260,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        }
+      ],
+      "parsed_bytes": 312,
+      "trailing_bytes": 0
+    },
+    {
+      "path": [
+        5,
+        184,
+        1033
+      ],
+      "rva": 7569096,
+      "offset": 4439752,
+      "size": 800,
+      "codepage": 0,
+      "extended": false,
+      "style": "0x40000040",
+      "exstyle": "0x0",
+      "help_id": null,
+      "rect_dlu": [
+        0,
+        0,
+        426,
+        295
+      ],
+      "menu": "",
+      "class": "",
+      "title": "",
+      "font": {
+        "point_size": 8,
+        "face": "MS Sans Serif"
+      },
+      "items": [
+        {
+          "id": 1670,
+          "rect_dlu": [
+            318,
+            257,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Back",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 56,
+          "file_offset": 4439808,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1684,
+          "rect_dlu": [
+            318,
+            1,
+            108,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:SoundOptions",
+          "style": "0x50020001",
+          "exstyle": "0x0",
+          "template_offset": 100,
+          "file_offset": 4439852,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1327,
+          "rect_dlu": [
+            105,
+            28,
+            175,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider1",
+          "style": "0x50010018",
+          "exstyle": "0x0",
+          "template_offset": 160,
+          "file_offset": 4439912,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 1330,
+          "rect_dlu": [
+            105,
+            50,
+            175,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider2",
+          "style": "0x50010018",
+          "exstyle": "0x0",
+          "template_offset": 232,
+          "file_offset": 4439984,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 65535,
+          "rect_dlu": [
+            9,
+            27,
+            90,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:MusicVolume",
+          "style": "0x50000202",
+          "exstyle": "0x0",
+          "template_offset": 304,
+          "file_offset": 4440056,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 65535,
+          "rect_dlu": [
+            9,
+            49,
+            90,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:SoundVolume",
+          "style": "0x50020202",
+          "exstyle": "0x0",
+          "template_offset": 360,
+          "file_offset": 4440112,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1328,
+          "rect_dlu": [
+            105,
+            97,
+            175,
+            99
+          ],
+          "class": {
+            "ordinal": 131
+          },
+          "title": "",
+          "style": "0x50010151",
+          "exstyle": "0x0",
+          "template_offset": 416,
+          "file_offset": 4440168,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "ListBox"
+        },
+        {
+          "id": 1329,
+          "rect_dlu": [
+            29,
+            214,
+            83,
+            15
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Play",
+          "style": "0x5001000b",
+          "exstyle": "0x0",
+          "template_offset": 444,
+          "file_offset": 4440196,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1333,
+          "rect_dlu": [
+            197,
+            214,
+            83,
+            15
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Stop",
+          "style": "0x5001000b",
+          "exstyle": "0x0",
+          "template_offset": 488,
+          "file_offset": 4440240,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 65535,
+          "rect_dlu": [
+            9,
+            71,
+            90,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:VoiceVolume",
+          "style": "0x50020202",
+          "exstyle": "0x0",
+          "template_offset": 532,
+          "file_offset": 4440284,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1334,
+          "rect_dlu": [
+            105,
+            72,
+            175,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider2",
+          "style": "0x50010018",
+          "exstyle": "0x0",
+          "template_offset": 588,
+          "file_offset": 4440340,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 1331,
+          "rect_dlu": [
+            29,
+            155,
+            70,
+            14
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Shuffle",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 660,
+          "file_offset": 4440412,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1332,
+          "rect_dlu": [
+            29,
+            182,
+            70,
+            14
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Repeat",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 708,
+          "file_offset": 4440460,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1685,
+          "rect_dlu": [
+            10,
+            282,
+            303,
+            12
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 756,
+          "file_offset": 4440508,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        }
+      ],
+      "parsed_bytes": 800,
+      "trailing_bytes": 0
+    },
+    {
+      "path": [
+        5,
+        213,
+        1033
+      ],
+      "rva": 7574344,
+      "offset": 4445000,
+      "size": 2018,
+      "codepage": 0,
+      "extended": true,
+      "style": "0x40000040",
+      "exstyle": "0x0",
+      "help_id": 0,
+      "rect_dlu": [
+        0,
+        0,
+        426,
+        295
+      ],
+      "menu": "",
+      "class": "",
+      "title": "",
+      "font": {
+        "point_size": 8,
+        "weight": 0,
+        "italic": 0,
+        "charset": 1,
+        "face": "MS Sans Serif"
+      },
+      "items": [
+        {
+          "id": 1670,
+          "rect_dlu": [
+            318,
+            257,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:MainMenu",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 68,
+          "file_offset": 4445068,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1486,
+          "rect_dlu": [
+            317,
+            122,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Keyboard",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 124,
+          "file_offset": 4445124,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1684,
+          "rect_dlu": [
+            318,
+            1,
+            108,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:OptionsMenu",
+          "style": "0x50020001",
+          "exstyle": "0x0",
+          "template_offset": 180,
+          "file_offset": 4445180,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1485,
+          "rect_dlu": [
+            317,
+            149,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Network",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 244,
+          "file_offset": 4445244,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1322,
+          "rect_dlu": [
+            170,
+            175,
+            120,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider2",
+          "style": "0x50000018",
+          "exstyle": "0x0",
+          "template_offset": 300,
+          "file_offset": 4445300,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            170,
+            160,
+            60,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:ScrollRate",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 380,
+          "file_offset": 4445380,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1323,
+          "rect_dlu": [
+            25,
+            45,
+            120,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider3",
+          "style": "0x50000018",
+          "exstyle": "0x0",
+          "template_offset": 440,
+          "file_offset": 4445440,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            25,
+            30,
+            60,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:VisualDetails",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 520,
+          "file_offset": 4445520,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1651,
+          "rect_dlu": [
+            85,
+            30,
+            60,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:HigherDetail",
+          "style": "0x50000202",
+          "exstyle": "0x0",
+          "template_offset": 588,
+          "file_offset": 4445588,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1650,
+          "rect_dlu": [
+            230,
+            160,
+            60,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Faster",
+          "style": "0x50000202",
+          "exstyle": "0x0",
+          "template_offset": 652,
+          "file_offset": 4445652,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1295,
+          "rect_dlu": [
+            25,
+            110,
+            120,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider3",
+          "style": "0x50000018",
+          "exstyle": "0x0",
+          "template_offset": 704,
+          "file_offset": 4445704,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            25,
+            95,
+            60,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Difficulty",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 784,
+          "file_offset": 4445784,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1648,
+          "rect_dlu": [
+            85,
+            95,
+            60,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Harder",
+          "style": "0x50000202",
+          "exstyle": "0x0",
+          "template_offset": 844,
+          "file_offset": 4445844,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1537,
+          "rect_dlu": [
+            25,
+            175,
+            130,
+            10
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:TargetLines",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 896,
+          "file_offset": 4445896,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1538,
+          "rect_dlu": [
+            25,
+            160,
+            130,
+            10
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Tooltips",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 960,
+          "file_offset": 4445960,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1540,
+          "rect_dlu": [
+            25,
+            190,
+            130,
+            10
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:ShowHidden",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 1016,
+          "file_offset": 4446016,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1773,
+          "rect_dlu": [
+            170,
+            45,
+            120,
+            74
+          ],
+          "class": {
+            "ordinal": 133
+          },
+          "title": "",
+          "style": "0x50000213",
+          "exstyle": "0x0",
+          "template_offset": 1076,
+          "file_offset": 4446076,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "ComboBox"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            25,
+            235,
+            85,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:MusicVolume",
+          "style": "0x50000201",
+          "exstyle": "0x0",
+          "template_offset": 1108,
+          "file_offset": 4446108,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1327,
+          "rect_dlu": [
+            25,
+            250,
+            85,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider1",
+          "style": "0x50010018",
+          "exstyle": "0x0",
+          "template_offset": 1172,
+          "file_offset": 4446172,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            122,
+            235,
+            85,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:SoundVolume",
+          "style": "0x50000201",
+          "exstyle": "0x0",
+          "template_offset": 1252,
+          "file_offset": 4446252,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1330,
+          "rect_dlu": [
+            122,
+            250,
+            85,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider2",
+          "style": "0x50010018",
+          "exstyle": "0x0",
+          "template_offset": 1316,
+          "file_offset": 4446316,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            220,
+            235,
+            85,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:VoiceVolume",
+          "style": "0x50000201",
+          "exstyle": "0x0",
+          "template_offset": 1396,
+          "file_offset": 4446396,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1334,
+          "rect_dlu": [
+            220,
+            250,
+            85,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider2",
+          "style": "0x50010018",
+          "exstyle": "0x0",
+          "template_offset": 1460,
+          "file_offset": 4446460,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 1774,
+          "rect_dlu": [
+            10,
+            10,
+            140,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:DisplayOptions",
+          "style": "0x50000000",
+          "exstyle": "0x0",
+          "template_offset": 1540,
+          "file_offset": 4446540,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1775,
+          "rect_dlu": [
+            10,
+            75,
+            298,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:GameOptions",
+          "style": "0x50000000",
+          "exstyle": "0x0",
+          "template_offset": 1608,
+          "file_offset": 4446608,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1776,
+          "rect_dlu": [
+            10,
+            140,
+            298,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:UIOptions",
+          "style": "0x50000000",
+          "exstyle": "0x0",
+          "template_offset": 1672,
+          "file_offset": 4446672,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1777,
+          "rect_dlu": [
+            10,
+            215,
+            298,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:AudioOptions",
+          "style": "0x50000000",
+          "exstyle": "0x0",
+          "template_offset": 1732,
+          "file_offset": 4446732,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1778,
+          "rect_dlu": [
+            170,
+            30,
+            120,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:SetResolution",
+          "style": "0x50000000",
+          "exstyle": "0x0",
+          "template_offset": 1796,
+          "file_offset": 4446796,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1685,
+          "rect_dlu": [
+            10,
+            282,
+            303,
+            12
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 1864,
+          "file_offset": 4446864,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1820,
+          "rect_dlu": [
+            339,
+            29,
+            61,
+            33
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "",
+          "style": "0x50000007",
+          "exstyle": "0x20",
+          "template_offset": 1916,
+          "file_offset": 4446916,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1539,
+          "rect_dlu": [
+            171,
+            158,
+            130,
+            10
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:AssumeNoObserve",
+          "style": "0x48008003",
+          "exstyle": "0x0",
+          "template_offset": 1948,
+          "file_offset": 4446948,
+          "extra_bytes": 0,
+          "template_visible": false,
+          "template_disabled": true,
+          "class_name": "Button"
+        }
+      ],
+      "parsed_bytes": 2018,
+      "trailing_bytes": 0
+    },
+    {
+      "path": [
+        5,
+        214,
+        1033
+      ],
+      "rva": 7573648,
+      "offset": 4444304,
+      "size": 696,
+      "codepage": 0,
+      "extended": true,
+      "style": "0x40000040",
+      "exstyle": "0x0",
+      "help_id": 0,
+      "rect_dlu": [
+        0,
+        0,
+        426,
+        295
+      ],
+      "menu": "",
+      "class": "",
+      "title": "",
+      "font": {
+        "point_size": 8,
+        "weight": 0,
+        "italic": 0,
+        "charset": 1,
+        "face": "MS Sans Serif"
+      },
+      "items": [
+        {
+          "id": 1670,
+          "rect_dlu": [
+            318,
+            257,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Back",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 68,
+          "file_offset": 4444372,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1684,
+          "rect_dlu": [
+            318,
+            1,
+            108,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:SoundOptions",
+          "style": "0x50020001",
+          "exstyle": "0x0",
+          "template_offset": 116,
+          "file_offset": 4444420,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            9,
+            111,
+            87,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:MusicVolume",
+          "style": "0x50020202",
+          "exstyle": "0x0",
+          "template_offset": 180,
+          "file_offset": 4444484,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1327,
+          "rect_dlu": [
+            103,
+            112,
+            173,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider1",
+          "style": "0x50010018",
+          "exstyle": "0x0",
+          "template_offset": 244,
+          "file_offset": 4444548,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            9,
+            134,
+            87,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:SoundVolume",
+          "style": "0x50020202",
+          "exstyle": "0x0",
+          "template_offset": 324,
+          "file_offset": 4444628,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1330,
+          "rect_dlu": [
+            103,
+            135,
+            173,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider2",
+          "style": "0x50010018",
+          "exstyle": "0x0",
+          "template_offset": 388,
+          "file_offset": 4444692,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            9,
+            156,
+            87,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:VoiceVolume",
+          "style": "0x50020202",
+          "exstyle": "0x0",
+          "template_offset": 468,
+          "file_offset": 4444772,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1334,
+          "rect_dlu": [
+            103,
+            157,
+            173,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider2",
+          "style": "0x50010018",
+          "exstyle": "0x0",
+          "template_offset": 532,
+          "file_offset": 4444836,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 1685,
+          "rect_dlu": [
+            10,
+            282,
+            303,
+            12
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 612,
+          "file_offset": 4444916,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1820,
+          "rect_dlu": [
+            339,
+            29,
+            61,
+            33
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "",
+          "style": "0x50000007",
+          "exstyle": "0x20",
+          "template_offset": 664,
+          "file_offset": 4444968,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        }
+      ],
+      "parsed_bytes": 696,
+      "trailing_bytes": 0
+    },
+    {
+      "path": [
+        5,
+        245,
+        1033
+      ],
+      "rva": 7570896,
+      "offset": 4441552,
+      "size": 1300,
+      "codepage": 0,
+      "extended": true,
+      "style": "0x40000040",
+      "exstyle": "0x0",
+      "help_id": 0,
+      "rect_dlu": [
+        0,
+        0,
+        426,
+        295
+      ],
+      "menu": "",
+      "class": "",
+      "title": "",
+      "font": {
+        "point_size": 8,
+        "weight": 0,
+        "italic": 0,
+        "charset": 1,
+        "face": "MS Sans Serif"
+      },
+      "items": [
+        {
+          "id": 1670,
+          "rect_dlu": [
+            318,
+            257,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Back",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 68,
+          "file_offset": 4441620,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1684,
+          "rect_dlu": [
+            318,
+            1,
+            108,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:GameOptions",
+          "style": "0x50020001",
+          "exstyle": "0x0",
+          "template_offset": 116,
+          "file_offset": 4441668,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1321,
+          "rect_dlu": [
+            84,
+            92,
+            148,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider1",
+          "style": "0x50000018",
+          "exstyle": "0x0",
+          "template_offset": 180,
+          "file_offset": 4441732,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            6,
+            92,
+            78,
+            13
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:GameSpeed",
+          "style": "0x50000202",
+          "exstyle": "0x0",
+          "template_offset": 260,
+          "file_offset": 4441812,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1322,
+          "rect_dlu": [
+            84,
+            114,
+            148,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider2",
+          "style": "0x50000018",
+          "exstyle": "0x0",
+          "template_offset": 320,
+          "file_offset": 4441872,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            6,
+            114,
+            78,
+            13
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:ScrollRate",
+          "style": "0x50000202",
+          "exstyle": "0x0",
+          "template_offset": 400,
+          "file_offset": 4441952,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1323,
+          "rect_dlu": [
+            84,
+            158,
+            148,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider3",
+          "style": "0x48000018",
+          "exstyle": "0x0",
+          "template_offset": 460,
+          "file_offset": 4442012,
+          "extra_bytes": 0,
+          "template_visible": false,
+          "template_disabled": true,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            6,
+            158,
+            78,
+            13
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:VisualDetails",
+          "style": "0x48000202",
+          "exstyle": "0x0",
+          "template_offset": 540,
+          "file_offset": 4442092,
+          "extra_bytes": 0,
+          "template_visible": false,
+          "template_disabled": true,
+          "class_name": "Static"
+        },
+        {
+          "id": 1651,
+          "rect_dlu": [
+            233,
+            158,
+            110,
+            13
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:HigherDetail",
+          "style": "0x48000200",
+          "exstyle": "0x0",
+          "template_offset": 608,
+          "file_offset": 4442160,
+          "extra_bytes": 0,
+          "template_visible": false,
+          "template_disabled": true,
+          "class_name": "Static"
+        },
+        {
+          "id": 1650,
+          "rect_dlu": [
+            233,
+            114,
+            110,
+            13
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Faster",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 672,
+          "file_offset": 4442224,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1649,
+          "rect_dlu": [
+            233,
+            92,
+            110,
+            13
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Faster",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 724,
+          "file_offset": 4442276,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1295,
+          "rect_dlu": [
+            84,
+            136,
+            148,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider3",
+          "style": "0x50000018",
+          "exstyle": "0x0",
+          "template_offset": 776,
+          "file_offset": 4442328,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 4294967295,
+          "rect_dlu": [
+            6,
+            136,
+            78,
+            13
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Difficulty",
+          "style": "0x50000202",
+          "exstyle": "0x0",
+          "template_offset": 856,
+          "file_offset": 4442408,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1648,
+          "rect_dlu": [
+            233,
+            136,
+            110,
+            13
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Harder",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 916,
+          "file_offset": 4442468,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1537,
+          "rect_dlu": [
+            26,
+            183,
+            124,
+            10
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:TargetLines",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 968,
+          "file_offset": 4442520,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1538,
+          "rect_dlu": [
+            150,
+            183,
+            128,
+            10
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Tooltips",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 1032,
+          "file_offset": 4442584,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1306,
+          "rect_dlu": [
+            150,
+            199,
+            128,
+            10
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:ScrollCoasting",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 1088,
+          "file_offset": 4442640,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1540,
+          "rect_dlu": [
+            26,
+            199,
+            119,
+            10
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:ShowHidden",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 1156,
+          "file_offset": 4442708,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1685,
+          "rect_dlu": [
+            10,
+            282,
+            303,
+            12
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 1216,
+          "file_offset": 4442768,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1820,
+          "rect_dlu": [
+            349,
+            38,
+            61,
+            33
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "",
+          "style": "0x50000007",
+          "exstyle": "0x20",
+          "template_offset": 1268,
+          "file_offset": 4442820,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        }
+      ],
+      "parsed_bytes": 1300,
+      "trailing_bytes": 0
+    },
+    {
+      "path": [
+        5,
+        3002,
+        1033
+      ],
+      "rva": 7568760,
+      "offset": 4439416,
+      "size": 336,
+      "codepage": 0,
+      "extended": false,
+      "style": "0x40000040",
+      "exstyle": "0x0",
+      "help_id": null,
+      "rect_dlu": [
+        0,
+        0,
+        426,
+        295
+      ],
+      "menu": "",
+      "class": "",
+      "title": "",
+      "font": {
+        "point_size": 8,
+        "face": "MS Sans Serif"
+      },
+      "items": [
+        {
+          "id": 1670,
+          "rect_dlu": [
+            318,
+            257,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:ResumeMission",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 56,
+          "file_offset": 4439472,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1314,
+          "rect_dlu": [
+            318,
+            149,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:AbortMission",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 116,
+          "file_offset": 4439532,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1313,
+          "rect_dlu": [
+            318,
+            122,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:GameControls",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 176,
+          "file_offset": 4439592,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1684,
+          "rect_dlu": [
+            318,
+            1,
+            108,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:GameOptions",
+          "style": "0x50020001",
+          "exstyle": "0x0",
+          "template_offset": 236,
+          "file_offset": 4439652,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1685,
+          "rect_dlu": [
+            10,
+            282,
+            303,
+            12
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 292,
+          "file_offset": 4439708,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        }
+      ],
+      "parsed_bytes": 336,
+      "trailing_bytes": 0
+    },
+    {
+      "path": [
+        5,
+        3003,
+        1033
+      ],
+      "rva": 7569896,
+      "offset": 4440552,
+      "size": 1000,
+      "codepage": 0,
+      "extended": false,
+      "style": "0x40000040",
+      "exstyle": "0x0",
+      "help_id": null,
+      "rect_dlu": [
+        0,
+        0,
+        426,
+        295
+      ],
+      "menu": "",
+      "class": "",
+      "title": "",
+      "font": {
+        "point_size": 8,
+        "face": "MS Sans Serif"
+      },
+      "items": [
+        {
+          "id": 1670,
+          "rect_dlu": [
+            318,
+            257,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Back",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 56,
+          "file_offset": 4440608,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1684,
+          "rect_dlu": [
+            318,
+            1,
+            108,
+            10
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:GameOptions",
+          "style": "0x50020001",
+          "exstyle": "0x0",
+          "template_offset": 100,
+          "file_offset": 4440652,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1321,
+          "rect_dlu": [
+            87,
+            87,
+            128,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider1",
+          "style": "0x50000018",
+          "exstyle": "0x0",
+          "template_offset": 156,
+          "file_offset": 4440708,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 1812,
+          "rect_dlu": [
+            4,
+            86,
+            78,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:GameSpeed",
+          "style": "0x50000202",
+          "exstyle": "0x0",
+          "template_offset": 228,
+          "file_offset": 4440780,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1322,
+          "rect_dlu": [
+            87,
+            118,
+            128,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider2",
+          "style": "0x50000018",
+          "exstyle": "0x0",
+          "template_offset": 280,
+          "file_offset": 4440832,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 1813,
+          "rect_dlu": [
+            4,
+            117,
+            78,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:ScrollRate",
+          "style": "0x50000202",
+          "exstyle": "0x0",
+          "template_offset": 352,
+          "file_offset": 4440904,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1323,
+          "rect_dlu": [
+            87,
+            149,
+            128,
+            13
+          ],
+          "class": "msctls_trackbar32",
+          "title": "Slider3",
+          "style": "0x48000018",
+          "exstyle": "0x0",
+          "template_offset": 408,
+          "file_offset": 4440960,
+          "extra_bytes": 0,
+          "template_visible": false,
+          "template_disabled": true,
+          "class_name": "msctls_trackbar32"
+        },
+        {
+          "id": 1814,
+          "rect_dlu": [
+            4,
+            148,
+            78,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:VisualDetails",
+          "style": "0x48000202",
+          "exstyle": "0x0",
+          "template_offset": 480,
+          "file_offset": 4441032,
+          "extra_bytes": 0,
+          "template_visible": false,
+          "template_disabled": true,
+          "class_name": "Static"
+        },
+        {
+          "id": 1651,
+          "rect_dlu": [
+            221,
+            148,
+            92,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:HigherDetail",
+          "style": "0x48000200",
+          "exstyle": "0x0",
+          "template_offset": 540,
+          "file_offset": 4441092,
+          "extra_bytes": 0,
+          "template_visible": false,
+          "template_disabled": true,
+          "class_name": "Static"
+        },
+        {
+          "id": 1650,
+          "rect_dlu": [
+            221,
+            117,
+            92,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Faster",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 600,
+          "file_offset": 4441152,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1649,
+          "rect_dlu": [
+            221,
+            86,
+            92,
+            15
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Faster",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 648,
+          "file_offset": 4441200,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        },
+        {
+          "id": 1537,
+          "rect_dlu": [
+            32,
+            193,
+            119,
+            10
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:TargetLines",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 696,
+          "file_offset": 4441248,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1538,
+          "rect_dlu": [
+            157,
+            193,
+            127,
+            10
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Tooltips",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 752,
+          "file_offset": 4441304,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1324,
+          "rect_dlu": [
+            318,
+            149,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Keyboard",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 804,
+          "file_offset": 4441356,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1325,
+          "rect_dlu": [
+            318,
+            122,
+            108,
+            23
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:Sound",
+          "style": "0x5000000b",
+          "exstyle": "0x0",
+          "template_offset": 856,
+          "file_offset": 4441408,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1540,
+          "rect_dlu": [
+            32,
+            211,
+            119,
+            10
+          ],
+          "class": {
+            "ordinal": 128
+          },
+          "title": "GUI:ShowHidden",
+          "style": "0x50008003",
+          "exstyle": "0x0",
+          "template_offset": 900,
+          "file_offset": 4441452,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Button"
+        },
+        {
+          "id": 1685,
+          "rect_dlu": [
+            10,
+            282,
+            303,
+            12
+          ],
+          "class": {
+            "ordinal": 130
+          },
+          "title": "GUI:Blank",
+          "style": "0x50000200",
+          "exstyle": "0x0",
+          "template_offset": 956,
+          "file_offset": 4441508,
+          "extra_bytes": 0,
+          "template_visible": true,
+          "template_disabled": false,
+          "class_name": "Static"
+        }
+      ],
+      "parsed_bytes": 1000,
+      "trailing_bytes": 0
+    }
+  ]
+}

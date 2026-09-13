@@ -1,0 +1,15 @@
+# Original rules.ini [NAPOWR]; timing uses the documented 30-frame reference clock.
+[units.power_soviet]
+name = "Tesla Reactor"
+category = "structures"
+faction = "soviet"
+cost = 600
+buildTime = 12.6
+hp = 750
+footprint = [3, 2]
+power = 150
+sight = 4
+sprite = "napowr"
+cameo = "npwricon"
+description = "Supplies 150 power to the Soviet base."
+armor = "wood"

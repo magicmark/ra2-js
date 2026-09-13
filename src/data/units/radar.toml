@@ -1,0 +1,16 @@
+# Original rules.ini [GAAIRC]; timing uses the documented 30-frame reference clock.
+[units.radar]
+name = "Airforce Command"
+category = "structures"
+faction = "allied"
+cost = 1000
+buildTime = 21.0
+hp = 600
+footprint = [3, 2]
+power = -50
+requires = ["refinery"]
+sight = 5
+sprite = "gaairc"
+cameo = "heliicon"
+description = "Unlocks advanced infantry and improves base reconnaissance."
+armor = "steel"

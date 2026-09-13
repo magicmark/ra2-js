@@ -1,0 +1,23 @@
+# Original rules.ini [FV]; integer Speed/ROF use the documented 30-frame reference clock.
+[units.ifv]
+name = "IFV"
+category = "vehicles"
+faction = "allied"
+cost = 600
+buildTime = 12.6
+hp = 200
+speed = 2.9296875
+damage = 25
+range = 6
+fireRate = 1.6666666666666667
+sight = 8
+requires = ["warfactory"]
+sprite = "fv"
+cameo = "fvicon"
+description = "Fast support vehicle armed with a long-range missile launcher."
+armor = "light"
+nativeSpeed = 10
+burst = 2
+verses = [1.0, 0.9, 0.8, 0.7, 0.35, 0.35, 0.75, 0.4, 0.2, 0.8, 1.0]
+rot = 5
+turret = true
