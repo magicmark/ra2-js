@@ -1,0 +1,225 @@
+{
+  "date": "2026-09-13",
+  "builds": {
+    "initial": "4205 index-2MgjThs6.js",
+    "final": "4206 index-C7DNzRFe.js",
+    "finalSha256": "5c7ddd155b51de93cc6433caa09cdf9c0721255a060de7111be42c9761e07cfc"
+  },
+  "staging": "265 actual selected original files seeded from /reviewer-originals.json; no installer or MIX archive seeded. Installer fetches and all workers blocked. Clock/Grizzly order staging for old/new keyboard comparison is labeled below.",
+  "speedPositions": [
+    {
+      "index": "0",
+      "speed": 0.3333333333333333,
+      "time": 13.099999999999964,
+      "focus": "game-speed"
+    },
+    {
+      "index": "1",
+      "speed": 0.4,
+      "time": 13.099999999999964,
+      "focus": "game-speed"
+    },
+    {
+      "index": "2",
+      "speed": 0.5,
+      "time": 13.099999999999964,
+      "focus": "game-speed"
+    },
+    {
+      "index": "3",
+      "speed": 0.6666666666666666,
+      "time": 13.099999999999964,
+      "focus": "game-speed"
+    },
+    {
+      "index": "4",
+      "speed": 1,
+      "time": 13.099999999999964,
+      "focus": "game-speed"
+    },
+    {
+      "index": "5",
+      "speed": 2,
+      "time": 13.099999999999964,
+      "focus": "game-speed"
+    },
+    {
+      "index": "6",
+      "speed": 4,
+      "time": 13.099999999999964,
+      "focus": "game-speed"
+    }
+  ],
+  "menu": {
+    "background": [
+      0,
+      0,
+      632,
+      568
+    ],
+    "back": [
+      653,
+      502,
+      125,
+      25
+    ],
+    "gameControls": [
+      653,
+      227,
+      125,
+      25
+    ],
+    "gameFilesExtension": [
+      653,
+      252,
+      125,
+      25
+    ],
+    "abort": [
+      653,
+      327,
+      125,
+      25
+    ],
+    "time": 13.099999999999964
+  },
+  "conflictBeforeAssign": {
+    "command": "stop",
+    "key": "K",
+    "message": "Currently assigned to Repair mode. Assign will replace it.",
+    "disabled": false
+  },
+  "afterBindingReload": {
+    "inputs": [
+      {
+        "type": "keydown",
+        "key": "Enter",
+        "id": "startup-asset-source",
+        "time": 12689.60000000149
+      },
+      {
+        "type": "click",
+        "id": "",
+        "time": 12691.5
+      },
+      {
+        "type": "keydown",
+        "key": "S",
+        "id": "game-canvas",
+        "time": 284967.1000000015
+      },
+      {
+        "type": "keydown",
+        "key": "K",
+        "id": "game-canvas",
+        "time": 292732.1000000015
+      },
+      {
+        "type": "pointerdown",
+        "id": "",
+        "action": "<button type=\"button\" class=\"native-menu-button\" data-options-action=\"reset-bindings\"><span data-native=\"Reset All\" aria-label=\"Reset All\"><canvas aria-hidden=\"true\" width=\"48\" hei",
+        "time": 370321.8999999985
+      },
+      {
+        "type": "click",
+        "id": "",
+        "action": "<button type=\"button\" class=\"native-menu-button\" data-options-action=\"reset-bindings\"><span data-native=\"Reset All\" aria-label=\"Reset All\"><canvas aria-hidden=\"true\" width=\"48\" hei",
+        "time": 370327.3999999985
+      }
+    ],
+    "network": [],
+    "workers": [],
+    "errors": [],
+    "afterReload": {
+      "ready": true,
+      "rows": [
+        {
+          "id": "stop",
+          "label": "Stop",
+          "category": "Orders",
+          "description": "Stop selected units and hold their position.",
+          "defaultKey": "S",
+          "key": "K"
+        },
+        {
+          "id": "repair",
+          "label": "Repair mode",
+          "category": "Orders",
+          "description": "Choose friendly buildings to repair.",
+          "defaultKey": "K",
+          "key": null
+        }
+      ],
+      "speed": 4,
+      "scroll": 3,
+      "network": [],
+      "workers": [],
+      "staging": "Clock frozen; original Grizzly6 selected and given a move order for native key comparison",
+      "before": "move"
+    },
+    "keyOrders": [
+      {
+        "key": "S",
+        "order": "move",
+        "mode": "select"
+      },
+      {
+        "key": "K",
+        "order": "guard",
+        "mode": "select"
+      }
+    ],
+    "reset": {
+      "rows": [
+        {
+          "id": "stop",
+          "label": "Stop",
+          "category": "Orders",
+          "description": "Stop selected units and hold their position.",
+          "defaultKey": "S",
+          "key": "S"
+        },
+        {
+          "id": "repair",
+          "label": "Repair mode",
+          "category": "Orders",
+          "description": "Choose friendly buildings to repair.",
+          "defaultKey": "K",
+          "key": "K"
+        }
+      ],
+      "hint": "Repair mode · K"
+    }
+  },
+  "correctedCheckboxes": {
+    "targetLines": false,
+    "tooltips": false,
+    "targetChecked": false,
+    "tooltipsChecked": false,
+    "preferences": "{\"targetLines\":false,\"tooltips\":false}",
+    "sliderText": "Fast",
+    "script": [
+      "http://omarky:4206/assets/index-C7DNzRFe.js"
+    ],
+    "network": [],
+    "workers": []
+  },
+  "finalReload": {
+    "targetLines": false,
+    "tooltips": false,
+    "ready": true,
+    "gate": false,
+    "network": [],
+    "workers": [],
+    "errors": [],
+    "preferences": {
+      "targetLines": false,
+      "tooltips": false
+    }
+  },
+  "limits": [
+    "4205 checkbox defect preserved in verification notes; fixed event-order regression and4206 native clicks passed.",
+    "Native tooltip dwell/mobile/new Sound visual checks deferred for urgent checkpoint; timing logic covered by automated tests.",
+    "Font-dependent control geometry is reconstructed, not certified retail pixel parity."
+  ]
+}

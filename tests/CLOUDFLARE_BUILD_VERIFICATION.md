@@ -40,3 +40,20 @@ attempts, workers or JavaScript errors without submission.
 Configuration references: [static assets](https://developers.cloudflare.com/workers/static-assets/get-started/),
 [Wrangler custom builds](https://developers.cloudflare.com/workers/wrangler/custom-builds/),
 and [Builds API](https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/).
+
+## Final gameplay deployment
+
+Commit `65c33ea` passed Workers Builds run
+`fcb1c8ec-5468-43c9-8a0a-e066877f13d1`. At 22:10:35 UTC, a real Chromium
+page on the public origin fetched all five output files with `cache: no-store`.
+Each returned HTTP 200 with its appropriate HTML, JavaScript, CSS or WASM content
+type; every SHA-256 matched [the tested 4206 build](artifacts/native-options-final-build.json).
+The deployed main bundle is `index-C7DNzRFe.js`, SHA-256
+`5c7ddd155b51de93cc6433caa09cdf9c0721255a060de7111be42c9761e07cfc`.
+The initial Python HTTP probe received 403; the successful verification above
+uses the real browser on the site, not that failed client request.
+
+A hard reload of the public page then loaded `index-C7DNzRFe.js` normally:
+visible source gate, prefilled editable CORS URL, simulation time zero, and zero
+JavaScript errors, archive attempts or workers. No installer was requested for
+this deployment smoke check.
