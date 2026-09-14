@@ -1,9 +1,12 @@
 import { definitions, isBuilding } from './definitions';
 import { createMap, MAP_SIZE } from './map';
+import { initializeOreMines, updateOreMines } from './oreMines';
+import { BUILDING_SALE_SECONDS } from './buildingSale';
 import type { NativeMap } from './maps/nativeMap';
 import { nativeGameMap } from './maps/gameMap';
 import { NATIVE_STRUCTURE_SPECS } from './maps/theater';
 import { findPath } from './pathfinding';
+import { placementCells } from './placement';
 import { turnFacing, type FacingTurn } from './facing';
 import { nativeGameSpeedIndex } from './timing';
 import { NATIVE_EFFECT_TIMINGS, NATIVE_INFANTRY_TIMINGS } from './combat';
@@ -38,6 +41,10 @@ interface UnitMemory {
   detourRetryAt?: number;
   fireIntentAt?: number;
   burstIndex?: number;
+  idleActionAt?: number;
+  idleActionRandom?: number;
+  idleActionPending?: string;
+  idleActionTurning?: boolean;
 }
 export interface GameOptions { ai?: boolean; map?: NativeMap; automaticSovietWaves?: boolean }
 
@@ -63,6 +70,7 @@ export class Game implements GameAPI {
   private effectAnimations = structuredClone(NATIVE_EFFECT_TIMINGS);
   private infantryAnimations = structuredClone(NATIVE_INFANTRY_TIMINGS);
   private combatRandomState = 0x524132;
+  private localTools = { instantBuild: false, free: false };
 
   constructor(options: GameOptions = {}) {
     this.aiEnabled = options.ai !== false;
@@ -76,6 +84,20 @@ export class Game implements GameAPI {
   get interpolation(): number { return clamp(this.accumulator / STEP, 0, 1); }
   get nativeGameSpeedIndex(): number { return nativeGameSpeedIndex(this.state.speed); }
   setGameSpeed(speed: number): void { if (Number.isFinite(speed)) this.state.speed = clamp(speed, .25, 4); }
+  configureLocalTools(options: Partial<{ instantBuild: boolean; free: boolean }>): void {
+    if (!import.meta.env.DEV) return;
+    if (typeof options.instantBuild === 'boolean') this.localTools.instantBuild = options.instantBuild;
+    if (typeof options.free === 'boolean') this.localTools.free = options.free;
+  }
+  placeLocalEnemy(type: string, x: number, y: number): Entity | undefined {
+    if (!import.meta.env.DEV || this.state.winner !== null || !Number.isFinite(x) || !Number.isFinite(y)) return;
+    const def = this.defs[type], tx = Math.floor(x), ty = Math.floor(y);
+    if (!def || isBuilding(def) || def.mapOnly || !this.isPassable(tx, ty) || this.mobileOccupies(tx, ty, -1)) return;
+    const entity = this.spawn(type, 1, tx + .5, ty + .5);
+    entity.order = 'guard';
+    this.updateVision();
+    return entity;
+  }
   setAnimationDefinitions(effects: Record<string, AnimationDefinition>, infantry: Record<string, InfantryAnimationDefinition>): void {
     const valid = (definition: AnimationDefinition, allowEmpty = false) => definition && Number.isInteger(definition.frames) && definition.frames >= (allowEmpty ? 0 : 1)
       && Number.isInteger(definition.ticksPerFrame) && definition.ticksPerFrame >= (allowEmpty ? 0 : 1);
@@ -84,7 +106,7 @@ export class Game implements GameAPI {
       if (!definition || !Number.isInteger(definition.fireFrame) || definition.fireFrame < 0 || !definition.sequences
         || Object.values(definition.sequences).some(sequence => !valid(sequence, true))) throw new Error(`Invalid original infantry timing: ${name}`);
     }
-    this.effectAnimations = structuredClone(Object.fromEntries(Object.entries(effects).map(([name, definition]) => [name.toUpperCase(), definition])));
+    this.effectAnimations = structuredClone({ ...NATIVE_EFFECT_TIMINGS, ...Object.fromEntries(Object.entries(effects).map(([name, definition]) => [name.toUpperCase(), definition])) });
     this.infantryAnimations = structuredClone(Object.fromEntries(Object.entries(infantry).map(([name, definition]) => [name.toLowerCase(), definition])));
   }
 
@@ -112,6 +134,7 @@ export class Game implements GameAPI {
       time: 0, paused: false, speed, winner: null, effects: [], events: [],
       fog: new Uint8Array(terrain.width * terrain.height), explored: new Uint8Array(terrain.width * terrain.height),
     };
+    this.state.oreMines = initializeOreMines(this.state);
     this.vision = [this.state.fog, new Uint8Array(terrain.width * terrain.height)];
     if (this.nativeMap) {
       for (const [sideId, waypoint] of [[0, 0], [1, 3]]) {
@@ -171,7 +194,7 @@ export class Game implements GameAPI {
     if (def.mapOnly) return { ok: false, reason: 'Capture this neutral structure with an Engineer' };
     if (this.state.winner !== null || side.defeated) return { ok: false, reason: 'Battle has ended' };
     if (def.faction !== 'both' && def.faction !== side.faction) return { ok: false, reason: 'Unavailable to this faction' };
-    const owned = this.state.entities.filter(e => e.side === sideId && e.hp > 0);
+    const owned = this.state.entities.filter(e => e.side === sideId && e.hp > 0 && !e.selling);
     const missing = def.requires.find(id => !owned.some(e => e.type === id));
     if (missing) return { ok: false, reason: `Requires ${this.defs[missing].name}` };
     if (!owned.some(e => this.defs[e.type].producer?.includes(def.category)))
@@ -213,32 +236,8 @@ export class Game implements GameAPI {
   }
 
   canPlace(type: string, x: number, y: number, sideId = 0): boolean {
-    const def = this.defs[type];
-    if (!def || !isBuilding(def) || !this.state.sides[sideId] || !Number.isInteger(x) || !Number.isInteger(y)) return false;
-    const [w, h] = def.footprint;
-    if (x < 0 || y < 0 || x + w > this.state.width || y + h > this.state.height) return false;
-    for (let ty = y; ty < y + h; ty++) {
-      for (let tx = x; tx < x + w; tx++) {
-        const tile = this.state.tiles[ty * this.state.width + tx];
-        if (tile.terrain === 'water' || tile.terrain === 'rock' || tile.ore > 0) return false;
-        if (sideId === 0 && !this.state.explored[ty * this.state.width + tx]) return false;
-      }
-    }
-    let nearBase = false;
-    for (const e of this.state.entities) {
-      if (e.hp <= 0) continue;
-      const entityDef = this.defs[e.type];
-      if (isBuilding(entityDef)) {
-        const [ew, eh] = entityDef.footprint;
-        if (x < e.x + ew && x + w > e.x && y < e.y + eh && y + h > e.y) return false;
-        if (e.side === sideId) {
-          const dx = Math.max(e.x - (x + w), x - (e.x + ew), 0);
-          const dy = Math.max(e.y - (y + h), y - (e.y + eh), 0);
-          if (Math.hypot(dx, dy) <= 4.5) nearBase = true;
-        }
-      } else if (e.x > x - 0.3 && e.x < x + w + 0.3 && e.y > y - 0.3 && e.y < y + h + 0.3) return false;
-    }
-    return nearBase;
+    const cells = placementCells(this.state, this.defs, type, x, y, sideId);
+    return cells.length > 0 && cells.every(cell => cell.valid);
   }
 
   place(type: string, x: number, y: number, sideId = 0): boolean {
@@ -262,8 +261,9 @@ export class Game implements GameAPI {
   select(ids: number[], additive = false): void {
     const wanted = new Set(ids);
     for (const entity of this.state.entities) {
-      if (entity.side !== 0 || entity.hp <= 0) { entity.selected = false; continue; }
+      if (entity.side !== 0 || entity.hp <= 0 || entity.selling) { entity.selected = false; continue; }
       entity.selected = wanted.has(entity.id) || (additive && entity.selected);
+      if (entity.selected) this.cancelInfantryIdle(entity);
     }
     if (this.state.entities.some(entity => entity.selected)) this.commandFeedbackTicks = 25;
   }
@@ -295,13 +295,14 @@ export class Game implements GameAPI {
 
   orderAttack(ids: number[], targetId: number, force = false): void {
     if (this.state.winner !== null) return;
-    const target = this.state.entities.find(e => e.id === targetId && e.hp > 0 && (force || e.side !== 0));
+    const target = this.state.entities.find(e => e.id === targetId && e.hp > 0 && !e.selling);
     if (!target || !this.visibleTo(target, 0)) return;
     const units = this.commandable(ids, 0).filter(e => e.type !== 'george');
     for (const entity of units) {
       const def = this.defs[entity.type];
       if ((!def.damage && entity.type !== 'engineer') || entity.id === targetId) continue;
-      if (entity.type === 'engineer' && !isBuilding(this.defs[target.type])) continue;
+      if (entity.type === 'engineer' && (!isBuilding(this.defs[target.type]) || target.side === entity.side && target.hp >= target.maxHp)) continue;
+      if (target.side === entity.side && !force && entity.type !== 'engineer') continue;
       entity.order = 'attack';
       entity.targetId = targetId;
       entity.path = [];
@@ -402,11 +403,14 @@ export class Game implements GameAPI {
   }
 
   sell(id: number): boolean {
-    const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0);
+    const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0 && !e.selling);
     if (!entity || !isBuilding(this.defs[entity.type]) || this.state.winner !== null) return false;
     if (this.defs[entity.type].mapOnly) return false;
     this.state.sides[0].money += Math.floor(this.defs[entity.type].cost * 0.5 * (entity.hp / entity.maxHp));
-    this.removeEntity(entity, false);
+    entity.selling = { startedAt: this.state.time, duration: BUILDING_SALE_SECONDS };
+    entity.selected = false; entity.targetId = null; entity.rally = undefined;
+    this.repairs.delete(entity.id);
+    for (const other of this.state.entities) if (other.targetId === entity.id) other.targetId = null;
     this.notify(`${this.defs[entity.type].name} sold`, 'info');
     this.updatePower();
     this.rebuildBlocked();
@@ -415,11 +419,17 @@ export class Game implements GameAPI {
     return true;
   }
 
+  canRepair(id: number): boolean {
+    const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0 && !e.selling);
+    return !!entity && isBuilding(this.defs[entity.type]) && this.state.winner === null
+      && (this.repairs.has(id) || (entity.hp < entity.maxHp && (this.state.sides[0].money >= 1 || (import.meta.env.DEV && this.localTools.free))));
+  }
+
   repair(id: number): boolean {
-    const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0);
+    const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0 && !e.selling);
     if (!entity || !isBuilding(this.defs[entity.type]) || this.state.winner !== null) return false;
     if (this.repairs.has(id)) { this.repairs.delete(id); this.notify('Repair canceled', 'info'); return true; }
-    if (entity.hp >= entity.maxHp || this.state.sides[0].money < 1) return false;
+    if (!this.canRepair(id)) return false;
     this.repairs.add(id);
     this.notify(`Repairing ${this.defs[entity.type].name}`, 'info');
     return true;
@@ -427,6 +437,7 @@ export class Game implements GameAPI {
 
   private step(dt: number): void {
     this.state.time += dt;
+    updateOreMines(this.state, this.defs);
     this.commandFeedbackTicks = Math.max(0, this.commandFeedbackTicks - 1);
     this.visionTimer -= dt;
     this.aiTimer -= dt;
@@ -438,6 +449,7 @@ export class Game implements GameAPI {
     // Entity removals are deferred so combat during a frame has stable iteration.
     for (const entity of [...this.state.entities]) {
       if (entity.hp <= 0) continue;
+      if (entity.selling) continue;
       entity.previous = { x: entity.x, y: entity.y };
       entity.previousFacing = entity.facing;
       entity.previousTurretFacing = entity.turretFacing ?? entity.facing;
@@ -446,6 +458,7 @@ export class Game implements GameAPI {
         entity.harvestTimer += dt;
         if (entity.harvestTimer >= 100 / 30) { entity.harvestTimer -= 100 / 30; this.state.sides[entity.side].money += 20; }
       }
+      entity.harvesting = false;
       entity.anim += dt;
       entity.cooldown = Math.max(0, entity.cooldown - dt - 1e-10);
       if (entity.type === 'george') {
@@ -474,12 +487,15 @@ export class Game implements GameAPI {
       if (def.damage > 0 || entity.type === 'engineer') this.tickCombat(entity, dt);
       if (!isBuilding(def)) this.moveEntity(entity, dt);
       this.updateFacing(entity);
+      this.updateInfantryIdle(entity);
     }
     const destroyed = this.state.entities.filter(e => e.hp <= 0);
     for (const entity of destroyed) this.removeEntity(entity, true);
+    const sold = this.state.entities.filter(e => e.selling && this.state.time - e.selling.startedAt + 1e-9 >= e.selling.duration);
+    for (const entity of sold) this.removeEntity(entity, false);
     this.updateInspections(dt);
-    if (destroyed.length) { this.rebuildBlocked(); this.updatePower(); }
-    if (this.visionTimer <= 0 || destroyed.length) { this.visionTimer = 0.25; this.updateVision(); }
+    if (destroyed.length || sold.length) { this.rebuildBlocked(); this.updatePower(); }
+    if (this.visionTimer <= 0 || destroyed.length || sold.length) { this.visionTimer = 0.25; this.updateVision(); }
     this.checkVictory();
   }
 
@@ -492,20 +508,22 @@ export class Game implements GameAPI {
         // New custom training depends on its living tech building throughout the
         // queue. A destroyed/sold shop holds paid progress until the shop is rebuilt.
         const missing = !item.ready && (CUSTOM_UNIT_IDS as readonly string[]).includes(item.type)
-          ? this.defs[item.type].requires.find(required => !this.state.entities.some(e => e.side === side.id && e.hp > 0 && e.type === required)) : undefined;
+          ? this.defs[item.type].requires.find(required => !this.state.entities.some(e => e.side === side.id && e.hp > 0 && !e.selling && e.type === required)) : undefined;
         item.blockedPrerequisite = missing ? `Requires ${this.defs[missing].name}` : undefined;
         if (item.paused || item.ready || item.blockedPrerequisite) continue;
-        const producer = this.state.entities.find(e => e.side === side.id && e.hp > 0 && this.defs[e.type].producer?.includes(category));
+        const producer = this.state.entities.find(e => e.side === side.id && e.hp > 0 && !e.selling && this.defs[e.type].producer?.includes(category));
         if (!producer) continue;
         const def = this.defs[item.type];
         const productionRate = lowPower ? clamp(side.power / Math.max(1, side.powerUsed), .5, .8) : 1;
-        const requestedProgress = Math.min(1 - item.progress, dt / def.buildTime * productionRate);
-        const requestedCost = requestedProgress * def.cost;
+        const instant = import.meta.env.DEV && side.id === 0 && this.localTools.instantBuild;
+        const free = import.meta.env.DEV && side.id === 0 && this.localTools.free;
+        const requestedProgress = Math.min(1 - item.progress, instant ? 1 : dt / def.buildTime * productionRate);
+        const requestedCost = free ? 0 : requestedProgress * def.cost;
         const payment = Math.min(Math.max(0, side.money), requestedCost);
         side.money = Math.max(0, side.money - payment);
         item.spent += payment;
         item.blockedFunds = payment + 1e-8 < requestedCost;
-        item.progress = Math.min(1, item.progress + (def.cost > 0 ? payment / def.cost : requestedProgress));
+        item.progress = Math.min(1, item.progress + (def.cost > 0 && !free ? payment / def.cost : requestedProgress));
         if (item.progress < 1 - 1e-8) continue;
         item.progress = 1;
         if (isBuilding(def)) {
@@ -559,7 +577,7 @@ export class Game implements GameAPI {
     if (memory.repairTimer < .48) return;
     memory.repairTimer -= .48;
     const hp = Math.min(entity.maxHp - entity.hp, 8);
-    const price = hp / entity.maxHp * def.cost * .15;
+    const price = import.meta.env.DEV && entity.side === 0 && this.localTools.free ? 0 : hp / entity.maxHp * def.cost * .15;
     if (hp <= 0) { this.repairs.delete(entity.id); return; }
     if (side.money < price) return;
     side.money -= price;
@@ -569,7 +587,7 @@ export class Game implements GameAPI {
   private updatePower(): void {
     for (const side of this.state.sides) { side.power = 0; side.powerUsed = 0; }
     for (const entity of this.state.entities) {
-      if (entity.hp <= 0) continue;
+      if (entity.hp <= 0 || entity.selling) continue;
       const power = this.defs[entity.type].power, side = this.state.sides[entity.side];
       if (!side) continue;
       if (power > 0) side.power += power;
@@ -629,12 +647,15 @@ export class Game implements GameAPI {
       return;
     }
     const dx = next.x - entity.x, dy = next.y - entity.y, d = Math.hypot(dx, dy);
-    if (memory.turningBeforeMove && d > 1e-6) {
-      memory.heading = Math.atan2(dy, dx);
-      const delta = memory.heading - entity.facing;
-      // Retail fresh vehicle orders turn the stationary hull before translating.
-      // A bend on an existing route continues moving while its hull turns.
-      if (Math.abs(Math.atan2(Math.sin(delta), Math.cos(delta))) > Math.PI * 2 / 65536) return;
+    if ((def.category === 'vehicles' && def.rot || memory.turningBeforeMove) && d > 1e-6) {
+      const heading = Math.atan2(dy, dx), delta = heading - entity.facing;
+      if (Math.abs(Math.atan2(Math.sin(delta), Math.cos(delta))) > Math.PI * 2 / 65536) {
+        // A cell boundary can consume part of a frame before reaching a bend.
+        // Finish that translation first; the next logic frame starts the turn.
+        if (!entity.previous || distance(entity, entity.previous) <= 1e-6) memory.heading = heading;
+        return;
+      }
+      memory.heading = heading;
       memory.turningBeforeMove = false;
     }
     const travel = def.speed * dt;
@@ -729,7 +750,7 @@ export class Game implements GameAPI {
 
   private tickHarvester(entity: Entity, dt: number): void {
     const def = this.defs[entity.type], memory = this.memory(entity), capacity = def.capacity ?? 700;
-    const refineries = this.state.entities.filter(e => e.side === entity.side && e.hp > 0 && (e.type === 'refinery' || e.type === 'refinery_soviet'));
+    const refineries = this.state.entities.filter(e => e.side === entity.side && e.hp > 0 && !e.selling && (e.type === 'refinery' || e.type === 'refinery_soviet'));
     if (!refineries.length) { entity.path = []; memory.oreTarget = undefined; return; }
     if (entity.cargo >= capacity) entity.order = 'return';
     if (entity.order === 'return') {
@@ -770,6 +791,7 @@ export class Game implements GameAPI {
     }
     if (!memory.oreTarget) return;
     if (distance(entity, memory.oreTarget) <= 0.75) {
+      entity.harvesting = true;
       entity.path = [];
       entity.harvestTimer += dt;
       if (entity.harvestTimer >= 0.3) {
@@ -838,7 +860,7 @@ export class Game implements GameAPI {
       }
       return;
     }
-    let target = entity.targetId === null ? undefined : this.state.entities.find(other => other.id === entity.targetId && other.hp > 0 && (memory.forceFire || other.side !== entity.side));
+    let target = entity.targetId === null ? undefined : this.state.entities.find(other => other.id === entity.targetId && other.hp > 0 && !other.selling && (memory.forceFire || other.side !== entity.side || entity.type === 'engineer' && isBuilding(this.defs[other.type]) && other.hp < other.maxHp));
     // Straight move orders are obeyed; attack-move is the explicit engage option.
     if (entity.order === 'move' && !memory.attackMove) return;
     if (!target && entity.targetId !== null) {
@@ -854,7 +876,7 @@ export class Game implements GameAPI {
     }
     if (!target && entity.type !== 'engineer' && memory.idleTimer <= 0) {
       memory.idleTimer = 0.35;
-      const candidates = this.state.entities.filter(other => other.side >= 0 && other.side !== entity.side && other.hp > 0 && this.visibleTo(other, entity.side) && this.distanceToEntity(entity, other) <= (isBuilding(def) || def.harvester || entity.deployed || memory.holdPosition ? range : def.sight));
+      const candidates = this.state.entities.filter(other => other.side >= 0 && other.side !== entity.side && other.hp > 0 && !other.selling && this.visibleTo(other, entity.side) && this.distanceToEntity(entity, other) <= (isBuilding(def) || def.harvester || entity.deployed || memory.holdPosition ? range : def.sight));
       candidates.sort((a, b) => this.distanceToEntity(entity, a) - this.distanceToEntity(entity, b));
       target = candidates[0];
       entity.targetId = target?.id ?? null;
@@ -867,14 +889,15 @@ export class Game implements GameAPI {
     const d = this.distanceToEntity(this.center(entity), target);
     if (d > range) this.cancelFireIntent(entity, memory);
     if (entity.type === 'engineer' && isBuilding(this.defs[target.type]) && d <= 0.9) {
+      const repairing = target.side === entity.side;
       if (target.type === 'tech_oil' && target.side === -1) this.state.sides[entity.side].money += 1000;
       target.side = entity.side;
       target.selected = false;
-      target.hp = Math.max(target.hp, target.maxHp * 0.3);
+      target.hp = repairing ? target.maxHp : Math.max(target.hp, target.maxHp * 0.3);
       target.targetId = null;
       entity.hp = 0;
       this.removeEntity(entity, false);
-      this.notify(`${this.defs[target.type].name} captured`, entity.side === 0 ? 'success' : 'warning');
+      this.notify(`${this.defs[target.type].name} ${repairing ? 'repaired' : 'captured'}`, entity.side === 0 ? 'success' : 'warning');
       this.updatePower();
       return;
     }
@@ -918,6 +941,52 @@ export class Game implements GameAPI {
     if (this.state.time + 1e-9 < startedAt + definition.frames * this.animationInterval(definition) * STEP) return;
     entity.infantryAnimation = undefined;
     if (sequence === 'Deploy' || sequence === 'Undeploy') entity.deployment = undefined;
+  }
+  private cancelInfantryIdle(entity: Entity): void {
+    const memory = this.memory(entity);
+    if (entity.infantryAnimation?.sequence.startsWith('Idle')) entity.infantryAnimation = undefined;
+    if (memory.idleActionTurning) { memory.heading = entity.facing; memory.bodyTurn = undefined; }
+    memory.idleActionPending = undefined; memory.idleActionTurning = false; memory.idleActionAt = undefined;
+  }
+  private updateInfantryIdle(entity: Entity): void {
+    const def = this.defs[entity.type];
+    // Airborne rocketeers already use Hover; their grounded Idle frames do not
+    // belong in flight. Custom infantry has its own authored animation system.
+    if (def.category !== 'infantry' || entity.type === 'rocketeer' || entity.type === 'george') return;
+    const memory = this.memory(entity), definition = this.infantryAnimations[def.sprite];
+    const eligible = !entity.selected && entity.hp > 0 && !entity.deployed && !entity.deployment && !entity.path.length && entity.targetId === null
+      && !memory.groundTarget && memory.fireIntentAt === undefined && ['idle', 'guard'].includes(entity.order)
+      && (!entity.previous || distance(entity, entity.previous) < 1e-7);
+    if (!eligible) { this.cancelInfantryIdle(entity); return; }
+    if (!definition?.sequences.Idle1 || !definition.sequences.Idle2) return;
+    const frequency = definition.idleFrequency ?? .15;
+    if (!Number.isFinite(frequency) || frequency <= 0) return;
+    const random = (min: number, max: number) => {
+      let state = memory.idleActionRandom ?? (Math.imul(entity.id, 0x9e3779b9) >>> 0);
+      state ^= state << 13; state ^= state >>> 17; state ^= state << 5;
+      memory.idleActionRandom = state >>> 0;
+      return min + memory.idleActionRandom % (max - min + 1);
+    };
+    // Retail game.exe 0x503e00: random delay [450,1800] * the rules.ini
+    // IdleActionFrequency. A separate stream keeps cosmetic idles out of combat.
+    if (memory.idleActionAt === undefined) memory.idleActionAt = this.state.time + random(Math.floor(frequency * 450), Math.floor(frequency * 1800)) * STEP;
+    if (entity.infantryAnimation) return;
+    if (memory.idleActionPending) {
+      const delta = (memory.heading ?? entity.facing) - entity.facing;
+      if (Math.abs(Math.atan2(Math.sin(delta), Math.cos(delta))) > Math.PI * 2 / 65536) return;
+      entity.infantryAnimation = { sequence: memory.idleActionPending, startedAt: this.state.time };
+      memory.idleActionPending = undefined; memory.idleActionTurning = false;
+      return;
+    }
+    if (this.state.time + 1e-9 < memory.idleActionAt) return;
+    memory.idleActionAt = this.state.time + random(Math.floor(frequency * 450), Math.floor(frequency * 1800)) * STEP;
+    // Original switch at 0x5040f8: 3/11 each Idle1/Idle2, 4/11 turn, 1/11 wait.
+    const choice = random(0, 10), sequence = [3, 4, 5].includes(choice) ? 'Idle1' : [1, 2, 7].includes(choice) ? 'Idle2' : undefined;
+    if (sequence) {
+      const facing = definition.sequences[sequence].facing;
+      memory.heading = facing === undefined ? entity.facing : (5 - facing) * Math.PI / 4;
+      memory.idleActionPending = sequence; memory.idleActionTurning = true;
+    } else if (choice !== 0) { memory.heading = random(0, 7) * Math.PI / 4; memory.idleActionTurning = true; }
   }
   private randomCombatValue(): number {
     // Stable match randomness for reproducible simulation; this does not claim
@@ -1147,7 +1216,7 @@ export class Game implements GameAPI {
   private updateVision(): void {
     for (const fog of this.vision) fog.fill(0);
     for (const entity of this.state.entities) {
-      if (entity.hp <= 0) continue;
+      if (entity.hp <= 0 || entity.selling) continue;
       const radius = this.defs[entity.type].sight, center = this.center(entity), fog = this.vision[entity.side];
       if (!fog) continue;
       for (let y = Math.max(0, Math.floor(center.y - radius)); y <= Math.min(this.state.height - 1, Math.ceil(center.y + radius)); y++)
@@ -1158,8 +1227,18 @@ export class Game implements GameAPI {
   }
 
   private visibleTo(entity: Entity, side: number): boolean {
-    const c = this.center(entity), index = Math.floor(c.y) * this.state.width + Math.floor(c.x);
-    return !!this.vision[side]?.[index];
+    const fog = this.vision[side], def = this.defs[entity.type];
+    if (!fog) return false;
+    // The renderer reveals a structure as soon as any foundation cell is seen.
+    // Center-only checks rejected visible buildings at an engineer's sight edge.
+    if (isBuilding(def)) {
+      for (let y = Math.floor(entity.y); y < entity.y + def.footprint[1]; y++)
+        for (let x = Math.floor(entity.x); x < entity.x + def.footprint[0]; x++)
+          if (x >= 0 && y >= 0 && x < this.state.width && y < this.state.height && fog[y * this.state.width + x]) return true;
+      return false;
+    }
+    const c = this.center(entity);
+    return !!fog[Math.floor(c.y) * this.state.width + Math.floor(c.x)];
   }
 
   private checkVictory(): void {
@@ -1176,7 +1255,7 @@ export class Game implements GameAPI {
 
   private commandable(ids: number[], side: number): Entity[] {
     const set = new Set(ids);
-    return this.state.entities.filter(e => e.side === side && e.hp > 0 && set.has(e.id));
+    return this.state.entities.filter(e => e.side === side && e.hp > 0 && !e.selling && set.has(e.id));
   }
   private center(entity: Entity): Vec2 {
     const def = this.defs[entity.type];

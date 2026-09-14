@@ -43,7 +43,8 @@ describe('native maps in the actual simulation', () => {
     expect(state.width).toBe(192); expect(state.height).toBe(192);
     expect(state.sides).toHaveLength(2); // Existing skirmish mode; native files retain six slots.
     expect(state.nativeMap?.starts).toHaveLength(6);
-    expect(state.tiles.filter(tile => tile.ore > 0)).toHaveLength(468);
+    expect(state.tiles.filter(tile => tile.ore > 0)).toHaveLength((49 + 29 - 2) * 6); // Each field reserves its central drill cell.
+    expect(state.oreMines).toHaveLength(12);
     expect(state.entities.filter(e => e.side === -1)).toHaveLength(9);
     for (const [side, waypoint] of [[0, 0], [1, 3]]) {
       const start = map.starts.find(s => s.index === waypoint)!, yard = state.entities.find(e => e.side === side && e.type === 'conyard')!;

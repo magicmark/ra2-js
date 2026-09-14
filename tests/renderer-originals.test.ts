@@ -48,22 +48,28 @@ describe('original artwork renderer', () => {
 
   it('reports missing original terrain instead of drawing a substitute', () => {
     const view = renderer();
-    view.assets = { ready: true, getSprite: () => null, getInfantryFrame: () => null, getInfantrySequence: () => null, getAnimationSprite: () => null, getAnimationOpacity: () => 1, getVehicleSprite: () => null, getBuildingSprite: () => null, getTerrain: () => null, getOverlay: () => null } satisfies SpriteProvider;
+    view.assets = { ready: true, getBuildingHeight: () => 2, getHarvestSprite: () => null, getPipSprite: () => null, getSprite: () => null, getInfantryFrame: () => null, getInfantrySequence: () => null, getAnimationSprite: () => null, getAnimationOpacity: () => 1, getVehicleSprite: () => null, getBuildingSprite: () => null, getTerrain: () => null, getOverlay: () => null } satisfies SpriteProvider;
     expect(() => view.render()).toThrow('Missing original artwork: grass terrain');
   });
 
-  it('covers hidden rows with contiguous geometry while leaving explored cells open', () => {
-    const view = renderer();
-    Object.assign(view.game.state, { width: 5, height: 3, explored: new Uint8Array(15) });
-    view.game.state.explored[7] = 1;
-    vi.spyOn(view as any, 'shroudEdge').mockReturnValue({});
-    const feather = vi.spyOn(view as any, 'drawArt').mockImplementation(() => {});
-    (view as any).drawShroud(0, 4, 0, 2);
-    // Five rows including the outside guard; the middle row splits around x=2.
-    expect(view.gl.polygon).toHaveBeenCalledTimes(6);
-    const row = [[-1,1],[2,1],[2,2],[-1,2]].map(([x,y]) => { const p=view.camera.screen(x,y); return [p.x,p.y]; });
-    expect(view.gl.polygon).toHaveBeenCalledWith(row, [0,0,0,1]);
-    expect(feather).toHaveBeenCalledOnce();
+  it('keeps explored ore and scenery bright after sight leaves while hiding enemy units', () => {
+    const view = renderer(), art = { source: {}, width: 60, height: 30 } as any;
+    view.camera.center(.5, .5);
+    view.game.state.tiles[0] = { terrain: 'rock', variant: 0, ore: 50 };
+    view.game.state.explored[0] = 1;
+    view.assets = { ready: true, getOverlay: () => art } as any;
+    vi.spyOn(view as any, 'drawTerrain').mockImplementation(() => {});
+    vi.spyOn(view as any, 'drawShroud').mockImplementation(() => {});
+    const draw = vi.spyOn(view as any, 'drawArt').mockImplementation(() => {});
+    view.render();
+    expect(draw).toHaveBeenCalledTimes(2);
+    expect(draw.mock.calls.every(call => call.length === 3)).toBe(true);
+    expect(view.gl.polygon).not.toHaveBeenCalled();
+    view.game.defs.gi = { footprint: [1, 1] } as any;
+    const enemy = { type: 'gi', side: 1, x: 0, y: 0 } as any;
+    expect(view.visible(enemy)).toBe(false);
+    view.game.state.fog[0] = 1;
+    expect(view.visible(enemy)).toBe(true);
   });
 
   it('interpolates unit presentation without changing simulation positions or moving buildings', () => {

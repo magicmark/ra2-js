@@ -6,6 +6,7 @@ vi.mock('../src/game/Game', () => ({ Game: class { constructor() { return harnes
 vi.mock('../src/game/Audio', () => ({ GameAudio: class {} }));
 vi.mock('../src/render/Renderer', () => ({ Renderer: class { constructor() { return harness.renderer; } } }));
 vi.mock('../src/input/Controls', () => ({ detectMobile: () => false, Controls: class { tick() {} cancelPlacement() {} setMode() {} } }));
+vi.mock('../src/admin/LocalTools', () => ({ installLocalTools: vi.fn() }));
 vi.mock('../src/assets/AssetManager', () => ({
   DEFAULT_ASSET_URL: 'https://example.test/game.exe', assetSourceUrl: (url: string) => url,
   HUD_ASSET_FRAMES: { side1: [0], radar: [32], tab00: [1, 2] },
@@ -132,16 +133,21 @@ describe('startup authorization', () => {
     clock.mockRestore();
   });
 
-  it('does not expose a fallback bypass and rejects incomplete original interface art', async () => {
+  it('continues with older original artwork missing optional font, cursors and interface chrome without a bypass or reimport', async () => {
     harness.assets.getUIAsset.mockReturnValue(null);
+    harness.assets.getFont = () => null; harness.assets.getCursors = () => null;
     await import('../src/main'); await settle();
     expect(harness.actions).not.toHaveProperty('onFallback');
     expect(harness.actions).not.toHaveProperty('onAssetUpdate');
-    expect(harness.status.error).toContain('Missing original interface artwork');
+    expect(harness.status.error).toBeUndefined();
+    expect(harness.status.ready).toBe(true);
     expect(harness.assets.download).not.toHaveBeenCalled();
     harness.frame(performance.now() + 100);
     expect(harness.loading).toBe(true);
     expect(harness.game.state.time).toBe(0);
+    harness.actions.onAssetRetry('https://example.test/game.exe'); await settle();
+    expect(harness.loading).toBe(false); expect(harness.assets.importFiles).not.toHaveBeenCalled();
+    harness.frame(performance.now() + 200); expect(harness.game.state.time).toBeGreaterThan(0);
   });
 
   it('keeps the gate closed if rendering originals fails before the first battle frame', async () => {

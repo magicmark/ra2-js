@@ -1,4 +1,6 @@
 import type { Tile } from './types';
+import type { NativeCell } from './maps/nativeMap';
+import { applyLandTransitions, applyShorelines, SHORE_CORNERS } from './maps/terrainTopology';
 
 export const MAP_SIZE = 64;
 
@@ -48,5 +50,17 @@ export function createMap(width = MAP_SIZE, height = MAP_SIZE): Tile[] {
     for (let y = top; y <= bottom; y++)
       for (let x = left; x <= right; x++) if (x < width && y < height)
         tiles[y * width + x] = { terrain: 'grass', ore: 0, variant: Math.floor(noise(x, y) * 6) };
+  // The default battlefield uses the same original coast/LAT topology as the
+  // catalog. Preserve semantic terrain for pathfinding and diagnostic edits.
+  const cells: NativeCell[] = tiles.map((tile, i) => ({ x: i % width, y: Math.floor(i / width), tileIndex: tile.terrain === 'sand' ? 493 : tile.terrain === 'rock' ? 131 : tile.terrain === 'road' ? 293 + Math.floor(tile.variant / 16) : 0, subTile: tile.terrain === 'road' ? tile.variant % 16 : 0, height: 0, iceGrowth: 0, overlay: 255, overlayData: 0 }));
+  const water = new Set(cells.filter(c => tiles[c.y * width + c.x].terrain === 'water').map(c => c.x + 512 * c.y));
+  applyShorelines(cells, water, 493);
+  applyLandTransitions(cells, 'TEMPERATE');
+  for (const cell of cells) {
+    const tile = tiles[cell.y * width + cell.x], shore = SHORE_CORNERS[cell.tileIndex];
+    if (shore !== undefined || cell.tileIndex === 314) { tile.terrain = cell.tileIndex === 314 || shore & 1 << cell.subTile ? 'water' : 'sand'; tile.ore = 0; }
+    else if (tile.terrain === 'water') tile.terrain = 'sand';
+    tile.nativeArt = { tileIndex: cell.tileIndex, subTile: cell.subTile, terrain: tile.terrain };
+  }
   return tiles;
 }

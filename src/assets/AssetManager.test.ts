@@ -33,9 +33,11 @@ function files(): AssetFile[] {
   const vpl = new Uint8Array(784 + 8192); new DataView(vpl.buffer).setUint32(8, 32, true);
   for (let i = 784; i < vpl.length; i++) vpl[i] = (i - 784) % 256;
   return [
-    ...['unittem.pal', 'cameo.pal', 'isotem.pal', 'temperat.pal', 'anim.pal', 'side0/sidebar.pal', 'side0/uibkgd.pal'].map(name => ({ name, bytes: palette.slice() })),
+    ...['palette.pal', 'unittem.pal', 'cameo.pal', 'isotem.pal', 'temperat.pal', 'anim.pal', 'side0/sidebar.pal', 'side0/uibkgd.pal'].map(name => ({ name, bytes: palette.slice() })),
     { name: 'art.ini', bytes: new TextEncoder().encode('[gi]\nCameo=giicon\nSequence=GISequence\nFireUp=2\n[GISequence]\nReady=0,1,1\nWalk=8,6,6\nFireUp=164,6,6\nDeploy=300,15,0\nDeployed=292,1,1\nDeployedFire=315,6,6\nUndeploy=276,2,2') },
     { name: 'game.fnt', bytes: testFont() },
+    { name: 'oregath.shp', bytes: testShape(120) }, { name: 'pips.shp', bytes: testShape(19) }, { name: 'pips2.shp', bytes: testShape(18) },
+    { name: 'tibtre01.tem', bytes: testShape(60) }, { name: 'tree20.tem', bytes: testShape(2) }, { name: 'plat02.tem', bytes: tile.slice() }, { name: 'gapowrmk.shp', bytes: testShape(20) },
     { name: 'mouse.shp', bytes: testCursorShape() }, { name: 'mousepal.pal', bytes: palette.slice() },
     { name: 'voxels.vpl', bytes: vpl }, { name: 'gi.shp', bytes: testShape(756) }, { name: 'giicon.shp', bytes: testShape() },
     ...Array.from({ length: 6 }, (_, i) => ({ name: `tib${String(i + 1).padStart(2, '0')}.tem`, bytes: testShape(9) })),
@@ -117,15 +119,45 @@ describe('durable extracted asset cache', () => {
     expect(open).not.toHaveBeenCalled(); expect(download).not.toHaveBeenCalled(); expect(makeWorker).not.toHaveBeenCalled();
   });
 
-  it('explains an artwork-only legacy upgrade while preserving its selected files and waiting for explicit input', async () => {
-    const legacy = { version: 5, files: files().filter(file => file.name !== 'game.fnt'), saved: 1 };
+  it('starts the 126-file artwork-only legacy cache without fonts or new optional art, archives, or a download', async () => {
+    const optional = new Set(['game.fnt', 'mouse.shp', 'mousepal.pal', 'palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'anim.pal', 'side0/uibkgd.pal',
+      ...DIALOG_SHAPE_FILES.map(name => `side0/${name}.shp`), ...Object.values(DIALOG_PCX_FILES), ...EFFECT_ANIMATIONS.map(name => `${name}.shp`)]);
+    const savedFiles = files().filter(file => !optional.has(file.name));
+    while (savedFiles.length < 126) savedFiles.push({ name: `legacy-extra-${savedFiles.length}.bin`, bytes: new Uint8Array([1]) });
+    const legacy = { version: 5, files: savedFiles, saved: 1 };
     await entry('/asset-source', legacy);
-    const manager = new AssetManager(); expect(await manager.initialize()).toBe('invalid');
-    expect(manager.status.phase).toBe('awaiting-source'); expect(manager.ready).toBe(false);
-    expect(manager.status.message).toContain(`${legacy.files.length} saved artwork files are still here`);
-    expect(manager.status.message).toContain('artwork-only cache'); expect(manager.status.message).toContain('game.fnt');
+    const manager = new AssetManager(); expect(await manager.initialize()).toBe('ready');
+    expect(legacy.files).toHaveLength(126);
+    expect(manager.status.phase).toBe('ready'); expect(manager.ready).toBe(true);
+    expect(manager.getFont()).toBeNull(); expect(manager.getCursors()).toBeNull();
+    expect(manager.getPipSprite('veteran')).toBeNull(); expect(manager.getHarvestSprite(0, 0)).toBeNull();
+    expect(manager.getDialogAsset('options-small')).toBeNull(); expect(manager.getAnimationSprite('piffpiff', 0)).toBeNull();
+    expect(manager.getSprite('gi')).not.toBeNull(); expect(manager.getTerrain('grass')).not.toBeNull();
     expectEntry(await entry(), legacy);
     expect(download).not.toHaveBeenCalled(); expect(makeWorker).not.toHaveBeenCalled();
+  });
+
+  it('keeps usable legacy artwork when a cached-archive enhancement fails', async () => {
+    await new AssetManager().download();
+    const saved = (await entry())!, legacy = { ...saved, files: saved.files.filter(file => !['game.fnt', 'oregath.shp'].includes(file.name)) };
+    await entry('/asset-source', legacy); workerFailure = 'Transient extraction failure';
+    download.mockClear(); makeWorker.mockClear();
+    const reopened = new AssetManager(); expect(await reopened.initialize()).toBe('ready');
+    expect(reopened.ready).toBe(true); expect(reopened.getFont()).toBeNull(); expect(reopened.getSprite('gi')).not.toBeNull();
+    expectEntry(await entry(), legacy); expect(download).not.toHaveBeenCalled(); expect(makeWorker).toHaveBeenCalledOnce();
+  });
+
+  it('does not repeatedly extract an archive that lacks the same optional artwork, but retries a newly missing enhancement', async () => {
+    extracted = files().filter(file => file.name !== 'oregath.shp');
+    await new AssetManager().download();
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(makeWorker).toHaveBeenCalledOnce(); expect(download).toHaveBeenCalledOnce();
+    const saved = (await entry())!;
+    await entry('/asset-source', { ...saved, files: saved.files.filter(file => file.name !== 'game.fnt') });
+    const repaired = new AssetManager(); expect(await repaired.initialize()).toBe('ready'); expect(repaired.getFont()).not.toBeNull();
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(makeWorker).toHaveBeenCalledTimes(2); expect(download).toHaveBeenCalledOnce();
   });
 
   it('resumes a completed download after a transient worker failure and a fresh page without another request', async () => {
@@ -155,8 +187,8 @@ describe('durable extracted asset cache', () => {
     await new AssetManager().download();
     const saved = (await entry())!, mix = await assetCache<SavedArchive>(archiveStageKey('/asset-source', 'mix'));
     const installer = await assetCache<SavedArchive>(archiveStageKey('/asset-source', 'installer'));
-    await entry('/asset-source', { ...saved, files: saved.files.filter(file => file.name !== 'game.fnt') });
-    extracted = failure === 'missing' ? files().filter(file => file.name !== 'game.fnt')
+    await entry('/asset-source', { ...saved, files: saved.files.filter(file => file.name !== 'gi.shp') });
+    extracted = failure === 'missing' ? files().filter(file => file.name !== 'gi.shp')
       : files().map(file => file.name === 'gi.shp' ? { ...file, bytes: new Uint8Array(3) } : file);
     const failed = new AssetManager();
     expect(await failed.initialize()).toBe('invalid'); expect(failed.ready).toBe(false);

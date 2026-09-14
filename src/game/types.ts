@@ -1,4 +1,5 @@
 import type { NativeMap } from './maps/nativeMap';
+import type { OreMine } from './oreMines';
 
 export type Category = 'structures' | 'defenses' | 'infantry' | 'vehicles';
 export type Vec2 = { x: number; y: number };
@@ -18,11 +19,12 @@ export interface Entity extends Vec2 {
   id: number; type: string; side: number; hp: number; maxHp: number;
   facing: number; path: Vec2[]; targetId: number | null; cooldown: number;
   order: 'idle' | 'move' | 'attack' | 'harvest' | 'return' | 'guard';
-  cargo: number; harvestTimer: number; selected: boolean;
+  cargo: number; harvestTimer: number; harvesting?: boolean; selected: boolean;
   rally?: Vec2; anim: number; deployed?: boolean;
   firedAt?: number;
   infantryAnimation?: { sequence: string; startedAt: number };
   deployment?: { startedAt: number; target: boolean };
+  selling?: { startedAt: number; duration: number };
   previous?: Vec2; previousFacing?: number; turretFacing?: number; previousTurretFacing?: number;
   nativeType?: string;
   rank?: 0 | 1 | 2;
@@ -31,15 +33,15 @@ export interface Entity extends Vec2 {
   inspectedBy?: number;
   inspectionProgress?: number;
 }
-export interface Tile { terrain: 'grass' | 'water' | 'rock' | 'road' | 'sand'; ore: number; variant: number }
+export interface Tile { terrain: 'grass' | 'water' | 'rock' | 'road' | 'sand'; ore: number; variant: number; nativeArt?: { tileIndex: number; subTile: number; terrain: Tile['terrain'] } }
 export interface BuildItem { id: number; type: string; progress: number; spent: number; ready: boolean; paused: boolean; blockedFunds?: boolean; blockedPrerequisite?: string }
 export interface Side {
   id: number; name: string; faction: 'allied' | 'soviet'; color: string;
   money: number; power: number; powerUsed: number; kills: number;
   queues: Record<Category, BuildItem[]>; defeated: boolean;
 }
-export interface AnimationDefinition { frames: number; ticksPerFrame: number; normalized?: boolean }
-export interface InfantryAnimationDefinition { sequences: Record<string, AnimationDefinition>; fireFrame: number }
+export interface AnimationDefinition { frames: number; ticksPerFrame: number; normalized?: boolean; facing?: number }
+export interface InfantryAnimationDefinition { sequences: Record<string, AnimationDefinition>; fireFrame: number; idleFrequency?: number }
 export interface Effect extends Vec2 {
   kind: 'shot' | 'impact' | 'explosion' | 'order' | 'smoke'; life: number; maxLife: number; to?: Vec2; side?: number;
   animation?: string; animationTicksPerFrame?: number; startedAt?: number; damage?: number;
@@ -47,6 +49,7 @@ export interface Effect extends Vec2 {
 export interface GameEvent { id: number; text: string; kind: 'info' | 'warning' | 'success'; time: number }
 export interface GameState {
   nativeMap?: NativeMap;
+  oreMines?: OreMine[];
   width: number; height: number; tiles: Tile[]; entities: Entity[]; sides: Side[];
   time: number; paused: boolean; speed: number; winner: number | null;
   effects: Effect[]; events: GameEvent[]; fog: Uint8Array; explored: Uint8Array;
@@ -79,6 +82,7 @@ export interface GameAPI {
   stop(ids: number[]): void;
   sell(id: number): boolean;
   repair(id: number): boolean;
+  canRepair(id: number): boolean;
   restart(): void;
   loadNativeMap(map: NativeMap): void;
 }

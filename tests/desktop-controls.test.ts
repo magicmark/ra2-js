@@ -34,6 +34,18 @@ function fixture() {
 }
 
 describe('retail mouse commands', () => {
+  it('sends selected engineers into friendly damaged buildings from the battlefield and radar', () => {
+    const { game, controls, click, pointer, pick } = fixture();
+    const engineer = game.state.entities.find(e => e.type === 'gi')!, target = game.state.entities.find(e => e.type === 'power')!;
+    engineer.type = 'engineer'; target.hp--; game.select([engineer.id]);
+    const attack = vi.spyOn(game, 'orderAttack');
+    pick(target); pointer('pointermove', 300, 300); expect(controls.cursor).toBe('repair');
+    click(target); expect(attack).toHaveBeenLastCalledWith([engineer.id], target.id); expect(engineer.selected).toBe(true);
+    controls.radarOrder(target.x + .5, target.y + .5); expect(attack).toHaveBeenCalledTimes(2);
+    target.hp = target.maxHp; click(target); expect(target.selected).toBe(true); expect(attack).toHaveBeenCalledTimes(2);
+    target.side = 1; game.select([engineer.id]); pick(target); pointer('pointermove', 300, 300);
+    expect(controls.cursor).toBe('enter'); click(target); expect(attack).toHaveBeenLastCalledWith([engineer.id], target.id);
+  });
   it('centers an unselected radar click and sends selected radar commands with planning and modifiers', () => {
     const { game, controls, camera } = fixture(); controls.radarOrder(25, 30); expect(camera.world(camera.width / 2, camera.height / 2)).toEqual({ x: 25, y: 30 });
     const tank = game.state.entities.find(e => e.type === 'grizzly')!; game.select([tank.id]); const move = vi.spyOn(game, 'orderMove');

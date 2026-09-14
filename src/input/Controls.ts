@@ -72,6 +72,10 @@ export class Controls {
   private local(e: PointerEvent | WheelEvent): Vec2 { const r = this.renderer.canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
   private ownUnits(): Entity[] { return this.game.state.entities.filter(e => e.side === 0 && e.hp > 0 && !isBuilding(this.game.defs[e.type])); }
   private ids(): number[] { return this.game.state.entities.filter(e => e.selected && e.side === 0).map(e => e.id); }
+  private engineerRepair(target: Entity | null | undefined): boolean {
+    return !!target && !target.selling && target.side === 0 && target.hp < target.maxHp && isBuilding(this.game.defs[target.type])
+      && this.game.state.entities.some(entity => entity.selected && entity.side === 0 && entity.hp > 0 && entity.type === 'engineer');
+  }
   private select(ids: number[], additive = false): void {
     const previous = this.ids();
     this.game.select(ids, additive);
@@ -151,7 +155,7 @@ export class Controls {
     }
     if (this.mode === 'pan' || this.pointers.size && (this.button === 1 || this.button === 2)) return 'pan';
     const target = this.renderer.pick(p.x, p.y), own = target?.side === 0;
-    if (this.mode === 'repair') return own && target && isBuilding(this.game.defs[target.type]) && target.hp < target.maxHp && this.game.state.sides[0].money >= 1 ? 'repair' : 'repair-blocked';
+    if (this.mode === 'repair') return target && this.game.canRepair(target.id) ? 'repair' : 'repair-blocked';
     if (this.mode === 'sell') return own && target && isBuilding(this.game.defs[target.type]) ? 'sell' : 'sell-blocked';
     const point = camera.world(p.x, p.y), x = Math.floor(point.x), y = Math.floor(point.y), state = this.game.state;
     const inside = x >= 0 && y >= 0 && x < state.width && y < state.height;
@@ -169,6 +173,8 @@ export class Controls {
     if (mobile && ctrl && shift || this.mode === 'attack') return clear ? 'attackmove' : 'attackmove-blocked';
     if (armed && ctrl) return 'attack';
     if (mobile && alt) return clear ? 'move' : 'move-blocked';
+    if (this.engineerRepair(target)) return 'repair';
+    if (target && !own && isBuilding(this.game.defs[target.type]) && selected.some(entity => entity.type === 'engineer')) return 'enter';
     if (target && own) return target.selected && this.game.defs[target.type].deployedRange !== undefined ? 'deploy' : 'select';
     if (target && selected.length && !own && armed) return 'attack';
     return mobile ? clear ? 'move' : 'move-blocked' : 'default';
@@ -213,7 +219,7 @@ export class Controls {
     else if (modifiers.ctrl) { if (target) this.game.orderAttack(ids, target.id, true); else this.game.orderForceFire(ids, x, y); }
     else if (modifiers.alt) this.game.orderForceMove(ids, x, y);
     else if (this.planning) { this.queueWaypoint(ids, { x, y }); return; }
-    else if (target && target.side !== 0) this.game.orderAttack(ids, target.id);
+    else if (target && (target.side !== 0 || this.engineerRepair(target))) this.game.orderAttack(ids, target.id);
     else if (x >= 0 && y >= 0 && x < s.width && y < s.height && s.tiles[Math.floor(y) * s.width + Math.floor(x)].ore > 0 && s.entities.some(entity => ids.includes(entity.id) && this.game.defs[entity.type].harvester)) this.game.orderHarvest(ids, x, y);
     else this.game.orderMove(ids, x, y, this.mode === 'attack');
     this.callbacks.ack(); if (this.mode === 'attack') this.setMode('select');
@@ -295,6 +301,7 @@ export class Controls {
       if (entity) this.game.orderAttack(ids, entity.id, true);
       else this.game.orderForceFire(ids, w.x, w.y);
     } else if (ids.length && e.altKey) this.game.orderForceMove(ids, w.x, w.y);
+    else if (entity && this.engineerRepair(entity)) this.game.orderAttack(ids, entity.id);
     else if (entity && entity.side === 0 && this.mode !== 'attack') {
       const now = performance.now(), double = this.lastClick.id === entity.id && now - this.lastClick.time < 320;
       if (e.shiftKey && entity.selected) this.select(ids.filter(id => id !== entity.id));

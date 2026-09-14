@@ -1,10 +1,10 @@
 import { nativeNormalizedInterval, NATIVE_LOGIC_HZ, NATIVE_SPEED_INDEX, type ArtSections, type NativeAnimationDefinition } from './NativeAnimation';
 
-export interface InfantrySequence extends NativeAnimationDefinition { start: number; stride: number }
+export interface InfantrySequence extends NativeAnimationDefinition { start: number; stride: number; facing?: number }
 export interface InfantryArt { sequences: Record<string, InfantrySequence>; fireFrame: number }
 const intervals: Record<string, number> = {
   Ready: 1, Walk: 3, FireUp: 1, Deploy: 1, Deployed: 1, DeployedFire: 1, Undeploy: 1,
-  Fly: 1, Hover: 2, FireFly: 1,
+  Fly: 1, Hover: 2, FireFly: 1, Idle1: 3, Idle2: 3,
 };
 const loops = new Set(['Ready', 'Walk', 'Deployed', 'Fly', 'Hover']);
 
@@ -16,12 +16,14 @@ export function infantryArt(art: ArtSections, sprite: string): InfantryArt {
     : sprite === 'gi' ? ['Ready', 'Walk', 'FireUp', 'Deploy', 'Deployed', 'DeployedFire', 'Undeploy']
     : sprite === 'engineer' ? ['Ready', 'Walk'] : ['Ready', 'Walk', 'FireUp'];
   const sequences: Record<string, InfantrySequence> = {};
-  for (const name of names) {
-    const values = sequence[name.toLowerCase()]?.split(',').slice(0, 3).map(Number);
+  for (const name of [...names, ...['Idle1', 'Idle2'].filter(name => sequence[name.toLowerCase()])]) {
+    const fields = sequence[name.toLowerCase()]?.split(',').map(value => value.trim());
+    const values = fields?.slice(0, 3).map(Number);
     if (!values || values.length !== 3 || values.some(value => !Number.isInteger(value) || value < 0) || values[1] < 1) {
       throw new Error(`Invalid original infantry sequence: ${sprite}.${name}`);
     }
-    sequences[name] = { start: values[0], frames: values[1], stride: values[2], ticksPerFrame: intervals[name], normalized: name === 'Hover' };
+    const facing = fields?.[3] ? ['N', 'NW', 'W', 'SW', 'S', 'SE', 'E', 'NE'].indexOf(fields[3].toUpperCase()) : -1;
+    sequences[name] = { start: values[0], frames: values[1], stride: values[2], ticksPerFrame: intervals[name], normalized: name === 'Hover' || name.startsWith('Idle'), ...(facing >= 0 ? { facing } : {}) };
   }
   const fireFrame = Number(type?.fireup ?? 0);
   if (!Number.isInteger(fireFrame) || fireFrame < 0) throw new Error(`Invalid original infantry FireUp: ${sprite}`);

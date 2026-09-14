@@ -9,7 +9,7 @@ import { assetCache, archiveStageKey, type SavedArchive } from './AssetDownload'
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
-const CURRENT_SELECTED_FILE_COUNT = 661;
+const CURRENT_SELECTED_FILE_COUNT = 748;
 // Fixed historical membership: deriving the old cache by subtracting only the
 // previous update's additions accidentally left hundreds of future map files in it.
 const PRE_NATIVE_NAMES = new Set(readFileSync(new URL('./fixtures/selected-art-pre-native.txt', import.meta.url), 'utf8')
@@ -129,11 +129,11 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('strict loader with actual original 
     const saved: SavedArchive = { version: 1, id: 'existing-original-MIX-generation', saved: 123, files: [{ name: 'ra2.mix', blob: new Blob(['actual-original-selection-worker-fixture']) }] };
     await assetCache(key, saved);
     worker.mockClear(); network.mockClear();
-    // All old gameplay art is still usable: only requesting native maps
-    // should require reselection of the new theaters and neutral buildings.
+    // Old gameplay remains usable. A saved MIX can now supply optional
+    // indicators/idle art and the new theaters in one local selection.
     if (nativeMaps) {
       expect(await new AssetManager().initialize()).toBe('ready');
-      expect(worker).not.toHaveBeenCalled();
+      expect(worker).toHaveBeenCalledOnce();
     }
     const recovered = new AssetManager(); expect(await recovered.initialize({ nativeMaps })).toBe('ready');
     expect(network).not.toHaveBeenCalled(); expect(worker).toHaveBeenCalledOnce();

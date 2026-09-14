@@ -7,6 +7,7 @@ import { NativeCursors } from './NativeCursor';
 import { decodePcx } from './Pcx';
 import { nativeAnimationInterval, nativeAnimationFrame, NATIVE_SPEED_INDEX, readArtSections, type NativeAnimationDefinition } from './NativeAnimation';
 import { infantryArt, infantrySequenceFrame, type InfantryArt } from './InfantryAnimation';
+import { buildingSaleFrame } from '../game/buildingSale';
 import type { CustomArt } from './CustomArt';
 import { nativeTileSpec, nativeOverlaySpec, NATIVE_THEATERS, type NativeTheater } from '../game/maps/theater';
 
@@ -35,7 +36,7 @@ export const DIALOG_ASSET_FRAMES: Readonly<Record<string, readonly number[]>> = 
   'options-button': [0, 1, 2], 'options-checkbox-on': [0], 'options-checkbox-off': [0], 'options-slider-thumb': [0],
 };
 interface AssetFile { name: string; bytes: Uint8Array }
-interface CacheEntry { version: number; files: AssetFile[]; saved: number }
+interface CacheEntry { version: number; files: AssetFile[]; saved: number; unavailableEnhancements?: string[] }
 interface PreparedVoxel { x: number; y: number; z: number; color: number; nx: number; ny: number; nz: number; turret: boolean }
 const CACHE_VERSION = 8;
 // Multiplayer DarkBlue, DarkRed, Gold and DarkGreen from rules.ini [Colors].
@@ -116,6 +117,7 @@ export class AssetManager {
   private infantry = new Map<string, InfantryArt>();
   private buildingAnchors = new Map<string, number>();
   private nativePalettes = new Map<string, Uint8Array>();
+  private pipPalette: Uint8Array = new Uint8Array(768);
   private unitPalette: Uint8Array = new Uint8Array(768);
   private cameoPalette: Uint8Array = new Uint8Array(768);
   private terrainPalette: Uint8Array = new Uint8Array(768);
@@ -125,6 +127,8 @@ export class AssetManager {
   private voxelLighting: Uint8Array = new Uint8Array();
   private preparingRun?: number;
   private requiresNativeMaps = false;
+  private enhancementUpgrade = false;
+  private missingEnhancements: string[] = [];
   private progress?: AssetOptions['onProgress'];
   private controller?: AbortController;
   private worker?: Worker;
@@ -181,6 +185,9 @@ export class AssetManager {
       try {
         await this.prepare(entry.files, run);
         if (run !== this.run) return 'cancelled';
+        // An archive selection already tried these optional files. Retrying
+        // the same absent artwork on every page load cannot improve the cache.
+        if (entry.unavailableEnhancements?.join('\n') === this.missingEnhancements.join('\n')) this.enhancementUpgrade = false;
         this.storageWarning('selected-read', null);
         this.report('ready', 'Original game assets loaded from this browser.', 1, 1);
         return 'ready';
@@ -200,10 +207,14 @@ export class AssetManager {
       const restored = downloading && forceRefresh ? 'missing' : await this.restore(run, source);
       if (run !== this.run) return 'cancelled';
       this.cacheResult = restored;
-      if (restored === 'ready') return restored;
+      if (restored === 'ready' && !this.enhancementUpgrade) return restored;
+      const usableFiles = restored === 'ready' ? [...this.files].map(([name, bytes]) => ({ name, bytes })) : undefined;
       const archives = this.archiveDownload(run, source);
       let local = forceRefresh ? undefined : await archives.resume();
       if (run !== this.run) return 'cancelled';
+      // New artwork is an enhancement to a playable saved selection. Upgrade
+      // from local archives when available; never require a new download.
+      if (usableFiles && !local) return 'ready';
       if (local) for (let attempt = 0; attempt < 2; attempt++) {
         this.report('cache', `Preparing saved game files from ${local.stage.startsWith('mix') ? 'extracted MIX archives' : 'the completed installer'}…`);
         try {
@@ -220,6 +231,14 @@ export class AssetManager {
             }
           }
           this.cacheProblem = error instanceof Error ? error.message : String(error);
+          if (usableFiles) {
+            this.diagnostics.push(`Optional artwork upgrade deferred: ${this.cacheProblem}`);
+            await this.prepare(usableFiles, run);
+            if (run !== this.run) return 'cancelled';
+            this.cacheResult = 'ready';
+            this.report('ready', 'Original game assets loaded from this browser.', 1, 1);
+            return 'ready';
+          }
           this.cacheResult = 'invalid';
           if (downloading) throw error;
           this.report('awaiting-source', `${this.cacheProblem} Press Enter to retry using saved work, or choose another source.`);
@@ -317,7 +336,7 @@ export class AssetManager {
       if (run !== this.run) return;
       // Save the small ready-to-render cache even if large archive writes hit quota.
       try {
-        await assetCache(assetCacheKey(this.source), { version: CACHE_VERSION, files: selected, saved: Date.now() }, () => run === this.run);
+        await assetCache(assetCacheKey(this.source), { version: CACHE_VERSION, files: selected, saved: Date.now(), ...(this.missingEnhancements.length ? { unavailableEnhancements: this.missingEnhancements } : {}) }, () => run === this.run);
         if (run === this.run) { this.storageWarning('selected-read', null); this.storageWarning('selected', null); }
       } catch (error) { if (run === this.run) this.storageWarning('selected', `Assets loaded; browser storage could not save selected artwork: ${error instanceof Error ? error.message : String(error)}`); }
       await archives.complete(input);
@@ -361,6 +380,9 @@ export class AssetManager {
       this.report('decode', 'Decoding original sprites, palettes and vehicle voxels…');
       if (run !== this.run) throw new Error('Asset loading cancelled');
       this.files = new Map(files.map(f => [f.name.toLowerCase(), f.bytes])); this.shapes.clear(); this.sprites.clear(); this.voxelModels.clear(); this.buildingAnchors.clear(); this.nativePalettes.clear();
+      this.missingEnhancements = ['game.fnt', 'mouse.shp', 'mousepal.pal', 'palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'anim.pal', 'tibtre01.tem', 'tree20.tem', 'plat02.tem', 'gapowrmk.shp',
+        'side0/sidebar.pal', 'side0/uibkgd.pal', ...DIALOG_SHAPE_FILES.map(name => `side0/${name}.shp`), ...Object.values(DIALOG_PCX_FILES),
+        ...EFFECT_ANIMATIONS.map(name => `${name}.shp`)].filter(name => !this.files.has(name));
       // Native maps extend the selected-art cache. A missing theater causes
       // restore() to reuse the saved MIX stage and select the new files locally.
       // It never invalidates or downloads the original archive on page load.
@@ -373,20 +395,25 @@ export class AssetManager {
       this.buildingLoops = buildingLoops(this.requiredFile('art.ini'));
       this.effectDefinitions = {};
       this.infantry.clear();
-      this.font = this.decodeFile('game.fnt', bytes => new NativeFont(bytes));
-      this.cursors = this.decodeFile('mouse.shp', bytes => new NativeCursors(bytes, this.requiredFile('mousepal.pal')));
+      this.font = this.files.has('game.fnt') ? this.decodeFile('game.fnt', bytes => new NativeFont(bytes)) : null;
+      this.cursors = this.files.has('mouse.shp') && this.files.has('mousepal.pal') ? this.decodeFile('mouse.shp', bytes => new NativeCursors(bytes, this.requiredFile('mousepal.pal'))) : null;
+      this.pipPalette = this.files.has('palette.pal') ? this.decodeFile('palette.pal', decodePalette) : new Uint8Array();
+      if (this.shape('pips')) this.validateShape('pips', [0, 1, 2, 4, 13, 14]);
+      if (this.shape('pips2')) this.validateShape('pips2', [0, 2]);
+      if (this.shape('oregath')) this.validateShape('oregath', Array.from({ length: 120 }, (_, i) => i));
       this.unitPalette = this.decodeFile('unittem.pal', decodePalette);
       this.cameoPalette = this.decodeFile('cameo.pal', decodePalette);
       this.terrainPalette = this.decodeFile('isotem.pal', decodePalette);
       this.orePalette = this.decodeFile('temperat.pal', decodePalette);
-      this.animationPalette = this.decodeFile('anim.pal', decodePalette);
-      this.sidebarPalettes = [this.decodeFile('side0/sidebar.pal', decodePalette)];
+      this.animationPalette = this.files.has('anim.pal') ? this.decodeFile('anim.pal', decodePalette) : new Uint8Array();
+      this.sidebarPalettes = this.files.has('side0/sidebar.pal') ? [this.decodeFile('side0/sidebar.pal', decodePalette)] : [];
       this.voxelLighting = this.decodeFile('voxels.vpl', bytes => {
         const levels = decodeVpl(bytes);
         if (levels.length !== 32 * 256) throw new Error('All 32 material lighting levels are required');
         return levels;
       });
       for (const [name, frames] of Object.entries(HUD_ASSET_FRAMES)) {
+        if (!this.files.has(`side0/${name}.shp`)) { this.missingEnhancements.push(`side0/${name}.shp`); continue; }
         this.decodeFile(`side0/${name}.shp`, bytes => {
           const shape = new ShpFile(bytes);
           for (const frame of frames) {
@@ -395,26 +422,30 @@ export class AssetManager {
           }
         });
       }
-      this.decodeFile('side0/uibkgd.pal', decodePalette);
-      for (const name of DIALOG_SHAPE_FILES) this.decodeFile(`side0/${name}.shp`, bytes => {
+      if (this.files.has('side0/uibkgd.pal')) this.decodeFile('side0/uibkgd.pal', decodePalette);
+      for (const name of DIALOG_SHAPE_FILES) if (this.files.has(`side0/${name}.shp`)) this.decodeFile(`side0/${name}.shp`, bytes => {
         const shape = new ShpFile(bytes);
         for (let frame = 0; frame < (name === 'sidebttn' ? 3 : 1); frame++) {
           if (frame >= shape.frameCount) throw new Error(`Missing frame ${frame}`);
           shape.frame(frame);
         }
       });
-      for (const name of Object.values(DIALOG_PCX_FILES)) this.decodeFile(name, decodePcx);
+      for (const name of Object.values(DIALOG_PCX_FILES)) if (this.files.has(name)) this.decodeFile(name, decodePcx);
       for (const name of EFFECT_ANIMATIONS) {
+        if (!this.shape(name) || !this.animationPalette.length) continue;
         const shape = this.validateShape(name), art = this.art.get(name), ticksPerFrame = nativeAnimationInterval(Number(art?.rate ?? 900));
         if (!ticksPerFrame) throw new Error(`Invalid original animation Rate: ${name}`);
         this.effectDefinitions[name] = { frames: shape.frameCount, ticksPerFrame, normalized: /^(yes|true|1)$/i.test(art?.normalized ?? '') };
       }
       // The renderer can select each authored road segment and terrain edge.
       // Mask 15 is never selected for an edge: at least one neighbor differs.
-      for (const name of REQUIRED_TERRAIN) this.decodeFile(`${name}.tem`, bytes => {
+      for (const name of REQUIRED_TERRAIN) {
+        if (!this.files.has(`${name}.tem`) && !['clear01', 'water01'].includes(name)) { this.missingEnhancements.push(`${name}.tem`); continue; }
+        this.decodeFile(`${name}.tem`, bytes => {
         const frames = name === 'proad03' ? 9 : name.startsWith('proad') ? 3 : /^(glat|clat)/.test(name) ? 1 : 6;
         for (let frame = 0; frame < frames; frame++) decodeTmp(bytes, frame);
-      });
+        });
+      }
       if (this.files.has('water02.tem')) this.decodeFile('water02.tem', bytes => { for (let frame = 0; frame < 6; frame++) decodeTmp(bytes, frame); });
       let done = 0;
       for (const [name, spec] of Object.entries(CATALOG)) {
@@ -443,6 +474,7 @@ export class AssetManager {
       }
       for (let variant = 0; variant < 6; variant++) { this.validateShape(`tib${String(variant + 1).padStart(2, '0')}`, [8]); if (!this.getOverlay('ore', variant)) throw new Error(`Cannot render original ore variant ${variant}`); }
       for (let variant = 0; variant < 8; variant++) { this.validateShape(`tree${String(variant + 1).padStart(2, '0')}`); if (!this.getOverlay('tree', variant)) throw new Error(`Cannot render original tree variant ${variant}`); }
+      this.missingEnhancements.sort(); this.enhancementUpgrade = this.missingEnhancements.length > 0;
       validated = true;
     } finally {
       if (this.preparingRun === run) this.preparingRun = undefined;
@@ -461,12 +493,10 @@ export class AssetManager {
     if (!shape) { shape = new ShpFile(this.files.get(candidate)!); this.shapes.set(candidate, shape); }
     return shape;
   }
-  getFont(): NativeFont {
-    if (!this.font) throw new Error('Missing original asset: game.fnt');
+  getFont(): NativeFont | null {
     return this.font;
   }
-  getCursors(): NativeCursors {
-    if (!this.cursors) throw new Error('Missing original asset: mouse.shp');
+  getCursors(): NativeCursors | null {
     return this.cursors;
   }
   getCameo(name: string): Sprite | null {
@@ -482,7 +512,7 @@ export class AssetManager {
     if (!this.ready && this.preparingRun !== this.run) return null;
     const filename = name.toLowerCase().replace(/\.shp$/, ''), key = `ui:${side}:${filename}:${frame}`;
     if (this.sprites.has(key)) return this.sprites.get(key)!;
-    const bytes = this.files.get(`side${side}/${filename}.shp`); if (!bytes) return null;
+    const bytes = this.files.get(`side${side}/${filename}.shp`); if (!bytes || !this.files.has(`side${side}/sidebar.pal`)) return null;
     const shape = new ShpFile(bytes), image = shape.frame(frame), result = canvas(shape.width, shape.height);
     result.getContext('2d')!.drawImage(paint(image, this.sidebarPalettes[side] ?? this.decodeFile(`side${side}/sidebar.pal`, decodePalette)), image.x, image.y);
     const value = sprite(result, 0, 0); this.sprites.set(key, value); return value;
@@ -496,10 +526,12 @@ export class AssetManager {
     const pcxFile = DIALOG_PCX_FILES[name as keyof typeof DIALOG_PCX_FILES];
     let result: HTMLCanvasElement;
     if (pcxFile) {
+      if (!this.files.has(pcxFile)) return null;
       const image = this.decodeFile(pcxFile, decodePcx);
       result = paint({ ...image, x: 0, y: 0, canvasWidth: image.width, canvasHeight: image.height }, image.palette);
     } else {
       const filename = ({ 'options-small': 'bkgdsm', 'options-medium': 'bkgdmd', 'options-large': 'bkgdlg', 'options-button': 'sidebttn' } as Record<string, string>)[name];
+      if (!this.files.has(`side${side}/${filename}.shp`) || !this.files.has(`side${side}/${name === 'options-button' ? 'sidebar' : 'uibkgd'}.pal`)) return null;
       const shape = this.decodeFile(`side${side}/${filename}.shp`, bytes => new ShpFile(bytes)), image = shape.frame(frame);
       const palette = name === 'options-button' ? this.decodeFile(`side${side}/sidebar.pal`, decodePalette) : this.decodeFile(`side${side}/uibkgd.pal`, decodePalette);
       result = canvas(shape.width, shape.height);
@@ -507,13 +539,41 @@ export class AssetManager {
     }
     const value = sprite(result, 0, 0); this.sprites.set(key, value); return value;
   }
+  /** Original OREGATH.SHP: eight facings, fifteen frames at one logic tick each.
+   * game.exe 0x700e70/0x7011d4 draws this with ANIM.PAL while harvesting. */
+  getHarvestSprite(facing: number, time: number): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    if (!this.animationPalette.length) return null;
+    const direction = ((Math.round(facing) % 8) + 8) % 8;
+    const index = direction * 15 + Math.max(0, Math.floor(time * 30 + 1e-8)) % 15;
+    const key = `harvest:${index}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const shape = this.shape('oregath'); if (!shape) return null;
+    const frame = shape.frame(index);
+    const result = sprite(paint(frame, this.animationPalette), shape.width / 2 - frame.x, shape.height / 2 - frame.y);
+    this.sprites.set(key, result); return result;
+  }
+  /** RA2 game.exe 0x6d5440 selects PIPS frames 13/14; cargo uses PIPS2 0/2.
+   * Both are drawn with PALETTE.PAL, not a side-remapped unit palette. */
+  getPipSprite(kind: 'veteran' | 'elite' | 'cargo-empty' | 'cargo-ore' | 'building-empty' | 'building-green' | 'building-yellow' | 'building-red'): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    if (!this.pipPalette.length) return null;
+    const name = kind.startsWith('cargo-') ? 'pips2' : 'pips';
+    const index = { veteran: 13, elite: 14, 'cargo-empty': 0, 'cargo-ore': 2, 'building-empty': 0, 'building-green': 1, 'building-yellow': 2, 'building-red': 4 }[kind];
+    const key = `pip:${kind}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const shape = this.shape(name); if (!shape) return null;
+    const frame = shape.frame(index), result = sprite(paint(frame, this.pipPalette), 0, 0);
+    this.sprites.set(key, result); return result;
+  }
   getAnimationDefinitions(): Record<string, NativeAnimationDefinition> {
     return Object.fromEntries(Object.entries(this.effectDefinitions).map(([name, definition]) => [name, { ...definition }]));
   }
-  getInfantryAnimationDefinitions(): Record<string, { sequences: Record<string, NativeAnimationDefinition>; fireFrame: number }> {
+  getInfantryAnimationDefinitions(): Record<string, { sequences: Record<string, NativeAnimationDefinition & { facing?: number }>; fireFrame: number; idleFrequency: number }> {
+    const idleFrequency = Number(readArtSections(this.files.get('rules.ini')).get('general')?.idleactionfrequency ?? .15);
     return Object.fromEntries([...this.infantry].map(([name, definition]) => [name, {
-      fireFrame: definition.fireFrame,
-      sequences: Object.fromEntries(Object.entries(definition.sequences).map(([action, sequence]) => [action, { frames: sequence.frames, ticksPerFrame: sequence.ticksPerFrame, normalized: sequence.normalized }])),
+      fireFrame: definition.fireFrame, idleFrequency,
+      sequences: Object.fromEntries(Object.entries(definition.sequences).map(([action, sequence]) => [action, { frames: sequence.frames, ticksPerFrame: sequence.ticksPerFrame, normalized: sequence.normalized, ...(sequence.facing === undefined ? {} : { facing: sequence.facing }) }])),
     }]));
   }
   getInfantrySequence(name: string, action: string, facing: number, ageSeconds: number, side = 0, speedIndex = NATIVE_SPEED_INDEX): Sprite | null {
@@ -604,6 +664,26 @@ export class AssetManager {
     const result = trimSprite(this.renderBuilding(shape, spec, side, 0, frames));
     this.sprites.set(key, result); return result;
   }
+  /** Sale replays the original buildup SHP backwards, including its own shadow. */
+  getBuildingSellSprite(name: string, progress: number, side = 0): Sprite | null {
+    const spec = this.spec(name);
+    if (!this.ready || !spec || spec.kind !== 'building') return this.getBuildingSprite(name, 0, side);
+    const buildup = this.art.get(spec.sprite)?.buildup?.toLowerCase() ?? spec.sprite + 'mk';
+    const shape = this.shape(buildup), base = this.shape(spec.sprite);
+    // Older artwork-only caches can retain the original standing building
+    // during its sale without blocking the game on an optional MK asset.
+    if (!shape || !base) return this.getBuildingSprite(name, 0, side);
+    const frames = shape.frameCount > 1 && shape.frameCount % 2 === 0 ? shape.frameCount / 2 : shape.frameCount;
+    const frame = buildingSaleFrame(progress, frames), key = `sell:${buildup}:${side}:${frame}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    this.getSprite(name, 0, side); // Establish the standing foundation's stable anchor.
+    const source = canvas(shape.width, shape.height), ctx = source.getContext('2d')!;
+    if (shape.frameCount === frames * 2) { const shade = shape.frame(frame + frames); ctx.drawImage(shadow(shade), shade.x, shade.y); }
+    const image = shape.frame(frame); ctx.drawImage(paint(image, this.unitPalette, side), image.x, image.y);
+    const anchorY = (this.buildingAnchors.get(spec.sprite) ?? base.height / 2) + (shape.height - base.height) / 2;
+    const result = trimSprite(sprite(source, shape.width / 2, anchorY));
+    this.sprites.set(key, result); return result;
+  }
   /** Hull and turret use independent, quantized original VXL orientations. */
   getVehicleSprite(name: string, hull: number, turret: number, side = 0): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;
@@ -648,7 +728,7 @@ export class AssetManager {
   }
   getTerrain(terrain: string, variant = 0): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;
-    const names = /^(proad|green|ruff|sandy|glat|clat)\d+$/.test(terrain) ? [terrain] : terrain === 'water' ? ['water01', 'water02'] : terrain === 'road' ? ['pave01'] : terrain === 'sand' ? ['green01', 'sand01', 'rough01'] : terrain === 'rock' ? ['ruff01', 'rough01', 'rough02'] : ['clear01'];
+    const names = /^(proad|green|ruff|sandy|glat|clat|shore|dlat|plat|water|pvclr|clear)\d+$/.test(terrain) ? [terrain] : terrain === 'water' ? ['water01', 'water02'] : terrain === 'road' ? ['pave01'] : terrain === 'sand' ? ['green01', 'sand01', 'rough01'] : terrain === 'rock' ? ['ruff01', 'rough01', 'rough02'] : ['clear01'];
     const available = names.filter(name => this.files.has(name + '.tem'));
     const name = available[terrain === 'sand' || terrain === 'rock' ? 0 : variant % available.length], key = `terrain:${name}:${variant % 16}`;
     if (this.sprites.has(key)) return this.sprites.get(key)!;
@@ -667,6 +747,9 @@ export class AssetManager {
   getNativeTerrain(theater: NativeTheater, tileIndex: number, subTile: number): Sprite | null {
     const spec = nativeTileSpec(theater, tileIndex);
     if (!this.ready || !spec) return null;
+    // Existing native-map caches predate pavement LAT selection. Keep their
+    // original pavement available while a saved archive supplies the new edges.
+    if (spec.fileName.startsWith('plat') && !this.files.has(spec.fileName)) return this.getNativeTerrain(theater, theater === 'SNOW' ? 734 : 534, 0);
     const key = `native-tile:${spec.fileName}:${subTile}`;
     if (this.sprites.has(key)) return this.sprites.get(key)!;
     const bytes = this.requiredFile(spec.fileName), data = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
@@ -700,36 +783,46 @@ export class AssetManager {
     if (!overlay && shape.frameCount > 1 && shape.frameCount % 2 === 0) {
       const shade = shape.frame(frame + shape.frameCount / 2); ctx.drawImage(shadow(shade), shade.x, shade.y);
     }
-    ctx.drawImage(paint(image, this.nativePalette(theater, overlay ? 'overlay' : 'iso')), image.x, image.y);
+    // The mechanical ore drill uses unit colors. Terrain/ISO colors turn its
+    // opaque metal pixels into cyan/yellow bands that look like a ghost.
+    ctx.drawImage(paint(image, this.nativePalette(theater, overlay ? 'overlay' : /^tibtre\d+$/i.test(name) ? 'unit' : 'iso')), image.x, image.y);
     const result = trimSprite(sprite(source, shape.width / 2, shape.height / 2 + (overlay ? 15 : 0)));
     this.sprites.set(key, result); return result;
+  }
+  getBuildingHeight(name: string): number {
+    return Number(this.art.get(this.spec(name)?.sprite ?? name.toLowerCase())?.height ?? 2);
   }
   getNativeFoundation(type: string): [number, number] {
     const art = this.art.get(type.toLowerCase()), match = /^(\d+)x(\d+)$/i.exec(art?.foundation ?? '');
     return match ? [Number(match[1]), Number(match[2])] : type.toUpperCase() === 'CAAIRP' ? [3, 3] : [2, 2];
   }
-  getNativeStructure(theater: string, type: string): Sprite | null {
+  getNativeStructure(theater: string, type: string, time = 0, side = -1, speedIndex = NATIVE_SPEED_INDEX): Sprite | null {
     if (!this.ready) return null;
     type = type.toLowerCase();
-    const key = `native-building:${theater}:${type}`;
-    if (this.sprites.has(key)) return this.sprites.get(key)!;
     const art = this.art.get(type), shape = this.nativeShape(theater, art?.image ?? type); if (!shape) return null;
+    const overlayNames = Object.entries(art ?? {}).filter(([name]) => /^(activeanim(?:two|three|four)?|idleanim\d*|bibshape)$/i.test(name)).map(([, name]) => name.toLowerCase());
+    const layers = [{ shape, frame: 0, side: -1 }, ...overlayNames.flatMap(name => {
+      const overlay = this.nativeShape(theater, this.art.get(name)?.image ?? name); if (!overlay) return [];
+      const frames = overlay.frameCount > 1 && overlay.frameCount % 2 === 0 ? overlay.frameCount / 2 : overlay.frameCount;
+      return [{ shape: overlay, frame: buildingLoopFrame(this.buildingLoops.get(name), time, frames, speedIndex), side: name.endsWith('_f') ? side : -1 }];
+    })];
+    const key = `native-building:${theater}:${type}:${side}:${layers.map(layer => layer.frame).join(',')}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
     const source = canvas(shape.width, shape.height), ctx = source.getContext('2d')!;
-    const overlayNames = Object.entries(art ?? {}).filter(([name]) => /^(activeanim(?:two|three|four)?|idleanim\d*|bibshape)$/i.test(name)).map(([, name]) => name);
-    const layers = [shape, ...overlayNames.map(name => this.nativeShape(theater, name)).filter((value): value is ShpFile => !!value)];
-    const draw = (layer: ShpFile, isShadow: boolean) => {
-      const frame = layer.frame(isShadow ? layer.frameCount / 2 : 0);
-      ctx.drawImage(isShadow ? shadow(frame) : paint(frame, this.nativePalette(theater, 'unit')), frame.x + (shape.width - layer.width) / 2, frame.y + (shape.height - layer.height) / 2);
+    const draw = (layer: typeof layers[number], isShadow: boolean) => {
+      const frame = layer.shape.frame(layer.frame + (isShadow ? layer.shape.frameCount / 2 : 0));
+      ctx.drawImage(isShadow ? shadow(frame) : paint(frame, this.nativePalette(theater, 'unit'), layer.side), frame.x + (shape.width - layer.shape.width) / 2, frame.y + (shape.height - layer.shape.height) / 2);
     };
-    for (const layer of layers) if (layer.frameCount > 1 && layer.frameCount % 2 === 0) draw(layer, true);
+    for (const layer of layers) if (layer.shape.frameCount > 1 && layer.shape.frameCount % 2 === 0) draw(layer, true);
     for (const layer of layers) draw(layer, false);
-    const pixels = ctx.getImageData(0, 0, source.width, source.height).data;
-    let bottom = source.height - 1;
-    while (bottom > 0 && !Array.from({ length: source.width }, (_, x) => pixels[(bottom * source.width + x) * 4 + 3]).some(alpha => alpha > 128)) bottom--;
-    const foundation = this.getNativeFoundation(type);
-    const result = trimSprite(sprite(source, source.width / 2, bottom + 5 - (foundation[0] + foundation[1]) * 7.5));
+    // The base shape owns the ground anchor; moving flags cannot shift it.
+    const base = shape.frame(0), foundation = this.getNativeFoundation(type);
+    let bottom = base.height - 1;
+    while (bottom > 0 && !base.pixels.subarray(bottom * base.width, (bottom + 1) * base.width).some(index => index > 1)) bottom--;
+    const result = trimSprite(sprite(source, source.width / 2, base.y + bottom + 5 - (foundation[0] + foundation[1]) * 7.5));
     this.sprites.set(key, result); return result;
   }
+
   getDecoration(name: string, frame = 0): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;
     const key = `decoration:${name}:${frame}`; if (this.sprites.has(key)) return this.sprites.get(key)!;

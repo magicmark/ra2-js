@@ -57,7 +57,7 @@ const ui=new UI(game,{
     if(!battleStarted||!assets.ready)return null;
     const entity=renderer.pick(x,y);if(!entity)return null;
     const def=game.defs[entity.type],inspection=entity.type==='george'||entity.inspectedBy!==undefined||(entity.rank??0)>0;
-    return{id:entity.id,title:inspection?`${def.name} · ${inspectionStatus(entity,game.state,game.defs)}`:def.name,description:inspection?`${def.description}\n${INSPECTION_HELP}`:def.description};
+    return{id:entity.id,title:inspection?`${def.name} · ${inspectionStatus(entity,game.state,game.defs)}`:def.name,description:inspection?`${def.description}\n${INSPECTION_HELP}`:undefined};
   },
   onRadar:(x,y,modifiers)=>controls.radarOrder(x,y,modifiers),
   getCameraView:()=>[[0,0],[renderer.camera.width,0],[renderer.camera.width,renderer.camera.height],[0,renderer.camera.height]].map(([x,y])=>renderer.camera.world(x,y)),
@@ -90,6 +90,7 @@ try{
   // Diagnostics keep actual runtime state and controls accessible for reproducible
   // browser smoke checks and mod development. No hidden game cheats are enabled.
   Object.assign(window,{__rts:{game,renderer,controls,assets,ui}});
+  if(import.meta.env.DEV)void import('./admin/LocalTools').then(({installLocalTools})=>installLocalTools(game,renderer,controls,()=>battleStarted&&assets.ready&&!ui.isModalOpen()));
   ui.setLoading(true);
   void restoreAssets();
 }catch(error){
@@ -152,13 +153,14 @@ function importAssets(files:File[]):Promise<void>{
 }
 function installCameos(){
   requireOriginals();
-  ui.setFont(assets.getFont());
-  ui.setCursors(assets.getCursors());
+  const font=assets.getFont(),cursors=assets.getCursors();
+  if(font)ui.setFont(font);
+  if(cursors)ui.setCursors(cursors);
   game.setAnimationDefinitions(assets.getAnimationDefinitions(),assets.getInfantryAnimationDefinitions());
   for(const def of Object.values(game.defs)){
     if(def.mapOnly)continue;
     const sprite=assets.getCameo(def.id);
-    if(!sprite)throw new Error(`Missing original cameo: ${def.name}. Load complete game files to continue.`);
+    if(!sprite)continue;
     const canvas=document.createElement('canvas');canvas.width=sprite.width;canvas.height=sprite.height;canvas.getContext('2d')!.drawImage(sprite.source,0,0);ui.setCameo(def.id,canvas.toDataURL());
   }
   installSidebar();
@@ -176,13 +178,13 @@ function enterBattle(){
 function installSidebar(){
   for(const [name,frames] of Object.entries(HUD_ASSET_FRAMES))for(const frame of frames){
     const sprite=assets.getUIAsset(name,frame);
-    if(!sprite)throw new Error(`Missing original interface artwork: ${name}, frame ${frame}.`);
+    if(!sprite)continue;
     const key=frame===32?'radar-online':frame===1?`${name}-active`:frame===2?`${name}-empty`:name;
     ui.setChrome(key,sprite.source.toDataURL());
   }
   for(const [name,frames] of Object.entries(DIALOG_ASSET_FRAMES))for(const frame of frames){
     const sprite=assets.getDialogAsset(name,frame);
-    if(!sprite)throw new Error(`Missing original interface artwork: ${name}, frame ${frame}.`);
+    if(!sprite)continue;
     ui.setChrome(frame?`${name}-frame${frame}`:name,sprite.source.toDataURL());
   }
 }

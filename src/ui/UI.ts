@@ -430,9 +430,11 @@ export class UI {
   }
   private nativeText(element: HTMLElement, text: string, color?: readonly number[]) {
     const signature = `${text}:${color?.join(',') ?? 'yellow'}`;
-    if (!this.font || this.nativeLabels.get(element) === signature) return;
+    if (this.nativeLabels.get(element) === signature) return;
     element.setAttribute('aria-label', text);
-    if (!text) element.replaceChildren();
+    element.classList.toggle('legacy-native-text', !this.font);
+    if (!this.font) element.textContent = text;
+    else if (!text) element.replaceChildren();
     else {
       let canvas = element.querySelector('canvas');
       if (!canvas) { canvas = document.createElement('canvas'); canvas.setAttribute('aria-hidden', 'true'); element.replaceChildren(canvas); }
@@ -496,7 +498,7 @@ export class UI {
       return rank(a.id) - rank(b.id);
     });
     this.el('category-name').textContent = CATEGORY_NAMES[this.category]; this.el('category-count').textContent = `${String(defs.length).padStart(2, '0')} AVAILABLE`;
-    this.el('build-grid').innerHTML = defs.map(def => `<button class="build-card" data-build="${escapeHTML(def.id)}" aria-label="Build ${escapeHTML(def.name)}, ${def.cost} credits"><div class="cameo"><img src="${escapeHTML(this.cameos.get(def.id)!)}" alt="${escapeHTML(def.name)}" draggable="false"/><span class="card-corner"></span><span class="card-queue"></span><span class="card-state"></span><span class="card-progress"></span></div><span class="card-requirement"></span></button>`).join('');
+    this.el('build-grid').innerHTML = defs.map(def => `<button class="build-card" data-build="${escapeHTML(def.id)}" data-tooltip="${escapeHTML(def.name)}&#10;$${def.cost}" aria-label="Build ${escapeHTML(def.name)}, ${def.cost} credits"><div class="cameo"><img src="${escapeHTML(this.cameos.get(def.id)!)}" alt="${escapeHTML(def.name)}" draggable="false"/><span class="card-corner"></span><span class="card-queue"></span><span class="card-state"></span><span class="card-progress"></span></div><span class="card-requirement"></span></button>`).join('');
     this.cardElements.clear(); this.el('build-grid').querySelectorAll<HTMLElement>('[data-build]').forEach(card => this.cardElements.set(card.dataset.build!, card));
     this.updateScrollButtons();
   }
@@ -541,7 +543,7 @@ export class UI {
       const index = y * state.width + x, tile = state.tiles[index];
       if (!tile || !state.explored[index]) continue;
       const p = point(x, y);
-      c.globalAlpha = state.fog[index] ? 1 : .45; c.fillStyle = tile.ore > 0 ? '#dfbd3c' : colors[tile.terrain]; c.fillRect(p.x, p.y, canvas.width / state.width + .5, canvas.height / state.height + .5);
+      c.globalAlpha = 1; c.fillStyle = tile.ore > 0 ? '#dfbd3c' : colors[tile.terrain]; c.fillRect(p.x, p.y, canvas.width / state.width + .5, canvas.height / state.height + .5);
     }
     c.globalAlpha = 1;
     for (const entity of state.entities) {
@@ -623,7 +625,7 @@ export class UI {
       const matching = queue.filter(item => item.type === type), ready = matching.some(item => item.ready), active = queue[0]?.type === type ? queue[0] : null;
       card.classList.toggle('unavailable', !available.ok && !ready); card.classList.toggle('producing', !!active && !ready); card.classList.toggle('ready', ready);
       card.setAttribute('aria-disabled', String(!available.ok && !ready));
-      card.dataset.tooltip = `${def.name} · $${formatMoney(def.cost)}\n${def.description}\n${ready ? 'Ready. Click to place near your base.' : available.ok ? `Build time: ${def.buildTime}s` : available.reason}`;
+      card.dataset.tooltip = `${def.name}\n$${formatMoney(def.cost)}`;
       this.nativeText(card.querySelector<HTMLElement>('.card-queue')!, matching.length > 1 ? String(matching.length) : '');
       this.nativeText(card.querySelector<HTMLElement>('.card-state')!, ready ? 'Ready' : active?.paused || active?.blockedFunds || active?.blockedPrerequisite ? 'On Hold' : '');
       card.querySelector<HTMLElement>('.card-progress')!.style.width = active ? `${active.progress * 100}%` : '0';

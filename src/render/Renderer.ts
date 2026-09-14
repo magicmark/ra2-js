@@ -3,17 +3,19 @@ import { GL, type Color, type Texture } from './GL';
 import { Camera } from './Camera';
 import type { NativeMap } from '../game/maps/nativeMap';
 import type { NativeCell } from '../game/maps/nativeMap';
-import type { NativeTheater } from '../game/maps/theater';
+import { nativeTileSpec, type NativeTheater } from '../game/maps/theater';
+import { oreMineFrame } from '../game/oreMines';
+import { placementCells } from '../game/placement';
 import { INSPECTION_RULES } from '../game/customUnits';
 const terrainCodes:Record<Tile['terrain'],number>={grass:1,water:2,rock:3,road:4,sand:5};
 
 export interface OriginalSprite { source: CanvasImageSource; width: number; height: number; offsetX?:number; offsetY?:number; anchorX?:number; anchorY?:number }
-export interface SpriteProvider { ready:boolean; getSprite(name:string,frame?:number,side?:number):OriginalSprite|null; getInfantryFrame(name:string,frame:number,side?:number):OriginalSprite|null; getInfantrySequence(name:string,action:string,facing:number,age:number,side?:number,speedIndex?:number):OriginalSprite|null; getAnimationSprite(name:string,age:number,ticksPerFrame?:number):OriginalSprite|null; getAnimationOpacity(name:string):number; getVehicleSprite(name:string,hull:number,turret:number,side?:number):OriginalSprite|null; getBuildingSprite(name:string,time:number,side?:number,speedIndex?:number):OriginalSprite|null; getTerrain(terrain:string,variant?:number):OriginalSprite|null; getOverlay(kind:'ore'|'tree',variant?:number):OriginalSprite|null }
+export interface SpriteProvider { ready:boolean; getBuildingHeight(name:string):number; getHarvestSprite(facing:number,time:number):OriginalSprite|null; getPipSprite(kind:'veteran'|'elite'|'cargo-empty'|'cargo-ore'|'building-empty'|'building-green'|'building-yellow'|'building-red'):OriginalSprite|null; getSprite(name:string,frame?:number,side?:number):OriginalSprite|null; getInfantryFrame(name:string,frame:number,side?:number):OriginalSprite|null; getInfantrySequence(name:string,action:string,facing:number,age:number,side?:number,speedIndex?:number):OriginalSprite|null; getAnimationSprite(name:string,age:number,ticksPerFrame?:number):OriginalSprite|null; getAnimationOpacity(name:string):number; getVehicleSprite(name:string,hull:number,turret:number,side?:number):OriginalSprite|null; getBuildingSprite(name:string,time:number,side?:number,speedIndex?:number):OriginalSprite|null; getBuildingSellSprite?(name:string,progress:number,side?:number):OriginalSprite|null; getTerrain(terrain:string,variant?:number):OriginalSprite|null; getOverlay(kind:'ore'|'tree',variant?:number):OriginalSprite|null }
 export interface NativeSpriteProvider extends SpriteProvider {
   getNativeTerrain(theater:NativeTheater,tileIndex:number,subTile:number):OriginalSprite|null;
   getNativeOverlay(theater:string,index:number,data?:number):OriginalSprite|null;
-  getNativeStructure(theater:string,type:string):OriginalSprite|null;
-  getNativeDecoration(theater:string,name:string):OriginalSprite|null;
+  getNativeStructure(theater:string,type:string,time?:number,side?:number,speedIndex?:number):OriginalSprite|null;
+  getNativeDecoration(theater:string,name:string,frame?:number):OriginalSprite|null;
   getNativeFoundation(type:string):[number,number];
 }
 export interface NativeMapBounds { left:number; top:number; right:number; bottom:number }
@@ -28,6 +30,10 @@ export class Renderer {
   targetLines = true;
   private textures = new WeakMap<object, Texture>();
   private shroudEdges = new Map<number, OriginalSprite>();
+  private shroudChunks = new Map<string, { source: HTMLCanvasElement; hash: number; version: number }>();
+  private shroudExplored = new Uint8Array(0);
+  private shroudVersion = 0;
+  private shroudMapWidth = 0;
   private terrainChunks = new Map<string, HTMLCanvasElement>();
   private terrainChunkVersions = new Map<string, number>();
   private terrainVersion=0;
@@ -134,8 +140,9 @@ export class Renderer {
       this.drawArt(art,p.x,p.y);
     }
     for(const object of map.terrain) {
-      const art=this.required(assets.getNativeDecoration(map.theater,object.type),object.type),p=this.nativePoint(object.x,object.y);
-      items.push({depth:object.x+object.y,draw:()=>this.drawArt(art,p.x,p.y)});
+      const art=assets.getNativeDecoration(map.theater,object.type),p=this.nativePoint(object.x,object.y);
+      if(!art&&/^(TIBTRE01|TREE2[0-3])$/i.test(object.type))continue;
+      items.push({depth:object.x+object.y,draw:()=>this.drawArt(this.required(art,object.type),p.x,p.y)});
     }
     for(const structure of map.structures) {
       const art=this.required(assets.getNativeStructure(map.theater,structure.type),structure.type),[w,h]=assets.getNativeFoundation(structure.type);
@@ -150,7 +157,7 @@ export class Renderer {
   entityPoint(entity:Entity):Vec2{const def=this.game.defs[entity.type],building=def.category==='structures'||def.category==='defenses',p=this.visualPosition(entity);return this.camera.screen(p.x+(building?def.footprint[0]/2:0),p.y+(building?def.footprint[1]/2:0));}
   pick(screenX:number,screenY:number):Entity|null{
     const world=this.camera.world(screenX,screenY),entities=this.game.state.entities;
-    for(let i=entities.length-1;i>=0;i--){const e=entities[i];if(!this.visible(e))continue;const d=this.game.defs[e.type];if(d.category==='structures'||d.category==='defenses'){if(world.x>=e.x&&world.x<e.x+d.footprint[0]&&world.y>=e.y&&world.y<e.y+d.footprint[1])return e;}else{const p=this.entityPoint(e);if(Math.hypot((screenX-p.x)/1.3,screenY-p.y+10*this.camera.zoom)<18*this.camera.zoom)return e;}}
+    for(let i=entities.length-1;i>=0;i--){const e=entities[i];if(e.hp<=0||e.selling||!this.visible(e))continue;const d=this.game.defs[e.type];if(d.category==='structures'||d.category==='defenses'){if(world.x>=e.x&&world.x<e.x+d.footprint[0]&&world.y>=e.y&&world.y<e.y+d.footprint[1])return e;}else{const p=this.entityPoint(e);if(Math.hypot((screenX-p.x)/1.3,screenY-p.y+10*this.camera.zoom)<18*this.camera.zoom)return e;}}
     return null;
   }
   private tileDiamond(x:number,y:number,color:Color,outline=false){
@@ -165,7 +172,7 @@ export class Renderer {
     for(let py=0;py<30;py++)for(let px=0;px<60;px++){
       const u=(px+.5-30)/60+(py+.5)/30,v=(py+.5)/30-(px+.5-30)/60;
       if(u<0||u>1||v<0||v>1)continue;
-      let distance=1;
+      let distance=mask===256?0:1;
       for(let bit=0;bit<neighbors.length;bit++)if(mask&(1<<bit)){
         const [dx,dy]=neighbors[bit];
         const du=dx<0?u:dx>0?1-u:0,dv=dy<0?v:dy>0?1-v:0;
@@ -179,24 +186,59 @@ export class Renderer {
   }
   private drawShroud(minX:number,maxX:number,minY:number,maxY:number){
     const s=this.game.state,neighbors=[[-1,0],[0,-1],[1,0],[0,1],[-1,-1],[1,-1],[1,1],[-1,1]];
-    // Cover original TMP edge pixels extending beyond the map's ideal diamond.
-    // Adjacent hidden cells form one parallelogram. Its exterior is identical
-    // to the individual diamonds, without thousands of redundant triangles.
+    const c=this.camera,z=c.zoom,size=480;
+    if(this.shroudMapWidth!==s.width||this.shroudExplored.length!==s.explored.length||s.explored.some((value,index)=>value!==this.shroudExplored[index])){
+      this.shroudMapWidth=s.width;this.shroudExplored=s.explored.slice();this.shroudVersion++;
+    }
+    const hidden=(x:number,y:number)=>x<0||y<0||x>=s.width||y>=s.height||!s.explored[y*s.width+x];
+    // Keep an exact world-space cover beneath the sampled mask. At fractional
+    // zoom a raster boundary can straddle a hidden cell by half a source pixel.
     for(let y=minY-1;y<=maxY+1;y++){
-      let run:number|null=null;
+      let start:number|null=null;
       const flush=(end:number)=>{
-        if(run===null)return;
-        const points=[[run,y],[end,y],[end,y+1],[run,y+1]].map(([x,y])=>{const p=this.camera.screen(x,y);return[p.x,p.y] as [number,number];});
-        this.gl.polygon(points,[0,0,0,1]);run=null;
+        if(start===null)return;
+        this.gl.polygon([[start,y],[end,y],[end,y+1],[start,y+1]].map(([x,y])=>{const p=c.screen(x,y);return[p.x,p.y] as [number,number];}),[0,0,0,1]);
+        start=null;
       };
       for(let x=minX-1;x<=maxX+1;x++){
-        if(x<0||y<0||x>=s.width||y>=s.height||!s.explored[y*s.width+x]){if(run===null)run=x;continue;}
-        flush(x);
-        let mask=0;
-        neighbors.forEach(([dx,dy],bit)=>{const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=s.width||ny>=s.height||!s.explored[ny*s.width+nx])mask|=1<<bit;});
-        if(mask){const p=this.camera.screen(x+.5,y+.5);this.drawArt(this.shroudEdge(mask),p.x,p.y);}
+        if(hidden(x,y)){if(start===null)start=x;}else flush(x);
       }
       flush(maxX+2);
+    }
+    // Compose the opaque shroud and its feather on one native-pixel surface.
+    // Scaling separate transparent diamonds leaves a dotted seam where their
+    // individually sampled edges meet, just as it does for terrain tiles.
+    const left=Math.floor((c.x-c.width/2/z)/size),right=Math.floor((c.x+c.width/2/z)/size);
+    const top=Math.floor((c.y-c.height/2/z)/size),bottom=Math.floor((c.y+c.height/2/z)/size);
+    for(let cy=top;cy<=bottom;cy++)for(let cx=left;cx<=right;cx++){
+      const px=cx*size,py=cy*size,key=`${cx}:${cy}`;
+      let chunk=this.shroudChunks.get(key);
+      if(chunk?.version===this.shroudVersion){
+        this.gl.sprite(this.texture(chunk.source),(px-c.x)*z+c.width/2,(py-c.y)*z+c.height/2,size*z,size*z);
+        continue;
+      }
+      const x0=Math.floor(px/60+py/30)-2,x1=Math.ceil((px+size)/60+(py+size)/30)+2;
+      const y0=Math.floor(py/30-(px+size)/60)-2,y1=Math.ceil((py+size)/30-px/60)+2;
+      const tiles:{sx:number;sy:number;mask:number}[]=[];
+      let hash=0;
+      for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
+        const sx=(x-y)*30-30-px,sy=(x+y)*15-py;
+        if(sx+60<=0||sy+30<=0||sx>=size||sy>=size)continue;
+        let mask=hidden(x,y)?256:0;
+        if(!mask)neighbors.forEach(([dx,dy],bit)=>{if(hidden(x+dx,y+dy))mask|=1<<bit;});
+        hash=Math.imul(hash^mask,16777619);
+        if(mask)tiles.push({sx,sy,mask});
+      }
+      if(!chunk||chunk.hash!==hash){
+        const source=chunk?.source??document.createElement('canvas');
+        if(!chunk){source.width=source.height=size;}
+        const ctx=source.getContext('2d')!;ctx.clearRect(0,0,size,size);ctx.imageSmoothingEnabled=false;
+        for(const tile of tiles)ctx.drawImage(this.shroudEdge(tile.mask).source,tile.sx,tile.sy);
+        chunk={source,hash,version:this.shroudVersion};this.shroudChunks.set(key,chunk);
+        const texture=this.textures.get(source);if(texture)this.gl.updateTexture(texture,source);
+      }
+      chunk.version=this.shroudVersion;
+      this.gl.sprite(this.texture(chunk.source),(px-c.x)*z+c.width/2,(py-c.y)*z+c.height/2,size*z,size*z);
     }
   }
   private drawCommandLines(){
@@ -214,6 +256,11 @@ export class Renderer {
   }
   private terrainSprite(tile:Tile,x:number,y:number):OriginalSprite {
     const assets=this.originals();
+    if(tile.nativeArt?.terrain===tile.terrain){
+      const {tileIndex,subTile}=tile.nativeArt,spec=nativeTileSpec('TEMPERATE',tileIndex);
+      const art=spec&&assets.getTerrain(spec.fileName.slice(0,-4),subTile);
+      if(art)return art;
+    }
     if(tile.terrain==='road'){
       const name=tile.variant>=32?'proad03':tile.variant>=16?'proad02':'proad01';
       return this.required(assets.getTerrain(name,tile.variant%16),`${name} terrain`);
@@ -234,7 +281,7 @@ export class Renderer {
     if(this.game.state.nativeMap){this.drawNativeTerrain(this.game.state.nativeMap,true);return;}
     const s=this.game.state,c=this.camera,assets=this.originals(),terrainSource=this.required(assets.getTerrain('grass',0),'grass terrain').source;
     let hash=s.width*65537+s.height;
-    for(const tile of s.tiles)hash=Math.imul(hash^terrainCodes[tile.terrain],16777619)^tile.variant;
+    for(const tile of s.tiles)hash=Math.imul(hash^terrainCodes[tile.terrain],16777619)^tile.variant^(tile.nativeArt?.tileIndex??0)*31^(tile.nativeArt?.subTile??0);
     if(this.terrainProvider!==assets||this.terrainSource!==terrainSource||this.terrainHash!==hash){
       this.terrainVersion++;this.terrainProvider=assets;
       this.terrainSource=terrainSource;this.terrainHash=hash;
@@ -283,23 +330,30 @@ export class Renderer {
     for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++){
       const i=y*s.width+x,tile=s.tiles[i],p=c.screen(x+.5,y+.5);
       if(!s.explored[i])continue;
-      const shade=s.fog[i]?1:.39;
-      if(!s.fog[i])this.tileDiamond(x,y,[0,0,0,.61]);
       if(tile.ore>0){
         const native=s.nativeMap,cell=native?this.nativeCells.get(`${x},${y}`):undefined;
-        const sprite=native&&cell?this.nativeAssets().getNativeOverlay(native.theater,cell.overlay,cell.overlayData):assets.getOverlay('ore',tile.variant);
-        this.drawArt(this.required(sprite,'ore'),p.x,p.y-(cell?.height??0)*15*c.zoom,shade);
+        const sprite=native&&cell?this.nativeAssets().getNativeOverlay(native.theater,cell.overlay===255?102+tile.variant%6:cell.overlay,Math.max(0,Math.min(11,Math.ceil(tile.ore/100)-1))):assets.getOverlay('ore',tile.variant);
+        this.drawArt(this.required(sprite,'ore'),p.x,p.y-(cell?.height??0)*15*c.zoom);
       }
     }
     const renderables:{depth:number;draw:()=>void}[]=[];
     for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++){
-      const i=y*s.width+x,t=s.tiles[i];if(s.nativeMap||!s.explored[i]||t.terrain!=='rock')continue;
-      const p=c.screen(x+.5,y+.5);renderables.push({depth:x+y+1,draw:()=>this.drawArt(this.required(assets.getOverlay('tree',t.variant),'tree'),p.x,p.y,s.fog[i]?1:.39)});
+      const i=y*s.width+x,t=s.tiles[i];if(s.nativeMap||!s.explored[i]||t.terrain!=='rock'||s.oreMines?.some(m=>m.x===x&&m.y===y))continue;
+      const p=c.screen(x+.5,y+.5);renderables.push({depth:x+y+1,draw:()=>this.drawArt(this.required(assets.getOverlay('tree',t.variant),'tree'),p.x,p.y)});
     }
     if(s.nativeMap)for(const object of s.nativeMap.terrain){
       const i=object.y*s.width+object.x;if(!s.explored[i])continue;
       const p=this.nativePoint(object.x+.5,object.y+.5);
-      renderables.push({depth:object.x+object.y+1,draw:()=>this.drawArt(this.required(this.nativeAssets().getNativeDecoration(s.nativeMap!.theater,object.type),object.type),p.x,p.y,s.fog[i]?1:.39)});
+      const mine=object.type.toUpperCase()==='TIBTRE01'?s.oreMines?.find(m=>m.x===object.x&&m.y===object.y):undefined;
+      const art=this.nativeAssets().getNativeDecoration(s.nativeMap.theater,object.type,oreMineFrame(mine,s.time));
+      if(!art&&/^(TIBTRE01|TREE2[0-3])$/i.test(object.type))continue;
+      renderables.push({depth:object.x+object.y+1,draw:()=>this.drawArt(this.required(art,object.type),p.x,p.y)});
+    }
+    if(!s.nativeMap)for(const mine of s.oreMines??[]){
+      if(!s.explored[mine.y*s.width+mine.x])continue;
+      const p=c.screen(mine.x+.5,mine.y+.5);
+      const art=this.nativeAssets().getNativeDecoration('TEMPERATE','TIBTRE01',oreMineFrame(mine,s.time));
+      if(art)renderables.push({depth:mine.x+mine.y+1,draw:()=>this.drawArt(art,p.x,p.y)});
     }
     for(const e of s.entities){if(!this.visible(e))continue;const p=this.entityPoint(e);if(p.x<-220||p.x>c.width+220||p.y<-80||p.y>c.height+250)continue;
       const d=this.game.defs[e.type],world=this.visualPosition(e);renderables.push({depth:world.x+world.y+(d.footprint[0]+d.footprint[1])/2,draw:()=>this.drawEntity(e,d,p)});
@@ -309,7 +363,8 @@ export class Renderer {
     for(const e of s.effects){if(!s.explored[Math.floor(e.y)*s.width+Math.floor(e.x)])continue;const p=c.screen(e.x,e.y),progress=1-e.life/e.maxLife;
       if(e.animation){
         const age=e.startedAt===undefined?e.maxLife-e.life:s.time-e.startedAt;
-        this.drawArt(this.required(assets.getAnimationSprite(e.animation,age,e.animationTicksPerFrame),`${e.animation} animation`),p.x,p.y,1,assets.getAnimationOpacity(e.animation));
+        const animation=assets.getAnimationSprite(e.animation,age,e.animationTicksPerFrame);
+        if(animation)this.drawArt(animation,p.x,p.y,1,assets.getAnimationOpacity(e.animation));
         continue;
       }
       // Shot/death events without authored animation metadata remain audio
@@ -320,17 +375,15 @@ export class Renderer {
     }
     this.drawCommandLines();
     this.drawShroud(minX,maxX,minY,maxY);
-    // Placement uses the same original sprite and simulation validation as the building.
-    if(this.placement){const def=this.game.defs[this.placement],p=c.world(this.pointer.x,this.pointer.y),x=Math.floor(p.x),y=Math.floor(p.y),valid=this.game.canPlace(this.placement,x,y);
-      for(let ty=0;ty<def.footprint[1];ty++)for(let tx=0;tx<def.footprint[0];tx++){this.tileDiamond(x+tx,y+ty,valid?[0,1,0,.3]:[1,0,0,.35]);this.tileDiamond(x+tx,y+ty,valid?[0,1,0,.85]:[1,0,0,.85],true);}
-      const q=c.screen(x+def.footprint[0]/2,y+def.footprint[1]/2),original=this.required(assets.getSprite(def.sprite||this.placement,0,0),`${def.name} placement`);
-      this.drawArt(original,q.x,q.y,.85,.65);
+    // Retail placement shows the cell footprint, before the building exists.
+    if(this.placement){const p=c.world(this.pointer.x,this.pointer.y);
+      for(const cell of placementCells(s,this.game.defs,this.placement,Math.floor(p.x),Math.floor(p.y)))this.tileDiamond(cell.x,cell.y,cell.valid?[0,1,0,1]:[1,0,0,1]);
     }
     if(this.selectionBox){const{from,to}=this.selectionBox,x=Math.min(from.x,to.x),y=Math.min(from.y,to.y),w=Math.abs(from.x-to.x),h=Math.abs(from.y-to.y);const color:Color=[1,1,1,1];this.gl.line(x,y,x+w,y,1,color);this.gl.line(x+w,y,x+w,y+h,1,color);this.gl.line(x+w,y+h,x,y+h,1,color);this.gl.line(x,y+h,x,y,1,color);}
     this.gl.flush();
   }
   private drawInspectionFeedback(entity:Entity){
-    const p=this.entityPoint(entity),z=this.camera.zoom,cyan:Color=[.2,.9,1,1],gold:Color=[1,.82,.2,1];
+    const p=this.entityPoint(entity),z=this.camera.zoom,cyan:Color=[.2,.9,1,1];
     const inspected=entity.inspectedBy!==undefined,george=entity.type==='george';
     if(george&&entity.side===0&&entity.selected){
       // A world-space circle projects to the same isometric ground plane as units.
@@ -353,16 +406,13 @@ export class Renderer {
     }
     const rank=entity.rank??0;
     if(rank>0){
-      const scale=Math.max(.8,z),x=p.x+12*z,y=p.y-20*z;
-      for(let i=0;i<rank;i++){
-        const top=y-i*5*scale;
-        this.gl.line(x-4*scale,top+3*scale,x,top,Math.max(3,3*scale),[0,0,0,1]);
-        this.gl.line(x,top,x+4*scale,top+3*scale,Math.max(3,3*scale),[0,0,0,1]);
-        this.gl.line(x-4*scale,top+3*scale,x,top,Math.max(1,scale),gold);
-        this.gl.line(x,top,x+4*scale,top+3*scale,Math.max(1,scale),gold);
-      }
+      const pip=this.originals().getPipSprite(rank===1?'veteran':'elite');
+      const infantry=this.game.defs[entity.type].category==='infantry';
+      // Native insignia sits alongside the unit, with the frame's authored pixels.
+      if(pip)this.drawArt(pip,p.x+(infantry?1:6)*z,p.y+(infantry?1:-2)*z);
     }
   }
+
   private drawEntity(e:Entity,d:UnitDef,p:Vec2){
     const c=this.camera,building=d.category==='structures'||d.category==='defenses',selected=e.selected,hover=e.id===this.hoverId;
     const heading=((this.visualFacing(e)%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
@@ -373,8 +423,11 @@ export class Renderer {
     const name=e.type==='conyard'&&e.side===1?'conyard_soviet':d.sprite||e.type;
     const assets=this.originals();
     let original:OriginalSprite;
-    if(this.game.state.nativeMap&&/^tech_(oil|airport)$/.test(e.type)){
-      original=this.required(this.nativeAssets().getNativeStructure(this.game.state.nativeMap.theater,e.type==='tech_oil'?'CAOILD':'CAAIRP'),d.name);
+    if(e.selling&&building){
+      const progress=(this.game.state.time-e.selling.startedAt)/e.selling.duration;
+      original=this.required(assets.getBuildingSellSprite?.(name,progress,e.side)??assets.getBuildingSprite(name,0,e.side,this.game.nativeGameSpeedIndex),name);
+    }else if(this.game.state.nativeMap&&/^tech_(oil|airport)$/.test(e.type)){
+      original=this.required(this.nativeAssets().getNativeStructure(this.game.state.nativeMap.theater,e.type==='tech_oil'?'CAOILD':'CAAIRP',this.game.state.time,e.side,this.game.nativeGameSpeedIndex),d.name);
     }else if(d.category==='infantry'){
       const facing=(5-Math.round(heading/(Math.PI*2)*8)+8)%8;
       const action=e.infantryAnimation?.sequence??(e.type==='rocketeer'?(moving?'Fly':'Hover'):e.deployed?'Deployed':moving?'Walk':'Ready');
@@ -387,22 +440,48 @@ export class Renderer {
       original=this.required(assets.getVehicleSprite(name,frame,turret,e.side),`${name} hull/turret`);
     }else original=this.required(building&&e.type!=='sentry'?assets.getBuildingSprite(name,this.game.state.time,e.side,this.game.nativeGameSpeedIndex):assets.getSprite(name,frame,e.side),name);
     this.drawArt(original,p.x,p.y);
+    if(e.selling)return;
+    if(d.harvester&&e.harvesting&&e.order==='harvest'&&!moving){
+      const direction=(5-Math.round(heading/(Math.PI*2)*8)+8)%8;
+      const original=assets.getHarvestSprite(direction,e.anim);
+      // Retail positions the directional OREGATH effect 30 leptons ahead.
+      const angle=Math.round(heading/(Math.PI/4))*Math.PI/4,dx=Math.cos(angle)*30/256,dy=Math.sin(angle)*30/256;
+      if(original)this.drawArt(original,p.x+(dx-dy)*30*c.zoom,p.y+(dx+dy)*15*c.zoom);
+    }
     if(selected||hover){const z=c.zoom,w=(building?Math.max(30,(d.footprint[0]+d.footprint[1])*15-8):d.category==='infantry'?16:28)*z;
       // Rotating turrets and walking poses keep the same health-frame anchor.
       const healthSprite=building?original:this.required(assets.getSprite(name,0,e.side),`${name} health anchor`);
       const spriteTop=p.y-(healthSprite.anchorY??healthSprite.height)*z;
       const y=Math.round(spriteTop-5*z),left=Math.round(p.x-w/2),height=Math.max(2,Math.round(2*z)),ratio=e.hp/e.maxHp;
       if(building){
-        this.gl.rect(left-1,y-1,w+2,height+2,[0,0,0,1]);this.gl.rect(left,y,w,height,[.28,.28,.28,1]);this.gl.rect(left,y,Math.round(w*ratio),height,ratio>.5?[0,1,0,1]:ratio>.25?[1,1,0,1]:[1,0,0,1]);
-        const bracket:Color=selected?[1,1,1,1]:e.side===0?[0,1,0,1]:[1,0,0,1],bottom=Math.round(p.y+2*z),top=y+height+3,corner=Math.max(3,Math.round(4*z));
-        for(const x of [left-2,left+w+2]){const direction=x< p.x?1:-1;this.gl.line(x,top,x+direction*corner,top,1,bracket);this.gl.line(x,top,x,top+corner,1,bracket);this.gl.line(x,bottom,x+direction*corner,bottom,1,bracket);this.gl.line(x,bottom,x,bottom-corner,1,bracket);}
+        const [width,depth]=d.footprint,roof=assets.getBuildingHeight(name)*15;
+        // game.exe 0x6c3f00: PIPS.SHP runs down the building's upper-left
+        // isometric edge in (-4,+2) pixel steps; art.ini Height sets the roof.
+        const count=Math.max(1,Math.floor(depth*15/2)),filled=Math.max(1,Math.min(count,Math.trunc(count*ratio)));
+        const kind=ratio>.5?'building-green':ratio>.25?'building-yellow':'building-red';
+        const startX=Math.round(p.x+((depth-width)*15+3)*z),startY=Math.round(p.y+(-(width+depth)*7.5-roof+4)*z);
+        const corners=[[-width/2,-depth/2],[width/2,-depth/2],[width/2,depth/2],[-width/2,depth/2]].map(([x,y])=>({x:p.x+(x-y)*30*z,y:p.y+(x+y)*15*z}));
+        const points=[...corners,...corners.map(point=>({x:point.x,y:point.y-roof*z}))];
+        const bracket:Color=[1,1,1,1];
+        // Original selection brackets follow the projected foundation/height,
+        // with a quarter-edge at either end rather than an axis-aligned box.
+        if(selected)for(const [a,b] of [[1,2],[2,3],[4,5],[5,6],[6,7],[7,4],[1,5],[2,6],[3,7]]){
+          const from=points[a],to=points[b],dx=(to.x-from.x)/4,dy=(to.y-from.y)/4;
+          this.gl.line(from.x,from.y,from.x+dx,from.y+dy,1,bracket);
+          this.gl.line(to.x,to.y,to.x-dx,to.y-dy,1,bracket);
+        }
+        for(let i=0;i<count;i++){const pip=assets.getPipSprite(i<filled?kind:'building-empty');if(pip)this.drawArt(pip,startX-i*4*z,startY+i*2*z);}
       }else{
         this.gl.rect(left-z,y-z,w+2*z,height+2*z,[.89,1,1,1]);this.gl.rect(left,y,w,height,[0,0,0,1]);
         const bright:Color=ratio>.5?[.31,.77,.32,1]:ratio>.25?[.95,.88,.25,1]:[.9,.25,.2,1];
         const dark:Color=ratio>.5?[0,.39,0,1]:ratio>.25?[.45,.39,0,1]:[.42,0,0,1];
         for(let pixel=0;pixel<Math.round(w/z*ratio);pixel++)this.gl.rect(left+pixel*z,y,z,height,pixel%2?dark:bright);
       }
-      if(d.harvester&&e.cargo>0)this.gl.rect(left,y+height+2,w*Math.min(1,e.cargo/(d.capacity||700)),Math.max(1,z),[1,1,0,1]);
+      if(d.harvester){
+        const count=5,filled=Math.round(count*Math.max(0,Math.min(1,e.cargo/(d.capacity||700))));
+        const start=Math.round(p.x-count*4*z/2),top=Math.round(p.y+6*z);
+        for(let i=0;i<count;i++){const pip=assets.getPipSprite(i<filled?'cargo-ore':'cargo-empty');if(pip)this.drawArt(pip,start+i*4*z,top);}
+      }
     }
   }
 }

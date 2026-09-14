@@ -4,6 +4,8 @@ import { decodePalette, ShpFile } from './formats';
 export const CURSOR_SEQUENCES = {
   default: [0, 1], select: [18, 13], move: [31, 10], 'move-blocked': [41, 1],
   attack: [58, 5], attackmove: [404, 9], 'attackmove-blocked': [384, 1], guard: [68, 5],
+  // Retail game.exe cursor table entry 25 (file 0x3e2d50).
+  enter: [89, 10],
   deploy: [110, 9], 'deploy-blocked': [119, 1], sell: [129, 10], 'sell-blocked': [149, 1],
   repair: [170, 20], 'repair-blocked': [190, 1], pan: [385, 1],
   'scroll-n': [2, 1], 'scroll-ne': [3, 1], 'scroll-e': [4, 1], 'scroll-se': [5, 1],

@@ -1,4 +1,4 @@
-import { nativeTerrainFiles, NATIVE_THEATERS, THEATER_EXTENSION, THEATER_LETTER } from '../game/maps/theater';
+import { nativeTerrainFiles, nativeDecorationNames, NATIVE_THEATERS, THEATER_EXTENSION, THEATER_LETTER } from '../game/maps/theater';
 
 export interface AssetSpec { sprite: string; cameo: string; kind: 'building' | 'infantry' | 'vehicle'; overlays?: string[]; bib?: string; turret?: string; footprint?: [number, number] }
 export const CATALOG: Record<string, AssetSpec> = {
@@ -48,8 +48,9 @@ export const UI_HASH_FILES = {
   'command-background.shp': 0x26034352, 'command-left.shp': 0x593cbe20, 'command-right.shp': 0xbc1580c2,
 };
 export function wantedFiles(): Set<string> {
-  const names = new Set(['unittem.pal', 'unitsno.pal', 'isotem.pal', 'temperat.pal', 'cameo.pal', 'anim.pal', 'voxels.vpl', 'art.ini', 'rules.ini', 'game.fnt', 'mouse.shp', 'mousepal.pal', ...Object.values(DIALOG_PCX_FILES), ...EFFECT_ANIMATIONS.map(name => name + '.shp')]);
+  const names = new Set(['palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'unittem.pal', 'unitsno.pal', 'isotem.pal', 'temperat.pal', 'cameo.pal', 'anim.pal', 'voxels.vpl', 'art.ini', 'rules.ini', 'game.fnt', 'mouse.shp', 'mousepal.pal', ...Object.values(DIALOG_PCX_FILES), ...EFFECT_ANIMATIONS.map(name => name + '.shp')]);
   for (const spec of Object.values(CATALOG)) {
+    if (spec.kind === 'building') for (const variant of theaterNames(spec.sprite + 'mk')) names.add(variant + '.shp');
     for (const name of [spec.sprite, ...(spec.overlays ?? []), ...(spec.bib ? [spec.bib] : []), ...(spec.turret ? [spec.turret] : [])]) for (const variant of theaterNames(name)) {
       names.add(`${variant}.shp`); names.add(`${variant}.vxl`); names.add(`${variant}.hva`);
       names.add(`${variant}tur.vxl`); names.add(`${variant}tur.hva`); names.add(`${variant}barl.vxl`); names.add(`${variant}barl.hva`);
@@ -69,7 +70,7 @@ export function wantedFiles(): Set<string> {
     names.add(`iso${extension}.pal`); names.add(`unit${extension}.pal`);
     for (const name of ['caoild', 'caoild_a', 'caoild_ad', 'caoild_f', 'caairp', 'caairp_a', 'caairp_ad', 'caairp_f'])
       for (const variant of [name, 'c' + letter + name.slice(2), 'cg' + name.slice(2)]) names.add(variant + '.shp');
-    for (let i = 1; i <= 8; i++) names.add(`tree${String(i).padStart(2, '0')}.${extension}`);
+    for (const name of nativeDecorationNames(theater)) names.add(`${name}.${extension}`);
     for (let i = 1; i <= 6; i++) names.add(`tib${String(i).padStart(2, '0')}.${extension}`);
     names.add(`gem01.${extension}`);
   }
