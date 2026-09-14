@@ -1,0 +1,16 @@
+# Original rules.ini [GAWALL]; 30-frame simulation reference clock.
+[units.wall]
+name = "Allied Wall"
+category = "defenses"
+faction = "allied"
+cost = 100
+buildTime = 2.1
+hp = 300
+armor = "concrete"
+footprint = [1, 1]
+power = 0
+requires = ["barracks"]
+sight = 1
+sprite = "gawall"
+cameo = "wallicon"
+description = "Concrete wall blocks ground movement and protects your base."

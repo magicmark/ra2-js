@@ -1,7 +1,34 @@
 import { nativeTerrainFiles, nativeDecorationNames, NATIVE_THEATERS, THEATER_EXTENSION, THEATER_LETTER, type NativeTheater } from '../game/maps/theater';
 
-export interface AssetSpec { sprite: string; cameo: string; kind: 'building' | 'infantry' | 'vehicle'; overlays?: string[]; bib?: string; turret?: string; footprint?: [number, number] }
+export interface AssetSpec { sprite: string; cameo: string; kind: 'building' | 'infantry' | 'vehicle' | 'spriteVehicle'; noBuildup?: boolean; overlays?: string[]; bib?: string; turret?: string; footprint?: [number, number] }
 export const CATALOG: Record<string, AssetSpec> = {
+  hornet: {"sprite": "hornet", "cameo": "proicon", "kind": "vehicle"},
+  sniper: {"sprite": "snipe", "cameo": "snipicon", "kind": "infantry"},
+  battlelab: {"sprite": "gatech", "cameo": "techicon", "kind": "building", "footprint": [3, 2], "overlays": ["gatech_a"]},
+  service_depot: {"sprite": "gadept", "cameo": "fixicon", "kind": "building", "footprint": [3, 3], "overlays": ["gadept_d"], "bib": "gadeptbb"},
+  shipyard: {"sprite": "gayard", "cameo": "ayaricon", "kind": "building", "footprint": [4, 4], "overlays": ["gayard_a", "gayard_c"]},
+  ore_purifier: {"sprite": "gaorep", "cameo": "gorep", "kind": "building", "footprint": [3, 3], "overlays": ["gaorep_a"]},
+  patriot: {"sprite": "nasam", "cameo": "samicon", "kind": "building", "footprint": [1, 1]},
+  prism_tower: {"sprite": "gapris", "cameo": "prisicon", "kind": "building", "footprint": [1, 1], "overlays": ["gapris_b"]},
+  // ART.INI names GAGAP_A, but the original archives contain no such SHP.
+  gap_generator: {"sprite": "gagap", "cameo": "gapicon", "kind": "building", "footprint": [1, 1]},
+  chronosphere: {"sprite": "gacsph", "cameo": "csphicon", "kind": "building", "footprint": [4, 3], "overlays": ["gacsph_e", "gacsph_f", "gacsph_g", "gacsph_h"]},
+  weather_control: {"sprite": "gaweth", "cameo": "wethicon", "kind": "building", "footprint": [3, 3], "overlays": ["gaweth_e", "gaweth_f", "gaweth_g", "gaweth_h"]},
+  wall: {"sprite": "gawall", "cameo": "wallicon", "kind": "building", "footprint": [1, 1], "noBuildup": true},
+  attack_dog: {"sprite": "adog", "cameo": "adogicon", "kind": "infantry"},
+  spy: {"sprite": "spy", "cameo": "spyicon", "kind": "infantry"},
+  tanya: {"sprite": "tany", "cameo": "tanyicon", "kind": "infantry"},
+  chrono_legionnaire: {"sprite": "cleg", "cameo": "clegicon", "kind": "infantry"},
+  prism_tank: {"sprite": "sref", "cameo": "sreficon", "kind": "vehicle"},
+  mirage_tank: {"sprite": "rtnk", "cameo": "rtnkicon", "kind": "vehicle"},
+  mcv: {"sprite": "mcv", "cameo": "mcvicon", "kind": "vehicle"},
+  nighthawk: {"sprite": "shad", "cameo": "shadicon", "kind": "vehicle"},
+  harrier: {"sprite": "falc", "cameo": "falcicon", "kind": "vehicle"},
+  destroyer: {"sprite": "dest", "cameo": "desticon", "kind": "vehicle"},
+  aegis: {"sprite": "aegis", "cameo": "agisicon", "kind": "vehicle"},
+  carrier: {"sprite": "carrier", "cameo": "carricon", "kind": "vehicle"},
+  dolphin: {"sprite": "dlph", "cameo": "dlphicon", "kind": "spriteVehicle"},
+  transport: {"sprite": "lcrf", "cameo": "landicon", "kind": "vehicle"},
   conyard: { sprite: 'gacnst', cameo: 'mcvicon', kind: 'building', overlays: ['gacnst_a', 'gacnst_b'], footprint: [4, 4] },
   // Draw the crane/tower before the beacon: the production SHP includes the
   // whole building and otherwise paints over NACNST_A's flashing light.
@@ -34,10 +61,10 @@ export function theaterNames(name: string, theater: NativeTheater = 'TEMPERATE')
   name = name.toLowerCase();
   // FinalAlert/RA2 NewTheater: current theater first, then G (generic).
   // The INI's A name is Arctic artwork, never a fallback on a dry map.
-  return /^[cgn]a/.test(name) ? [name[0] + THEATER_LETTER[theater] + name.slice(2), name[0] + 'g' + name.slice(2)] : [name];
+  return /^[cgn]a/.test(name) && !name.endsWith('icon') ? [name[0] + THEATER_LETTER[theater] + name.slice(2), name[0] + 'g' + name.slice(2)] : [name];
 }
 export const NESTED_MIXES = ['ra2.mix', 'language.mix', 'cache.mix', 'local.mix', 'conquer.mix', 'generic.mix', 'neutral.mix', 'isogen.mix', 'isotemp.mix', 'isosnow.mix', 'isourb.mix', 'temperat.mix', 'snow.mix', 'urban.mix', 'tem.mix', 'sno.mix', 'urb.mix', 'cameo.mix', 'cameomd.mix', 'sidec01.mix', 'sidec02.mix', 'sidec03.mix', 'sidecd01.mix', 'sidecd02.mix'];
-export const EFFECT_ANIMATIONS = ['piffpiff', 's_clsn22', 'xgrysml2', 'htrkpuff', 'twlt070', 's_bang48', 's_brnl58', 's_clsn58', 's_tumu60'];
+export const EFFECT_ANIMATIONS = ['wclbolt1', 'wclbolt2', 'wclbolt3', 'chronofd', 'chronotg', 'piffpiff', 's_clsn22', 'xgrysml2', 'htrkpuff', 'twlt070', 's_bang48', 's_brnl58', 's_clsn58', 's_tumu60'];
 export const DIALOG_SHAPE_FILES = ['bkgdsm', 'bkgdmd', 'bkgdlg', 'sidebttn'];
 export const DIALOG_PCX_FILES = { 'options-checkbox-on': 'cce_i.pcx', 'options-checkbox-off': 'cue_i.pcx', 'options-slider-thumb': 'trakgrip.pcx' };
 export const UI_FILES = ['sidebar.pal', 'uibkgd.pal', ...['top', 'credits', 'tabs', 'radar', 'side1', 'side2', 'side2b', 'side3', 'tab00', 'tab01', 'tab02', 'tab03', 'sell', 'repair', 'power', 'powerp', ...DIALOG_SHAPE_FILES].map(name => name + '.shp')];

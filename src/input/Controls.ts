@@ -5,7 +5,7 @@ import type { Renderer } from '../render/Renderer';
 import { BINDING_DEFAULTS, type BindingId, type BindingInfo, type BindingResult } from './bindings';
 export { GAME_SPEED_STEPS, SCROLL_RATE_STEPS, type BindingId, type BindingInfo, type BindingResult } from './bindings';
 
-export type ControlMode = 'select' | 'pan' | 'attack' | 'repair' | 'sell';
+export type ControlMode = 'select' | 'pan' | 'attack' | 'repair' | 'sell' | 'chrono-source' | 'chrono-destination' | 'weather';
 export type ControlCommand = 'team1' | 'team2' | 'type' | 'deploy' | 'guard' | 'planning';
 export interface ControlCallbacks {
   toast(text: string): void; zoom(value: number): void; mode(value: ControlMode): void; ack(): void;
@@ -16,6 +16,7 @@ export const detectMobile = () => new URLSearchParams(location.search).get('forc
 /** Retail RA2 mouse/keyboard commands; touch adds explicit pan/attack buttons. */
 export class Controls {
   mode: ControlMode = 'select';
+  private chronoSource?: Vec2;
   private keys = new Set<string>();
   private pointers = new Map<number, Vec2>();
   private start: Vec2 | null = null;
@@ -70,7 +71,7 @@ export class Controls {
     return this.callbacks.enabled?.() !== false && !document.documentElement.classList.contains('settings-open') && !document.body.classList.contains('settings-open');
   }
   private local(e: PointerEvent | WheelEvent): Vec2 { const r = this.renderer.canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
-  private ownUnits(): Entity[] { return this.game.state.entities.filter(e => e.side === 0 && e.hp > 0 && !isBuilding(this.game.defs[e.type])); }
+  private ownUnits(): Entity[] { return this.game.state.entities.filter(e => e.side === 0 && e.hp > 0 && e.transportId === undefined && !isBuilding(this.game.defs[e.type])); }
   private ids(): number[] { return this.game.state.entities.filter(e => e.selected && e.side === 0).map(e => e.id); }
   private engineerRepair(target: Entity | null | undefined): boolean {
     return !!target && !target.selling && target.side === 0 && target.hp < target.maxHp && isBuilding(this.game.defs[target.type])
@@ -154,18 +155,22 @@ export class Controls {
       }
     }
     if (this.mode === 'pan' || this.pointers.size && (this.button === 1 || this.button === 2)) return 'pan';
+    if (['chrono-source', 'chrono-destination', 'weather'].includes(this.mode)) return 'attack';
     const target = this.renderer.pick(p.x, p.y), own = target?.side === 0;
     if (this.mode === 'repair') return target && this.game.canRepair(target.id) ? 'repair' : 'repair-blocked';
     if (this.mode === 'sell') return own && target && isBuilding(this.game.defs[target.type]) ? 'sell' : 'sell-blocked';
     const point = camera.world(p.x, p.y), x = Math.floor(point.x), y = Math.floor(point.y), state = this.game.state;
     const inside = x >= 0 && y >= 0 && x < state.width && y < state.height;
     const tile = inside ? state.tiles[y * state.width + x] : undefined;
-    const clear = !!tile && tile.terrain !== 'water' && tile.terrain !== 'rock' && !state.entities.some(entity => {
+    const selected = state.entities.filter(entity => entity.selected && entity.side === 0 && entity.hp > 0 && entity.transportId === undefined);
+    const movers = selected.map(e => this.game.defs[e.type]).filter(def => !isBuilding(def));
+    const airborne = movers.some(def => def.movement === 'air');
+    const terrainAllowed = !!tile && (movers.length ? movers.some(def => def.movement === 'air' || (def.movement === 'water' ? tile.terrain === 'water' : tile.terrain !== 'rock' && (def.movement === 'amphibious' || tile.terrain !== 'water'))) : tile.terrain !== 'water' && tile.terrain !== 'rock');
+    const clear = terrainAllowed && (airborne || !state.entities.some(entity => {
       const def = this.game.defs[entity.type];
       return entity.hp > 0 && isBuilding(def) && x >= entity.x && x < entity.x + def.footprint[0] && y >= entity.y && y < entity.y + def.footprint[1];
-    });
+    }));
     if (this.renderer.placement) return this.game.canPlace(this.renderer.placement, x, y) ? 'deploy' : 'deploy-blocked';
-    const selected = state.entities.filter(entity => entity.selected && entity.side === 0 && entity.hp > 0);
     const mobile = selected.some(entity => !isBuilding(this.game.defs[entity.type]));
     const armed = selected.some(entity => this.game.defs[entity.type].damage > 0);
     const { ctrl, shift, alt } = this.modifiers;
@@ -174,7 +179,8 @@ export class Controls {
     if (armed && ctrl) return 'attack';
     if (mobile && alt) return clear ? 'move' : 'move-blocked';
     if (this.engineerRepair(target)) return 'repair';
-    if (target && !own && isBuilding(this.game.defs[target.type]) && selected.some(entity => entity.type === 'engineer')) return 'enter';
+    if (target && !own && isBuilding(this.game.defs[target.type]) && selected.some(entity => entity.type === 'engineer' || this.game.defs[entity.type].ability === 'spy')) return 'enter';
+    if (target && own && this.game.defs[target.type].passengers && selected.some(e => e.id !== target.id)) return 'enter';
     if (target && own) return target.selected && this.game.defs[target.type].deployedRange !== undefined ? 'deploy' : 'select';
     if (target && selected.length && !own && armed) return 'attack';
     return mobile ? clear ? 'move' : 'move-blocked' : 'default';
@@ -188,6 +194,7 @@ export class Controls {
   }
   setMode(mode: ControlMode): void {
     if (mode !== 'pan') this.cancelPlacement();
+    if (mode !== 'chrono-destination') this.chronoSource = undefined;
     this.mode = mode; this.callbacks.mode(mode);
     if (!this.callbacks.cursor) this.renderer.canvas.style.cursor = mode === 'pan' ? 'grab' : mode === 'attack' || mode === 'repair' || mode === 'sell' ? 'crosshair' : 'default';
     this.updateCursor();
@@ -206,6 +213,7 @@ export class Controls {
       else this.select([]);
       return;
     }
+    if (this.superweaponClick({ x, y })) return;
     this.followId = null;
     const ids = this.ids(), s = this.game.state;
     if (!ids.length || ['pan', 'repair', 'sell'].includes(this.mode) || this.renderer.placement) { this.renderer.camera.center(x, y); return; }
@@ -214,6 +222,7 @@ export class Controls {
       const def = this.game.defs[entity.type];
       return isBuilding(def) ? x >= entity.x && x < entity.x + def.footprint[0] && y >= entity.y && y < entity.y + def.footprint[1] : Math.hypot(x - entity.x, y - entity.y) < .6;
     });
+    if (target?.side === 0 && !modifiers.ctrl && !modifiers.alt && this.game.enterTransport?.(ids, target.id)) return;
     if (modifiers.ctrl && modifiers.alt) this.game.orderGuard(ids, x, y, target?.side === 0 ? target.id : undefined);
     else if (modifiers.ctrl && modifiers.shift) this.game.orderMove(ids, x, y, true);
     else if (modifiers.ctrl) { if (target) this.game.orderAttack(ids, target.id, true); else this.game.orderForceFire(ids, x, y); }
@@ -281,6 +290,7 @@ export class Controls {
       if (!this.planning) this.waypointOrders.clear(); return;
     }
     const w = this.renderer.camera.world(p.x, p.y), x = Math.floor(w.x), y = Math.floor(w.y), s = this.game.state;
+    if (this.superweaponClick(w)) return;
     if (this.renderer.placement) {
       if (this.game.place(this.renderer.placement, x, y)) { this.callbacks.ack(); this.cancelPlacement(); }
       else this.callbacks.toast('Cannot place here. Use clear ground close to your base.');
@@ -301,12 +311,13 @@ export class Controls {
       if (entity) this.game.orderAttack(ids, entity.id, true);
       else this.game.orderForceFire(ids, w.x, w.y);
     } else if (ids.length && e.altKey) this.game.orderForceMove(ids, w.x, w.y);
+    else if (entity?.side === 0 && this.game.enterTransport?.(ids, entity.id)) { this.callbacks.ack(); return; }
     else if (entity && this.engineerRepair(entity)) this.game.orderAttack(ids, entity.id);
     else if (entity && entity.side === 0 && this.mode !== 'attack') {
       const now = performance.now(), double = this.lastClick.id === entity.id && now - this.lastClick.time < 320;
       if (e.shiftKey && entity.selected) this.select(ids.filter(id => id !== entity.id));
       else if (double && this.game.defs[entity.type].deployedRange === undefined) this.select(this.ownUnits().filter(other => other.type === entity.type && this.renderer.visible(other)).map(other => other.id), e.shiftKey);
-      else if (entity.selected && !e.shiftKey && this.game.defs[entity.type].deployedRange !== undefined) this.game.deploy([entity.id]);
+      else if (entity.selected && !e.shiftKey && (this.game.defs[entity.type].deployedRange !== undefined || entity.type === 'mcv' || this.game.defs[entity.type].passengers)) this.game.deploy([entity.id]);
       else this.select([entity.id], e.shiftKey);
       this.lastClick = { id: entity.id, time: now }; this.callbacks.ack(); return;
     } else if (ids.length) {
@@ -318,6 +329,17 @@ export class Controls {
       else this.game.orderMove(ids, w.x, w.y, this.mode === 'attack');
     } else { this.select([]); return; }
     this.callbacks.ack(); if (this.mode === 'attack') this.setMode('select');
+  }
+  private superweaponClick(point: Vec2): boolean {
+    if (!['chrono-source', 'chrono-destination', 'weather'].includes(this.mode)) return false;
+    if (this.mode === 'chrono-source') {
+      this.chronoSource = { ...point }; this.setMode('chrono-destination');
+      this.callbacks.toast('Choose the Chronosphere destination. Right click cancels.'); return true;
+    }
+    const success = this.game.activateSuperweapon?.(this.mode === 'weather' ? 'weather' : 'chronosphere', point, this.chronoSource);
+    if (success) this.setMode('select');
+    else this.callbacks.toast('Choose an explored, valid target. The weapon must be charged and powered.');
+    return true;
   }
   get planning(): boolean { const key = this.bindings.get('planning'); return this.planningMode || (key !== undefined && this.keys.has(key)); }
 

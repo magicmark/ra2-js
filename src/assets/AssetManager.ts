@@ -386,7 +386,7 @@ export class AssetManager {
         ...EFFECT_ANIMATIONS.map(name => `${name}.shp`)].filter(name => !this.files.has(name));
       // Earlier selections omitted urban buildup/sale SHPs. Reselect them
       // from saved MIX archives through the existing optional-art upgrade.
-      for (const spec of Object.values(CATALOG)) if (spec.kind === 'building') {
+      for (const spec of Object.values(CATALOG)) if (spec.kind === 'building' && !spec.noBuildup) {
         const name = theaterNames(spec.sprite + 'mk', 'URBAN')[0] + '.shp';
         if (!this.files.has(name)) this.missingEnhancements.push(name);
       }
@@ -607,7 +607,7 @@ export class AssetManager {
     const index = nativeAnimationFrame(timing, ageSeconds), key = `animation:${name}:${index}`;
     if (this.sprites.has(key)) return this.sprites.get(key)!;
     const shape = this.shape(name); if (!shape) return null;
-    const frame = shape.frame(index), result = sprite(paint(frame, this.animationPalette), shape.width / 2 - frame.x, shape.height / 2 - frame.y);
+    const frame = shape.frame(index), result = sprite(paint(frame, this.animationPalette), shape.width / 2 - frame.x, (/^wclbolt/.test(name) ? shape.height : shape.height / 2) - frame.y);
     this.sprites.set(key, result); return result;
   }
   getAnimationOpacity(name: string): number {
@@ -629,8 +629,10 @@ export class AssetManager {
         const shape = this.shape(spec.sprite);
         if (shape) {
           if (spec.kind === 'building') result = this.renderBuilding(shape, spec, side, frame);
+          else if (spec.kind === 'spriteVehicle') return this.getSpriteVehicle(name, Math.round(frame / 4), 0, side);
           else {
-            const [start, stride] = idleFrames[spec.sprite] ?? [0, 1];
+            const ready = this.infantry.get(spec.sprite)?.sequences.Ready;
+            const [start, stride] = ready ? [ready.start, ready.stride] : idleFrames[spec.sprite] ?? [0, 1];
             const index = frame < 8 ? start + frame * stride : (spec.sprite === 'rock' ? 292 : 8) + (frame % 8) * 6 + Math.floor((frame - 8) / 8) % 6;
             return this.getInfantryFrame(spec.sprite, index, side);
           }
@@ -682,6 +684,9 @@ export class AssetManager {
   }
   /** Sale replays the original buildup SHP backwards, including its own shadow. */
   getBuildingSellSprite(name: string, progress: number, side = 0): Sprite | null {
+    return this.getBuildingTransitionSprite(name, progress, side, true);
+  }
+  private getBuildingTransitionSprite(name: string, progress: number, side: number, reverse: boolean): Sprite | null {
     const spec = this.spec(name);
     if (!this.ready || !spec || spec.kind !== 'building') return this.getBuildingSprite(name, 0, side);
     const buildup = this.art.get(spec.sprite)?.buildup?.toLowerCase() ?? spec.sprite + 'mk';
@@ -690,7 +695,8 @@ export class AssetManager {
     // during its sale without blocking the game on an optional MK asset.
     if (!shape || !base) return this.getBuildingSprite(name, 0, side);
     const frames = shape.frameCount > 1 && shape.frameCount % 2 === 0 ? shape.frameCount / 2 : shape.frameCount;
-    const frame = buildingSaleFrame(progress, frames), key = `sell:${buildup}:${side}:${frame}`;
+    const frame = reverse ? buildingSaleFrame(progress, frames) : Math.min(frames - 1, Math.floor(Math.max(0, progress) * frames));
+    const key = `buildup:${buildup}:${side}:${frame}`;
     if (this.sprites.has(key)) return this.sprites.get(key)!;
     this.getSprite(name, 0, side); // Establish the standing foundation's stable anchor.
     const source = canvas(shape.width, shape.height), ctx = source.getContext('2d')!;
@@ -698,6 +704,25 @@ export class AssetManager {
     const image = shape.frame(frame); ctx.drawImage(paint(image, this.unitPalette, side), image.x, image.y);
     const anchorY = (this.buildingAnchors.get(spec.sprite) ?? base.height / 2) + (shape.height - base.height) / 2;
     const result = trimSprite(sprite(source, shape.width / 2, anchorY));
+    this.sprites.set(key, result); return result;
+  }
+  /** Placement plays the same authored MK frames forwards, on the simulation clock. */
+  getBuildingBuildSprite(name: string, progress: number, side = 0): Sprite | null {
+    return this.getBuildingTransitionSprite(name, progress, side, false);
+  }
+  /** Non-voxel vehicles such as the Dolphin have eight directional SHP sequences. */
+  getSpriteVehicle(name: string, facing: number, time: number, side = 0, firing = false): Sprite | null {
+    const spec = this.spec(name); if (spec?.kind !== 'spriteVehicle') return null;
+    const shape = this.shape(spec.sprite); if (!shape) return null;
+    const frames = Number(this.art.get(spec.sprite)?.[firing ? 'firingframes' : 'walkframes'] ?? 1);
+    const direction = ((5 - Math.round(facing)) % 8 + 8) % 8;
+    const frame = (firing ? 8 * Number(this.art.get(spec.sprite)?.walkframes ?? 1) : 0) + direction * frames + Math.floor(time * 10) % frames;
+    const key = `sprite-vehicle:${name}:${side}:${frame}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const image = shape.frame(frame), shade = shape.frame(frame + shape.frameCount / 2);
+    const source = canvas(shape.width, shape.height), ctx = source.getContext('2d')!;
+    ctx.drawImage(shadow(shade), shade.x, shade.y); ctx.drawImage(paint(image, this.unitPalette, side), image.x, image.y);
+    const result = trimSprite(sprite(source, shape.width / 2, shape.height / 2));
     this.sprites.set(key, result); return result;
   }
   /** Hull and turret use independent, quantized original VXL orientations. */
@@ -884,7 +909,10 @@ export class AssetManager {
   }
   private renderVehicle(name: string, facing: number, side: number, castShadow = true, turretFacing = facing): Sprite | null {
     const model = this.vehicleModel(name); if (!model.length) return null;
-    const size = 144, result = canvas(size, size), ctx = result.getContext('2d')!, output = ctx.createImageData(size, size), depth = new Float32Array(size * size).fill(-Infinity);
+    // Large ships must retain their bow/stern at every facing. Integer centers
+    // preserve the native pixel positions of the existing vehicle artwork.
+    const radius = model.reduce((max, voxel) => Math.max(max, Math.hypot(voxel.x, voxel.y) + Math.abs(voxel.z) + 16), 0);
+    const size = Math.max(144, Math.ceil(radius) * 2), result = canvas(size, size), ctx = result.getContext('2d')!, output = ctx.createImageData(size, size), depth = new Float32Array(size * size).fill(-Infinity);
     const angle = facing / 32 * Math.PI * 2, cs = Math.cos(angle), sn = Math.sin(angle), center = size / 2, ground = size / 2 + 12;
     const turretAngle = turretFacing / 32 * Math.PI * 2, tcs = Math.cos(turretAngle), tsn = Math.sin(turretAngle);
     if (castShadow) for (const voxel of model) {

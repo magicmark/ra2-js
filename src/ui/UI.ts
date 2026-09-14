@@ -1,3 +1,4 @@
+import { revealedEntity } from '../game/visibility';
 import { MAP_CATALOG } from '../game/maps/catalog';
 import type { Category, GameAPI } from '../game/types';
 import { inspectionStatus, INSPECTION_HELP } from '../game/customUnits';
@@ -51,7 +52,7 @@ const CATEGORY_NAMES: Record<Category, string> = { structures: 'Structures', def
 const COMMANDS: [ControlCommand, string][] = [['team1', 'Team 1 · click to create or select; right click to disband'], ['team2', 'Team 2 · click to create or select; right click to disband'], ['type', 'Select units of the same type'], ['deploy', 'Deploy'], ['guard', 'Guard area'], ['planning', 'Planning mode']];
 // Authored Allied [BuildingTypes] order: GAPOWR(1), GAREFN(2), GAPILE(4),
 // GAWEAP(8), GAAIRC(106), also visible in the retail sidebar reference.
-const ALLIED_STRUCTURE_ORDER = ['power', 'refinery', 'barracks', 'warfactory', 'radar'];
+const ALLIED_STRUCTURE_ORDER = ['power', 'refinery', 'barracks', 'warfactory', 'radar', 'service_depot', 'battlelab', 'shipyard', 'ore_purifier'];
 const STORAGE_NOTE = 'Game files are saved in this browser when storage is available.';
 const SOURCE_HINT = 'Press Enter to use saved game files, or load this URL if they are not available.';
 const escapeHTML = (value: unknown) => String(value).replace(/[&<>"']/g, x => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[x]!);
@@ -254,6 +255,11 @@ export class UI {
       const requested = target.dataset.mode as ControlMode;
       const mode = (requested === 'repair' || requested === 'sell') && this.mode === requested ? 'select' : requested;
       this.setMode(mode); this.actions.onMode(mode); return;
+    }
+    if (target.dataset.superweapon) {
+      const mode = target.dataset.superweapon === 'weather' ? 'weather' : 'chrono-source';
+      this.actions.onMode(mode); this.setMode(mode); this.closeBuildPanel();
+      this.showToast(mode === 'weather' ? 'Choose the lightning storm target.' : 'Choose the vehicles to chronoshift, then their destination.'); return;
     }
     if (target.dataset.build) {
       const type = target.dataset.build; const def = this.game.defs[type];
@@ -499,6 +505,10 @@ export class UI {
     });
     this.el('category-name').textContent = CATEGORY_NAMES[this.category]; this.el('category-count').textContent = `${String(defs.length).padStart(2, '0')} AVAILABLE`;
     this.el('build-grid').innerHTML = defs.map(def => `<button class="build-card" data-build="${escapeHTML(def.id)}" data-tooltip="${escapeHTML(def.name)}&#10;$${def.cost}" aria-label="Build ${escapeHTML(def.name)}, ${def.cost} credits"><div class="cameo"><img src="${escapeHTML(this.cameos.get(def.id)!)}" alt="${escapeHTML(def.name)}" draggable="false"/><span class="card-corner"></span><span class="card-queue"></span><span class="card-state"></span><span class="card-progress"></span></div><span class="card-requirement"></span></button>`).join('');
+    if (this.category === 'defenses') this.el('build-grid').insertAdjacentHTML('beforeend', ['chronosphere', 'weather_control'].map(id => {
+      const def = this.game.defs[id]; if (!def || !this.cameos.has(id)) return '';
+      return `<button class="build-card superweapon-card" data-superweapon="${def.superweapon}" hidden disabled aria-label="${id === 'chronosphere' ? 'Activate Chronosphere' : 'Activate Lightning Storm'}"><div class="cameo"><img src="${this.cameos.get(id)}" alt=""/><span class="card-state"></span></div><span class="card-requirement"></span></button>`;
+    }).join(''));
     this.cardElements.clear(); this.el('build-grid').querySelectorAll<HTMLElement>('[data-build]').forEach(card => this.cardElements.set(card.dataset.build!, card));
     this.updateScrollButtons();
   }
@@ -547,7 +557,7 @@ export class UI {
     }
     c.globalAlpha = 1;
     for (const entity of state.entities) {
-      if (entity.side !== 0 && !state.fog[Math.floor(entity.y) * state.width + Math.floor(entity.x)]) continue;
+      if (!revealedEntity(state, this.game.defs, entity)) continue;
       const def = this.game.defs[entity.type]; if (!def) continue;
       const p = point(entity.x + def.footprint[0] / 2, entity.y + def.footprint[1] / 2);
       c.fillStyle = state.sides[entity.side]?.color ?? '#fff';
@@ -601,7 +611,7 @@ export class UI {
     this.el('power-fill').style.height = `${side.power / powerScale * 100}%`;
     this.el('power-demand').style.bottom = `${side.powerUsed / powerScale * 100}%`;
     this.el('power-resource').dataset.tooltip = `Power: ${side.power} generated / ${side.powerUsed} used`;
-    const radarOnline = side.power >= side.powerUsed && state.entities.some(entity => entity.side === 0 && entity.hp > 0 && /^radar/.test(entity.type));
+    const radarOnline = side.power >= side.powerUsed && state.entities.some(entity => entity.side === 0 && entity.hp > 0 && !entity.constructing && !entity.selling && /^radar/.test(entity.type));
     this.radarOnline = radarOnline; this.el('radar-frame').classList.toggle('online', radarOnline);
     this.el('minimap').setAttribute('aria-label', radarOnline ? 'Tactical radar. Click to order selected units; with no selection, center the camera.' : 'Radar offline. Build an Airforce Command to activate.');
 
@@ -609,7 +619,7 @@ export class UI {
 
     this.options?.update();
 
-    const friendly = state.entities.filter(entity => entity.side === 0);
+    const friendly = state.entities.filter(entity => entity.side === 0 && entity.hp > 0 && !entity.selling && !entity.constructing && entity.transportId === undefined);
     let totalQueue = 0, hasReady = false;
     for (const category of CATEGORIES) {
       const queue = side.queues[category], ready = queue.some(item => item.ready); totalQueue += queue.length; hasReady ||= ready;
@@ -625,7 +635,7 @@ export class UI {
       const matching = queue.filter(item => item.type === type), ready = matching.some(item => item.ready), active = queue[0]?.type === type ? queue[0] : null;
       card.classList.toggle('unavailable', !available.ok && !ready); card.classList.toggle('producing', !!active && !ready); card.classList.toggle('ready', ready);
       card.setAttribute('aria-disabled', String(!available.ok && !ready));
-      card.dataset.tooltip = `${def.name}\n$${formatMoney(def.cost)}`;
+      card.dataset.tooltip = `${def.name}\n$${formatMoney(def.cost)}${!available.ok ? `\n${available.reason}` : ''}`;
       this.nativeText(card.querySelector<HTMLElement>('.card-queue')!, matching.length > 1 ? String(matching.length) : '');
       this.nativeText(card.querySelector<HTMLElement>('.card-state')!, ready ? 'Ready' : active?.paused || active?.blockedFunds || active?.blockedPrerequisite ? 'On Hold' : '');
       card.querySelector<HTMLElement>('.card-progress')!.style.width = active ? `${active.progress * 100}%` : '0';
@@ -634,6 +644,17 @@ export class UI {
       reason.textContent = active?.blockedPrerequisite ?? (!available.ok && !ready && !active ? available.reason : '');
     }
 
+    for (const card of this.root.querySelectorAll<HTMLButtonElement>('[data-superweapon]')) {
+      const building = state.entities.find(e => e.side === 0 && e.hp > 0 && !e.selling && !e.constructing && this.game.defs[e.type].superweapon === card.dataset.superweapon);
+      card.hidden = !building;
+      if (!building) continue;
+      const def = this.game.defs[building.type], remaining = Math.max(0, Math.ceil(def.recharge! - (building.recharge ?? 0)));
+      card.disabled = remaining > 0 || side.power < side.powerUsed;
+      const label = side.power < side.powerUsed ? 'Low Power' : remaining ? `${Math.floor(remaining / 60)}:${String(remaining % 60).padStart(2, '0')}` : 'Ready';
+      this.nativeText(card.querySelector<HTMLElement>('.card-state')!, label);
+      card.dataset.tooltip = `${def.superweapon === 'weather' ? 'Lightning Storm' : 'Chronoshift'} · ${label}`;
+      card.classList.toggle('ready', !card.disabled);
+    }
     this.updateScrollButtons();
     this.paintCursor();
     this.renderQueue();

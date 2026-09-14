@@ -1,0 +1,24 @@
+# Original rules.ini [SNIPE]; Britain roster.
+[units.sniper]
+name = "Sniper"
+category = "infantry"
+faction = "allied"
+cost = 600
+buildTime = 12.600000000000001
+hp = 125
+armor = "none"
+sight = 8
+speed = 1.171875
+nativeSpeed = 4
+damage = 125
+range = 14.0
+fireRate = 5.0
+verses = [2.0, 1.0, 1.0, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 1.0]
+sprite = "snipe"
+cameo = "snipicon"
+requires = ["barracks", "radar"]
+impact = "PIFFPIFF"
+description = "British specialist. Eliminates enemy infantry at long range."
+factory = "barracks"
+targets = ["infantry"]
+size = 1

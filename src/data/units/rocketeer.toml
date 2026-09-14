@@ -19,3 +19,5 @@ description = "Fast mobile assault infantry with a powerful rapid-fire weapon."
 armor = "none"
 nativeSpeed = 9
 verses = [1.0, 1.0, 0.7, 0.6, 0.4, 0.4, 0.75, 0.5, 0.25, 1.0, 1.0]
+movement = "air"
+targets = ["land", "air", "water"]

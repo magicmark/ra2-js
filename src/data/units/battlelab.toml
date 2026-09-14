@@ -1,0 +1,16 @@
+# Original rules.ini [GATECH]; 30-frame simulation reference clock.
+[units.battlelab]
+name = "Battle Lab"
+category = "structures"
+faction = "allied"
+cost = 2000
+buildTime = 42.0
+hp = 500
+armor = "wood"
+footprint = [3, 2]
+power = -100
+requires = ["warfactory", "radar", "conyard"]
+sight = 6
+sprite = "gatech"
+cameo = "techicon"
+description = "Unlocks advanced Allied units, the Ore Purifier and superweapons."

@@ -1,0 +1,27 @@
+# Original rules.ini [DLPH]; 30-frame simulation reference clock.
+[units.dolphin]
+name = "Dolphin"
+category = "vehicles"
+faction = "allied"
+cost = 500
+buildTime = 10.5
+hp = 200
+armor = "light"
+footprint = [1, 1]
+power = 0
+requires = ["shipyard", "battlelab"]
+sight = 4
+sprite = "dlph"
+cameo = "dlphicon"
+description = "Fast naval scout armed with a sonic weapon."
+speed = 2.34375
+nativeSpeed = 8
+size = 15
+rot = 6
+damage = 4
+range = 6.0
+fireRate = 4.0
+verses = [1.0, 1.0, 1.0, 1.0, 0.8, 0.8, 1.0, 0.6, 0.6, 1.0, 1.0]
+targets = ["land", "water"]
+factory = "shipyard"
+movement = "water"

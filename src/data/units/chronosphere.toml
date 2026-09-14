@@ -1,0 +1,20 @@
+# Original rules.ini [GACSPH]; 30-frame simulation reference clock.
+[units.chronosphere]
+name = "Chronosphere"
+category = "defenses"
+faction = "allied"
+cost = 2500
+buildTime = 52.5
+hp = 750
+armor = "concrete"
+footprint = [4, 3]
+power = -200
+requires = ["battlelab", "conyard"]
+sight = 5
+sprite = "gacsph"
+cameo = "csphicon"
+description = "Charges for seven minutes. Transfers vehicles from a source area to a destination."
+powered = true
+buildLimit = 1
+superweapon = "chronosphere"
+recharge = 420

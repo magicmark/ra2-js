@@ -7,7 +7,7 @@ export function readArtSections(bytes: Uint8Array | undefined): ArtSections {
   const sections: ArtSections = new Map();
   let section: Record<string, string> | undefined;
   for (const raw of new TextDecoder().decode(bytes).split(/\r?\n/)) {
-    const line = raw.split(';')[0].trim(), header = /^\[([^\]]+)\]$/.exec(line);
+    const line = raw.split(';')[0].split('//')[0].trim(), header = /^\[([^\]]+)\]$/.exec(line);
     if (header) {
       const name = header[1].toLowerCase(); section = sections.get(name) ?? {};
       sections.set(name, section);

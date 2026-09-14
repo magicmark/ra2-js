@@ -28,6 +28,11 @@ function validateDefinitions(units: Record<string, Partial<UnitDef>>): Record<st
   for (const def of Object.values(result))
     for (const requirement of def.requires)
       if (!result[requirement]) throw new Error(`${def.id} requires unknown unit ${requirement}`);
+  for (const def of Object.values(result)) {
+    if (def.factory && (!result[def.factory]?.producer?.includes(def.category) || !def.requires.includes(def.factory))) throw new Error(`${def.id} requires a compatible factory`);
+    if (def.movement && !['land', 'air', 'water', 'amphibious', 'teleport'].includes(def.movement)) throw new Error(`Invalid movement: ${def.id}`);
+    if (def.superweapon && (!def.recharge || def.recharge <= 0)) throw new Error(`Invalid superweapon recharge: ${def.id}`);
+  }
   return result;
 }
 

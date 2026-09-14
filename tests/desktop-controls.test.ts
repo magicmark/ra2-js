@@ -34,6 +34,16 @@ function fixture() {
 }
 
 describe('retail mouse commands', () => {
+  it('targets a Chronosphere source and destination and cancels superweapon targeting', () => {
+    const { game, controls, click, key, callbacks } = fixture();
+    const activate = vi.spyOn(game, 'activateSuperweapon').mockReturnValue(true);
+    controls.setMode('chrono-source'); click();
+    expect(controls.mode).toBe('chrono-destination'); expect(activate).not.toHaveBeenCalled();
+    click(); expect(activate).toHaveBeenCalledWith('chronosphere', expect.any(Object), expect.any(Object));
+    expect(controls.mode).toBe('select');
+    controls.setMode('weather'); key('Escape'); expect(controls.mode).toBe('select');
+    expect(callbacks.options).not.toHaveBeenCalled();
+  });
   it('sends selected engineers into friendly damaged buildings from the battlefield and radar', () => {
     const { game, controls, click, pointer, pick } = fixture();
     const engineer = game.state.entities.find(e => e.type === 'gi')!, target = game.state.entities.find(e => e.type === 'power')!;

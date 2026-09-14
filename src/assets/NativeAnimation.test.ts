@@ -25,3 +25,9 @@ it('keeps omitted impact Rate at one tick and bounds non-looping frames', () => 
   expect(nativeAnimationFrame(impact, 11 / 30)).toBe(11);
   expect(nativeAnimationFrame(impact, 12 / 30)).toBe(11);
 });
+
+it('accepts original INI section headers with trailing C-style comments', () => {
+  const art = readArtSections(new TextEncoder().encode('[CometWH]\nVerses=200%\n[MirageWH] // heat ray\nVerses=100%'));
+  expect(art.get('cometwh')?.verses).toBe('200%');
+  expect(art.get('miragewh')?.verses).toBe('100%');
+});

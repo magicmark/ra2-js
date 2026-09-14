@@ -1,0 +1,30 @@
+# Original rules.ini [SHAD]; 30-frame simulation reference clock.
+[units.nighthawk]
+name = "Nighthawk Transport"
+category = "vehicles"
+faction = "allied"
+cost = 1000
+buildTime = 21.0
+hp = 175
+armor = "light"
+footprint = [1, 1]
+power = 0
+requires = ["warfactory"]
+sight = 7
+sprite = "shad"
+cameo = "shadicon"
+description = "Airborne infantry transport. Select passengers and click it to load; Deploy unloads."
+speed = 4.1015625
+nativeSpeed = 14
+size = 15
+rot = 5
+damage = 35
+range = 6.0
+fireRate = 1.3333333333333333
+verses = [1.0, 0.8, 0.7, 0.5, 0.25, 0.25, 0.75, 0.5, 0.25, 1.0, 1.0]
+impact = "XGRYSML2"
+targets = ["land", "water"]
+factory = "warfactory"
+movement = "air"
+passengers = 5
+infantryOnly = true

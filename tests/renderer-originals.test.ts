@@ -15,6 +15,18 @@ function renderer() {
 }
 
 describe('original artwork renderer', () => {
+  it('draws known enemy contacts above the shroud when they move into unexplored terrain', () => {
+    const view = renderer(), order: string[] = [];
+    view.assets = { ready: true, setTheater: vi.fn() } as any;
+    view.camera.center(.5, .5);
+    view.game.defs.gi = { category: 'infantry', footprint: [1, 1] } as any;
+    view.game.state.entities = [{ id: 1, type: 'gi', side: 1, hp: 100, x: .5, y: .5, revealed: true }] as any;
+    vi.spyOn(view as any, 'drawTerrain').mockImplementation(() => {});
+    vi.spyOn(view as any, 'drawShroud').mockImplementation(() => { order.push('shroud'); });
+    vi.spyOn(view as any, 'drawEntity').mockImplementation(() => { order.push('enemy'); });
+    view.render();
+    expect(order).toEqual(['shroud', 'enemy']);
+  });
   it('selects each map file’s FinalAlert theater before requesting gameplay artwork, and resets for training', () => {
     const view = renderer(), setTheater = vi.fn();
     view.assets = { ready: true, setTheater } as any;
@@ -76,7 +88,7 @@ describe('original artwork renderer', () => {
     expect(() => view.render()).toThrow('Missing original artwork: grass terrain');
   });
 
-  it('keeps explored ore and scenery bright after sight leaves while hiding enemy units', () => {
+  it('keeps explored ore and scenery bright after sight leaves and retains revealed enemy units', () => {
     const view = renderer(), art = { source: {}, width: 60, height: 30 } as any;
     view.camera.center(.5, .5);
     view.game.state.tiles[0] = { terrain: 'rock', variant: 0, ore: 50 };
@@ -91,7 +103,10 @@ describe('original artwork renderer', () => {
     expect(view.gl.polygon).not.toHaveBeenCalled();
     view.game.defs.gi = { footprint: [1, 1] } as any;
     const enemy = { type: 'gi', side: 1, x: 0, y: 0 } as any;
+    expect(view.visible(enemy)).toBe(true);
+    view.game.state.explored[0] = 0;
     expect(view.visible(enemy)).toBe(false);
+    view.game.state.explored[0] = 1;
     view.game.state.fog[0] = 1;
     expect(view.visible(enemy)).toBe(true);
   });

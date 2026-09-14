@@ -1,0 +1,28 @@
+# Original rules.ini [TANY]; 30-frame simulation reference clock.
+[units.tanya]
+name = "Tanya"
+category = "infantry"
+faction = "allied"
+cost = 1000
+buildTime = 21.0
+hp = 125
+armor = "flak"
+footprint = [1, 1]
+power = 0
+requires = ["barracks", "battlelab"]
+sight = 8
+sprite = "tany"
+cameo = "tanyicon"
+description = "Elite infantry killer. Places C4 on enemy buildings and ships at close range."
+speed = 1.40625
+nativeSpeed = 5
+size = 1
+damage = 125
+range = 6.0
+fireRate = 0.3333333333333333
+verses = [2.0, 1.0, 1.0, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 1.0]
+impact = "PIFFPIFF"
+targets = ["land", "water"]
+factory = "barracks"
+movement = "amphibious"
+ability = "tanya"

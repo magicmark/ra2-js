@@ -1,0 +1,30 @@
+# Original rules.ini [ORCA]; 30-frame simulation reference clock.
+[units.harrier]
+name = "Harrier"
+category = "vehicles"
+faction = "allied"
+cost = 1200
+buildTime = 25.2
+hp = 150
+armor = "light"
+footprint = [1, 1]
+power = 0
+requires = ["radar"]
+sight = 8
+sprite = "falc"
+cameo = "falcicon"
+description = "Strike aircraft. Returns to Airforce Command to rearm; four aircraft per command."
+speed = 4.1015625
+nativeSpeed = 14
+size = 3
+rot = 3
+damage = 150
+range = 6.0
+fireRate = 0.3333333333333333
+verses = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.75, 1.0, 1.0]
+burst = 2
+impact = "XGRYSML2"
+targets = ["land", "water"]
+factory = "radar"
+movement = "air"
+ammo = 1

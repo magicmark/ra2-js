@@ -14,6 +14,14 @@ export interface UnitDef {
   deployedDamage?: number; deployedRange?: number; deployedFireRate?: number; deployedVerses?: number[];
   crusher?: boolean; nativeSpeed?: number; rot?: number; turret?: boolean;
   mapOnly?: boolean;
+  factory?: string;
+  movement?: 'land' | 'air' | 'water' | 'amphibious' | 'teleport';
+  targets?: ('land' | 'air' | 'water' | 'infantry')[];
+  powered?: boolean; buildLimit?: number;
+  passengers?: number; infantryOnly?: boolean; size?: number;
+  ability?: 'spy' | 'tanya' | 'chrono' | 'mirage' | 'prism' | 'carrier';
+  superweapon?: 'chronosphere' | 'weather';
+  recharge?: number; ammo?: number;
 }
 export interface Entity extends Vec2 {
   id: number; type: string; side: number; hp: number; maxHp: number;
@@ -25,6 +33,11 @@ export interface Entity extends Vec2 {
   infantryAnimation?: { sequence: string; startedAt: number };
   deployment?: { startedAt: number; target: boolean };
   selling?: { startedAt: number; duration: number };
+  constructing?: { startedAt: number; duration: number };
+  passengers?: Entity[]; transportId?: number;
+  recharge?: number; ammo?: number; rearm?: number; homeId?: number;
+  disabledUntil?: number; infiltrated?: boolean;
+  revealed?: boolean;
   previous?: Vec2; previousFacing?: number; turretFacing?: number; previousTurretFacing?: number;
   nativeType?: string;
   rank?: 0 | 1 | 2;
@@ -80,6 +93,8 @@ export interface GameAPI {
   deploy(ids: number[]): void;
   orderHarvest(ids: number[], x: number, y: number): void;
   stop(ids: number[]): void;
+  enterTransport?(ids: number[], targetId: number): boolean;
+  activateSuperweapon?(type: 'chronosphere' | 'weather', destination: Vec2, source?: Vec2, side?: number): boolean;
   sell(id: number): boolean;
   repair(id: number): boolean;
   canRepair(id: number): boolean;

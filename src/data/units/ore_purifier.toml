@@ -1,0 +1,17 @@
+# Original rules.ini [GAOREP]; 30-frame simulation reference clock.
+[units.ore_purifier]
+name = "Ore Purifier"
+category = "structures"
+faction = "allied"
+cost = 2500
+buildTime = 52.5
+hp = 900
+armor = "wood"
+footprint = [3, 3]
+power = -200
+requires = ["battlelab", "refinery", "conyard"]
+sight = 5
+sprite = "gaorep"
+cameo = "gorep"
+description = "Each powered purifier increases income from harvested ore by 25%."
+powered = true

@@ -77,6 +77,9 @@ describe('map theater artwork', () => {
       expect(colors(assets.getBuildingSprite('refinery', 1 / 30, -1))).toEqual([color, color + 1, color + 3, color + 4, color + 5].map(value => value * 4));
       expect(colors(assets.getBuildingSellSprite('refinery', 0, -1))).toEqual([(color + 6) * 4]);
       expect(colors(assets.getBuildingSellSprite('refinery', 1, -1))).toEqual([(color + 5) * 4]);
+      expect(colors(assets.getBuildingBuildSprite('refinery', 0, -1))).toEqual([(color + 5) * 4]);
+      expect(colors(assets.getBuildingBuildSprite('refinery', .5, -1))).toEqual([(color + 6) * 4]);
+      expect(colors(assets.getBuildingBuildSprite('refinery', 1, -1))).toEqual([(color + 6) * 4]);
     }
   });
 
@@ -85,6 +88,10 @@ describe('map theater artwork', () => {
     expect(colors(assets.getNativeStructure('SNOW', 'CAOILD'))).toEqual([120]);
     expect(colors(assets.getNativeStructure('TEMPERATE', 'CAOILD'))).toEqual([40]);
     expect(colors(assets.getNativeStructure('URBAN', 'CAOILD'))).toEqual([40]);
+  });
+
+  it('does not mistake the Gap Generator cameo for Arctic building artwork', () => {
+    for (const theater of NATIVE_THEATERS) expect(theaterNames('GAPICON', theater)).toEqual(['gapicon']);
   });
 
   it('does not silently fall back to snow when dry building art is missing', () => {

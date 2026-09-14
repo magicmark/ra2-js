@@ -15,5 +15,5 @@ it('retains explored radar terrain at full brightness without exposing unseen en
   Object.assign(ui, { game: { state, defs: { gi: { footprint: [1, 1] } } }, actions: {}, el: vi.fn(() => canvas) });
   ui.drawMinimap();
   expect(paints.filter(paint => paint.color === '#747b37')).toEqual([{ alpha: 1, color: '#747b37' }]);
-  expect(paints.filter(paint => paint.color === 'red')).toHaveLength(1);
+  expect(paints.filter(paint => paint.color === 'red')).toHaveLength(2);
 });

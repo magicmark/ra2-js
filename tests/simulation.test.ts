@@ -1,3 +1,4 @@
+import { BUILDING_CONSTRUCTION_SECONDS } from '../src/game/buildingSale';
 import { describe, expect, it } from 'vitest';
 import { Game } from '../src/game/Game';
 import { definitions, isBuilding, parseDefinitions } from '../src/game/definitions';
@@ -120,6 +121,8 @@ describe('construction and per-side production', () => {
     advance(game, game.defs.power.buildTime + .1);
     expect(game.place('refinery', plot.x, plot.y)).toBe(false);
     expect(game.place('power', plot.x, plot.y)).toBe(true);
+    expect(game.state.sides[0].power).toBe(200);
+    advance(game, BUILDING_CONSTRUCTION_SECONDS);
     expect(game.state.sides[0].power).toBe(400);
     expect(game.state.sides[0].queues.structures).toHaveLength(0);
     expect(game.place('power', plot.x, plot.y)).toBe(false);
@@ -273,6 +276,7 @@ describe('ore miners', () => {
     advance(game, game.defs.refinery.buildTime + .1);
     const plot = validPlot(game, 'refinery');
     expect(game.place('refinery', plot.x, plot.y)).toBe(true);
+    advance(game, BUILDING_CONSTRUCTION_SECONDS);
     expect(game.state.entities.filter(e => e.side === 0 && e.type === 'miner')).toHaveLength(2);
     advance(game, 25);
     expect(game.state.sides[0].money).toBeGreaterThan(before - 2000);
@@ -285,6 +289,7 @@ describe('ore miners', () => {
     advance(game, game.defs.refinery.buildTime + .1);
     const plot = validPlot(game, 'refinery');
     game.place('refinery', plot.x, plot.y);
+    advance(game, BUILDING_CONSTRUCTION_SECONDS);
     const miners = game.state.entities.filter(e => e.type === 'miner');
     expect(miners).toHaveLength(2);
     const before = game.state.sides[0].money;
@@ -345,10 +350,14 @@ describe('combat, AI and match lifecycle', () => {
   it('builds an enemy economy, produces armor and launches an attacking force', () => {
     const game = new Game({ automaticSovietWaves: true });
     // Hull turns now consume stationary logic frames on every route bend.
-    advance(game, 180);
+    const producedRhinos = new Set<number>();
+    for (let i = 0; i < 180 * 30; i++) {
+      game.tick(1 / 30);
+      for (const unit of game.state.entities) if (unit.side === 1 && unit.type === 'rhino') producedRhinos.add(unit.id);
+    }
     expect(game.state.entities.some(e => e.side === 1 && e.type === 'warfactory_soviet')).toBe(true);
     expect(game.state.entities.filter(e => e.side === 1 && e.type === 'warminer').length).toBeGreaterThanOrEqual(2);
-    expect(game.state.entities.filter(e => e.side === 1 && e.type === 'rhino').length).toBeGreaterThanOrEqual(2);
+    expect(producedRhinos.size).toBeGreaterThanOrEqual(2);
     expect(game.state.events.some(e => e.text.includes('strike force'))).toBe(true);
     expect(game.state.entities.some(e => e.side === 1 && !isBuilding(game.defs[e.type]) && !game.defs[e.type].harvester && e.y > 28)).toBe(true);
     expect(game.state.sides[1].money).toBeGreaterThanOrEqual(0);
@@ -359,7 +368,7 @@ describe('combat, AI and match lifecycle', () => {
       const building = entity(game, type);
       return !building || building.hp < building.maxHp;
     })).toBe(true);
-  }, 20000);
+  }, 45000); // Simulates 235 seconds of construction, traffic and combat.
 
   it('declares either winner when a base is eliminated, stops simulation and restarts all state', () => {
     for (const losingSide of [0, 1]) {

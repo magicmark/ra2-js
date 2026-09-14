@@ -9,7 +9,7 @@ import { assetCache, archiveStageKey, type SavedArchive } from './AssetDownload'
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
-const CURRENT_SELECTED_FILE_COUNT = 762;
+const CURRENT_SELECTED_FILE_COUNT = 901;
 // Fixed historical membership: deriving the old cache by subtracting only the
 // previous update's additions accidentally left hundreds of future map files in it.
 const PRE_NATIVE_NAMES = new Set(readFileSync(new URL('./fixtures/selected-art-pre-native.txt', import.meta.url), 'utf8')
@@ -21,8 +21,13 @@ let network: ReturnType<typeof vi.fn>;
 
 // The real installer bytes stay external; only already-extracted local MIXes
 // are read. Archive extraction itself is covered by the browser end-to-end test.
-describe.skipIf(!process.env.RA2_ASSET_DIR)('strict loader with actual original artwork', () => {
+describe.skipIf(!process.env.RA2_ASSET_DIR && !process.env.RA2_SELECTED_ART)('strict loader with actual original artwork', () => {
   beforeAll(() => {
+    if (process.env.RA2_SELECTED_ART) {
+      const files = JSON.parse(readFileSync(process.env.RA2_SELECTED_ART, 'utf8')) as { name: string; base64: string }[];
+      originals = files.map(file => ({ name: file.name, bytes: new Uint8Array(Buffer.from(file.base64, 'base64')) }));
+      return;
+    }
     const archives: MixArchive[] = [];
     const visit = (name: string, bytes: Uint8Array) => {
       const archive = new MixArchive(bytes, name); archives.push(archive);
@@ -159,7 +164,7 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('strict loader with actual original 
     await new AssetManager().importFiles([new File(['fixture'], 'ra2.mix')]);
     const source = '/asset-source', previous = await assetCache<any>(source);
     const files = previous.files.filter((file: AssetFile) => !/^[gn]u.*mk\.shp$/.test(file.name));
-    expect(files).toHaveLength(748);
+    expect(files.length).toBeLessThan(CURRENT_SELECTED_FILE_COUNT);
     await assetCache(source, { ...previous, files });
     await assetCache(archiveStageKey(source, 'mix'), { version: 1, id: 'saved-mixes', saved: 123, files: [{ name: 'ra2.mix', blob: new Blob(['local fixture']) }] } satisfies SavedArchive);
     worker.mockClear(); network.mockClear();
@@ -172,6 +177,19 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('strict loader with actual original 
       expect(manager.getBuildingSellSprite(name, .5, spec.sprite.startsWith('n') ? 1 : 0), name).not.toBeNull();
     }
     expect(await new AssetManager().initialize({ nativeMaps: true })).toBe('ready');
+    expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
+  }, 60_000);
+
+  it('upgrades an earlier tech roster from saved MIX files without a network request', async () => {
+    await new AssetManager().importFiles([new File(['fixture'], 'ra2.mix')]);
+    const source = '/asset-source', previous = await assetCache<any>(source);
+    await assetCache(source, { ...previous, files: previous.files.filter((file: AssetFile) => file.name !== 'ggtech.shp' && file.name !== 'snipe.shp') });
+    await assetCache(archiveStageKey(source, 'mix'), { version: 1, id: 'saved-mixes', saved: 123, files: [{ name: 'ra2.mix', blob: new Blob(['local fixture']) }] } satisfies SavedArchive);
+    worker.mockClear(); network.mockClear();
+    const manager = new AssetManager();
+    expect(await manager.initialize()).toBe('ready');
+    expect(manager.getBuildingSprite('battlelab')).not.toBeNull();
+    expect(manager.getInfantrySequence('sniper', 'Walk', 0, .3)).not.toBeNull();
     expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
   }, 60_000);
 

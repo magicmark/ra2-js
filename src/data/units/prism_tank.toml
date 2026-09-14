@@ -1,0 +1,29 @@
+# Original rules.ini [SREF]; 30-frame simulation reference clock.
+[units.prism_tank]
+name = "Prism Tank"
+category = "vehicles"
+faction = "allied"
+cost = 1200
+buildTime = 25.2
+hp = 150
+armor = "light"
+footprint = [1, 1]
+power = 0
+requires = ["warfactory", "battlelab"]
+sight = 8
+sprite = "sref"
+cameo = "sreficon"
+description = "Long-range prism weapon effective against infantry and structures."
+speed = 1.171875
+nativeSpeed = 4
+size = 3
+rot = 5
+turret = true
+crusher = true
+damage = 100
+range = 10.0
+fireRate = 3.3333333333333335
+verses = [1.0, 1.0, 1.0, 0.75, 0.5, 0.5, 2.0, 2.0, 2.0, 1.0, 1.0]
+targets = ["land", "water"]
+factory = "warfactory"
+ability = "prism"

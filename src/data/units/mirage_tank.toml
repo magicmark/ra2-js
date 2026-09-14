@@ -1,0 +1,29 @@
+# Original rules.ini [MGTK]; 30-frame simulation reference clock.
+[units.mirage_tank]
+name = "Mirage Tank"
+category = "vehicles"
+faction = "allied"
+cost = 1000
+buildTime = 21.0
+hp = 200
+armor = "light"
+footprint = [1, 1]
+power = 0
+requires = ["warfactory", "battlelab"]
+sight = 9
+sprite = "rtnk"
+cameo = "rtnkicon"
+description = "Disguises itself as a tree while stationary; fires a powerful heat weapon."
+speed = 1.9921875
+nativeSpeed = 7
+size = 3
+rot = 5
+crusher = true
+damage = 100
+range = 7.0
+fireRate = 2.3333333333333335
+verses = [1.0, 1.0, 0.8, 1.0, 1.0, 1.0, 0.3, 0.2, 0.2, 1.0, 1.0]
+impact = "XGRYSML2"
+targets = ["land", "water"]
+factory = "warfactory"
+ability = "mirage"

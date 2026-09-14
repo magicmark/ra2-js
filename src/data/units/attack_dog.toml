@@ -1,0 +1,26 @@
+# Original rules.ini [ADOG]; 30-frame simulation reference clock.
+[units.attack_dog]
+name = "Attack Dog"
+category = "infantry"
+faction = "allied"
+cost = 200
+buildTime = 4.2
+hp = 100
+armor = "none"
+footprint = [1, 1]
+power = 0
+requires = ["barracks"]
+sight = 9
+sprite = "adog"
+cameo = "adogicon"
+description = "Fast close-range infantry killer. Detects enemy spies."
+speed = 2.34375
+nativeSpeed = 8
+size = 1
+damage = 30
+range = 1.5
+fireRate = 1.0
+verses = [1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+impact = "PIFFPIFF"
+targets = ["infantry"]
+factory = "barracks"

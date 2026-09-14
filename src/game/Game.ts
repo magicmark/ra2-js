@@ -1,7 +1,9 @@
+import { IFV_WEAPONS } from './ifvWeapons';
+import { revealedEntity } from './visibility';
 import { definitions, isBuilding } from './definitions';
 import { createMap, MAP_SIZE } from './map';
 import { initializeOreMines, updateOreMines } from './oreMines';
-import { BUILDING_SALE_SECONDS } from './buildingSale';
+import { BUILDING_SALE_SECONDS, BUILDING_CONSTRUCTION_SECONDS } from './buildingSale';
 import type { NativeMap } from './maps/nativeMap';
 import { nativeGameMap } from './maps/gameMap';
 import { NATIVE_STRUCTURE_SPECS } from './maps/theater';
@@ -10,7 +12,7 @@ import { placementCells } from './placement';
 import { turnFacing, type FacingTurn } from './facing';
 import { nativeGameSpeedIndex } from './timing';
 import { NATIVE_EFFECT_TIMINGS, NATIVE_INFANTRY_TIMINGS } from './combat';
-import { CUSTOM_UNIT_IDS, INSPECTION_RULES, rankMultiplier, rankName } from './customUnits';
+import { INSPECTION_RULES, rankMultiplier, rankName } from './customUnits';
 import { TESTING_FLAGS } from './testing';
 import { nativeNormalizedInterval } from '../assets/NativeAnimation';
 import type { AnimationDefinition, Category, Entity, GameAPI, GameState, InfantryAnimationDefinition, Side, UnitDef, Vec2 } from './types';
@@ -22,6 +24,7 @@ const STEP = 1 / 30;
 const distance = (a: Vec2, b: Vec2): number => Math.hypot(a.x - b.x, a.y - b.y);
 const clamp = (n: number, low: number, high: number): number => Math.max(low, Math.min(high, n));
 interface UnitMemory {
+  transportTarget?: number; returnTarget?: number;
   destination?: Vec2;
   attackMove?: boolean;
   oreTarget?: Vec2;
@@ -63,6 +66,9 @@ export class Game implements GameAPI {
   private nextAttack = 100;
   private commandFeedbackTicks = 0;
   private wave = 0;
+  private storms: { point: Vec2; side: number; starts: number; ends: number; next: number }[] = [];
+  private veteranTraining = new Set<string>();
+  private gapGenerators: Entity[] = [];
   private memories = new Map<number, UnitMemory>();
   private repairs = new Set<number>();
   private blocked = new Uint8Array(MAP_SIZE * MAP_SIZE);
@@ -92,7 +98,7 @@ export class Game implements GameAPI {
   placeLocalEnemy(type: string, x: number, y: number): Entity | undefined {
     if (!import.meta.env.DEV || this.state.winner !== null || !Number.isFinite(x) || !Number.isFinite(y)) return;
     const def = this.defs[type], tx = Math.floor(x), ty = Math.floor(y);
-    if (!def || isBuilding(def) || def.mapOnly || !this.isPassable(tx, ty) || this.mobileOccupies(tx, ty, -1)) return;
+    if (!def || isBuilding(def) || def.mapOnly || !this.isPassable(tx, ty, def) || this.mobileOccupies(tx, ty, -1, def)) return;
     const entity = this.spawn(type, 1, tx + .5, ty + .5);
     entity.order = 'guard';
     this.updateVision();
@@ -120,7 +126,7 @@ export class Game implements GameAPI {
     this.nextAttack = 100;
     this.commandFeedbackTicks = 0;
     this.combatRandomState = 0x524132;
-    this.wave = 0;
+    this.wave = 0; this.storms = []; this.gapGenerators = []; this.veteranTraining.clear();
     this.memories.clear();
     this.repairs.clear();
     const side = (id: number, faction: 'allied' | 'soviet', name: string, color: string): Side => ({
@@ -130,7 +136,7 @@ export class Game implements GameAPI {
     const terrain = this.nativeMap ? nativeGameMap(this.nativeMap) : { width: MAP_SIZE, height: MAP_SIZE, tiles: createMap() };
     this.state = {
       ...terrain, nativeMap: this.nativeMap, entities: [],
-      sides: [side(0, 'allied', 'Allied Command', '#2269d4'), side(1, 'soviet', 'Soviet AI', '#ff1919')],
+      sides: [side(0, 'allied', 'British Command', '#2269d4'), side(1, 'soviet', 'Soviet AI', '#ff1919')],
       time: 0, paused: false, speed, winner: null, effects: [], events: [],
       fog: new Uint8Array(terrain.width * terrain.height), explored: new Uint8Array(terrain.width * terrain.height),
     };
@@ -194,10 +200,14 @@ export class Game implements GameAPI {
     if (def.mapOnly) return { ok: false, reason: 'Capture this neutral structure with an Engineer' };
     if (this.state.winner !== null || side.defeated) return { ok: false, reason: 'Battle has ended' };
     if (def.faction !== 'both' && def.faction !== side.faction) return { ok: false, reason: 'Unavailable to this faction' };
-    const owned = this.state.entities.filter(e => e.side === sideId && e.hp > 0 && !e.selling);
+    const owned = this.state.entities.filter(e => e.side === sideId && e.hp > 0 && !e.selling && !e.constructing);
     const missing = def.requires.find(id => !owned.some(e => e.type === id));
     if (missing) return { ok: false, reason: `Requires ${this.defs[missing].name}` };
-    if (!owned.some(e => this.defs[e.type].producer?.includes(def.category)))
+    if (def.buildLimit && owned.filter(e => e.type === type).length + this.state.entities.filter(e => e.side === sideId && e.type === type && e.constructing).length + side.queues[def.category].filter(i => i.type === type).length >= def.buildLimit)
+      return { ok: false, reason: 'Build limit reached' };
+    if (def.factory === 'radar' && this.state.entities.filter(e => e.side === sideId && this.defs[e.type].factory === 'radar' && e.hp > 0).length + side.queues.vehicles.filter(i => this.defs[i.type].factory === 'radar').length >= owned.filter(e => e.type === 'radar').length * 4)
+      return { ok: false, reason: 'Airforce Command has four aircraft pads. Build another command.' };
+    if (!owned.some(e => this.produces(e, def)))
       return { ok: false, reason: `Requires ${def.category === 'infantry' ? 'Barracks' : def.category === 'vehicles' ? 'War Factory' : 'Construction Yard'}` };
     if (side.queues[def.category].length >= 8) return { ok: false, reason: 'Queue is full (8)' };
     const queuedUnits = side.queues.infantry.length + side.queues.vehicles.length;
@@ -249,19 +259,19 @@ export class Game implements GameAPI {
     if (!item || !item.ready || item.type !== type || !this.canPlace(type, x, y, sideId)) return false;
     queue.shift();
     const entity = this.spawn(type, sideId, x, y);
+    if (type !== 'wall' && type !== 'butchers') entity.constructing = { startedAt: this.state.time, duration: BUILDING_CONSTRUCTION_SECONDS };
     this.rebuildBlocked();
     this.updatePower();
     this.updateVision();
-    if (type === 'refinery' || type === 'refinery_soviet')
-      this.spawnFrom(entity, sideId === 0 ? 'miner' : 'warminer');
-    if (sideId === 0) this.notify(`${def.name} online`, 'success');
+    if (!entity.constructing) this.finishConstruction(entity);
+    if (sideId === 0) this.notify(`${def.name} ${entity.constructing ? 'construction underway' : 'online'}`, 'success');
     return true;
   }
 
   select(ids: number[], additive = false): void {
     const wanted = new Set(ids);
     for (const entity of this.state.entities) {
-      if (entity.side !== 0 || entity.hp <= 0 || entity.selling) { entity.selected = false; continue; }
+      if (entity.side !== 0 || entity.hp <= 0 || entity.selling || entity.constructing || entity.transportId !== undefined) { entity.selected = false; continue; }
       entity.selected = wanted.has(entity.id) || (additive && entity.selected);
       if (entity.selected) this.cancelInfantryIdle(entity);
     }
@@ -295,12 +305,12 @@ export class Game implements GameAPI {
 
   orderAttack(ids: number[], targetId: number, force = false): void {
     if (this.state.winner !== null) return;
-    const target = this.state.entities.find(e => e.id === targetId && e.hp > 0 && !e.selling);
-    if (!target || !this.visibleTo(target, 0)) return;
+    const target = this.state.entities.find(e => e.id === targetId && e.hp > 0 && !e.selling && !e.constructing && e.transportId === undefined);
+    if (!target || !revealedEntity(this.state, this.defs, target)) return;
     const units = this.commandable(ids, 0).filter(e => e.type !== 'george');
     for (const entity of units) {
       const def = this.defs[entity.type];
-      if ((!def.damage && entity.type !== 'engineer') || entity.id === targetId) continue;
+      if ((!def.damage && entity.type !== 'engineer' && def.ability !== 'spy') || entity.id === targetId || !this.canTarget(entity, target)) continue;
       if (entity.type === 'engineer' && (!isBuilding(this.defs[target.type]) || target.side === entity.side && target.hp >= target.maxHp)) continue;
       if (target.side === entity.side && !force && entity.type !== 'engineer') continue;
       entity.order = 'attack';
@@ -344,6 +354,8 @@ export class Game implements GameAPI {
 
   deploy(ids: number[]): void {
     for (const entity of this.commandable(ids, 0)) {
+      if (entity.type === 'mcv') { this.deployMcv(entity); continue; }
+      if (this.defs[entity.type].passengers) { this.unloadTransport(entity); continue; }
       if (this.defs[entity.type].deployedRange === undefined) continue;
       this.stop([entity.id]);
       this.beginDeployment(entity, !entity.deployed);
@@ -403,7 +415,7 @@ export class Game implements GameAPI {
   }
 
   sell(id: number): boolean {
-    const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0 && !e.selling);
+    const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0 && !e.selling && !e.constructing && e.transportId === undefined);
     if (!entity || !isBuilding(this.defs[entity.type]) || this.state.winner !== null) return false;
     if (this.defs[entity.type].mapOnly) return false;
     this.state.sides[0].money += Math.floor(this.defs[entity.type].cost * 0.5 * (entity.hp / entity.maxHp));
@@ -420,13 +432,13 @@ export class Game implements GameAPI {
   }
 
   canRepair(id: number): boolean {
-    const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0 && !e.selling);
+    const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0 && !e.selling && !e.constructing && e.transportId === undefined);
     return !!entity && isBuilding(this.defs[entity.type]) && this.state.winner === null
       && (this.repairs.has(id) || (entity.hp < entity.maxHp && (this.state.sides[0].money >= 1 || (import.meta.env.DEV && this.localTools.free))));
   }
 
   repair(id: number): boolean {
-    const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0 && !e.selling);
+    const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0 && !e.selling && !e.constructing && e.transportId === undefined);
     if (!entity || !isBuilding(this.defs[entity.type]) || this.state.winner !== null) return false;
     if (this.repairs.has(id)) { this.repairs.delete(id); this.notify('Repair canceled', 'info'); return true; }
     if (!this.canRepair(id)) return false;
@@ -442,6 +454,8 @@ export class Game implements GameAPI {
     this.visionTimer -= dt;
     this.aiTimer -= dt;
     this.updatePower();
+    this.gapGenerators = this.state.entities.filter(e => e.type === 'gap_generator' && this.operational(e));
+    this.tickStorms();
     this.updateQueues(dt);
     if (this.aiEnabled && this.aiTimer <= 0) { this.aiTimer = 2.5; this.updateAI(); }
     for (const effect of this.state.effects) effect.life -= dt;
@@ -449,7 +463,14 @@ export class Game implements GameAPI {
     // Entity removals are deferred so combat during a frame has stable iteration.
     for (const entity of [...this.state.entities]) {
       if (entity.hp <= 0) continue;
-      if (entity.selling) continue;
+      if (entity.selling || entity.transportId !== undefined) continue;
+      if (entity.constructing) {
+        if (this.state.time + 1e-9 >= entity.constructing.startedAt + entity.constructing.duration) {
+          entity.constructing = undefined; this.finishConstruction(entity); this.updatePower(); this.updateVision();
+        } else continue;
+      }
+      if (this.tickAllied(entity, dt)) continue;
+      if ((entity.disabledUntil ?? 0) > this.state.time) continue;
       entity.previous = { x: entity.x, y: entity.y };
       entity.previousFacing = entity.facing;
       entity.previousTurretFacing = entity.turretFacing ?? entity.facing;
@@ -484,7 +505,7 @@ export class Game implements GameAPI {
       }
       if (this.repairs.has(entity.id)) this.tickRepair(entity, dt);
       if (def.harvester && (entity.order === 'harvest' || entity.order === 'return' || entity.order === 'idle')) this.tickHarvester(entity, dt);
-      if (def.damage > 0 || entity.type === 'engineer') this.tickCombat(entity, dt);
+      if (def.damage > 0 || entity.type === 'engineer' || def.ability === 'spy') this.tickCombat(entity, dt);
       if (!isBuilding(def)) this.moveEntity(entity, dt);
       this.updateFacing(entity);
       this.updateInfantryIdle(entity);
@@ -505,13 +526,10 @@ export class Game implements GameAPI {
       for (const category of CATEGORIES) {
         const queue = side.queues[category], item = queue[0];
         if (!item) continue;
-        // New custom training depends on its living tech building throughout the
-        // queue. A destroyed/sold shop holds paid progress until the shop is rebuilt.
-        const missing = !item.ready && (CUSTOM_UNIT_IDS as readonly string[]).includes(item.type)
-          ? this.defs[item.type].requires.find(required => !this.state.entities.some(e => e.side === side.id && e.hp > 0 && !e.selling && e.type === required)) : undefined;
+        const missing = !item.ready ? this.defs[item.type].requires.find(required => !this.state.entities.some(e => e.side === side.id && e.hp > 0 && !e.selling && !e.constructing && e.type === required)) : undefined;
         item.blockedPrerequisite = missing ? `Requires ${this.defs[missing].name}` : undefined;
         if (item.paused || item.ready || item.blockedPrerequisite) continue;
-        const producer = this.state.entities.find(e => e.side === side.id && e.hp > 0 && !e.selling && this.defs[e.type].producer?.includes(category));
+        const producer = this.state.entities.find(e => e.side === side.id && e.hp > 0 && !e.selling && !e.constructing && e.transportId === undefined && this.produces(e, this.defs[item.type]));
         if (!producer) continue;
         const def = this.defs[item.type];
         const productionRate = lowPower ? clamp(side.power / Math.max(1, side.powerUsed), .5, .8) : 1;
@@ -587,11 +605,12 @@ export class Game implements GameAPI {
   private updatePower(): void {
     for (const side of this.state.sides) { side.power = 0; side.powerUsed = 0; }
     for (const entity of this.state.entities) {
-      if (entity.hp <= 0 || entity.selling) continue;
+      if (entity.hp <= 0 || entity.selling || entity.constructing || entity.transportId !== undefined) continue;
       const power = this.defs[entity.type].power, side = this.state.sides[entity.side];
       if (!side) continue;
-      if (power > 0) side.power += power;
-      else side.powerUsed -= power;
+      if (power > 0) {
+        if ((entity.disabledUntil ?? 0) <= this.state.time) side.power += power;
+      } else side.powerUsed -= power;
     }
   }
 
@@ -617,7 +636,7 @@ export class Game implements GameAPI {
 
   private moveEntity(entity: Entity, dt: number): void {
     const memory = this.memory(entity), def = this.defs[entity.type];
-    if (entity.deployed || entity.deployment) return;
+    if (entity.deployed || entity.deployment || (entity.disabledUntil ?? 0) > this.state.time) return;
     if (memory.avoidancePoint && !entity.path.includes(memory.avoidancePoint)) memory.avoidancePoint = undefined;
     if (!entity.path.length) {
       if (entity.order === 'move' && memory.destination) {
@@ -641,7 +660,7 @@ export class Game implements GameAPI {
     }
     const next = entity.path[0];
     // New buildings can invalidate an existing route; do not walk through them.
-    if (!this.isPassable(Math.floor(next.x), Math.floor(next.y))) {
+    if (!this.isPassable(Math.floor(next.x), Math.floor(next.y), entity)) {
       entity.path = [];
       memory.repath = 0;
       return;
@@ -658,18 +677,24 @@ export class Game implements GameAPI {
       memory.heading = heading;
       memory.turningBeforeMove = false;
     }
+    if (def.movement === 'teleport') {
+      const target = entity.path.at(-1)!;
+      if (this.mobileOccupies(Math.floor(target.x), Math.floor(target.y), entity.id)) { entity.path = []; return; }
+      entity.disabledUntil = this.state.time + Math.max(16, distance(entity, target) * 256 / 48) / 30;
+      entity.x = target.x; entity.y = target.y; entity.previous = { ...target }; entity.path = []; return;
+    }
     const travel = def.speed * dt;
     const amount = Math.min(d, travel), nx = entity.x + (d > 0 ? dx / d * amount : 0), ny = entity.y + (d > 0 ? dy / d * amount : 0);
     // Cell-center spacing is also enforced during travel, not just at orders.
     if (memory.forceMove && def.crusher) {
       for (const other of this.state.entities) {
-        if (other.side !== entity.side && other.hp > 0 && this.defs[other.type].category === 'infantry' && Math.hypot(other.x - nx, other.y - ny) < 0.48) {
+        if (other.side !== entity.side && other.hp > 0 && other.transportId === undefined && this.sameLayer(entity, other) && this.defs[other.type].category === 'infantry' && Math.hypot(other.x - nx, other.y - ny) < 0.48) {
           other.hp = 0;
           this.state.sides[entity.side].kills++;
         }
       }
     }
-    const collision = this.state.entities.find(other => other.id !== entity.id && other.hp > 0 && !isBuilding(this.defs[other.type]) && Math.hypot(other.x - nx, other.y - ny) < 0.48);
+    const collision = this.state.entities.find(other => other.id !== entity.id && other.hp > 0 && other.transportId === undefined && this.sameLayer(entity, other) && !isBuilding(this.defs[other.type]) && Math.hypot(other.x - nx, other.y - ny) < 0.48);
     if (collision) {
       memory.stuck += dt;
       if (def.category === 'vehicles') {
@@ -685,7 +710,7 @@ export class Game implements GameAPI {
             for (let step = 1; step <= 10; step++) {
               const px = entity.x + (detour.x - entity.x) * step / 10, py = entity.y + (detour.y - entity.y) * step / 10;
               const tx = Math.floor(px), ty = Math.floor(py);
-              if (!this.isPassable(tx, ty) || (tx !== previous.x && ty !== previous.y && (!this.isPassable(tx, previous.y) || !this.isPassable(previous.x, ty))) ||
+              if (!this.isPassable(tx, ty, entity) || (tx !== previous.x && ty !== previous.y && (!this.isPassable(tx, previous.y, entity) || !this.isPassable(previous.x, ty, entity))) ||
                 this.state.entities.some(other => other.id !== entity.id && other.hp > 0 && !isBuilding(this.defs[other.type]) && Math.hypot(other.x - px, other.y - py) < .49)) { clear = false; break; }
               previous = { x: tx, y: ty };
             }
@@ -709,7 +734,7 @@ export class Game implements GameAPI {
             const angle = forward + turn;
             const px = entity.x + Math.cos(angle) * amount, py = entity.y + Math.sin(angle) * amount;
             const tx = Math.floor(px), ty = Math.floor(py), sx = Math.floor(entity.x), sy = Math.floor(entity.y);
-            if (!this.isPassable(tx, ty) || (tx !== sx && ty !== sy && (!this.isPassable(tx, sy) || !this.isPassable(sx, ty)))) continue;
+            if (!this.isPassable(tx, ty, entity) || (tx !== sx && ty !== sy && (!this.isPassable(tx, sy, entity) || !this.isPassable(sx, ty, entity)))) continue;
             if (this.state.entities.some(other => other.id !== entity.id && other.hp > 0 && !isBuilding(this.defs[other.type]) && Math.hypot(other.x - px, other.y - py) < 0.48)) continue;
             entity.x = px;
             entity.y = py;
@@ -750,7 +775,7 @@ export class Game implements GameAPI {
 
   private tickHarvester(entity: Entity, dt: number): void {
     const def = this.defs[entity.type], memory = this.memory(entity), capacity = def.capacity ?? 700;
-    const refineries = this.state.entities.filter(e => e.side === entity.side && e.hp > 0 && !e.selling && (e.type === 'refinery' || e.type === 'refinery_soviet'));
+    const refineries = this.state.entities.filter(e => e.side === entity.side && e.hp > 0 && !e.selling && !e.constructing && e.transportId === undefined && (e.type === 'refinery' || e.type === 'refinery_soviet'));
     if (!refineries.length) { entity.path = []; memory.oreTarget = undefined; return; }
     if (entity.cargo >= capacity) entity.order = 'return';
     if (entity.order === 'return') {
@@ -759,7 +784,7 @@ export class Game implements GameAPI {
         entity.harvestTimer += dt;
         entity.path = [];
         if (entity.harvestTimer >= 1.1) {
-          this.state.sides[entity.side].money += entity.cargo;
+          this.state.sides[entity.side].money += entity.cargo * (1 + .25 * this.state.entities.filter(e => e.side === entity.side && e.type === 'ore_purifier' && this.operational(e)).length);
           entity.cargo = 0;
           entity.harvestTimer = 0;
           entity.order = 'harvest';
@@ -836,9 +861,10 @@ export class Game implements GameAPI {
 
   private tickCombat(entity: Entity, _dt: number): void {
     if (entity.type === 'george') return;
-    const def = this.defs[entity.type], memory = this.memory(entity);
-    if (entity.deployment) return;
-    const range = entity.deployed ? def.deployedRange ?? def.range : def.range;
+    const def = this.weaponFor(entity), memory = this.memory(entity);
+    if (entity.deployment || !this.operational(entity) || this.defs[entity.type].ammo && entity.ammo === 0 || this.memory(entity).transportTarget !== undefined) return;
+    const c4 = def.ability === 'tanya' && this.state.entities.some(e => e.id === entity.targetId && (isBuilding(this.defs[e.type]) || this.defs[e.type].movement === 'water'));
+    const range = c4 ? .9 : entity.deployed ? def.deployedRange ?? def.range : def.range;
     const damage = entity.deployed ? def.deployedDamage ?? def.damage : def.damage;
     const fireRate = entity.deployed ? def.deployedFireRate ?? def.fireRate : def.fireRate;
     const verses = entity.deployed ? def.deployedVerses ?? def.verses : def.verses;
@@ -867,16 +893,17 @@ export class Game implements GameAPI {
       this.cancelFireIntent(entity, memory);
       entity.targetId = null;
     }
-    if (target && !this.visibleTo(target, entity.side)) {
+    const pursuingKnownContact = target && entity.side === 0 && entity.order === 'attack' && revealedEntity(this.state, this.defs, target);
+    if (target && ((!pursuingKnownContact && !this.visibleTo(target, entity.side)) || !this.canTarget(entity, target))) {
       this.cancelFireIntent(entity, memory);
       entity.targetId = null;
       target = undefined;
       entity.path = [];
       if (entity.order === 'attack') entity.order = 'guard';
     }
-    if (!target && entity.type !== 'engineer' && memory.idleTimer <= 0) {
+    if (!target && entity.type !== 'engineer' && def.ability !== 'spy' && memory.idleTimer <= 0) {
       memory.idleTimer = 0.35;
-      const candidates = this.state.entities.filter(other => other.side >= 0 && other.side !== entity.side && other.hp > 0 && !other.selling && this.visibleTo(other, entity.side) && this.distanceToEntity(entity, other) <= (isBuilding(def) || def.harvester || entity.deployed || memory.holdPosition ? range : def.sight));
+      const candidates = this.state.entities.filter(other => other.side >= 0 && other.side !== entity.side && other.hp > 0 && !other.selling && other.transportId === undefined && this.canTarget(entity, other) && this.visibleTo(other, entity.side) && this.distanceToEntity(entity, other) <= (isBuilding(def) || def.harvester || entity.deployed || memory.holdPosition ? range : def.sight));
       candidates.sort((a, b) => this.distanceToEntity(entity, a) - this.distanceToEntity(entity, b));
       target = candidates[0];
       entity.targetId = target?.id ?? null;
@@ -888,6 +915,8 @@ export class Game implements GameAPI {
     }
     const d = this.distanceToEntity(this.center(entity), target);
     if (d > range) this.cancelFireIntent(entity, memory);
+    if (def.ability === 'spy' && isBuilding(this.defs[target.type]) && d <= .9) { this.infiltrate(entity, target); return; }
+    if (c4 && d <= .9) { this.damageTarget(entity, target, target.maxHp * 10); entity.cooldown = 1; return; }
     if (entity.type === 'engineer' && isBuilding(this.defs[target.type]) && d <= 0.9) {
       const repairing = target.side === entity.side;
       if (target.type === 'tech_oil' && target.side === -1) this.state.sides[entity.side].money += 1000;
@@ -901,7 +930,7 @@ export class Game implements GameAPI {
       this.updatePower();
       return;
     }
-    if (d <= range && entity.type !== 'engineer') {
+    if (d <= range && entity.type !== 'engineer' && def.ability !== 'spy') {
       // Harvesters continue their economic route while their gun defends them.
       if (!def.harvester) entity.path = [];
       const center = this.center(entity), to = this.center(target);
@@ -914,7 +943,7 @@ export class Game implements GameAPI {
       this.cancelFireIntent(entity, memory);
       // Guard units pursue within their sight but do not run across the map.
       if (entity.order !== 'attack' && d > def.sight + 1) { entity.targetId = null; return; }
-      const firingPoint = this.nearestFiringPosition(entity, target, entity.type === 'engineer' ? 0.7 : range * 0.85);
+      const firingPoint = this.nearestFiringPosition(entity, target, entity.type === 'engineer' || def.ability === 'spy' ? 0.7 : range * 0.85);
       if (firingPoint) entity.path = this.path(entity, firingPoint, true);
       memory.repath = 0.8;
     }
@@ -922,7 +951,7 @@ export class Game implements GameAPI {
 
   private cancelFireIntent(entity: Entity, memory: UnitMemory): void {
     memory.fireIntentAt = undefined;
-    if (!entity.deployment && entity.infantryAnimation && ['FireUp', 'FireFly', 'DeployedFire'].includes(entity.infantryAnimation.sequence)) entity.infantryAnimation = undefined;
+    if (!entity.deployment && entity.infantryAnimation && ['FireUp', 'FireFly', 'DeployedFire', 'WetAttack'].includes(entity.infantryAnimation.sequence)) entity.infantryAnimation = undefined;
   }
 
   private animationInterval(definition: AnimationDefinition): number {
@@ -1006,9 +1035,10 @@ export class Game implements GameAPI {
   private fireProjectile(entity: Entity, to: Vec2, target: Entity | undefined, damage: number, verses: number[] | undefined, fireRate: number): void {
     if (entity.type === 'george') return;
     damage *= rankMultiplier(entity);
-    const def = this.defs[entity.type], memory = this.memory(entity);
+    const def = this.weaponFor(entity), memory = this.memory(entity);
     if (def.category === 'infantry') {
-      const sequence = entity.deployed ? 'DeployedFire' : entity.type === 'rocketeer' ? 'FireFly' : 'FireUp';
+      const swimming = entity.type === 'tanya' && this.state.tiles[Math.floor(entity.y) * this.state.width + Math.floor(entity.x)]?.terrain === 'water';
+      const sequence = swimming ? 'WetAttack' : entity.deployed ? 'DeployedFire' : entity.type === 'rocketeer' ? 'FireFly' : 'FireUp';
       const infantry = this.infantryAnimations[def.sprite], definition = infantry?.sequences[sequence];
       if (!definition) throw new Error(`Missing original infantry timing: ${def.sprite} ${sequence}`);
       if (memory.fireIntentAt === undefined) {
@@ -1019,11 +1049,26 @@ export class Game implements GameAPI {
       memory.fireIntentAt = undefined;
     }
     entity.firedAt = this.state.time;
+    if (def.ability === 'carrier') {
+      if (target && this.state.entities.filter(e => e.type === 'hornet' && e.homeId === entity.id && e.hp > 0).length < 3) {
+        const plane = this.spawn('hornet', entity.side, entity.x, entity.y);
+        plane.homeId = entity.id; plane.targetId = target.id; plane.order = 'attack';
+      }
+      entity.cooldown = fireRate; return;
+    }
     const burst = def.burst ?? 1, nextBurstIndex = (memory.burstIndex ?? 0) + 1;
     entity.cooldown = nextBurstIndex < burst ? this.randomCombatFrames(3, 5) * STEP : fireRate + this.randomCombatFrames(0, 2) * STEP;
     memory.burstIndex = nextBurstIndex % burst;
     this.state.effects.push({ kind: 'shot', ...this.center(entity), to: { ...to }, life: .16, maxLife: .16, side: entity.side, startedAt: this.state.time, damage });
-    if (target) this.damageTarget(entity, target, damage, verses);
+    if (target) {
+      this.damageTarget(entity, target, entity.type === 'attack_dog' ? target.maxHp : damage, verses);
+      if (def.ability === 'prism') for (const other of this.state.entities.filter(e => e.id !== target.id && e.side !== entity.side && e.side >= 0 && e.hp > 0 && this.canTarget(entity, e) && distance(this.center(e), to) < 2).slice(0, 3)) this.damageTarget(entity, other, damage * .5, verses);
+      if (def.ability === 'chrono' && target.hp > 0) target.disabledUntil = this.state.time + fireRate + .2;
+    }
+    if (def.ammo) {
+      entity.ammo = Math.max(0, (entity.ammo ?? def.ammo) - 1);
+      if (!entity.ammo) { memory.returnTarget = entity.targetId ?? undefined; entity.targetId = null; entity.path = []; }
+    }
     if (def.impact) this.addAnimation(def.impact, to, entity.side, 'impact', damage);
   }
 
@@ -1057,12 +1102,192 @@ export class Game implements GameAPI {
     for (let y = Math.floor(c.y) - radius; y <= Math.floor(c.y) + radius; y++)
       for (let x = Math.floor(c.x) - radius; x <= Math.floor(c.x) + radius; x++) {
         const p = { x: x + 0.5, y: y + 0.5 };
-        if (this.isPassable(x, y) && !this.mobileOccupies(x, y, entity.id) && this.distanceToEntity(p, target) <= range) candidates.push(p);
+        if (this.isPassable(x, y, entity) && !this.mobileOccupies(x, y, entity.id, entity) && this.distanceToEntity(p, target) <= range) candidates.push(p);
       }
     candidates.sort((a, b) => distance(entity, a) - distance(entity, b));
     for (const candidate of candidates.slice(0, 32))
       if (distance(entity, candidate) < 0.2 || this.path(entity, candidate).length) return candidate;
     return undefined;
+  }
+
+  private operational(entity: Entity): boolean {
+    const def = this.defs[entity.type], side = this.state.sides[entity.side];
+    return entity.hp > 0 && !entity.selling && !entity.constructing && entity.transportId === undefined
+      && (entity.disabledUntil ?? 0) <= this.state.time && (!def.powered || !!side && side.power >= side.powerUsed);
+  }
+  private produces(producer: Entity, def: UnitDef): boolean {
+    if (def.factory) return producer.type === def.factory;
+    // Airfields and shipyards share the vehicle tab, but are distinct factories.
+    return !!this.defs[producer.type].producer?.includes(def.category)
+      && (def.category !== 'vehicles' || !['radar', 'shipyard'].includes(producer.type));
+  }
+  private finishConstruction(entity: Entity): void {
+    if (entity.type === 'refinery' || entity.type === 'refinery_soviet') this.spawnFrom(entity, entity.type === 'refinery' ? 'miner' : 'warminer');
+    if (entity.side === 0) this.notify(`${this.defs[entity.type].name} construction complete`, 'success');
+  }
+  private sameLayer(a: Entity, b: Entity): boolean {
+    return (this.defs[a.type].movement === 'air') === (this.defs[b.type].movement === 'air');
+  }
+  private weaponFor(entity: Entity): UnitDef {
+    const def = this.defs[entity.type], passenger = entity.type === 'ifv' ? entity.passengers?.[0] : undefined;
+    return passenger && IFV_WEAPONS[passenger.type] ? { ...def, ...IFV_WEAPONS[passenger.type] } : def;
+  }
+  private canTarget(attacker: Entity, target: Entity): boolean {
+    const def = this.weaponFor(attacker), other = this.defs[target.type];
+    if (target.transportId !== undefined || target.hp <= 0 || !def.damage && def.ability !== 'spy' && attacker.type !== 'engineer') return false;
+    if (def.ability === 'spy' || attacker.type === 'engineer') return isBuilding(other);
+    if (other.ability === 'mirage' && target.side !== attacker.side && !target.path.length && this.state.time - (target.firedAt ?? -Infinity) > 3 && distance(attacker, target) > 2 && attacker.targetId !== target.id) return false;
+    if (other.ability === 'spy' && attacker.type !== 'attack_dog' && attacker.targetId !== target.id) return false;
+    const layer = other.movement === 'air' ? 'air' : other.movement === 'water' ? 'water' : 'land';
+    return (def.targets ?? (attacker.type === 'flak' ? ['land', 'water', 'air'] : ['land', 'water'])).some(kind => kind === layer || kind === 'infantry' && other.category === 'infantry' && layer !== 'air');
+  }
+  private deployMcv(entity: Entity): void {
+    const x = Math.floor(entity.x) - 1, y = Math.floor(entity.y) - 1, def = this.defs.conyard;
+    for (let dy = 0; dy < def.footprint[1]; dy++) for (let dx = 0; dx < def.footprint[0]; dx++) {
+      const tx = x + dx, ty = y + dy;
+      if (!this.isPassable(tx, ty) || this.mobileOccupies(tx, ty, entity.id, entity) || !this.state.explored[ty * this.state.width + tx] || this.state.tiles[ty * this.state.width + tx].ore) {
+        this.notify('Move the MCV to clear, explored ground before deploying.', 'warning'); return;
+      }
+    }
+    this.removeEntity(entity, false);
+    const yard = this.spawn('conyard', entity.side, x, y);
+    yard.constructing = { startedAt: this.state.time, duration: BUILDING_CONSTRUCTION_SECONDS };
+    this.rebuildBlocked(); this.updateVision();
+  }
+  enterTransport(ids: number[], targetId: number): boolean {
+    const transport = this.state.entities.find(e => e.id === targetId && e.side === 0 && this.operational(e));
+    if (!transport || !this.defs[transport.type].passengers) return false;
+    const def = this.defs[transport.type]; let assigned = false;
+    for (const entity of this.commandable(ids, 0)) {
+      const unit = this.defs[entity.type];
+      if (entity.id === transport.id || isBuilding(unit) || unit.movement === 'air' || unit.movement === 'water' || unit.passengers || def.infantryOnly && unit.category !== 'infantry') continue;
+      const load = (transport.passengers ?? []).reduce((n, p) => n + (this.defs[p.type].size ?? 1), 0);
+      if (load + (unit.size ?? 1) > def.passengers!) continue;
+      this.issueMove([entity], transport, false); this.memory(entity).transportTarget = transport.id; assigned = true;
+    }
+    return assigned;
+  }
+  private unloadTransport(entity: Entity): void {
+    const remaining: Entity[] = [];
+    for (const passenger of entity.passengers ?? []) {
+      const spot = this.nearestOpen(entity, passenger.id, undefined, 3, this.defs[passenger.type]);
+      if (!spot) { remaining.push(passenger); continue; }
+      passenger.transportId = undefined; passenger.x = spot.x; passenger.y = spot.y; passenger.previous = { ...spot };
+      passenger.order = 'guard'; passenger.path = []; this.memories.delete(passenger.id);
+    }
+    entity.passengers = remaining;
+    this.updateVision();
+    if (remaining.length) this.notify('Move the transport closer to clear land to unload.', 'warning');
+  }
+  private infiltrate(spy: Entity, target: Entity): void {
+    const side = this.state.sides[spy.side], enemy = this.state.sides[target.side];
+    if (!enemy || target.side === spy.side) return;
+    if (target.type.startsWith('refinery')) {
+      const credits = Math.floor(enemy.money / 2); enemy.money -= credits; side.money += credits;
+    } else if (this.defs[target.type].power > 0) {
+      for (const e of this.state.entities) if (e.side === target.side && this.defs[e.type].power > 0) e.disabledUntil = this.state.time + 60;
+    } else if (this.defs[target.type].producer?.includes('infantry')) this.veteranTraining.add(`${spy.side}:infantry`);
+    else if (this.defs[target.type].producer?.includes('vehicles')) this.veteranTraining.add(`${spy.side}:vehicles`);
+    else if (target.type.startsWith('radar')) { this.vision[target.side]?.fill(0); target.disabledUntil = this.state.time + 60; }
+    else target.disabledUntil = this.state.time + 60;
+    target.infiltrated = true; this.removeEntity(spy, false); this.updatePower();
+    this.notify(`${this.defs[target.type].name} infiltrated`, 'success');
+  }
+  /** Returns true while a unit is boarding, landed, or otherwise occupied. */
+  private tickAllied(entity: Entity, dt: number): boolean {
+    const def = this.defs[entity.type], memory = this.memory(entity);
+    if (def.recharge && this.operational(entity)) entity.recharge = Math.min(def.recharge, (entity.recharge ?? 0) + dt);
+    if (memory.transportTarget !== undefined) {
+      const transport = this.state.entities.find(e => e.id === memory.transportTarget && e.side === entity.side && this.operational(e));
+      if (!transport) { memory.transportTarget = undefined; return false; }
+      if (distance(entity, transport) < 2) {
+        const capacity = this.defs[transport.type].passengers ?? 0;
+        const load = (transport.passengers ?? []).reduce((n, p) => n + (this.defs[p.type].size ?? 1), 0);
+        if (load + (def.size ?? 1) <= capacity) {
+          (transport.passengers ??= []).push(entity); entity.transportId = transport.id; entity.selected = false; entity.path = []; entity.targetId = null;
+        }
+        memory.transportTarget = undefined; return entity.transportId !== undefined;
+      }
+      if (!entity.path.length || memory.repath <= 0) {
+        const spot = this.nearestOpen(transport, entity.id, undefined, 4);
+        if (spot) entity.path = this.path(entity, spot);
+        memory.repath = 1;
+      }
+    }
+    if (def.ammo && entity.ammo === 0) {
+      let home = this.state.entities.find(e => e.id === entity.homeId && e.side === entity.side && this.operational(e));
+      home ??= this.state.entities.find(e => e.type === 'radar' && e.side === entity.side && this.operational(e));
+      if (!home) {
+        const unpowered = this.state.entities.find(e => e.type === 'radar' && e.side === entity.side && e.hp > 0 && !e.selling && !e.constructing);
+        if (unpowered) return false;
+        entity.hp = 0; return true;
+      }
+      entity.homeId = home.id;
+      const point = this.center(home);
+      if (distance(entity, point) > .6) {
+        if (!entity.path.length) { entity.path = [point]; entity.order = 'return'; }
+      } else {
+        entity.path = []; entity.rearm = (entity.rearm ?? 0) + dt;
+        if (entity.type === 'hornet') { this.removeEntity(entity, false); return true; }
+        if (entity.rearm >= 5) {
+          entity.ammo = def.ammo; entity.rearm = undefined; entity.order = 'guard';
+          const target = this.state.entities.find(e => e.id === memory.returnTarget && e.hp > 0);
+          if (target) { entity.targetId = target.id; entity.order = 'attack'; }
+          memory.returnTarget = undefined;
+        }
+        return true;
+      }
+    }
+    if (def.category === 'vehicles' && def.movement !== 'air' && entity.hp < entity.maxHp) {
+      const repairer = this.state.entities.find(e => e.side === entity.side && this.operational(e) &&
+        ((e.type === (def.movement === 'water' ? 'shipyard' : 'service_depot') && this.distanceToEntity(entity, e) < 1.6) ||
+         (e.type === 'ifv' && e.passengers?.some(p => p.type === 'engineer') && distance(e, entity) < 3)));
+      if (repairer) {
+        const side = this.state.sides[entity.side], perHp = def.cost / def.hp * .25, hp = Math.min(entity.maxHp - entity.hp, 20 * dt, side.money / perHp);
+        entity.hp += hp; side.money -= hp * perHp;
+      }
+    }
+    return false;
+  }
+  activateSuperweapon(type: 'chronosphere' | 'weather', destination: Vec2, source?: Vec2, side = 0): boolean {
+    if (this.state.winner !== null || ![destination.x, destination.y].every(Number.isFinite)) return false;
+    const x = Math.floor(destination.x), y = Math.floor(destination.y);
+    if (x < 0 || y < 0 || x >= this.state.width || y >= this.state.height || side === 0 && !this.state.explored[y * this.state.width + x]) return false;
+    const building = this.state.entities.find(e => e.side === side && this.defs[e.type].superweapon === type && this.operational(e) && (e.recharge ?? 0) + 1e-8 >= this.defs[e.type].recharge!);
+    if (!building) return false;
+    if (type === 'chronosphere') {
+      if (!source || ![source.x, source.y].every(Number.isFinite)) return false;
+      const sx = Math.floor(source.x), sy = Math.floor(source.y);
+      if (sx < 0 || sy < 0 || sx >= this.state.width || sy >= this.state.height || side === 0 && !this.state.explored[sy * this.state.width + sx]) return false;
+      const origin = { x: source.x, y: source.y };
+      const units = this.state.entities.filter(e => e.hp > 0 && !e.transportId && this.defs[e.type].category === 'vehicles' && this.defs[e.type].movement !== 'air' && distance(e, source) <= 2.5);
+      const reserved = new Set<number>(), moves: { unit: Entity; spot: Vec2 }[] = [];
+      for (const unit of units) {
+        const desired = { x: destination.x + unit.x - source.x, y: destination.y + unit.y - source.y };
+        const spot = this.nearestOpen(desired, unit.id, reserved, 3);
+        if (!spot) continue;
+        reserved.add(Math.floor(spot.y) * this.state.width + Math.floor(spot.x)); moves.push({ unit, spot });
+      }
+      if (!moves.length) { this.notify('Choose vehicles with a clear destination.', 'warning'); return false; }
+      this.addAnimation('CHRONOFD', origin, side, 'impact');
+      this.addAnimation('CHRONOTG', destination, side, 'impact');
+      for (const { unit, spot } of moves) {
+        unit.x = spot.x; unit.y = spot.y; unit.previous = { ...spot }; unit.path = []; unit.targetId = null; unit.order = 'guard';
+        unit.disabledUntil = this.state.time + 2; this.memories.delete(unit.id);
+      }
+    } else this.storms.push({ point: { ...destination }, side, starts: this.state.time + 250 / 30, ends: this.state.time + 430 / 30, next: this.state.time + 250 / 30 });
+    building.recharge = 0; this.updateVision(); this.notify(type === 'weather' ? 'Lightning storm approaching.' : 'Chronosphere activated.', 'warning'); return true;
+  }
+  private tickStorms(): void {
+    for (const storm of this.storms) {
+      if (this.state.time < storm.next || this.state.time > storm.ends) continue;
+      storm.next += 10 / 30;
+      const attacker = { side: storm.side } as Entity;
+      for (const target of this.state.entities) if (target.hp > 0 && target.transportId === undefined && distance(this.center(target), storm.point) <= 3.5) this.damageTarget(attacker, target, 250);
+      this.addAnimation('TWLT070', storm.point, storm.side, 'explosion');
+      this.addAnimation(`WCLBOLT${1 + this.randomCombatValue() % 3}`, storm.point, storm.side, 'impact');
+    }
+    this.storms = this.storms.filter(storm => this.state.time <= storm.ends);
   }
 
   private updateAI(): void {
@@ -1132,6 +1357,9 @@ export class Game implements GameAPI {
       previous: { x, y }, previousFacing: side === 0 ? -Math.PI / 4 : Math.PI * .75,
       ...(def.turret ? { turretFacing: side === 0 ? -Math.PI / 4 : Math.PI * .75, previousTurretFacing: side === 0 ? -Math.PI / 4 : Math.PI * .75 } : {}),
     };
+    if (def.ammo) { entity.ammo = def.ammo; }
+    if (def.recharge) entity.recharge = 0;
+    if (this.veteranTraining.has(`${side}:${def.category}`)) entity.rank = 1;
     this.state.entities.push(entity);
     if (side === 1 && def.producer?.some(category => category === 'infantry' || category === 'vehicles'))
       entity.rally = this.nativeMap ? { x: x + def.footprint[0] / 2, y: y + def.footprint[1] + 2.5 } : { x: 46.5, y: 27.5 };
@@ -1141,18 +1369,22 @@ export class Game implements GameAPI {
   private spawnFrom(producer: Entity, type: string): Entity | undefined {
     const def = this.defs[producer.type];
     const target = { x: producer.x + def.footprint[0] * 0.5, y: producer.y + def.footprint[1] + 0.5 };
-    const location = this.nearestOpen(target, -1, undefined, 7);
+    const location = this.nearestOpen(target, -1, undefined, 7, this.defs[type]);
     if (!location) return undefined;
-    return this.spawn(type, producer.side, location.x, location.y);
+    const unit = this.spawn(type, producer.side, location.x, location.y);
+    if (this.defs[type].ammo) unit.homeId = producer.id;
+    return unit;
   }
 
   private removeEntity(entity: Entity, explosion: boolean): void {
+    if (!this.state.entities.some(e => e.id === entity.id)) return;
     if (explosion) {
       const choices = this.defs[entity.type].deathAnimations;
       if (choices?.length) this.addAnimation(choices[this.randomCombatValue() % choices.length], this.center(entity), entity.side, 'explosion');
       else this.state.effects.push({ kind: 'explosion', ...this.center(entity), life: 0.65, maxLife: 0.65, side: entity.side });
       if (entity.side === 0) this.notify(`${this.defs[entity.type].name} lost`, 'warning');
     }
+    for (const passenger of entity.passengers ?? []) { passenger.hp = 0; this.removeEntity(passenger, false); }
     this.state.entities = this.state.entities.filter(e => e.id !== entity.id);
     this.memories.delete(entity.id);
     this.repairs.delete(entity.id);
@@ -1170,25 +1402,31 @@ export class Game implements GameAPI {
     }
   }
 
-  private isPassable(x: number, y: number): boolean {
+  private isPassable(x: number, y: number, unit?: Entity | UnitDef): boolean {
     if (x < 0 || y < 0 || x >= this.state.width || y >= this.state.height) return false;
     const index = y * this.state.width + x, terrain = this.state.tiles[index].terrain;
-    return !this.blocked[index] && terrain !== 'water' && terrain !== 'rock';
+    const def = unit && ('type' in unit ? this.defs[unit.type] : unit);
+    if (def?.movement === 'air') return true;
+    return !this.blocked[index] && (def?.movement === 'water' ? terrain === 'water' : terrain !== 'rock' && (def?.movement === 'amphibious' || terrain !== 'water'));
   }
 
-  private mobileOccupies(x: number, y: number, except: number): boolean {
-    return this.state.entities.some(e => e.id !== except && e.hp > 0 && !isBuilding(this.defs[e.type]) && Math.floor(e.x) === x && Math.floor(e.y) === y);
+  private mobileOccupies(x: number, y: number, except: number, unit?: Entity | UnitDef): boolean {
+    const def = unit && ('type' in unit ? this.defs[unit.type] : unit);
+    const airborne = def?.movement === 'air';
+    return this.state.entities.some(e => e.id !== except && e.hp > 0 && e.transportId === undefined && ((this.defs[e.type].movement === 'air') === airborne) && !isBuilding(this.defs[e.type]) && Math.floor(e.x) === x && Math.floor(e.y) === y);
   }
 
   private path(entity: Entity, destination: Vec2, avoidUnits = false): Vec2[] {
+    if (this.defs[entity.type].movement === 'air' || this.defs[entity.type].movement === 'teleport') return this.isPassable(Math.floor(destination.x), Math.floor(destination.y), entity) ? [{ ...destination }] : [];
     const occupied = new Set<number>();
     if (avoidUnits)
       for (const other of this.state.entities)
-        if (other.id !== entity.id && other.hp > 0 && !isBuilding(this.defs[other.type])) occupied.add(Math.floor(other.y) * this.state.width + Math.floor(other.x));
-    return findPath(this.state.width, this.state.height, entity, destination, (x, y) => this.isPassable(x, y) && !occupied.has(y * this.state.width + x));
+        if (other.id !== entity.id && other.hp > 0 && other.transportId === undefined && this.sameLayer(entity, other) && !isBuilding(this.defs[other.type])) occupied.add(Math.floor(other.y) * this.state.width + Math.floor(other.x));
+    return findPath(this.state.width, this.state.height, entity, destination, (x, y) => this.isPassable(x, y, entity) && !occupied.has(y * this.state.width + x));
   }
 
-  private nearestOpen(destination: Vec2, entityId: number, reserved?: Set<number>, maxRadius = 10): Vec2 | undefined {
+  private nearestOpen(destination: Vec2, entityId: number, reserved?: Set<number>, maxRadius = 10, definition?: UnitDef): Vec2 | undefined {
+    const unit = definition ?? this.state.entities.find(e => e.id === entityId);
     const cx = Math.floor(destination.x), cy = Math.floor(destination.y);
     for (let radius = 0; radius <= maxRadius; radius++) {
       const points: Vec2[] = [];
@@ -1196,7 +1434,7 @@ export class Game implements GameAPI {
         for (let dx = -radius; dx <= radius; dx++) {
           if (Math.max(Math.abs(dx), Math.abs(dy)) !== radius) continue;
           const x = cx + dx, y = cy + dy;
-          if (!this.isPassable(x, y) || reserved?.has(y * this.state.width + x) || this.mobileOccupies(x, y, entityId)) continue;
+          if (!this.isPassable(x, y, unit) || reserved?.has(y * this.state.width + x) || this.mobileOccupies(x, y, entityId, unit)) continue;
           points.push({ x: x + 0.5, y: y + 0.5 });
         }
       if (points.length) return points.sort((a, b) => distance(a, destination) - distance(b, destination))[0];
@@ -1208,7 +1446,7 @@ export class Game implements GameAPI {
     const def = this.defs[building.type], points: Vec2[] = [], bx = Math.floor(building.x), by = Math.floor(building.y);
     for (let y = by - 1; y <= by + def.footprint[1]; y++)
       for (let x = bx - 1; x <= bx + def.footprint[0]; x++)
-        if (this.isPassable(x, y) && !this.mobileOccupies(x, y, entity.id)) points.push({ x: x + 0.5, y: y + 0.5 });
+        if (this.isPassable(x, y, entity) && !this.mobileOccupies(x, y, entity.id, entity)) points.push({ x: x + 0.5, y: y + 0.5 });
     points.sort((a, b) => distance(entity, a) - distance(entity, b));
     return points.find(p => distance(entity, p) < 0.2 || this.path(entity, p, true).length > 0);
   }
@@ -1216,7 +1454,7 @@ export class Game implements GameAPI {
   private updateVision(): void {
     for (const fog of this.vision) fog.fill(0);
     for (const entity of this.state.entities) {
-      if (entity.hp <= 0 || entity.selling) continue;
+      if (entity.hp <= 0 || entity.selling || entity.constructing || entity.transportId !== undefined) continue;
       const radius = this.defs[entity.type].sight, center = this.center(entity), fog = this.vision[entity.side];
       if (!fog) continue;
       for (let y = Math.max(0, Math.floor(center.y - radius)); y <= Math.min(this.state.height - 1, Math.ceil(center.y + radius)); y++)
@@ -1224,9 +1462,12 @@ export class Game implements GameAPI {
           if (Math.hypot(x + 0.5 - center.x, y + 0.5 - center.y) <= radius) fog[y * this.state.width + x] = 1;
     }
     for (let i = 0; i < this.state.fog.length; i++) if (this.state.fog[i]) this.state.explored[i] = 1;
+    for (const entity of this.state.entities) if (revealedEntity(this.state, this.defs, entity)) entity.revealed = true;
   }
 
   private visibleTo(entity: Entity, side: number): boolean {
+    if (entity.transportId !== undefined) return false;
+    if (entity.side !== side && this.gapGenerators.some(e => e.side === entity.side && distance(this.center(e), this.center(entity)) < 5)) return false;
     const fog = this.vision[side], def = this.defs[entity.type];
     if (!fog) return false;
     // The renderer reveals a structure as soon as any foundation cell is seen.
@@ -1255,7 +1496,7 @@ export class Game implements GameAPI {
 
   private commandable(ids: number[], side: number): Entity[] {
     const set = new Set(ids);
-    return this.state.entities.filter(e => e.side === side && e.hp > 0 && !e.selling && set.has(e.id));
+    return this.state.entities.filter(e => e.side === side && e.hp > 0 && !e.selling && !e.constructing && e.transportId === undefined && set.has(e.id));
   }
   private center(entity: Entity): Vec2 {
     const def = this.defs[entity.type];

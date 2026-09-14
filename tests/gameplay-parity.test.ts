@@ -21,14 +21,14 @@ function advance(game: Game, seconds: number, hz = 30) { for (let i = 0; i < Mat
 describe('individual TOML definition files', () => {
   it('loads one named entity per file and resolves prerequisites after merging', () => {
     const files = import.meta.glob<string>('../src/data/units/*.toml', { query: '?raw', import: 'default', eager: true });
-    expect(Object.keys(files)).toHaveLength(27);
+    expect(Object.keys(files)).toHaveLength(53);
     expect(parseDefinitionFiles(files)).toEqual(definitions);
-    expect(Object.values(definitions).filter(def => !def.mapOnly && !(CUSTOM_UNIT_IDS as readonly string[]).includes(def.id))).toHaveLength(23);
+    expect(Object.values(definitions).filter(def => !def.mapOnly && !(CUSTOM_UNIT_IDS as readonly string[]).includes(def.id))).toHaveLength(48);
     expect(CUSTOM_UNIT_IDS).toEqual(['butchers', 'george']);
     expect(CUSTOM_UNIT_IDS.every(id => !!definitions[id])).toBe(true);
-    expect(Object.keys(nativeIds)).toHaveLength(25);
+    expect(Object.keys(nativeIds)).toHaveLength(51);
     expect(Object.keys(definitions).sort()).toEqual([...Object.keys(nativeIds), ...CUSTOM_UNIT_IDS].sort());
-    expect(Object.values(definitions).filter(def => def.mapOnly).map(def => def.id).sort()).toEqual(['tech_airport', 'tech_oil']);
+    expect(Object.values(definitions).filter(def => def.mapOnly).map(def => def.id).sort()).toEqual(['hornet', 'tech_airport', 'tech_oil']);
     const tiny = { 'first.toml': '[units.first]\nname="First"\ncategory="structures"\ncost=10\nrequires=["second"]', 'second.toml': '[units.second]\nname="Second"\ncategory="infantry"\ncost=20' };
     expect(parseDefinitionFiles(tiny).first.requires).toEqual(['second']);
     expect(() => parseDefinitionFiles({ 'first.toml': tiny['first.toml'] })).toThrow('unknown unit second');
@@ -225,11 +225,11 @@ describe('simulation frame and speed independence', () => {
   });
 });
 
-const nativeIds: Record<string, string> = { conyard: 'GACNST', power: 'GAPOWR', refinery: 'GAREFN', barracks: 'GAPILE', warfactory: 'GAWEAP', radar: 'GAAIRC', pillbox: 'GAPILL', gi: 'E1', engineer: 'ENGINEER', rocketeer: 'JUMPJET', grizzly: 'MTNK', ifv: 'FV', miner: 'CMIN', power_soviet: 'NAPOWR', refinery_soviet: 'NAREFN', barracks_soviet: 'NAHAND', warfactory_soviet: 'NAWEAP', radar_soviet: 'NARADR', sentry: 'NALASR', conscript: 'E2', rhino: 'HTNK', flak: 'HTK', warminer: 'HARV', tech_oil: 'CAOILD', tech_airport: 'CAAIRP' };
+const nativeIds: Record<string, string> = { sniper: 'SNIPE', hornet: 'HORNET', battlelab: 'GATECH', service_depot: 'GADEPT', shipyard: 'GAYARD', ore_purifier: 'GAOREP', patriot: 'NASAM', prism_tower: 'ATESLA', gap_generator: 'GAGAP', chronosphere: 'GACSPH', weather_control: 'GAWEAT', wall: 'GAWALL', attack_dog: 'ADOG', spy: 'SPY', tanya: 'TANY', chrono_legionnaire: 'CLEG', prism_tank: 'SREF', mirage_tank: 'MGTK', mcv: 'AMCV', nighthawk: 'SHAD', harrier: 'ORCA', destroyer: 'DEST', aegis: 'AEGIS', carrier: 'CARRIER', dolphin: 'DLPH', transport: 'LCRF',  conyard: 'GACNST', power: 'GAPOWR', refinery: 'GAREFN', barracks: 'GAPILE', warfactory: 'GAWEAP', radar: 'GAAIRC', pillbox: 'GAPILL', gi: 'E1', engineer: 'ENGINEER', rocketeer: 'JUMPJET', grizzly: 'MTNK', ifv: 'FV', miner: 'CMIN', power_soviet: 'NAPOWR', refinery_soviet: 'NAREFN', barracks_soviet: 'NAHAND', warfactory_soviet: 'NAWEAP', radar_soviet: 'NARADR', sentry: 'NALASR', conscript: 'E2', rhino: 'HTNK', flak: 'HTK', warminer: 'HARV', tech_oil: 'CAOILD', tech_airport: 'CAAIRP' };
 function ini(source: string): Record<string, Record<string, string>> {
   const result: Record<string, Record<string, string>> = {}; let section: Record<string, string> | undefined;
   for (const line of source.split(/\r?\n/)) {
-    const clean = line.split(';')[0].trim();
+    const clean = line.split(';')[0].split('//')[0].trim();
     if (/^\[.+\]$/.test(clean)) section = result[clean.slice(1, -1).toUpperCase()] = {};
     else if (section && clean.includes('=')) { const [key, ...value] = clean.split('='); section[key.trim().toLowerCase()] = value.join('=').trim(); }
   }
@@ -244,7 +244,7 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('data verified against original West
       const def = definitions[id], source = rules[name];
       expect(def.hp, id).toBe(Number(source.strength)); expect(def.armor, id).toBe(source.armor);
       expect(def.power, id).toBe(Number(source.power ?? 0));
-      if (def.mapOnly) {
+      if (def.mapOnly && isBuilding(def)) {
         // Neutral tech has no native production cost/timing: verify its capture
         // rules instead, while retaining native strength, armor and foundation checks.
         expect(['CAOILD', 'CAAIRP']).toContain(name);
@@ -257,12 +257,12 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('data verified against original West
         expect(def.cost, id).toBe(Number(source.cost)); expect(def.sight, id).toBe(Number(source.sight));
         expect(def.buildTime, id).toBeCloseTo(Number(source.cost) / 1000 * Number(rules.GENERAL.buildspeed) * 900 / 30, 8);
       }
-      if (isBuilding(def)) expect(def.footprint, id).toEqual(art[name].foundation.split('x').map(Number));
+      if (isBuilding(def)) expect(def.footprint, id).toEqual(art[(source.image ?? name).toUpperCase()].foundation.split('x').map(Number));
       else { expect(def.nativeSpeed, id).toBe(Number(source.speed)); if (id !== 'rocketeer') expect(def.speed, id).toBe(Math.min(255, Math.trunc(Math.min(100, Number(source.speed)) * 256 / 100)) * 30 / 256); if (source.rot) expect(def.rot, id).toBe(Number(source.rot)); }
       if (def.damage > 0) {
-        const weapon = rules[source.primary.toUpperCase()];
+        const weapon = rules[(source.primary ?? source.weapon1).toUpperCase()];
         expect(def.damage, id).toBe(Number(weapon.damage)); expect(def.range, id).toBe(Number(weapon.range)); expect(def.fireRate, id).toBeCloseTo(Number(weapon.rof) / 30, 8);
-        expect(def.verses, id).toEqual(rules[weapon.warhead.toUpperCase()].verses.split(',').map(n => Number(n.trim().replace('%', '')) / 100));
+        expect(def.verses, id).toEqual(rules[weapon.warhead.toUpperCase()].verses?.split(',').map(n => Number(n.trim().replace('%', '')) / 100));
       }
     }
   });

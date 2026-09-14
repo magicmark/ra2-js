@@ -20,3 +20,4 @@ armor = "medium"
 nativeSpeed = 4
 crusher = true
 rot = 5
+factory = "warfactory"

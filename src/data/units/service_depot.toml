@@ -1,0 +1,16 @@
+# Original rules.ini [GADEPT]; 30-frame simulation reference clock.
+[units.service_depot]
+name = "Service Depot"
+category = "structures"
+faction = "allied"
+cost = 800
+buildTime = 16.8
+hp = 1200
+armor = "wood"
+footprint = [3, 3]
+power = -25
+requires = ["warfactory", "conyard"]
+sight = 5
+sprite = "gadept"
+cameo = "fixicon"
+description = "Repairs nearby vehicles and unlocks the Mobile Construction Vehicle."

@@ -8,7 +8,7 @@ export function placementCells(state: GameState, defs: Record<string, UnitDef>, 
   const [width, height] = def.footprint, entities = state.entities.filter(entity => entity.hp > 0);
   const nearBase = entities.some(entity => {
     const other = defs[entity.type];
-    if (entity.side !== side || entity.selling || !isBuilding(other)) return false;
+    if (entity.side !== side || entity.selling || entity.constructing || !isBuilding(other)) return false;
     const dx = Math.max(entity.x - (x + width), x - (entity.x + other.footprint[0]), 0);
     const dy = Math.max(entity.y - (y + height), y - (entity.y + other.footprint[1]), 0);
     return Math.hypot(dx, dy) <= 4.5;
@@ -18,9 +18,10 @@ export function placementCells(state: GameState, defs: Record<string, UnitDef>, 
     let valid = nearBase && tx >= 0 && ty >= 0 && tx < state.width && ty < state.height;
     if (valid) {
       const tile = state.tiles[ty * state.width + tx];
-      valid = tile.terrain !== 'water' && tile.terrain !== 'rock' && tile.ore <= 0 && (side !== 0 || !!state.explored[ty * state.width + tx]);
+      valid = (def.movement === 'water' ? tile.terrain === 'water' : tile.terrain !== 'water' && tile.terrain !== 'rock') && tile.ore <= 0 && (side !== 0 || !!state.explored[ty * state.width + tx]);
     }
     if (valid) valid = !entities.some(entity => {
+      if (entity.transportId !== undefined || defs[entity.type].movement === 'air') return false;
       const other = defs[entity.type];
       return isBuilding(other)
         ? tx < entity.x + other.footprint[0] && tx + 1 > entity.x && ty < entity.y + other.footprint[1] && ty + 1 > entity.y

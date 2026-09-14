@@ -96,6 +96,20 @@ The native 168-pixel Allied sidebar uses the original radar, repair/sell buttons
 
 Touch controls activate for mobile user agents and coarse touch devices. Use `?force_mobile=1` to force them on any device. **Select** supports tapping units and dragging selection boxes; tap terrain to command selected units. **Pan** drags the camera. **Attack** issues an attack-move command, and **Stop** holds selected units in place. Pinch to zoom, drag with two fingers to pan, and use **Build** to open the production drawer. Tap **Select** to cancel building placement while retaining the completed structure. The mobile selection panel provides repair/sell actions for owned buildings.
 
+## British Allied technology
+
+Build a **War Factory** and **Airforce Command** to unlock the **Battle Lab**. The lab unlocks Prism Tanks, Mirage Tanks, Spies, Tanya, Chrono Legionnaires, Dolphins, Aircraft Carriers, the Ore Purifier, Gap Generator and superweapons. Britain's Sniper requires Barracks and Airforce Command. Hover a locked production card to see its missing prerequisite.
+
+The Service Depot repairs nearby vehicles and unlocks MCVs. Deploy an MCV on clear explored ground to establish another Construction Yard. Place Naval Shipyards on water near your base; ships leave from the shipyard and travel on water. Aircraft and ships share the vehicle sidebar tab but use their own production building. Each Airforce Command supports four Harriers, which return to rearm after firing.
+
+Select infantry or vehicles and click a compatible transport to board. Use **Deploy / D** to unload. Nighthawks carry infantry; Amphibious Transports also carry vehicles. An Engineer inside an IFV repairs nearby vehicles. Other British infantry select their original IFV weapon modes.
+
+Powered Ore Purifiers increase ore income by 25% each. Gap Generators conceal nearby forces from enemy targeting. Spies enter enemy buildings to steal credits, interrupt power or unlock veteran production. Tanya uses C4 against buildings and ships; Chrono Legionnaires teleport and immobilize targets while erasing them. Carriers launch Hornets that attack and return to their carrier.
+
+The defense tab shows charged **Chronoshift** and **Lightning Storm** actions after their buildings finish construction. Chronoshift takes a source area and then a destination; Lightning Storm takes one target. Both require power and explored targets. Right click or Escape cancels targeting.
+
+Placed buildings play their original theater-specific buildup before providing power, production or prerequisites. Revealed enemy units and buildings remain visible after scouts leave; unexplored terrain remains covered. Vehicle movement retains the original static track/wheel artwork.
+
 ## Rules and architecture
 
 Each unit and building has its own TOML file in [`src/data/units/`](src/data/units/). Change costs, build times, health, movement speed, combat, footprints, power, prerequisites and producer categories there. The sidebar and simulation consume the same parsed definitions; gameplay rules do not depend on the original INI files.
@@ -111,7 +125,7 @@ Each unit and building has its own TOML file in [`src/data/units/`](src/data/uni
 
 Automatic Soviet attack waves are temporarily disabled for testing by `TESTING_FLAGS.automaticSovietWaves` in [`src/game/testing.ts`](src/game/testing.ts). This applies to the training battlefield and native maps, including restarts. Soviet construction, harvesting, production, repairs and defensive combat continue; player combat remains active. George is a [noncombat inspector](docs/BUTCHERS.md) who promotes nearby friendly units. Set the flag to `true` to restore scheduled waves, or use `new Game({ automaticSovietWaves: true })` for an explicit simulation check. The resolved setting is visible at `window.__rts.game.automaticSovietWaves`.
 
-This is a focused skirmish implementation through milestone 7. Campaigns, multiplayer and the full faction/unit roster remain outside the agreed scope. The subsequent retail-parity work is active; Options appearance, combat animation and other remaining differences are recorded in [the acceptance checklist](docs/PARITY_ACCEPTANCE.md) and [`TASKS.md`](TASKS.md).
+The Allied player uses the British roster, including the Sniper. Campaigns, multiplayer, other country-exclusive units and the expanded Soviet roster remain outside this skirmish implementation. The subsequent retail-parity work is active; Options appearance, combat animation and other remaining differences are recorded in [the acceptance checklist](docs/PARITY_ACCEPTANCE.md) and [`TASKS.md`](TASKS.md).
 
 ## Verification
 

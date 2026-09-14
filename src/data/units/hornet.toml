@@ -1,0 +1,25 @@
+# Original rules.ini [HORNET]; Britain roster.
+[units.hornet]
+name = "Hornet"
+category = "vehicles"
+faction = "allied"
+cost = 50
+buildTime = 1.05
+hp = 75
+armor = "light"
+sight = 2
+speed = 3.515625
+nativeSpeed = 12
+damage = 40
+range = 5.0
+fireRate = 0.1
+verses = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.75, 1.0, 1.0]
+sprite = "hornet"
+cameo = "proicon"
+requires = []
+impact = "XGRYSML2"
+description = "Carrier-launched strike aircraft."
+mapOnly = true
+movement = "air"
+ammo = 1
+rot = 3

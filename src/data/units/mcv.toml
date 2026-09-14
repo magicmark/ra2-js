@@ -1,0 +1,22 @@
+# Original rules.ini [AMCV]; 30-frame simulation reference clock.
+[units.mcv]
+name = "Mobile Construction Vehicle"
+category = "vehicles"
+faction = "allied"
+cost = 3000
+buildTime = 63.0
+hp = 1000
+armor = "heavy"
+footprint = [1, 1]
+power = 0
+requires = ["warfactory", "service_depot"]
+sight = 6
+sprite = "mcv"
+cameo = "mcvicon"
+description = "Deploy on clear ground to establish a new Construction Yard."
+speed = 1.171875
+nativeSpeed = 4
+size = 6
+rot = 5
+crusher = true
+factory = "warfactory"

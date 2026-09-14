@@ -1,0 +1,20 @@
+# Original rules.ini [GAWEAT]; 30-frame simulation reference clock.
+[units.weather_control]
+name = "Weather Control Device"
+category = "defenses"
+faction = "allied"
+cost = 5000
+buildTime = 105.0
+hp = 1000
+armor = "concrete"
+footprint = [3, 3]
+power = -200
+requires = ["battlelab", "conyard"]
+sight = 5
+sprite = "gaweth"
+cameo = "wethicon"
+description = "Charges for ten minutes. Calls a devastating lightning storm."
+powered = true
+buildLimit = 1
+superweapon = "weather"
+recharge = 600

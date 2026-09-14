@@ -1,0 +1,27 @@
+# Original rules.ini [CLEG]; 30-frame simulation reference clock.
+[units.chrono_legionnaire]
+name = "Chrono Legionnaire"
+category = "infantry"
+faction = "allied"
+cost = 1500
+buildTime = 31.5
+hp = 125
+armor = "none"
+footprint = [1, 1]
+power = 0
+requires = ["barracks", "battlelab"]
+sight = 8
+sprite = "cleg"
+cameo = "clegicon"
+description = "Teleports across the battlefield and erases targets with a neutron rifle."
+speed = 1.40625
+nativeSpeed = 5
+size = 1
+damage = 8
+range = 5.0
+fireRate = 4.0
+verses = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+targets = ["land", "water"]
+factory = "barracks"
+movement = "teleport"
+ability = "chrono"

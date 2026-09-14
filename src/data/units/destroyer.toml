@@ -1,0 +1,28 @@
+# Original rules.ini [DEST]; 30-frame simulation reference clock.
+[units.destroyer]
+name = "Destroyer"
+category = "vehicles"
+faction = "allied"
+cost = 1000
+buildTime = 21.0
+hp = 600
+armor = "heavy"
+footprint = [1, 1]
+power = 0
+requires = ["shipyard"]
+sight = 7
+sprite = "dest"
+cameo = "desticon"
+description = "Naval escort armed with a cannon for shore and sea bombardment."
+speed = 1.7578125
+nativeSpeed = 6
+size = 30
+rot = 5
+damage = 60
+range = 8.0
+fireRate = 3.6666666666666665
+verses = [1.0, 0.8, 0.6, 1.0, 0.6, 0.6, 1.0, 0.8, 0.6, 1.0, 1.0]
+impact = "XGRYSML2"
+targets = ["land", "water"]
+factory = "shipyard"
+movement = "water"

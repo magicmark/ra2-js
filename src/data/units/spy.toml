@@ -1,0 +1,21 @@
+# Original rules.ini [SPY]; 30-frame simulation reference clock.
+[units.spy]
+name = "Spy"
+category = "infantry"
+faction = "allied"
+cost = 1000
+buildTime = 21.0
+hp = 100
+armor = "flak"
+footprint = [1, 1]
+power = 0
+requires = ["barracks", "battlelab"]
+sight = 9
+sprite = "spy"
+cameo = "spyicon"
+description = "Enter enemy buildings to steal credits, disrupt power or gain veteran training."
+speed = 1.171875
+nativeSpeed = 4
+size = 1
+factory = "barracks"
+ability = "spy"

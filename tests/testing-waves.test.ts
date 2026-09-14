@@ -26,7 +26,7 @@ describe('temporary automatic Soviet wave setting', () => {
     expect(game.state.entities.filter(e => e.side === 1 && e.type === 'warminer').length).toBeGreaterThanOrEqual(2);
     expect(game.state.entities.filter(e => e.side === 1 && e.type === 'rhino').length).toBeGreaterThanOrEqual(2);
     expect(game.state.sides[1].money).toBeGreaterThanOrEqual(0);
-  }, 20000);
+  }, 45000); // Four simulated minutes, including native-map pathfinding.
 
   it('preserves the setting through restart and native-map selection, with an explicit reenable option', () => {
     for (const automaticSovietWaves of [false, true]) {

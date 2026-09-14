@@ -1,0 +1,28 @@
+# Original rules.ini [CARRIER]; 30-frame simulation reference clock.
+[units.carrier]
+name = "Aircraft Carrier"
+category = "vehicles"
+faction = "allied"
+cost = 2000
+buildTime = 42.0
+hp = 800
+armor = "heavy"
+footprint = [1, 1]
+power = 0
+requires = ["shipyard", "battlelab"]
+sight = 7
+sprite = "carrier"
+cameo = "carricon"
+description = "Long-range naval strike platform launches Hornet aircraft at ground targets."
+speed = 1.171875
+nativeSpeed = 4
+size = 50
+rot = 1
+damage = 1
+range = 25
+fireRate = 5
+impact = "XGRYSML2"
+targets = ["land", "water"]
+factory = "shipyard"
+movement = "water"
+ability = "carrier"

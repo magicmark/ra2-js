@@ -1,0 +1,23 @@
+# Original rules.ini [LCRF]; 30-frame simulation reference clock.
+[units.transport]
+name = "Amphibious Transport"
+category = "vehicles"
+faction = "allied"
+cost = 900
+buildTime = 18.9
+hp = 300
+armor = "light"
+footprint = [1, 1]
+power = 0
+requires = ["shipyard"]
+sight = 6
+sprite = "lcrf"
+cameo = "landicon"
+description = "Carries infantry and vehicles over land and sea. Deploy unloads passengers."
+speed = 1.7578125
+nativeSpeed = 6
+size = 16
+rot = 5
+factory = "shipyard"
+movement = "amphibious"
+passengers = 12

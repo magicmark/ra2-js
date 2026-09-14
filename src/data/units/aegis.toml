@@ -1,0 +1,28 @@
+# Original rules.ini [AEGIS]; 30-frame simulation reference clock.
+[units.aegis]
+name = "Aegis Cruiser"
+category = "vehicles"
+faction = "allied"
+cost = 1200
+buildTime = 25.2
+hp = 800
+armor = "light"
+footprint = [1, 1]
+power = 0
+requires = ["shipyard", "radar"]
+sight = 8
+sprite = "aegis"
+cameo = "agisicon"
+description = "Heavy naval anti-aircraft escort."
+speed = 1.171875
+nativeSpeed = 4
+size = 30
+rot = 1
+damage = 100
+range = 12.0
+fireRate = 0.5
+verses = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0]
+impact = "XGRYSML2"
+targets = ["air"]
+factory = "shipyard"
+movement = "water"

@@ -4,9 +4,9 @@ export interface InfantrySequence extends NativeAnimationDefinition { start: num
 export interface InfantryArt { sequences: Record<string, InfantrySequence>; fireFrame: number }
 const intervals: Record<string, number> = {
   Ready: 1, Walk: 3, FireUp: 1, Deploy: 1, Deployed: 1, DeployedFire: 1, Undeploy: 1,
-  Fly: 1, Hover: 2, FireFly: 1, Idle1: 3, Idle2: 3,
+  Fly: 1, Hover: 2, FireFly: 1, Idle1: 3, Idle2: 3, Swim: 3, Tread: 3, WetAttack: 1,
 };
-const loops = new Set(['Ready', 'Walk', 'Deployed', 'Fly', 'Hover']);
+const loops = new Set(['Ready', 'Walk', 'Deployed', 'Fly', 'Hover', 'Swim', 'Tread']);
 
 /** Only sequences consumed by this roster are required and exposed. */
 export function infantryArt(art: ArtSections, sprite: string): InfantryArt {
@@ -15,6 +15,7 @@ export function infantryArt(art: ArtSections, sprite: string): InfantryArt {
   const names = sprite === 'rock' ? ['Fly', 'Hover', 'FireFly']
     : sprite === 'gi' ? ['Ready', 'Walk', 'FireUp', 'Deploy', 'Deployed', 'DeployedFire', 'Undeploy']
     : sprite === 'engineer' ? ['Ready', 'Walk'] : ['Ready', 'Walk', 'FireUp'];
+  if (sprite === 'tany') names.push('Swim', 'Tread', 'WetAttack');
   const sequences: Record<string, InfantrySequence> = {};
   for (const name of [...names, ...['Idle1', 'Idle2'].filter(name => sequence[name.toLowerCase()])]) {
     const fields = sequence[name.toLowerCase()]?.split(',').map(value => value.trim());
