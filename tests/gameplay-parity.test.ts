@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { Game } from '../src/game/Game';
 import { definitions, isBuilding, parseDefinitionFiles } from '../src/game/definitions';
+import { CUSTOM_UNIT_IDS } from '../src/game/customUnits';
 
 function arena() {
   const game = new Game({ ai: false });
@@ -20,9 +21,13 @@ function advance(game: Game, seconds: number, hz = 30) { for (let i = 0; i < Mat
 describe('individual TOML definition files', () => {
   it('loads one named entity per file and resolves prerequisites after merging', () => {
     const files = import.meta.glob<string>('../src/data/units/*.toml', { query: '?raw', import: 'default', eager: true });
-    expect(Object.keys(files)).toHaveLength(25);
+    expect(Object.keys(files)).toHaveLength(27);
     expect(parseDefinitionFiles(files)).toEqual(definitions);
-    expect(Object.values(definitions).filter(def => !def.mapOnly)).toHaveLength(23);
+    expect(Object.values(definitions).filter(def => !def.mapOnly && !(CUSTOM_UNIT_IDS as readonly string[]).includes(def.id))).toHaveLength(23);
+    expect(CUSTOM_UNIT_IDS).toEqual(['butchers', 'george']);
+    expect(CUSTOM_UNIT_IDS.every(id => !!definitions[id])).toBe(true);
+    expect(Object.keys(nativeIds)).toHaveLength(25);
+    expect(Object.keys(definitions).sort()).toEqual([...Object.keys(nativeIds), ...CUSTOM_UNIT_IDS].sort());
     expect(Object.values(definitions).filter(def => def.mapOnly).map(def => def.id).sort()).toEqual(['tech_airport', 'tech_oil']);
     const tiny = { 'first.toml': '[units.first]\nname="First"\ncategory="structures"\ncost=10\nrequires=["second"]', 'second.toml': '[units.second]\nname="Second"\ncategory="infantry"\ncost=20' };
     expect(parseDefinitionFiles(tiny).first.requires).toEqual(['second']);
@@ -234,7 +239,7 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('data verified against original West
   it('matches all authored roster stats, foundations, costs, weapons and frame-based build/attack timings', () => {
     const rules = ini(readFileSync(join(process.env.RA2_ASSET_DIR!, 'rules.ini'), 'utf8'));
     const art = ini(readFileSync(join(process.env.RA2_ASSET_DIR!, 'art.ini'), 'utf8'));
-    expect(Object.keys(nativeIds).sort()).toEqual(Object.keys(definitions).sort());
+    expect(Object.keys(nativeIds).sort()).toEqual(Object.keys(definitions).filter(id => !(CUSTOM_UNIT_IDS as readonly string[]).includes(id)).sort());
     for (const [id, name] of Object.entries(nativeIds)) {
       const def = definitions[id], source = rules[name];
       expect(def.hp, id).toBe(Number(source.strength)); expect(def.armor, id).toBe(source.armor);

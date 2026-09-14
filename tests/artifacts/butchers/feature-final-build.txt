@@ -1,0 +1,20 @@
+
+> red-alert-command@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v7.3.6 building client environment for production...
+transforming...
+[plugin vite:resolve] Module "module" has been externalized for browser compatibility, imported by "/home/mark/apps/ra2-js/node_modules/7z-wasm/7zz.es6.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+✓ 82 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                             1.18 kB │ gzip:   0.68 kB
+dist/assets/extract.worker-ChiUfhEm.js     79.00 kB
+dist/assets/7zz-CgkXYLdN.wasm           1,651.93 kB │ gzip: 669.87 kB
+dist/assets/MapViewer-ShImk63S.css         12.43 kB │ gzip:   3.37 kB
+dist/assets/main-B3Ft3Jmb.css              62.41 kB │ gzip:  13.80 kB
+dist/assets/index-B3BX9_97.js               2.88 kB │ gzip:   1.42 kB
+dist/assets/MapViewer-BJDLWDNh.js          13.18 kB │ gzip:   5.08 kB
+dist/assets/Renderer-CawXkvk5.js           90.40 kB │ gzip:  32.88 kB
+dist/assets/main-f2ciZNjY.js              152.29 kB │ gzip:  46.71 kB
+✓ built in 5.10s

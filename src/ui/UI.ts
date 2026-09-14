@@ -1,5 +1,6 @@
 import { MAP_CATALOG } from '../game/maps/catalog';
 import type { Category, GameAPI } from '../game/types';
+import { inspectionStatus, INSPECTION_HELP } from '../game/customUnits';
 
 import type { ControlMode, ControlCommand } from '../input/Controls';
 import type { NativeFont } from '../assets/NativeFont';
@@ -507,8 +508,12 @@ export class UI {
   }
 
   private renderSelection() {
-    if (!this.mobile) { this.el('selection-panel').hidden = true; return; }
-    const selected = this.selected(); const signature = selected.map(entity => `${entity.id}:${entity.type}`).join(',');
+    const selected = this.selected(), inspection = selected.length === 1 && (selected[0].type === 'george' || selected[0].inspectedBy !== undefined || (selected[0].rank ?? 0) > 0);
+    const panel = this.el('selection-panel');
+    panel.classList.toggle('inspection-selection', inspection);
+    if (!this.mobile && !inspection) { panel.hidden = true; return; }
+    panel.hidden = !selected.length;
+    const signature = selected.map(entity => `${entity.id}:${entity.type}`).join(',') + `:${inspection}`;
     if (signature === this.lastSelection && this.el('selection-panel').childElementCount) return;
     this.lastSelection = signature;
     this.el('selection-panel').hidden = !selected.length;
@@ -519,6 +524,11 @@ export class UI {
     if (!cameo) { this.el('selection-panel').hidden = true; this.el('selection-panel').replaceChildren(); return; }
     const building = selected.length === 1 && (def.category === 'structures' || def.category === 'defenses');
     this.el('selection-panel').innerHTML = `<img class="selection-cameo" src="${escapeHTML(cameo)}" alt=""/><div class="selection-copy"><span class="eyebrow">${selected.length > 1 ? `${selected.length} UNITS SELECTED` : `${CATEGORY_NAMES[def.category]} / FRIENDLY`}</span><h3>${escapeHTML(selected.length > 1 ? 'Strike group' : def.name)}</h3><div class="selection-health"><i id="selection-health-fill"></i></div><span class="selection-status" id="selection-status"></span></div><div class="selection-actions">${building ? `<button data-action="repair" data-tooltip="Repair selected building" aria-label="Repair selected building">${icon('wrench')}</button><button data-action="sell" data-tooltip="Sell selected building" aria-label="Sell selected building">${icon('sell')}</button>` : `<button data-action="stop" data-tooltip="Stop selected units" aria-label="Stop selected units">${icon('stop')}</button><button data-mode="attack" data-tooltip="Attack-move mode" aria-label="Attack move mode">${icon('target')}</button>`}</div>`;
+    if (selected.length === 1 && selected[0].type === 'george') panel.querySelector('[data-mode="attack"]')?.remove();
+    if (inspection) {
+      panel.querySelector('.selection-copy')!.insertAdjacentHTML('beforeend', '<progress class="inspection-progress" id="inspection-progress" max="1" value="0" aria-label="Continuous inspection progress"></progress><small class="inspection-help">3 cells · 10 continuous seconds · moving or leaving resets</small>');
+      panel.dataset.tooltip = INSPECTION_HELP;
+    } else delete panel.dataset.tooltip;
   }
 
   private drawMinimap() {
@@ -564,7 +574,7 @@ export class UI {
     if (!panel.querySelector('.active-queue')) {
       panel.innerHTML = `<div class="active-queue"><div><span class="eyebrow"></span><strong></strong></div><div class="queue-buttons"><button data-action="queue-pause"></button><button data-action="queue-cancel" aria-label="Cancel last queued item and refund" data-tooltip="Cancel last item & refund">${icon('close')}</button></div></div><div class="queue-track"><i></i></div><span class="queue-total"></span>`;
     }
-    panel.querySelector<HTMLElement>('.eyebrow')!.textContent = active.ready ? 'AWAITING DEPLOYMENT' : active.paused || active.blockedFunds ? 'PRODUCTION ON HOLD' : 'PRODUCTION IN PROGRESS';
+    panel.querySelector<HTMLElement>('.eyebrow')!.textContent = active.ready ? 'AWAITING DEPLOYMENT' : active.paused || active.blockedFunds || active.blockedPrerequisite ? 'PRODUCTION ON HOLD' : 'PRODUCTION IN PROGRESS';
     panel.querySelector<HTMLElement>('.active-queue strong')!.textContent = this.game.defs[active.type]?.name ?? active.type;
     const pauseButton = panel.querySelector<HTMLButtonElement>('[data-action="queue-pause"]')!;
     pauseButton.hidden = active.ready;
@@ -575,7 +585,7 @@ export class UI {
       pauseButton.dataset.paused = String(active.paused);
     }
     panel.querySelector<HTMLElement>('.queue-track i')!.style.width = `${Math.max(0, Math.min(1, active.progress)) * 100}%`;
-    panel.querySelector<HTMLElement>('.queue-total')!.textContent = queue.length > 1 ? `${queue.length - 1} more in queue` : active.ready ? 'Click the highlighted card to place' : 'Production is automatic';
+    panel.querySelector<HTMLElement>('.queue-total')!.textContent = active.blockedPrerequisite ?? (queue.length > 1 ? `${queue.length - 1} more in queue` : active.ready ? 'Click the highlighted card to place' : 'Production is automatic');
   }
 
   update() {
@@ -615,11 +625,11 @@ export class UI {
       card.setAttribute('aria-disabled', String(!available.ok && !ready));
       card.dataset.tooltip = `${def.name} · $${formatMoney(def.cost)}\n${def.description}\n${ready ? 'Ready. Click to place near your base.' : available.ok ? `Build time: ${def.buildTime}s` : available.reason}`;
       this.nativeText(card.querySelector<HTMLElement>('.card-queue')!, matching.length > 1 ? String(matching.length) : '');
-      this.nativeText(card.querySelector<HTMLElement>('.card-state')!, ready ? 'Ready' : active?.paused || active?.blockedFunds ? 'On Hold' : '');
+      this.nativeText(card.querySelector<HTMLElement>('.card-state')!, ready ? 'Ready' : active?.paused || active?.blockedFunds || active?.blockedPrerequisite ? 'On Hold' : '');
       card.querySelector<HTMLElement>('.card-progress')!.style.width = active ? `${active.progress * 100}%` : '0';
       card.style.setProperty('--build-progress', `${(active?.progress ?? 0) * 360}deg`);
       const reason = card.querySelector<HTMLElement>('.card-requirement')!;
-      reason.textContent = !available.ok && !ready && !active ? available.reason : '';
+      reason.textContent = active?.blockedPrerequisite ?? (!available.ok && !ready && !active ? available.reason : '');
     }
 
     this.updateScrollButtons();
@@ -631,7 +641,9 @@ export class UI {
       const totalHealth = selected.reduce((sum, entity) => sum + entity.hp, 0), maxHealth = selected.reduce((sum, entity) => sum + entity.maxHp, 0);
       const health = this.el('selection-health-fill'); if (health) { health.style.width = `${totalHealth / Math.max(1, maxHealth) * 100}%`; health.classList.toggle('damaged', totalHealth < maxHealth * 0.4); }
       const status = this.el('selection-status');
-      if (status) status.textContent = selected.length === 1 ? `${Math.ceil(selected[0].hp)} / ${selected[0].maxHp} HP · ${selected[0].cargo > 0 ? `${Math.floor(selected[0].cargo)} ORE` : selected[0].order.toUpperCase()}` : `${Math.ceil(totalHealth)} HP · ${selected.length} COMBATANTS`;
+      if (status) status.textContent = selected.length === 1 ? `${Math.ceil(selected[0].hp)} / ${selected[0].maxHp} HP · ${selected[0].type === 'george' || selected[0].inspectedBy !== undefined || (selected[0].rank ?? 0) > 0 ? inspectionStatus(selected[0], state, this.game.defs) : selected[0].cargo > 0 ? `${Math.floor(selected[0].cargo)} ORE` : selected[0].order.toUpperCase()}` : `${Math.ceil(totalHealth)} HP · ${selected.length} UNITS`;
+      const progress = this.root.querySelector<HTMLProgressElement>('#inspection-progress');
+      if (progress) progress.value = selected[0].type === 'george' ? (selected[0].inspection?.elapsed ?? 0) / 10 : selected[0].inspectionProgress ?? 0;
     }
     const event = state.events.at(-1); if (event && event.id !== this.lastEvent) { this.lastEvent = event.id; this.showToast(event.text); }
     if (this.radarOnline && performance.now() - this.lastMinimap > 350) { this.drawMinimap(); this.lastMinimap = performance.now(); }

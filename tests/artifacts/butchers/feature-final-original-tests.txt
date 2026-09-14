@@ -1,0 +1,18 @@
+
+> red-alert-command@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.11 /home/mark/apps/ra2-js
+
+(node:273597) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:273577) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:273741) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  32 passed | 1 skipped (33)
+      Tests  296 passed | 1 skipped (297)
+   Start at  22:18:11
+   Duration  37.68s (transform 25.19s, setup 0ms, import 44.05s, tests 158.37s, environment 31ms)

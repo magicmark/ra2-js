@@ -7,6 +7,7 @@ import { NativeCursors } from './NativeCursor';
 import { decodePcx } from './Pcx';
 import { nativeAnimationInterval, nativeAnimationFrame, NATIVE_SPEED_INDEX, readArtSections, type NativeAnimationDefinition } from './NativeAnimation';
 import { infantryArt, infantrySequenceFrame, type InfantryArt } from './InfantryAnimation';
+import type { CustomArt } from './CustomArt';
 import { nativeTileSpec, nativeOverlaySpec, NATIVE_THEATERS, type NativeTheater } from '../game/maps/theater';
 
 import { AssetDownload, InvalidArchiveError, assetCache, assetCacheKey, assetSourceUrl, selectedAssetCacheKeys, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL, type ArchiveInput, type ArchiveResume, type SavedArchive } from './AssetDownload';
@@ -91,6 +92,7 @@ function shadow(frame: IndexedFrame): HTMLCanvasElement {
   ctx.putImageData(image, 0, 0); return result;
 }
 export class AssetManager {
+  customArt: CustomArt | null = null;
   ready = false;
   error: string | null = null;
   status: AssetProgress = { phase: 'cache', loaded: 0, message: 'Preparing game assets…' };
@@ -469,6 +471,7 @@ export class AssetManager {
   }
   getCameo(name: string): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;
+    if (name === 'butchers' || name === 'george') return this.customArt?.getCameo(name) ?? null;
     const spec = this.spec(name), file = spec?.cameo ?? name.toLowerCase().replace(/\.shp$/, ''), key = `cameo:${file}`;
     if (this.sprites.has(key)) return this.sprites.get(key)!;
     const shape = this.shape(file); if (!shape) { this.sprites.set(key, null); return null; }
@@ -514,6 +517,7 @@ export class AssetManager {
     }]));
   }
   getInfantrySequence(name: string, action: string, facing: number, ageSeconds: number, side = 0, speedIndex = NATIVE_SPEED_INDEX): Sprite | null {
+    if (name === 'george') return this.ready ? this.customArt?.getInfantrySequence(action, facing, ageSeconds) ?? null : null;
     const spec = this.spec(name); if (!spec) return null;
     const sequence = this.infantry.get(spec.sprite)?.sequences[action]; if (!sequence) return null;
     return this.getInfantryFrame(name, infantrySequenceFrame(sequence, action, facing, ageSeconds, speedIndex), side);
@@ -536,6 +540,7 @@ export class AssetManager {
   }
   getSprite(name: string, frame = 0, side = 0): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;
+    if (name === 'butchers' || name === 'george') return this.customArt?.getSprite(name, frame) ?? null;
     name = name.toLowerCase().replace(/\.(shp|vxl)$/, '');
     const spec = this.spec(name); if (!spec) return this.getDecoration(name, frame);
     frame = spec.kind === 'infantry' ? Math.max(0, Math.floor(frame)) : ((Math.floor(frame) % 32) + 32) % 32;
@@ -562,6 +567,7 @@ export class AssetManager {
   /** Exact authored SHP frame, with matching shadow and a stable ground anchor. */
   getInfantryFrame(name: string, frame: number, side = 0): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;
+    if (name === 'george') return this.customArt?.getInfantryFrame(frame) ?? null;
     const spec = this.spec(name);
     if (spec?.kind !== 'infantry' || !Number.isInteger(frame) || frame < 0) return null;
     const key = `infantry:${spec.sprite}:${frame}:${side}`;
@@ -582,6 +588,7 @@ export class AssetManager {
   }
   getBuildingSprite(name: string, time = 0, side = 0, speedIndex = NATIVE_SPEED_INDEX): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;
+    if (name === 'butchers') return this.customArt?.getSprite(name) ?? null;
     const spec = this.spec(name);
     if (!spec || spec.kind !== 'building' || spec.turret) return this.getSprite(name, 0, side);
     const shape = this.shape(spec.sprite); if (!shape) return null;

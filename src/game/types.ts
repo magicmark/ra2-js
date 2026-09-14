@@ -25,9 +25,14 @@ export interface Entity extends Vec2 {
   deployment?: { startedAt: number; target: boolean };
   previous?: Vec2; previousFacing?: number; turretFacing?: number; previousTurretFacing?: number;
   nativeType?: string;
+  rank?: 0 | 1 | 2;
+  promotedAt?: number;
+  inspection?: { targetId: number; elapsed: number };
+  inspectedBy?: number;
+  inspectionProgress?: number;
 }
 export interface Tile { terrain: 'grass' | 'water' | 'rock' | 'road' | 'sand'; ore: number; variant: number }
-export interface BuildItem { id: number; type: string; progress: number; spent: number; ready: boolean; paused: boolean; blockedFunds?: boolean }
+export interface BuildItem { id: number; type: string; progress: number; spent: number; ready: boolean; paused: boolean; blockedFunds?: boolean; blockedPrerequisite?: string }
 export interface Side {
   id: number; name: string; faction: 'allied' | 'soviet'; color: string;
   money: number; power: number; powerUsed: number; kills: number;

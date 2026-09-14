@@ -8,6 +8,8 @@ import { AssetManager, DEFAULT_ASSET_URL, HUD_ASSET_FRAMES, DIALOG_ASSET_FRAMES,
 import { requestPersistentAssetStorage } from './assets/AssetDownload';
 import { MAP_CATALOG } from './game/maps/catalog';
 import { parseNativeMap, type NativeMap } from './game/maps/nativeMap';
+import { CustomArt } from './assets/CustomArt';
+import { inspectionStatus, INSPECTION_HELP } from './game/customUnits';
 
 const requestedMap=new URLSearchParams(location.search).get('map');
 let nativeMap:NativeMap|undefined;
@@ -54,7 +56,8 @@ const ui=new UI(game,{
   getBattlefieldTooltip:(x,y)=>{
     if(!battleStarted||!assets.ready)return null;
     const entity=renderer.pick(x,y);if(!entity)return null;
-    const def=game.defs[entity.type];return{id:entity.id,title:def.name,description:def.description};
+    const def=game.defs[entity.type],inspection=entity.type==='george'||entity.inspectedBy!==undefined||(entity.rank??0)>0;
+    return{id:entity.id,title:inspection?`${def.name} · ${inspectionStatus(entity,game.state,game.defs)}`:def.name,description:inspection?`${def.description}\n${INSPECTION_HELP}`:def.description};
   },
   onRadar:(x,y,modifiers)=>controls.radarOrder(x,y,modifiers),
   getCameraView:()=>[[0,0],[renderer.camera.width,0],[renderer.camera.width,renderer.camera.height],[0,renderer.camera.height]].map(([x,y])=>renderer.camera.world(x,y)),
@@ -106,6 +109,7 @@ function showAssetError(error:unknown){
 }
 function handleBattleError(error:unknown){
   const message=error instanceof Error?error.message:String(error);
+  if(message.includes('bundled artwork')){battleStarted=false;ui.showRuntimeError(message);return;}
   if(assets.ready&&assets.status.phase==='ready'&&!/^(Missing original|Invalid original|Original game artwork|Complete original)/.test(message)){
     battleStarted=false;ui.showRuntimeError(message);
   }else showAssetError(error);
@@ -121,7 +125,7 @@ function runAssetOperation(action:()=>Promise<void>){
 function restoreAssets(){
   restoringAssets=true;
   return runAssetOperation(async()=>{
-    try{await assets.initialize({url:source,nativeMaps:!!nativeMap,onProgress:progress});if(assets.status.phase==='ready')installCameos();}
+    try{assets.customArt=await CustomArt.load();await assets.initialize({url:source,nativeMaps:!!nativeMap,onProgress:progress});if(assets.status.phase==='ready')installCameos();}
     finally{restoringAssets=false;}
   });
 }

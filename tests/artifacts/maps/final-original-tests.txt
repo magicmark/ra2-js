@@ -1,0 +1,12 @@
+
+> red-alert-command@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.11 /home/mark/apps/ra2-js
+
+
+ Test Files  28 passed | 1 skipped (29)
+      Tests  273 passed | 1 skipped (274)
+   Start at  21:03:36
+   Duration  26.54s (transform 22.60s, setup 0ms, import 33.28s, tests 85.68s, environment 23ms)

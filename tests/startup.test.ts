@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const harness = vi.hoisted(() => ({ assets: {} as any, game: {} as any, renderer: {} as any, actions: {} as any, status: {} as any, loading: true, modal: false, runtimeError: '', frame: (_now: number) => {}, visibility: () => {} }));
+const harness = vi.hoisted(() => ({ assets: {} as any, game: {} as any, renderer: {} as any, actions: {} as any, status: {} as any, customArt: vi.fn(), loading: true, modal: false, runtimeError: '', frame: (_now: number) => {}, visibility: () => {} }));
+vi.mock('../src/assets/CustomArt', () => ({ CustomArt: { load: harness.customArt } }));
 vi.mock('../src/game/Game', () => ({ Game: class { constructor() { return harness.game; } } }));
 vi.mock('../src/game/Audio', () => ({ GameAudio: class {} }));
 vi.mock('../src/render/Renderer', () => ({ Renderer: class { constructor() { return harness.renderer; } } }));
@@ -23,6 +24,7 @@ vi.mock('../src/ui/UI', () => ({ UI: class {
 const settle = () => new Promise(resolve => setTimeout(resolve, 0));
 beforeEach(() => {
   vi.resetModules(); harness.loading = true; harness.status = {}; harness.modal = false; harness.runtimeError = '';
+  harness.customArt.mockReset().mockResolvedValue({});
   harness.game = { defs: {}, state: { time: 0, speed: 1, events: [], effects: [] } };
   harness.game.tick = vi.fn((dt: number) => { harness.game.state.time += dt; });
   harness.game.setAnimationDefinitions = vi.fn();
@@ -51,6 +53,8 @@ describe('startup authorization', () => {
   it('restores cached artwork while keeping the first-open gate and battle clock stopped', async () => {
     await import('../src/main'); await settle();
     expect(harness.assets.initialize).toHaveBeenCalledOnce();
+    expect(harness.customArt).toHaveBeenCalledOnce();
+    expect(harness.assets.customArt).toEqual({});
     expect(harness.assets.getUIAsset).toHaveBeenCalled();
     expect(harness.game.setAnimationDefinitions).toHaveBeenCalledWith({piffpiff:{frames:12,ticksPerFrame:1}},{});
     expect(harness.assets.download).not.toHaveBeenCalled();
@@ -71,6 +75,18 @@ describe('startup authorization', () => {
     expect(harness.loading).toBe(false);
     harness.frame(performance.now() + 100);
     expect(harness.game.state.time).toBeGreaterThan(0);
+  });
+
+  it('reports missing bundled PNGs without blaming the user’s original archives or starting the battle', async () => {
+    harness.customArt.mockRejectedValue(new Error('Unable to load bundled artwork /art/butchers/george-sheet.png. Reload the page to retry.'));
+    await import('../src/main'); await settle();
+    expect(harness.runtimeError).toContain('Unable to load bundled artwork');
+    expect(harness.assets.initialize).not.toHaveBeenCalled();
+    expect(harness.assets.download).not.toHaveBeenCalled();
+    expect(harness.status.error).toBeUndefined();
+    harness.frame(performance.now() + 100);
+    expect(harness.game.tick).not.toHaveBeenCalled();
+    expect(harness.loading).toBe(true);
   });
 
   it('does not wait for the browser persistence decision before entering with imported originals', async () => {

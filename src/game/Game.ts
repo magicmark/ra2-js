@@ -7,6 +7,8 @@ import { findPath } from './pathfinding';
 import { turnFacing, type FacingTurn } from './facing';
 import { nativeGameSpeedIndex } from './timing';
 import { NATIVE_EFFECT_TIMINGS, NATIVE_INFANTRY_TIMINGS } from './combat';
+import { CUSTOM_UNIT_IDS, INSPECTION_RULES, rankMultiplier, rankName } from './customUnits';
+import { TESTING_FLAGS } from './testing';
 import { nativeNormalizedInterval } from '../assets/NativeAnimation';
 import type { AnimationDefinition, Category, Entity, GameAPI, GameState, InfantryAnimationDefinition, Side, UnitDef, Vec2 } from './types';
 
@@ -37,12 +39,13 @@ interface UnitMemory {
   fireIntentAt?: number;
   burstIndex?: number;
 }
-export interface GameOptions { ai?: boolean; map?: NativeMap }
+export interface GameOptions { ai?: boolean; map?: NativeMap; automaticSovietWaves?: boolean }
 
 /** Fixed-step, renderer-independent RTS rules. The UI can only command side 0. */
 export class Game implements GameAPI {
   readonly defs: Record<string, UnitDef> = definitions;
   state!: GameState;
+  readonly automaticSovietWaves: boolean;
   private readonly aiEnabled: boolean;
   private nativeMap?: NativeMap;
   private nextId = 1;
@@ -63,6 +66,7 @@ export class Game implements GameAPI {
 
   constructor(options: GameOptions = {}) {
     this.aiEnabled = options.ai !== false;
+    this.automaticSovietWaves = options.automaticSovietWaves ?? TESTING_FLAGS.automaticSovietWaves;
     this.nativeMap = options.map;
     this.restart();
   }
@@ -293,7 +297,7 @@ export class Game implements GameAPI {
     if (this.state.winner !== null) return;
     const target = this.state.entities.find(e => e.id === targetId && e.hp > 0 && (force || e.side !== 0));
     if (!target || !this.visibleTo(target, 0)) return;
-    const units = this.commandable(ids, 0);
+    const units = this.commandable(ids, 0).filter(e => e.type !== 'george');
     for (const entity of units) {
       const def = this.defs[entity.type];
       if ((!def.damage && entity.type !== 'engineer') || entity.id === targetId) continue;
@@ -379,13 +383,13 @@ export class Game implements GameAPI {
     if (!Number.isFinite(x) || !Number.isFinite(y) || this.state.winner !== null) return;
     const point = this.constrain({ x, y });
     if (!this.state.explored[Math.floor(point.y) * this.state.width + Math.floor(point.x)]) return;
-    for (const entity of this.commandable(ids, 0)) {
-      if (!this.defs[entity.type].damage) continue;
+    const units = this.commandable(ids, 0).filter(e => e.type !== 'george' && this.defs[e.type].damage > 0);
+    for (const entity of units) {
       this.stop([entity.id]);
       entity.order = 'attack';
       this.memory(entity).groundTarget = point;
     }
-    this.addOrderEffect(point.x, point.y, 1);
+    if (units.length) this.addOrderEffect(point.x, point.y, 1);
   }
 
   orderWaypoints(ids: number[], points: Vec2[]): void {
@@ -444,6 +448,12 @@ export class Game implements GameAPI {
       }
       entity.anim += dt;
       entity.cooldown = Math.max(0, entity.cooldown - dt - 1e-10);
+      if (entity.type === 'george') {
+        entity.targetId = null;
+        if (entity.order === 'attack') entity.order = 'guard';
+        this.memory(entity).groundTarget = undefined;
+        this.cancelFireIntent(entity, this.memory(entity));
+      }
       this.updateInfantryAnimation(entity);
       const memory = this.memory(entity);
       memory.repath -= dt;
@@ -467,6 +477,7 @@ export class Game implements GameAPI {
     }
     const destroyed = this.state.entities.filter(e => e.hp <= 0);
     for (const entity of destroyed) this.removeEntity(entity, true);
+    this.updateInspections(dt);
     if (destroyed.length) { this.rebuildBlocked(); this.updatePower(); }
     if (this.visionTimer <= 0 || destroyed.length) { this.visionTimer = 0.25; this.updateVision(); }
     this.checkVictory();
@@ -477,7 +488,13 @@ export class Game implements GameAPI {
       const lowPower = side.powerUsed > side.power;
       for (const category of CATEGORIES) {
         const queue = side.queues[category], item = queue[0];
-        if (!item || item.paused || item.ready) continue;
+        if (!item) continue;
+        // New custom training depends on its living tech building throughout the
+        // queue. A destroyed/sold shop holds paid progress until the shop is rebuilt.
+        const missing = !item.ready && (CUSTOM_UNIT_IDS as readonly string[]).includes(item.type)
+          ? this.defs[item.type].requires.find(required => !this.state.entities.some(e => e.side === side.id && e.hp > 0 && e.type === required)) : undefined;
+        item.blockedPrerequisite = missing ? `Requires ${this.defs[missing].name}` : undefined;
+        if (item.paused || item.ready || item.blockedPrerequisite) continue;
         const producer = this.state.entities.find(e => e.side === side.id && e.hp > 0 && this.defs[e.type].producer?.includes(category));
         if (!producer) continue;
         const def = this.defs[item.type];
@@ -501,6 +518,36 @@ export class Game implements GameAPI {
           if (producer.rally && !def.harvester) this.issueMove([unit], producer.rally, false);
           if (side.id === 0) this.notify(`${def.name} ready`, 'success');
         }
+      }
+    }
+  }
+
+  private updateInspections(dt: number): void {
+    const entities = this.state.entities, claimed = new Set<number>();
+    for (const entity of entities) { entity.inspectedBy = undefined; entity.inspectionProgress = undefined; }
+    for (const george of entities.filter(e => e.type === 'george').sort((a, b) => a.id - b.id)) {
+      if (george.hp <= 0 || george.side < 0 || george.path.length || george.order === 'move' ||
+        (george.previous && distance(george, george.previous) > 1e-6)) { george.inspection = undefined; continue; }
+      const eligible = (target: Entity) => target.id !== george.id && target.type !== 'george' && target.side === george.side && target.side >= 0 && target.hp > 0
+        && !isBuilding(this.defs[target.type]) && (target.rank ?? 0) < INSPECTION_RULES.maxRank && !claimed.has(target.id)
+        && distance(george, target) <= INSPECTION_RULES.radius;
+      const previous = george.inspection;
+      const target = entities.find(e => e.id === previous?.targetId && eligible(e))
+        ?? entities.filter(eligible).sort((a, b) => distance(george, a) - distance(george, b) || a.id - b.id)[0];
+      if (!target) { george.inspection = undefined; continue; }
+      claimed.add(target.id);
+      const elapsed = (previous?.targetId === target.id ? previous.elapsed : 0) + dt;
+      george.inspection = { targetId: target.id, elapsed };
+      target.inspectedBy = george.id;
+      target.inspectionProgress = Math.min(1, elapsed / INSPECTION_RULES.seconds);
+      if (elapsed + 1e-9 < INSPECTION_RULES.seconds) continue;
+      target.rank = Math.min(INSPECTION_RULES.maxRank, (target.rank ?? 0) + 1) as 1 | 2;
+      target.promotedAt = this.state.time;
+      george.inspection.elapsed = 0;
+      target.inspectionProgress = 0;
+      if (target.side === 0) this.notify(`${this.defs[target.type].name} promoted to ${rankName(target)}`, 'success');
+      if (target.rank === INSPECTION_RULES.maxRank) {
+        george.inspection = undefined; target.inspectedBy = undefined; target.inspectionProgress = undefined;
       }
     }
   }
@@ -546,7 +593,7 @@ export class Game implements GameAPI {
       else if (!entity.deployment) entity.infantryAnimation = undefined;
       entity.targetId = null;
       entity.path = this.path(entity, target);
-      this.memories.set(entity.id, { destination: target, attackMove, repath: 1, stuck: 0, idleTimer: 0, turningBeforeMove: !moving && !!this.defs[entity.type].rot });
+      this.memories.set(entity.id, { destination: target, attackMove: entity.type !== 'george' && attackMove, repath: 1, stuck: 0, idleTimer: 0, turningBeforeMove: !moving && !!this.defs[entity.type].rot });
     }
   }
 
@@ -766,6 +813,7 @@ export class Game implements GameAPI {
   }
 
   private tickCombat(entity: Entity, _dt: number): void {
+    if (entity.type === 'george') return;
     const def = this.defs[entity.type], memory = this.memory(entity);
     if (entity.deployment) return;
     const range = entity.deployed ? def.deployedRange ?? def.range : def.range;
@@ -887,6 +935,8 @@ export class Game implements GameAPI {
     this.state.effects.push({ kind, ...point, side, animation: name, animationTicksPerFrame, startedAt: this.state.time, life, maxLife: life, damage });
   }
   private fireProjectile(entity: Entity, to: Vec2, target: Entity | undefined, damage: number, verses: number[] | undefined, fireRate: number): void {
+    if (entity.type === 'george') return;
+    damage *= rankMultiplier(entity);
     const def = this.defs[entity.type], memory = this.memory(entity);
     if (def.category === 'infantry') {
       const sequence = entity.deployed ? 'DeployedFire' : entity.type === 'rocketeer' ? 'FireFly' : 'FireUp';
@@ -928,7 +978,7 @@ export class Game implements GameAPI {
   private damageTarget(attacker: Entity, target: Entity, damage: number, verses?: number[]): void {
     const armorOrder = ['none', 'flak', 'plate', 'light', 'medium', 'heavy', 'wood', 'steel', 'concrete', 'special_1', 'special_2'];
     const multiplier = verses?.[armorOrder.indexOf(this.defs[target.type].armor ?? 'none')] ?? 1;
-    target.hp = Math.max(0, target.hp - damage * multiplier);
+    target.hp = Math.max(0, target.hp - damage * multiplier / rankMultiplier(target));
     if (target.hp <= 0 && target.side !== attacker.side) this.state.sides[attacker.side].kills++;
   }
 
@@ -977,7 +1027,7 @@ export class Game implements GameAPI {
       if (army.length < 28 && side.money > (wanted === 'warminer' ? 1400 : 1100) && this.canBuild(wanted, 1).ok) this.build(wanted, 1);
     }
     // Every wave assembles a fresh task force; previous attackers keep fighting.
-    if (this.state.time >= this.nextAttack) {
+    if (this.automaticSovietWaves && this.state.time >= this.nextAttack) {
       const attackers = army.filter(e => e.order === 'guard' || e.order === 'idle');
       if (attackers.length >= 4) {
         this.wave++;

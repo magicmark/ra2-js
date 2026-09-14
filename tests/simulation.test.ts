@@ -343,7 +343,7 @@ describe('combat, AI and match lifecycle', () => {
   });
 
   it('builds an enemy economy, produces armor and launches an attacking force', () => {
-    const game = new Game();
+    const game = new Game({ automaticSovietWaves: true });
     advance(game, 125);
     expect(game.state.entities.some(e => e.side === 1 && e.type === 'warfactory_soviet')).toBe(true);
     expect(game.state.entities.filter(e => e.side === 1 && e.type === 'warminer').length).toBeGreaterThanOrEqual(2);

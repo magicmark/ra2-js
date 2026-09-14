@@ -1,0 +1,33 @@
+{
+  "sha256": "461944047e7e181ce67f1585fec4a249f4a09ba0210a8bd8d13148bcd9f5ac3f",
+  "image": [
+    1402,
+    1122
+  ],
+  "opaqueWidth": 1163,
+  "projectionY": 0.9191648206910493,
+  "foundationEdges": [
+    {
+      "sourceSlope": 0.5448129066862394,
+      "projectedSlope": 0.5007728576844266,
+      "rmseSourcePixels": 0.42152395182370356
+    },
+    {
+      "sourceSlope": -0.5431312546755684,
+      "projectedSlope": -0.4992271423155735,
+      "rmseSourcePixels": 0.37258313844119906
+    }
+  ],
+  "roofReportedProjectedSlopes": [
+    0.4683144761420896,
+    0.48871993516143086
+  ],
+  "pixelReview": "PASS after anchor correction: actual 1x/2x game overlay aligns with exact 3x3 foundation. Low-rise roof visually coherent beside native structures; reported roof slopes are approximate and retain documented small residual.",
+  "finalRuntimeSprite": {
+    "width": 217,
+    "height": 160,
+    "anchorX": 108.17753764030763,
+    "anchorY": 101.93450074564919
+  },
+  "frontRelativeToCenterY": 44.99999999999997
+}

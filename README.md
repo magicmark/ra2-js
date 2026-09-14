@@ -109,6 +109,8 @@ Each unit and building has its own TOML file in [`src/data/units/`](src/data/uni
 
 `window.__rts` exposes the running game, renderer, controls, asset diagnostics and UI for development and reproducible browser checks. It references the live state.
 
+Automatic Soviet attack waves are temporarily disabled for testing by `TESTING_FLAGS.automaticSovietWaves` in [`src/game/testing.ts`](src/game/testing.ts). This applies to the training battlefield and native maps, including restarts. Soviet construction, harvesting, production, repairs and defensive combat continue; player combat remains active. George is a [noncombat inspector](docs/BUTCHERS.md) who promotes nearby friendly units. Set the flag to `true` to restore scheduled waves, or use `new Game({ automaticSovietWaves: true })` for an explicit simulation check. The resolved setting is visible at `window.__rts.game.automaticSovietWaves`.
+
 This is a focused skirmish implementation through milestone 7. Campaigns, multiplayer and the full faction/unit roster remain outside the agreed scope. The subsequent retail-parity work is active; Options appearance, combat animation and other remaining differences are recorded in [the acceptance checklist](docs/PARITY_ACCEPTANCE.md) and [`TASKS.md`](TASKS.md).
 
 ## Verification

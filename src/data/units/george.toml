@@ -1,0 +1,19 @@
+# Noncombat inspector. Visible equipment is part of his approved artwork only.
+[units.george]
+name = "George"
+category = "infantry"
+faction = "allied"
+cost = 650
+buildTime = 13.65
+hp = 225
+speed = 1.171875
+damage = 0
+range = 0
+fireRate = 1.2
+sight = 6
+requires = ["barracks", "butchers"]
+sprite = "george"
+cameo = "george"
+description = "Noncombat inspector. Stop within 3 cells of an own infantry unit or vehicle for 10 continuous seconds to promote it. Moving George or leaving range resets progress. One inspector per target; maximum Elite. Each rank adds 10% damage and durability. Requires Barracks and The Butcher's."
+armor = "flak"
+nativeSpeed = 4

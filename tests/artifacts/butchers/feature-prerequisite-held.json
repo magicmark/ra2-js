@@ -1,0 +1,21 @@
+{
+  "before": {
+    "progress": 0.21978021978021955,
+    "spent": 142.85714285714275,
+    "reason": "Requires The Butcher's",
+    "money": 8207.14285714318
+  },
+  "after": {
+    "progress": 0.21978021978021955,
+    "spent": 142.85714285714275,
+    "reason": "Requires The Butcher's",
+    "money": 8207.14285714318
+  },
+  "canBuild": {
+    "ok": false,
+    "reason": "Requires The Butcher's"
+  },
+  "card": "Requires The Butcher's",
+  "queueText": "",
+  "aliveShop": false
+}

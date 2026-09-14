@@ -1,0 +1,61 @@
+{
+  "build_uuid": "97439af1-470f-4d9b-845e-0c49b8149bc7",
+  "status": "stopped",
+  "build_outcome": "success",
+  "initializing_on": "2026-09-14T02:09:32.559Z",
+  "running_on": "2026-09-14T02:09:35.599Z",
+  "stopped_on": "2026-09-14T02:10:15.054Z",
+  "created_on": "2026-09-14T02:09:31.901Z",
+  "modified_on": "2026-09-14T02:10:15.054Z",
+  "trigger": {
+    "trigger_uuid": "eb1c9145-e4b6-419f-8d9f-b973910cd830",
+    "external_script_id": "1cb4860c5bf54aef90f1ec8ad3ddcb14",
+    "build_token_name": "ra2-js build token",
+    "trigger_name": "1cb4860c5bf54aef90f1ec8ad3ddcb14",
+    "build_command": "",
+    "deploy_command": "npx wrangler deploy",
+    "root_directory": "/",
+    "branch_includes": [
+      "main"
+    ],
+    "branch_excludes": [],
+    "path_includes": [
+      "*"
+    ],
+    "path_excludes": [],
+    "build_caching_enabled": true,
+    "created_on": "2026-09-13T20:18:33.604Z",
+    "modified_on": "2026-09-13T20:18:33.604Z",
+    "deleted_on": null,
+    "repo_connection": {
+      "repo_connection_uuid": "4ad9db56-0be1-4db6-b7fd-dfe43c77b204",
+      "repo_id": "1368013707",
+      "repo_name": "ra2-js",
+      "provider_type": "github",
+      "provider_account_id": "1590756",
+      "provider_account_name": "magicmark",
+      "grant_id": null,
+      "created_on": "2026-09-13T20:18:33.604Z",
+      "modified_on": "2026-09-13T20:18:33.604Z",
+      "deleted_on": null
+    }
+  },
+  "build_trigger_metadata": {
+    "build_trigger_source": "push_event",
+    "branch": "main",
+    "commit_hash": "83d83d5684e231959e014a42205004f10c381680",
+    "commit_message": "Add eight native maps and responsive simulation-free previews",
+    "author": "Mark Larah",
+    "build_command": "",
+    "deploy_command": "npx wrangler deploy",
+    "root_directory": "/",
+    "build_token_uuid": "fd4b028f-82c8-4c4d-9161-25475302d3c4",
+    "build_token_name": "ra2-js build token",
+    "environment_variables": {},
+    "repo_name": "ra2-js",
+    "provider_account_name": "magicmark",
+    "provider_type": "github"
+  },
+  "pull_request": null,
+  "deploy_hook": null
+}

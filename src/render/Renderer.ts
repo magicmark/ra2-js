@@ -4,6 +4,7 @@ import { Camera } from './Camera';
 import type { NativeMap } from '../game/maps/nativeMap';
 import type { NativeCell } from '../game/maps/nativeMap';
 import type { NativeTheater } from '../game/maps/theater';
+import { INSPECTION_RULES } from '../game/customUnits';
 const terrainCodes:Record<Tile['terrain'],number>={grass:1,water:2,rock:3,road:4,sand:5};
 
 export interface OriginalSprite { source: CanvasImageSource; width: number; height: number; offsetX?:number; offsetY?:number; anchorX?:number; anchorY?:number }
@@ -304,6 +305,7 @@ export class Renderer {
       const d=this.game.defs[e.type],world=this.visualPosition(e);renderables.push({depth:world.x+world.y+(d.footprint[0]+d.footprint[1])/2,draw:()=>this.drawEntity(e,d,p)});
     }
     renderables.sort((a,b)=>a.depth-b.depth);for(const item of renderables)item.draw();
+    for(const entity of s.entities)if(this.visible(entity))this.drawInspectionFeedback(entity);
     for(const e of s.effects){if(!s.explored[Math.floor(e.y)*s.width+Math.floor(e.x)])continue;const p=c.screen(e.x,e.y),progress=1-e.life/e.maxLife;
       if(e.animation){
         const age=e.startedAt===undefined?e.maxLife-e.life:s.time-e.startedAt;
@@ -326,6 +328,40 @@ export class Renderer {
     }
     if(this.selectionBox){const{from,to}=this.selectionBox,x=Math.min(from.x,to.x),y=Math.min(from.y,to.y),w=Math.abs(from.x-to.x),h=Math.abs(from.y-to.y);const color:Color=[1,1,1,1];this.gl.line(x,y,x+w,y,1,color);this.gl.line(x+w,y,x+w,y+h,1,color);this.gl.line(x+w,y+h,x,y+h,1,color);this.gl.line(x,y+h,x,y,1,color);}
     this.gl.flush();
+  }
+  private drawInspectionFeedback(entity:Entity){
+    const p=this.entityPoint(entity),z=this.camera.zoom,cyan:Color=[.2,.9,1,1],gold:Color=[1,.82,.2,1];
+    const inspected=entity.inspectedBy!==undefined,george=entity.type==='george';
+    if(george&&entity.side===0&&entity.selected){
+      // A world-space circle projects to the same isometric ground plane as units.
+      const points=Array.from({length:33},(_,i)=>{
+        const angle=i/32*Math.PI*2,dx=Math.cos(angle)*INSPECTION_RULES.radius,dy=Math.sin(angle)*INSPECTION_RULES.radius;
+        return{x:p.x+(dx-dy)*30*z,y:p.y+(dx+dy)*15*z};
+      });
+      for(let i=1;i<points.length;i++)this.gl.line(points[i-1].x,points[i-1].y,points[i].x,points[i].y,1,[.2,.9,1,.5]);
+    }
+    if(george&&entity.inspection&&entity.side===0){
+      const target=this.game.state.entities.find(e=>e.id===entity.inspection?.targetId);
+      if(target&&this.visible(target)){const q=this.entityPoint(target);this.gl.line(p.x,p.y,q.x,q.y,Math.max(1,z),[.2,.9,1,.65]);}
+    }
+    if(entity.side===0&&(inspected||(george&&(entity.inspection||entity.selected)))){
+      const progress=george?(entity.inspection?.elapsed??0)/INSPECTION_RULES.seconds:entity.inspectionProgress??0;
+      const width=30*Math.max(.75,z),height=Math.max(3,3*z),left=p.x-width/2,top=p.y-48*z;
+      this.gl.rect(left-1,top-1,width+2,height+2,[0,0,0,.9]);
+      this.gl.rect(left,top,width,height,[.06,.22,.27,1]);
+      this.gl.rect(left,top,width*Math.max(0,Math.min(1,progress)),height,cyan);
+    }
+    const rank=entity.rank??0;
+    if(rank>0){
+      const scale=Math.max(.8,z),x=p.x+12*z,y=p.y-20*z;
+      for(let i=0;i<rank;i++){
+        const top=y-i*5*scale;
+        this.gl.line(x-4*scale,top+3*scale,x,top,Math.max(3,3*scale),[0,0,0,1]);
+        this.gl.line(x,top,x+4*scale,top+3*scale,Math.max(3,3*scale),[0,0,0,1]);
+        this.gl.line(x-4*scale,top+3*scale,x,top,Math.max(1,scale),gold);
+        this.gl.line(x,top,x+4*scale,top+3*scale,Math.max(1,scale),gold);
+      }
+    }
   }
   private drawEntity(e:Entity,d:UnitDef,p:Vec2){
     const c=this.camera,building=d.category==='structures'||d.category==='defenses',selected=e.selected,hover=e.id===this.hoverId;

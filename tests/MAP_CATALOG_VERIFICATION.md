@@ -122,6 +122,14 @@ Production `npm run build` (TypeScript and Vite): **passed**.
 Logs are retained in this artifact directory. Cloudflare is configured with
 [SPA fallback](https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/)
 so direct admin and preview routes receive the application entry document.
-Deployment is verified against the exact pushed commit using the GitHub Workers
-Builds check and Cloudflare build commit metadata; the release handoff records
-that SHA, check URL, and production URL.
+Map baseline `83d83d5684e231959e014a42205004f10c381680` on `main` was pushed and
+verified successful in both the GitHub Workers Builds check and Cloudflare commit
+metadata. [Build 97439af1](https://dash.cloudflare.com/9b1869e2c83a3ec33ecb5be77e0f0b19/workers/services/view/ra2-js/production/builds/97439af1-470f-4d9b-845e-0c49b8149bc7)
+completed on 2026-09-14 at 02:10:15 UTC. The actual production
+[Frostline preview](https://ra2-js.markl.workers.dev/admin/frostline-basin/preview)
+loaded original artwork and all 18,336 cells, 468 ore cells, nine neutral buildings,
+and six starts. Direct navigation, warm-cache hard reload, and Back to the selected
+overview passed without application errors or a Game instance. All eight map HTTP
+responses matched the accepted local SHA256 values. Remote build metadata, response
+hashes, runtime diagnostics, and the production screenshot are retained as
+`baseline-*` files in [artifacts/maps/](artifacts/maps/).
