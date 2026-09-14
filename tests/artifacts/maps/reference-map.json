@@ -1,0 +1,39 @@
+{
+  "sourceSha256": "dca79391d1d2185f65460c611ffe4803c1fff0c144e5ce55fb0a7b131b70ae4b",
+  "dimensions": [
+    0,
+    0,
+    98,
+    99
+  ],
+  "cells": 19305,
+  "starts": [
+    {
+      "index": 0,
+      "x": 43,
+      "y": 87
+    },
+    {
+      "index": 1,
+      "x": 143,
+      "y": 100
+    }
+  ],
+  "sections": {
+    "IsoMapPack5": {
+      "bytes": 212355,
+      "sha256": "fc0f4fe8b643dd6503e62d9f7bd1722119f0f8d9067831437ebd78db32b84e06",
+      "blocks": 26
+    },
+    "OverlayPack": {
+      "bytes": 262144,
+      "sha256": "ce35c1f23c7c17e9a1b1ee912ec2952f7909d405064ec3dac1bd6dcd4696348d",
+      "blocks": 32
+    },
+    "OverlayDataPack": {
+      "bytes": 262144,
+      "sha256": "0bf93ca52613e98a58231590330fed42455ff53723e0fb3c6fa43aa3ab509465",
+      "blocks": 32
+    }
+  }
+}

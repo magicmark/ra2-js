@@ -1,3 +1,4 @@
+import { MAP_CATALOG } from '../game/maps/catalog';
 import type { Category, GameAPI } from '../game/types';
 
 import type { ControlMode, ControlCommand } from '../input/Controls';
@@ -144,7 +145,7 @@ export class UI {
         <div class="queue-panel" id="queue-panel"><div class="queue-idle"></div></div>
       </aside>
 
-      <div class="loading-screen" id="loading-screen" role="dialog" aria-modal="true" aria-labelledby="loading-title"><div class="loading-command"><div class="loading-insignia">★</div><h1 id="loading-title">RED ALERT <b>2</b></h1><p class="loading-operation">Your battlefield awaits.</p><form id="startup-source-form" class="source-form" novalidate><label for="startup-asset-source">Game archive URL</label><p class="source-intro" id="startup-source-description">Use the prefilled archive URL, or enter a URL for your own copy of the game.</p><input id="startup-asset-source" name="asset-source" type="text" inputmode="url" enterkeyhint="go" autocomplete="url" spellcheck="false" aria-describedby="startup-source-description startup-source-hint startup-source-error" value="${escapeHTML(initialSource)}" /><small id="startup-source-hint">${SOURCE_HINT}</small><p id="startup-source-error" class="source-error" role="alert"></p><button class="primary-button asset-submit-button" type="submit"><span id="startup-submit-label">Load & play</span><kbd>Enter ↵</kbd></button></form><div class="loading-status" role="status" aria-live="polite"><strong id="loading-phase">Choose your game files</strong><div class="loading-track"><i id="loading-progress"></i></div><p id="loading-detail">No download starts until you press Enter or choose Load & play.</p></div><div class="loading-actions"><label class="secondary-button file-button">${icon('upload')} Import game files<input type="file" multiple id="startup-asset-import" accept=".exe,.zip,.mix" aria-label="Import local game installer or MIX files" /></label></div><small id="loading-note" role="status">${STORAGE_NOTE}</small><button class="primary-button runtime-reload" data-action="reload" hidden>Reload battlefield</button></div></div>
+      <div class="loading-screen" id="loading-screen" role="dialog" aria-modal="true" aria-labelledby="loading-title"><div class="loading-command"><div class="loading-insignia">★</div><h1 id="loading-title">RED ALERT <b>2</b></h1><p class="loading-operation">Your battlefield awaits.</p><div class="startup-map-choice"><label for="startup-map-select">Battlefield</label><select id="startup-map-select"><option value="">Field Command · Training battlefield</option>${MAP_CATALOG.map(entry => `<option value="${entry.id}" ${new URLSearchParams(location.search).get('map') === entry.id ? 'selected' : ''}>${escapeHTML(entry.name)} · ${entry.players} starts</option>`).join('')}</select><div><small>Skirmish: Allied command vs. Soviet AI</small><a href="/admin/">Explore map library ↗</a></div></div><form id="startup-source-form" class="source-form" novalidate><label for="startup-asset-source">Game archive URL</label><p class="source-intro" id="startup-source-description">Use the prefilled archive URL, or enter a URL for your own copy of the game.</p><input id="startup-asset-source" name="asset-source" type="text" inputmode="url" enterkeyhint="go" autocomplete="url" spellcheck="false" aria-describedby="startup-source-description startup-source-hint startup-source-error" value="${escapeHTML(initialSource)}" /><small id="startup-source-hint">${SOURCE_HINT}</small><p id="startup-source-error" class="source-error" role="alert"></p><button class="primary-button asset-submit-button" type="submit"><span id="startup-submit-label">Load & play</span><kbd>Enter ↵</kbd></button></form><div class="loading-status" role="status" aria-live="polite"><strong id="loading-phase">Choose your game files</strong><div class="loading-track"><i id="loading-progress"></i></div><p id="loading-detail">No download starts until you press Enter or choose Load & play.</p></div><div class="loading-actions"><label class="secondary-button file-button">${icon('upload')} Import game files<input type="file" multiple id="startup-asset-import" accept=".exe,.zip,.mix" aria-label="Import local game installer or MIX files" /></label></div><small id="loading-note" role="status">${STORAGE_NOTE}</small><button class="primary-button runtime-reload" data-action="reload" hidden>Reload battlefield</button></div></div>
 
       <nav class="mobile-commandbar" aria-label="Mobile commands"><button class="active" data-mode="select" aria-label="Select units mode; cancel building placement">${icon('select')}<span>SELECT</span></button><button data-mode="pan" aria-label="Pan camera mode">${icon('pan')}<span>PAN</span></button><button data-mode="attack" aria-label="Attack move mode">${icon('target')}<span>ATTACK</span></button><button data-action="stop" aria-label="Stop selected units">${icon('stop')}<span>STOP</span></button><button class="mobile-build-button" data-action="build-toggle" aria-expanded="false">${icon('structures')}<span>BUILD</span><i id="mobile-ready-dot"></i></button></nav>
       <footer class="statusbar" aria-label="Advanced command bar"><button class="command-bar-toggle" data-action="command-toggle" aria-label="Toggle advanced command bar" aria-expanded="true"></button><div class="tactical-buttons">${COMMANDS.map(([command, label]) => `<button data-command="${command}" aria-label="${label}" data-tooltip="${label}"${command === 'planning' ? ' aria-pressed="false"' : ''}></button>`).join('')}</div></footer>
@@ -177,6 +178,11 @@ export class UI {
       } else if (active.paused || active.ready) this.game.cancelBuild(def.category, 0, active.id);
       else this.game.toggleBuildPause(def.category);
       this.update();
+    });
+    this.el<HTMLSelectElement>('startup-map-select').addEventListener('change', event => {
+      const id = (event.target as HTMLSelectElement).value, query = new URLSearchParams(location.search);
+      if (id) query.set('map', id); else query.delete('map');
+      location.assign(`/${query.size ? '?' + query.toString() : ''}`);
     });
     for (const [formId, inputId] of [['startup-source-form', 'startup-asset-source'], ['settings-source-form', 'asset-source']]) {
       this.el<HTMLFormElement>(formId).addEventListener('submit', event => {
@@ -306,7 +312,7 @@ export class UI {
     if (this.loading) {
       event.stopPropagation();
       if (event.key === 'Tab') {
-        const focusable = [...this.el('loading-screen').querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), [tabindex="0"]')].filter(el => el.offsetParent !== null);
+        const focusable = [...this.el('loading-screen').querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), select:not(:disabled), a[href], [tabindex="0"]')].filter(el => el.offsetParent !== null);
         const first = focusable[0], last = focusable.at(-1);
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
@@ -483,7 +489,7 @@ export class UI {
   private renderCards() {
     this.root.querySelectorAll<HTMLElement>('[data-category]').forEach(button => { const active = button.dataset.category === this.category; button.classList.toggle('active', active); button.setAttribute('aria-selected', String(active)); });
     const faction = this.game.state.sides[0]?.faction;
-    const defs = Object.values(this.game.defs).filter(def => def.category === this.category && (def.faction === faction || def.faction === 'both') && def.cost > 0 && def.id !== 'conyard' && this.cameos.has(def.id));
+    const defs = Object.values(this.game.defs).filter(def => !def.mapOnly && def.category === this.category && (def.faction === faction || def.faction === 'both') && def.cost > 0 && def.id !== 'conyard' && this.cameos.has(def.id));
     if (faction === 'allied' && this.category === 'structures') defs.sort((a, b) => {
       const rank = (id: string) => { const index = ALLIED_STRUCTURE_ORDER.indexOf(id); return index < 0 ? 999 : index; };
       return rank(a.id) - rank(b.id);

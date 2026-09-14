@@ -7,6 +7,7 @@ import { NativeCursors } from './NativeCursor';
 import { decodePcx } from './Pcx';
 import { nativeAnimationInterval, nativeAnimationFrame, NATIVE_SPEED_INDEX, readArtSections, type NativeAnimationDefinition } from './NativeAnimation';
 import { infantryArt, infantrySequenceFrame, type InfantryArt } from './InfantryAnimation';
+import { nativeTileSpec, nativeOverlaySpec, NATIVE_THEATERS, type NativeTheater } from '../game/maps/theater';
 
 import { AssetDownload, InvalidArchiveError, assetCache, assetCacheKey, assetSourceUrl, selectedAssetCacheKeys, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL, type ArchiveInput, type ArchiveResume, type SavedArchive } from './AssetDownload';
 export { assetCacheKey, assetSourceUrl, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL } from './AssetDownload';
@@ -14,7 +15,7 @@ export { assetCacheKey, assetSourceUrl, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL } 
 export interface Sprite { source: HTMLCanvasElement; width: number; height: number; anchorX: number; anchorY: number; offsetX: number; offsetY: number }
 export interface AssetProgress { phase: 'cache' | 'awaiting-source' | 'download' | 'extract' | 'decode' | 'ready' | 'error'; loaded: number; total?: number; message: string }
 export type AssetRestoreResult = 'ready' | 'missing' | 'invalid' | 'unavailable' | 'cancelled';
-export interface AssetOptions { url?: string; onProgress?: (progress: AssetProgress) => void; forceRefresh?: boolean }
+export interface AssetOptions { url?: string; onProgress?: (progress: AssetProgress) => void; forceRefresh?: boolean; nativeMaps?: boolean }
 /** Original sidebar frames consumed by the supported Allied interface. */
 export const HUD_ASSET_FRAMES: Readonly<Record<string, readonly number[]>> = {
   side1: [0], side2: [0], side2b: [0], side3: [0], top: [0], credits: [0], tabs: [0],
@@ -112,6 +113,7 @@ export class AssetManager {
   private effectDefinitions: Record<string, NativeAnimationDefinition> = {};
   private infantry = new Map<string, InfantryArt>();
   private buildingAnchors = new Map<string, number>();
+  private nativePalettes = new Map<string, Uint8Array>();
   private unitPalette: Uint8Array = new Uint8Array(768);
   private cameoPalette: Uint8Array = new Uint8Array(768);
   private terrainPalette: Uint8Array = new Uint8Array(768);
@@ -120,6 +122,7 @@ export class AssetManager {
   private sidebarPalettes: Uint8Array[] = [];
   private voxelLighting: Uint8Array = new Uint8Array();
   private preparingRun?: number;
+  private requiresNativeMaps = false;
   private progress?: AssetOptions['onProgress'];
   private controller?: AbortController;
   private worker?: Worker;
@@ -135,9 +138,11 @@ export class AssetManager {
   /** Call only after explicit source submission. Repeated submissions share a run. */
   async download(options: AssetOptions = {}): Promise<void> { await this.start(options, true); }
   private start(options: AssetOptions, downloading: boolean): Promise<AssetRestoreResult> {
+    const nativeUpgrade = !!options.nativeMaps && !this.requiresNativeMaps;
+    this.requiresNativeMaps ||= !!options.nativeMaps;
     const source = assetSourceUrl(options.url || DEFAULT_ASSET_URL), key = assetCacheKey(source);
     if (this.active?.key === key && (this.active.downloading || !downloading)) return this.active.promise;
-    if (!options.forceRefresh && !this.active && this.ready && this.status.phase === 'ready' && key === assetCacheKey(this.source)) {
+    if (!nativeUpgrade && !options.forceRefresh && !this.active && this.ready && this.status.phase === 'ready' && key === assetCacheKey(this.source)) {
       this.progress = options.onProgress;
       this.report('ready', this.status.message, 1, 1);
       return Promise.resolve('ready');
@@ -248,6 +253,7 @@ export class AssetManager {
     }, this.archiveMemory);
   }
   async importFiles(files: FileList | File[], options: AssetOptions = {}): Promise<void> {
+    this.requiresNativeMaps ||= !!options.nativeMaps;
     this.cancel(); const run = this.run; this.error = null; this.storageWarnings.clear(); this.cacheWarning = null; this.ready = false;
     this.source = assetSourceUrl(options.url || this.source || DEFAULT_ASSET_URL); this.progress = options.onProgress ?? this.progress;
     const archives = this.archiveDownload(run, this.source);
@@ -352,7 +358,15 @@ export class AssetManager {
     try {
       this.report('decode', 'Decoding original sprites, palettes and vehicle voxels…');
       if (run !== this.run) throw new Error('Asset loading cancelled');
-      this.files = new Map(files.map(f => [f.name.toLowerCase(), f.bytes])); this.shapes.clear(); this.sprites.clear(); this.voxelModels.clear(); this.buildingAnchors.clear();
+      this.files = new Map(files.map(f => [f.name.toLowerCase(), f.bytes])); this.shapes.clear(); this.sprites.clear(); this.voxelModels.clear(); this.buildingAnchors.clear(); this.nativePalettes.clear();
+      // Native maps extend the selected-art cache. A missing theater causes
+      // restore() to reuse the saved MIX stage and select the new files locally.
+      // It never invalidates or downloads the original archive on page load.
+      if (this.requiresNativeMaps) for (const theater of NATIVE_THEATERS) {
+        for (const kind of ['iso', 'unit', 'overlay'] as const) this.nativePalette(theater, kind);
+        const tile = nativeTileSpec(theater, 0); if (tile) this.requiredFile(tile.fileName);
+        for (const type of ['caoild', 'caairp']) if (!this.nativeShape(theater, type)) throw new Error(`Missing original native structure: ${theater} ${type}. Import complete game MIX files.`);
+      }
       this.art = readArtSections(this.requiredFile('art.ini'));
       this.buildingLoops = buildingLoops(this.requiredFile('art.ini'));
       this.effectDefinitions = {};
@@ -634,6 +648,80 @@ export class AssetManager {
     const bytes = this.files.get(name + '.tem'); if (!bytes) return null;
     try { const frame = decodeTmp(bytes, variant), result = sprite(paint(frame, this.terrainPalette), 30, 15); this.sprites.set(key, result); return result; }
     catch { return null; }
+  }
+  private nativePalette(theater: string, kind: 'iso' | 'unit' | 'overlay'): Uint8Array {
+    const suffix = theater === 'SNOW' ? 'sno' : theater === 'URBAN' ? 'urb' : 'tem';
+    const name = kind === 'overlay' ? (theater === 'SNOW' ? 'snow.pal' : theater === 'URBAN' ? 'urban.pal' : 'temperat.pal') : `${kind}${suffix}.pal`;
+    let palette = this.nativePalettes.get(name);
+    if (!palette) { palette = decodePalette(this.requiredFile(name)); this.nativePalettes.set(name, palette); }
+    return palette;
+  }
+  /** Decode the exact authored native template/subtile; never substitute a terrain category. */
+  getNativeTerrain(theater: NativeTheater, tileIndex: number, subTile: number): Sprite | null {
+    const spec = nativeTileSpec(theater, tileIndex);
+    if (!this.ready || !spec) return null;
+    const key = `native-tile:${spec.fileName}:${subTile}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const bytes = this.requiredFile(spec.fileName), data = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    const count = data.getUint32(0, true) * data.getUint32(4, true);
+    if (subTile < 0 || subTile >= count) throw new Error(`Invalid native subtile ${spec.fileName}:${subTile}`);
+    const frame = decodeTmp(bytes, subTile), result = sprite(paint(frame, this.nativePalette(theater, 'iso')), 30, 15);
+    this.sprites.set(key, result); return result;
+  }
+  private nativeShape(theater: string, name: string): ShpFile | undefined {
+    const letter = theater === 'SNOW' ? 's' : theater === 'URBAN' ? 'u' : 't';
+    const extension = theater === 'SNOW' ? 'sno' : theater === 'URBAN' ? 'urb' : 'tem';
+    name = name.toLowerCase();
+    const variants = /^[cgn]a/.test(name) ? [name[0] + letter + name.slice(2), name[0] + 'g' + name.slice(2), name] : [name];
+    const filename = variants.flatMap(value => [`${value}.${extension}`, `${value}.shp`]).find(value => this.files.has(value));
+    if (!filename) return;
+    let shape = this.shapes.get(filename);
+    if (!shape) { shape = new ShpFile(this.requiredFile(filename)); this.shapes.set(filename, shape); }
+    return shape;
+  }
+  getNativeOverlay(theater: string, index: number, data = 0): Sprite | null {
+    const spec = nativeOverlaySpec(index);
+    return spec ? this.getNativeDecoration(theater, spec.name, data, true) : null;
+  }
+  getNativeDecoration(theater: string, name: string, frame = 0, overlay = false): Sprite | null {
+    if (!this.ready) return null;
+    const key = `native-decoration:${theater}:${name}:${frame}:${overlay}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const shape = this.nativeShape(theater, name); if (!shape) return null;
+    if (frame >= shape.frameCount) throw new Error(`Invalid native overlay frame ${name}:${frame}`);
+    const image = shape.frame(frame), source = canvas(shape.width, shape.height), ctx = source.getContext('2d')!;
+    if (!overlay && shape.frameCount > 1 && shape.frameCount % 2 === 0) {
+      const shade = shape.frame(frame + shape.frameCount / 2); ctx.drawImage(shadow(shade), shade.x, shade.y);
+    }
+    ctx.drawImage(paint(image, this.nativePalette(theater, overlay ? 'overlay' : 'iso')), image.x, image.y);
+    const result = trimSprite(sprite(source, shape.width / 2, shape.height / 2 + (overlay ? 15 : 0)));
+    this.sprites.set(key, result); return result;
+  }
+  getNativeFoundation(type: string): [number, number] {
+    const art = this.art.get(type.toLowerCase()), match = /^(\d+)x(\d+)$/i.exec(art?.foundation ?? '');
+    return match ? [Number(match[1]), Number(match[2])] : type.toUpperCase() === 'CAAIRP' ? [3, 3] : [2, 2];
+  }
+  getNativeStructure(theater: string, type: string): Sprite | null {
+    if (!this.ready) return null;
+    type = type.toLowerCase();
+    const key = `native-building:${theater}:${type}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const art = this.art.get(type), shape = this.nativeShape(theater, art?.image ?? type); if (!shape) return null;
+    const source = canvas(shape.width, shape.height), ctx = source.getContext('2d')!;
+    const overlayNames = Object.entries(art ?? {}).filter(([name]) => /^(activeanim(?:two|three|four)?|idleanim\d*|bibshape)$/i.test(name)).map(([, name]) => name);
+    const layers = [shape, ...overlayNames.map(name => this.nativeShape(theater, name)).filter((value): value is ShpFile => !!value)];
+    const draw = (layer: ShpFile, isShadow: boolean) => {
+      const frame = layer.frame(isShadow ? layer.frameCount / 2 : 0);
+      ctx.drawImage(isShadow ? shadow(frame) : paint(frame, this.nativePalette(theater, 'unit')), frame.x + (shape.width - layer.width) / 2, frame.y + (shape.height - layer.height) / 2);
+    };
+    for (const layer of layers) if (layer.frameCount > 1 && layer.frameCount % 2 === 0) draw(layer, true);
+    for (const layer of layers) draw(layer, false);
+    const pixels = ctx.getImageData(0, 0, source.width, source.height).data;
+    let bottom = source.height - 1;
+    while (bottom > 0 && !Array.from({ length: source.width }, (_, x) => pixels[(bottom * source.width + x) * 4 + 3]).some(alpha => alpha > 128)) bottom--;
+    const foundation = this.getNativeFoundation(type);
+    const result = trimSprite(sprite(source, source.width / 2, bottom + 5 - (foundation[0] + foundation[1]) * 7.5));
+    this.sprites.set(key, result); return result;
   }
   getDecoration(name: string, frame = 0): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;

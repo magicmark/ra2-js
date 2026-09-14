@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { Renderer, type SpriteProvider } from '../src/render/Renderer';
 import type { GameAPI } from '../src/game/types';
+import type { NativeMap } from '../src/game/maps/nativeMap';
 
 vi.mock('../src/render/GL', () => ({ GL: class { begin = vi.fn(); rect = vi.fn(); line = vi.fn(); polygon = vi.fn(); flush = vi.fn(); } }));
 
@@ -11,6 +12,34 @@ function renderer() {
 }
 
 describe('original artwork renderer', () => {
+  it('renders native preview objects without a Game instance or any fog pass', () => {
+    const canvas = { getBoundingClientRect: () => ({ width: 390, height: 650 }) } as HTMLCanvasElement;
+    const view = new Renderer(canvas), art = { source: {}, width: 60, height: 30 } as any;
+    view.camera.center(10, 10);
+    const provider = {
+      ready: true, getNativeTerrain: vi.fn(() => art), getNativeOverlay: vi.fn(() => art),
+      getNativeDecoration: vi.fn(() => art), getNativeStructure: vi.fn(() => art), getNativeFoundation: () => [2, 2],
+    };
+    view.assets = provider as any;
+    vi.spyOn(view as any, 'drawNativeTerrain').mockImplementation(() => {});
+    const draw = vi.spyOn(view as any, 'drawArt').mockImplementation(() => {});
+    const shroud = vi.spyOn(view as any, 'drawShroud');
+    const map: NativeMap = {
+      name: 'Preview', theater: 'SNOW', size: [0, 0, 96, 96], localSize: [3, 4, 90, 86],
+      cells: [{ x: 10, y: 10, tileIndex: 0, subTile: 0, height: 0, iceGrowth: 0, overlay: 102, overlayData: 8 }],
+      terrain: [{ type: 'TREE01', x: 11, y: 12 }], starts: [],
+      structures: [{ id: '0', owner: 'Neutral', type: 'CAOILD', x: 12, y: 10, health: 256, facing: 0 }],
+      lighting: { ambient: 1, red: 1, green: 1, blue: 1 },
+    };
+    expect(() => view.game).toThrow('without a running game');
+    expect(() => view.renderNativeMap(map)).not.toThrow();
+    expect(provider.getNativeOverlay).toHaveBeenCalledWith('SNOW', 102, 8);
+    expect(provider.getNativeDecoration).toHaveBeenCalledWith('SNOW', 'TREE01');
+    expect(provider.getNativeStructure).toHaveBeenCalledWith('SNOW', 'CAOILD');
+    expect(draw).toHaveBeenCalledTimes(3); expect(shroud).not.toHaveBeenCalled();
+    expect(view.camera.width).toBe(390); expect(view.camera.height).toBe(650);
+  });
+
   it('refuses to begin a frame before validated originals are available', () => {
     const view = renderer();
     expect(() => view.render()).toThrow('Original game artwork is not ready');

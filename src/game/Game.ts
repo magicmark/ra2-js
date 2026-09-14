@@ -1,5 +1,8 @@
 import { definitions, isBuilding } from './definitions';
 import { createMap, MAP_SIZE } from './map';
+import type { NativeMap } from './maps/nativeMap';
+import { nativeGameMap } from './maps/gameMap';
+import { NATIVE_STRUCTURE_SPECS } from './maps/theater';
 import { findPath } from './pathfinding';
 import { turnFacing, type FacingTurn } from './facing';
 import { nativeGameSpeedIndex } from './timing';
@@ -34,13 +37,14 @@ interface UnitMemory {
   fireIntentAt?: number;
   burstIndex?: number;
 }
-export interface GameOptions { ai?: boolean }
+export interface GameOptions { ai?: boolean; map?: NativeMap }
 
 /** Fixed-step, renderer-independent RTS rules. The UI can only command side 0. */
 export class Game implements GameAPI {
   readonly defs: Record<string, UnitDef> = definitions;
   state!: GameState;
   private readonly aiEnabled: boolean;
+  private nativeMap?: NativeMap;
   private nextId = 1;
   private nextEventId = 1;
   private accumulator = 0;
@@ -59,8 +63,11 @@ export class Game implements GameAPI {
 
   constructor(options: GameOptions = {}) {
     this.aiEnabled = options.ai !== false;
+    this.nativeMap = options.map;
     this.restart();
   }
+
+  loadNativeMap(map: NativeMap): void { this.nativeMap = map; this.restart(); }
 
   get interpolation(): number { return clamp(this.accumulator / STEP, 0, 1); }
   get nativeGameSpeedIndex(): number { return nativeGameSpeedIndex(this.state.speed); }
@@ -94,13 +101,34 @@ export class Game implements GameAPI {
       id, faction, name, color, money: 6000, power: 0, powerUsed: 0, kills: 0, defeated: false,
       queues: { structures: [], defenses: [], infantry: [], vehicles: [] },
     });
+    const terrain = this.nativeMap ? nativeGameMap(this.nativeMap) : { width: MAP_SIZE, height: MAP_SIZE, tiles: createMap() };
     this.state = {
-      width: MAP_SIZE, height: MAP_SIZE, tiles: createMap(), entities: [],
+      ...terrain, nativeMap: this.nativeMap, entities: [],
       sides: [side(0, 'allied', 'Allied Command', '#2269d4'), side(1, 'soviet', 'Soviet AI', '#ff1919')],
       time: 0, paused: false, speed, winner: null, effects: [], events: [],
-      fog: new Uint8Array(MAP_SIZE * MAP_SIZE), explored: new Uint8Array(MAP_SIZE * MAP_SIZE),
+      fog: new Uint8Array(terrain.width * terrain.height), explored: new Uint8Array(terrain.width * terrain.height),
     };
-    this.vision = [this.state.fog, new Uint8Array(MAP_SIZE * MAP_SIZE)];
+    this.vision = [this.state.fog, new Uint8Array(terrain.width * terrain.height)];
+    if (this.nativeMap) {
+      for (const [sideId, waypoint] of [[0, 0], [1, 3]]) {
+        const start = this.nativeMap.starts.find(s => s.index === waypoint);
+        if (!start) throw new Error(`Native skirmish requires starting waypoint ${waypoint}`);
+        const x = start.x, y = start.y;
+        const layout: [string, number, number][] = [
+          ['conyard', -2, -2], [sideId ? 'power_soviet' : 'power', 3, -2],
+          [sideId ? 'refinery_soviet' : 'refinery', -3, 4], [sideId ? 'barracks_soviet' : 'barracks', 4, 4],
+          [sideId ? 'warminer' : 'miner', -4.5, 7.5], [sideId ? 'rhino' : 'grizzly', 5.5, 1.5],
+          ...[3.5, 4.5, 5.5, 6.5].map(dx => [sideId ? 'conscript' : 'gi', dx, 3.5] as [string, number, number]),
+        ];
+        for (const [type, dx, dy] of layout) this.spawn(type, sideId, x + dx, y + dy);
+      }
+      for (const structure of this.nativeMap.structures) {
+        const spec = NATIVE_STRUCTURE_SPECS[structure.type as keyof typeof NATIVE_STRUCTURE_SPECS];
+        if (!spec) throw new Error(`Unsupported native gameplay structure: ${structure.type}`);
+        const entity = this.spawn(spec.gameType, -1, structure.x, structure.y);
+        entity.hp = entity.maxHp * structure.health / 256; entity.nativeType = structure.type;
+      }
+    } else {
     this.spawn('conyard', 0, 12, 39);
     this.spawn('power', 0, 17, 39);
     this.spawn('refinery', 0, 11, 45);
@@ -115,6 +143,7 @@ export class Game implements GameAPI {
     this.spawn('warminer', 1, 47.5, 20.5);
     this.spawn('rhino', 1, 48.5, 18.5);
     for (const [x, y] of [[48.5, 19.5], [49.5, 19.5], [50.5, 19.5], [51.5, 19.5]]) this.spawn('conscript', 1, x, y);
+    }
     this.rebuildBlocked();
     this.updatePower();
     this.updateVision();
@@ -135,6 +164,7 @@ export class Game implements GameAPI {
   canBuild(type: string, sideId = 0): { ok: boolean; reason: string } {
     const def = this.defs[type], side = this.state.sides[sideId];
     if (!def || !side) return { ok: false, reason: 'Unknown unit or side' };
+    if (def.mapOnly) return { ok: false, reason: 'Capture this neutral structure with an Engineer' };
     if (this.state.winner !== null || side.defeated) return { ok: false, reason: 'Battle has ended' };
     if (def.faction !== 'both' && def.faction !== side.faction) return { ok: false, reason: 'Unavailable to this faction' };
     const owned = this.state.entities.filter(e => e.side === sideId && e.hp > 0);
@@ -370,6 +400,7 @@ export class Game implements GameAPI {
   sell(id: number): boolean {
     const entity = this.state.entities.find(e => e.id === id && e.side === 0 && e.hp > 0);
     if (!entity || !isBuilding(this.defs[entity.type]) || this.state.winner !== null) return false;
+    if (this.defs[entity.type].mapOnly) return false;
     this.state.sides[0].money += Math.floor(this.defs[entity.type].cost * 0.5 * (entity.hp / entity.maxHp));
     this.removeEntity(entity, false);
     this.notify(`${this.defs[entity.type].name} sold`, 'info');
@@ -407,6 +438,10 @@ export class Game implements GameAPI {
       entity.previousFacing = entity.facing;
       entity.previousTurretFacing = entity.turretFacing ?? entity.facing;
       const def = this.defs[entity.type];
+      if (entity.type === 'tech_oil' && entity.side >= 0) {
+        entity.harvestTimer += dt;
+        if (entity.harvestTimer >= 100 / 30) { entity.harvestTimer -= 100 / 30; this.state.sides[entity.side].money += 20; }
+      }
       entity.anim += dt;
       entity.cooldown = Math.max(0, entity.cooldown - dt - 1e-10);
       this.updateInfantryAnimation(entity);
@@ -489,6 +524,7 @@ export class Game implements GameAPI {
     for (const entity of this.state.entities) {
       if (entity.hp <= 0) continue;
       const power = this.defs[entity.type].power, side = this.state.sides[entity.side];
+      if (!side) continue;
       if (power > 0) side.power += power;
       else side.powerUsed -= power;
     }
@@ -770,7 +806,7 @@ export class Game implements GameAPI {
     }
     if (!target && entity.type !== 'engineer' && memory.idleTimer <= 0) {
       memory.idleTimer = 0.35;
-      const candidates = this.state.entities.filter(other => other.side !== entity.side && other.hp > 0 && this.visibleTo(other, entity.side) && this.distanceToEntity(entity, other) <= (isBuilding(def) || def.harvester || entity.deployed || memory.holdPosition ? range : def.sight));
+      const candidates = this.state.entities.filter(other => other.side >= 0 && other.side !== entity.side && other.hp > 0 && this.visibleTo(other, entity.side) && this.distanceToEntity(entity, other) <= (isBuilding(def) || def.harvester || entity.deployed || memory.holdPosition ? range : def.sight));
       candidates.sort((a, b) => this.distanceToEntity(entity, a) - this.distanceToEntity(entity, b));
       target = candidates[0];
       entity.targetId = target?.id ?? null;
@@ -783,6 +819,7 @@ export class Game implements GameAPI {
     const d = this.distanceToEntity(this.center(entity), target);
     if (d > range) this.cancelFireIntent(entity, memory);
     if (entity.type === 'engineer' && isBuilding(this.defs[target.type]) && d <= 0.9) {
+      if (target.type === 'tech_oil' && target.side === -1) this.state.sides[entity.side].money += 1000;
       target.side = entity.side;
       target.selected = false;
       target.hp = Math.max(target.hp, target.maxHp * 0.3);
@@ -944,7 +981,8 @@ export class Game implements GameAPI {
       const attackers = army.filter(e => e.order === 'guard' || e.order === 'idle');
       if (attackers.length >= 4) {
         this.wave++;
-        const destination = { x: 16 + (this.wave % 3) * 2, y: 42 };
+        const playerBase = this.state.entities.find(e => e.side === 0 && isBuilding(this.defs[e.type]) && !this.defs[e.type].mapOnly && e.hp > 0);
+        const destination = this.nativeMap && playerBase ? this.center(playerBase) : { x: 16 + (this.wave % 3) * 2, y: 42 };
         this.issueMove(attackers.slice(0, Math.min(12, 4 + this.wave * 2)), destination, true);
         this.notify('Warning: Soviet strike force approaching.', 'warning');
       }
@@ -958,10 +996,11 @@ export class Game implements GameAPI {
   }
 
   private findAIPlacement(type: string): Vec2 | undefined {
-    const anchor = type === 'sentry' ? { x: 42, y: 25 } : { x: 47, y: 17 };
+    const nativeStart = this.nativeMap?.starts.find(s => s.index === 3);
+    const anchor = nativeStart ?? (type === 'sentry' ? { x: 42, y: 25 } : { x: 47, y: 17 });
     const candidates: Vec2[] = [];
-    for (let y = 4; y < 31; y++)
-      for (let x = 34; x < 59; x++) if (this.canPlace(type, x, y, 1)) candidates.push({ x, y });
+    for (let y = nativeStart ? Math.max(1, anchor.y - 22) : 4; y < (nativeStart ? Math.min(this.state.height - 1, anchor.y + 23) : 31); y++)
+      for (let x = nativeStart ? Math.max(1, anchor.x - 22) : 34; x < (nativeStart ? Math.min(this.state.width - 1, anchor.x + 23) : 59); x++) if (this.canPlace(type, x, y, 1)) candidates.push({ x, y });
     candidates.sort((a, b) => distance(a, anchor) - distance(b, anchor));
     return candidates[0];
   }
@@ -976,7 +1015,7 @@ export class Game implements GameAPI {
     };
     this.state.entities.push(entity);
     if (side === 1 && def.producer?.some(category => category === 'infantry' || category === 'vehicles'))
-      entity.rally = { x: 46.5, y: 27.5 };
+      entity.rally = this.nativeMap ? { x: x + def.footprint[0] / 2, y: y + def.footprint[1] + 2.5 } : { x: 46.5, y: 27.5 };
     return entity;
   }
 
@@ -1060,6 +1099,7 @@ export class Game implements GameAPI {
     for (const entity of this.state.entities) {
       if (entity.hp <= 0) continue;
       const radius = this.defs[entity.type].sight, center = this.center(entity), fog = this.vision[entity.side];
+      if (!fog) continue;
       for (let y = Math.max(0, Math.floor(center.y - radius)); y <= Math.min(this.state.height - 1, Math.ceil(center.y + radius)); y++)
         for (let x = Math.max(0, Math.floor(center.x - radius)); x <= Math.min(this.state.width - 1, Math.ceil(center.x + radius)); x++)
           if (Math.hypot(x + 0.5 - center.x, y + 0.5 - center.y) <= radius) fog[y * this.state.width + x] = 1;
@@ -1075,7 +1115,7 @@ export class Game implements GameAPI {
   private checkVictory(): void {
     if (this.state.winner !== null) return;
     for (const side of this.state.sides) {
-      if (!this.state.entities.some(e => e.side === side.id && e.hp > 0 && isBuilding(this.defs[e.type]))) side.defeated = true;
+      if (!this.state.entities.some(e => e.side === side.id && e.hp > 0 && isBuilding(this.defs[e.type]) && !this.defs[e.type].mapOnly)) side.defeated = true;
     }
     const surviving = this.state.sides.filter(side => !side.defeated);
     if (surviving.length < this.state.sides.length) {

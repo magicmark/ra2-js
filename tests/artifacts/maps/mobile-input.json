@@ -1,0 +1,616 @@
+{
+  "fit": {
+    "preview": false,
+    "simulation": false,
+    "gameInstance": false,
+    "rts": false,
+    "rect": {
+      "x": 10,
+      "y": 273,
+      "width": 370,
+      "height": 522,
+      "right": 380,
+      "bottom": 795
+    },
+    "url": "http://omarky:5173/admin/frostline-basin",
+    "ready": true,
+    "zoom": 0.05524305555555555,
+    "camera": {
+      "x": 0,
+      "y": 2887.5
+    },
+    "markers": [
+      {
+        "label": "1",
+        "hidden": false
+      },
+      {
+        "label": "2",
+        "hidden": false
+      },
+      {
+        "label": "3",
+        "hidden": false
+      },
+      {
+        "label": "4",
+        "hidden": false
+      },
+      {
+        "label": "5",
+        "hidden": false
+      },
+      {
+        "label": "6",
+        "hidden": false
+      }
+    ],
+    "bodyWidth": 390,
+    "innerWidth": 390,
+    "gate": false
+  },
+  "preview": {
+    "preview": true,
+    "simulation": false,
+    "gameInstance": false,
+    "rts": false,
+    "rect": {
+      "x": 7,
+      "y": 63,
+      "width": 376,
+      "height": 740,
+      "right": 383,
+      "bottom": 803
+    },
+    "url": "http://omarky:5173/admin/whiteout-causeway/preview",
+    "ready": true,
+    "zoom": 0.05613888888888889,
+    "camera": {
+      "x": 0,
+      "y": 2887.5
+    },
+    "markers": [
+      {
+        "label": "1",
+        "hidden": false
+      },
+      {
+        "label": "2",
+        "hidden": false
+      },
+      {
+        "label": "3",
+        "hidden": false
+      },
+      {
+        "label": "4",
+        "hidden": false
+      },
+      {
+        "label": "5",
+        "hidden": false
+      },
+      {
+        "label": "6",
+        "hidden": false
+      }
+    ],
+    "bodyWidth": 390,
+    "innerWidth": 390,
+    "gate": false
+  },
+  "pinch": {
+    "preview": true,
+    "simulation": false,
+    "gameInstance": false,
+    "rts": false,
+    "rect": {
+      "x": 7,
+      "y": 63,
+      "width": 376,
+      "height": 740,
+      "right": 383,
+      "bottom": 803
+    },
+    "url": "http://omarky:5173/admin/whiteout-causeway/preview",
+    "ready": true,
+    "zoom": 0.13312936507936507,
+    "camera": {
+      "x": 3.322442022108394,
+      "y": 2887.5
+    },
+    "markers": [
+      {
+        "label": "1",
+        "hidden": true
+      },
+      {
+        "label": "2",
+        "hidden": true
+      },
+      {
+        "label": "3",
+        "hidden": true
+      },
+      {
+        "label": "4",
+        "hidden": true
+      },
+      {
+        "label": "5",
+        "hidden": true
+      },
+      {
+        "label": "6",
+        "hidden": true
+      }
+    ],
+    "bodyWidth": 390,
+    "innerWidth": 390,
+    "gate": false
+  },
+  "pan": {
+    "preview": true,
+    "simulation": false,
+    "gameInstance": false,
+    "rts": false,
+    "rect": {
+      "x": 7,
+      "y": 63,
+      "width": 376,
+      "height": 740,
+      "right": 383,
+      "bottom": 803
+    },
+    "url": "http://omarky:5173/admin/whiteout-causeway/preview",
+    "ready": true,
+    "zoom": 0.13312936507936507,
+    "camera": {
+      "x": -447.3670055256284,
+      "y": 2887.5
+    },
+    "markers": [
+      {
+        "label": "1",
+        "hidden": false
+      },
+      {
+        "label": "2",
+        "hidden": true
+      },
+      {
+        "label": "3",
+        "hidden": true
+      },
+      {
+        "label": "4",
+        "hidden": true
+      },
+      {
+        "label": "5",
+        "hidden": false
+      },
+      {
+        "label": "6",
+        "hidden": true
+      }
+    ],
+    "bodyWidth": 390,
+    "innerWidth": 390,
+    "gate": false
+  },
+  "wheel": {
+    "preview": true,
+    "simulation": false,
+    "gameInstance": false,
+    "rts": false,
+    "rect": {
+      "x": 7,
+      "y": 63,
+      "width": 376,
+      "height": 740,
+      "right": 383,
+      "bottom": 803
+    },
+    "url": "http://omarky:5173/admin/whiteout-causeway/preview",
+    "ready": true,
+    "zoom": 0.17970584599938214,
+    "camera": {
+      "x": -447.3670055256284,
+      "y": 2887.5
+    },
+    "markers": [
+      {
+        "label": "1",
+        "hidden": true
+      },
+      {
+        "label": "2",
+        "hidden": true
+      },
+      {
+        "label": "3",
+        "hidden": true
+      },
+      {
+        "label": "4",
+        "hidden": true
+      },
+      {
+        "label": "5",
+        "hidden": true
+      },
+      {
+        "label": "6",
+        "hidden": true
+      }
+    ],
+    "bodyWidth": 390,
+    "innerWidth": 390,
+    "gate": false
+  },
+  "returned": {
+    "preview": false,
+    "simulation": false,
+    "gameInstance": false,
+    "rts": false,
+    "rect": {
+      "x": 10,
+      "y": 273,
+      "width": 370,
+      "height": 522,
+      "right": 380,
+      "bottom": 795
+    },
+    "url": "http://omarky:5173/admin/whiteout-causeway",
+    "ready": true,
+    "zoom": 0.05524305555555555,
+    "camera": {
+      "x": 0,
+      "y": 2887.5
+    },
+    "markers": [
+      {
+        "label": "1",
+        "hidden": false
+      },
+      {
+        "label": "2",
+        "hidden": false
+      },
+      {
+        "label": "3",
+        "hidden": false
+      },
+      {
+        "label": "4",
+        "hidden": false
+      },
+      {
+        "label": "5",
+        "hidden": false
+      },
+      {
+        "label": "6",
+        "hidden": false
+      }
+    ],
+    "bodyWidth": 390,
+    "innerWidth": 390,
+    "gate": false
+  },
+  "browserBack": {
+    "preview": true,
+    "simulation": false,
+    "gameInstance": false,
+    "rts": false,
+    "rect": {
+      "x": 7,
+      "y": 63,
+      "width": 376,
+      "height": 740,
+      "right": 383,
+      "bottom": 803
+    },
+    "url": "http://omarky:5173/admin/whiteout-causeway/preview",
+    "ready": true,
+    "zoom": 0.05613888888888889,
+    "camera": {
+      "x": 0,
+      "y": 2887.5
+    },
+    "markers": [
+      {
+        "label": "1",
+        "hidden": false
+      },
+      {
+        "label": "2",
+        "hidden": false
+      },
+      {
+        "label": "3",
+        "hidden": false
+      },
+      {
+        "label": "4",
+        "hidden": false
+      },
+      {
+        "label": "5",
+        "hidden": false
+      },
+      {
+        "label": "6",
+        "hidden": false
+      }
+    ],
+    "bodyWidth": 390,
+    "innerWidth": 390,
+    "gate": false
+  },
+  "directReload": {
+    "preview": true,
+    "simulation": false,
+    "gameInstance": false,
+    "rts": false,
+    "rect": {
+      "x": 7,
+      "y": 63,
+      "width": 376,
+      "height": 740,
+      "right": 383,
+      "bottom": 803
+    },
+    "url": "http://omarky:5173/admin/ironwood-crossing/preview",
+    "ready": true,
+    "zoom": 0.05613888888888889,
+    "camera": {
+      "x": 0,
+      "y": 2887.5
+    },
+    "markers": [
+      {
+        "label": "1",
+        "hidden": false
+      },
+      {
+        "label": "2",
+        "hidden": false
+      },
+      {
+        "label": "3",
+        "hidden": false
+      },
+      {
+        "label": "4",
+        "hidden": false
+      },
+      {
+        "label": "5",
+        "hidden": false
+      },
+      {
+        "label": "6",
+        "hidden": false
+      }
+    ],
+    "bodyWidth": 390,
+    "innerWidth": 390,
+    "gate": false
+  },
+  "sizes": [
+    {
+      "width": 844,
+      "height": 390,
+      "preview": {
+        "preview": true,
+        "simulation": false,
+        "gameInstance": false,
+        "rts": false,
+        "rect": {
+          "x": 7,
+          "y": 50,
+          "width": 830,
+          "height": 309,
+          "right": 837,
+          "bottom": 359
+        },
+        "url": "http://omarky:5173/admin/ironwood-crossing/preview",
+        "ready": true,
+        "zoom": 0.06804835924006908,
+        "camera": {
+          "x": 0,
+          "y": 2887.5
+        },
+        "markers": [
+          {
+            "label": "1",
+            "hidden": false
+          },
+          {
+            "label": "2",
+            "hidden": false
+          },
+          {
+            "label": "3",
+            "hidden": false
+          },
+          {
+            "label": "4",
+            "hidden": false
+          },
+          {
+            "label": "5",
+            "hidden": false
+          },
+          {
+            "label": "6",
+            "hidden": false
+          }
+        ],
+        "bodyWidth": 844,
+        "innerWidth": 844,
+        "gate": false
+      },
+      "overview": {
+        "preview": false,
+        "simulation": false,
+        "gameInstance": false,
+        "rts": false,
+        "rect": {
+          "x": 199,
+          "y": 143,
+          "width": 636,
+          "height": 214,
+          "right": 835,
+          "bottom": 357
+        },
+        "url": "http://omarky:5173/admin/ironwood-crossing",
+        "ready": true,
+        "zoom": 0.043164075993091536,
+        "camera": {
+          "x": 0,
+          "y": 2887.5
+        },
+        "markers": [
+          {
+            "label": "1",
+            "hidden": false
+          },
+          {
+            "label": "2",
+            "hidden": false
+          },
+          {
+            "label": "3",
+            "hidden": false
+          },
+          {
+            "label": "4",
+            "hidden": false
+          },
+          {
+            "label": "5",
+            "hidden": false
+          },
+          {
+            "label": "6",
+            "hidden": false
+          }
+        ],
+        "bodyWidth": 844,
+        "innerWidth": 844,
+        "gate": false
+      }
+    },
+    {
+      "width": 320,
+      "height": 700,
+      "preview": {
+        "preview": true,
+        "simulation": false,
+        "gameInstance": false,
+        "rts": false,
+        "rect": {
+          "x": 7,
+          "y": 63,
+          "width": 306,
+          "height": 596,
+          "right": 313,
+          "bottom": 659
+        },
+        "url": "http://omarky:5173/admin/ironwood-crossing/preview",
+        "ready": true,
+        "zoom": 0.04568749999999999,
+        "camera": {
+          "x": 0,
+          "y": 2887.5
+        },
+        "markers": [
+          {
+            "label": "1",
+            "hidden": false
+          },
+          {
+            "label": "2",
+            "hidden": false
+          },
+          {
+            "label": "3",
+            "hidden": false
+          },
+          {
+            "label": "4",
+            "hidden": false
+          },
+          {
+            "label": "5",
+            "hidden": false
+          },
+          {
+            "label": "6",
+            "hidden": false
+          }
+        ],
+        "bodyWidth": 320,
+        "innerWidth": 320,
+        "gate": false
+      },
+      "overview": {
+        "preview": false,
+        "simulation": false,
+        "gameInstance": false,
+        "rts": false,
+        "rect": {
+          "x": 10,
+          "y": 287.5,
+          "width": 300,
+          "height": 363.5,
+          "right": 310,
+          "bottom": 651
+        },
+        "url": "http://omarky:5173/admin/ironwood-crossing",
+        "ready": true,
+        "zoom": 0.04479166666666667,
+        "camera": {
+          "x": 0,
+          "y": 2887.5
+        },
+        "markers": [
+          {
+            "label": "1",
+            "hidden": false
+          },
+          {
+            "label": "2",
+            "hidden": false
+          },
+          {
+            "label": "3",
+            "hidden": false
+          },
+          {
+            "label": "4",
+            "hidden": false
+          },
+          {
+            "label": "5",
+            "hidden": false
+          },
+          {
+            "label": "6",
+            "hidden": false
+          }
+        ],
+        "bodyWidth": 320,
+        "innerWidth": 320,
+        "gate": false
+      }
+    }
+  ],
+  "errors": [],
+  "networkFailures": [],
+  "archiveDownloads": [],
+  "input": "real CDP touch/mouse input, fresh browser UI MIX import"
+}

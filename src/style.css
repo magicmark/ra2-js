@@ -16,6 +16,12 @@
   --topbar-height: 64px;
   --footer-height: 32px;
 }
+.startup-map-choice { margin: 20px 0; text-align: left; }
+.startup-map-choice > label { display: block; color: #b8c0ac; font-size: 11px; margin-bottom: 8px; }
+.startup-map-choice select { display: block; width: 100%; border: 1px solid #586548; border-radius: 3px; padding: 10px; background: #141c12; color: #e1e7d7; font-size: 12px; }
+.startup-map-choice > div { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 9px; font-size: 10px; }
+.startup-map-choice small { color: #94a086; font-size: 10px; }
+.startup-map-choice a { color: #c3d4a7; text-decoration: underline; white-space: nowrap; }
 
 * { box-sizing: border-box; }
 html, body, #app { width: 100%; height: 100%; margin: 0; overflow: hidden; }

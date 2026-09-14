@@ -1,3 +1,5 @@
+import type { NativeMap } from './maps/nativeMap';
+
 export type Category = 'structures' | 'defenses' | 'infantry' | 'vehicles';
 export type Vec2 = { x: number; y: number };
 export interface UnitDef {
@@ -10,6 +12,7 @@ export interface UnitDef {
   impact?: string; deathAnimations?: string[];
   deployedDamage?: number; deployedRange?: number; deployedFireRate?: number; deployedVerses?: number[];
   crusher?: boolean; nativeSpeed?: number; rot?: number; turret?: boolean;
+  mapOnly?: boolean;
 }
 export interface Entity extends Vec2 {
   id: number; type: string; side: number; hp: number; maxHp: number;
@@ -21,6 +24,7 @@ export interface Entity extends Vec2 {
   infantryAnimation?: { sequence: string; startedAt: number };
   deployment?: { startedAt: number; target: boolean };
   previous?: Vec2; previousFacing?: number; turretFacing?: number; previousTurretFacing?: number;
+  nativeType?: string;
 }
 export interface Tile { terrain: 'grass' | 'water' | 'rock' | 'road' | 'sand'; ore: number; variant: number }
 export interface BuildItem { id: number; type: string; progress: number; spent: number; ready: boolean; paused: boolean; blockedFunds?: boolean }
@@ -37,6 +41,7 @@ export interface Effect extends Vec2 {
 }
 export interface GameEvent { id: number; text: string; kind: 'info' | 'warning' | 'success'; time: number }
 export interface GameState {
+  nativeMap?: NativeMap;
   width: number; height: number; tiles: Tile[]; entities: Entity[]; sides: Side[];
   time: number; paused: boolean; speed: number; winner: number | null;
   effects: Effect[]; events: GameEvent[]; fog: Uint8Array; explored: Uint8Array;
@@ -70,4 +75,5 @@ export interface GameAPI {
   sell(id: number): boolean;
   repair(id: number): boolean;
   restart(): void;
+  loadNativeMap(map: NativeMap): void;
 }

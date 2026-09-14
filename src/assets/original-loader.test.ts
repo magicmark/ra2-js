@@ -5,10 +5,15 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vite
 import { AssetManager, DIALOG_ASSET_FRAMES, HUD_ASSET_FRAMES } from './AssetManager';
 import { CATALOG, DIALOG_PCX_FILES, DIALOG_SHAPE_FILES, EFFECT_ANIMATIONS, NESTED_MIXES, UI_FILES, UI_HASH_FILES, theaterNames, wantedFiles } from './catalog';
 import { MixArchive, ShpFile, decodePalette } from './formats';
-import { assetCache, archiveStageKey } from './AssetDownload';
+import { assetCache, archiveStageKey, type SavedArchive } from './AssetDownload';
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
+const CURRENT_SELECTED_FILE_COUNT = 661;
+// Fixed historical membership: deriving the old cache by subtracting only the
+// previous update's additions accidentally left hundreds of future map files in it.
+const PRE_NATIVE_NAMES = new Set(readFileSync(new URL('./fixtures/selected-art-pre-native.txt', import.meta.url), 'utf8')
+  .split('\n').filter(name => name && !name.startsWith('#')));
 let originals: AssetFile[];
 let extracted: AssetFile[];
 let worker: ReturnType<typeof vi.fn>;
@@ -56,7 +61,7 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('strict loader with actual original 
   afterEach(() => vi.unstubAllGlobals());
 
   it('validates every required original and reopens its cache without network or extraction', async () => {
-    expect(originals.length).toBeGreaterThanOrEqual(265);
+    expect(originals).toHaveLength(CURRENT_SELECTED_FILE_COUNT);
     const manager = new AssetManager();
     await manager.importFiles([new File(['local MIX fixture'], 'ra2.mix')]);
     expect(manager.error).toBeNull(); expect(manager.status.phase).toBe('ready');
@@ -106,23 +111,47 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('strict loader with actual original 
     expect(Array.from((check.source as unknown as TestCanvas).pixels.subarray(0, 4))).toEqual([255, 0, 0, 255]);
   }, 60_000);
 
-  it('reselects newly required originals locally without discarding archive generations', async () => {
+  it.each([
+    { cache: 'pre-dialog', expectedFiles: 242, nativeMaps: false },
+    { cache: 'pre-native maps', expectedFiles: 265, nativeMaps: true },
+  ])('upgrades the $cache cache locally without discarding archive generations', async ({ expectedFiles, nativeMaps }) => {
     await new AssetManager().importFiles([new File(['fixture'], 'ra2.mix')]);
     const source = '/asset-source', previous = await assetCache<any>(source);
     const added = new Set(['anim.pal', ...EFFECT_ANIMATIONS.map(name => `${name}.shp`), ...Object.values(DIALOG_PCX_FILES),
       ...[0, 1].flatMap(side => [`side${side}/uibkgd.pal`, ...DIALOG_SHAPE_FILES.map(name => `side${side}/${name}.shp`)])]);
-    const oldFiles = previous.files.filter((file: AssetFile) => !added.has(file.name));
-    expect(oldFiles).toHaveLength(242);
+    expect(PRE_NATIVE_NAMES.size).toBe(265);
+    const oldFiles = previous.files.filter((file: AssetFile) => PRE_NATIVE_NAMES.has(file.name) && (nativeMaps || !added.has(file.name)));
+    expect(oldFiles).toHaveLength(expectedFiles);
+    expect(oldFiles.some((file: AssetFile) => file.name === 'snow.pal')).toBe(false);
+    expect(oldFiles.some((file: AssetFile) => /oild|airp/.test(file.name))).toBe(false);
     await assetCache(source, { ...previous, files: oldFiles });
     const key = archiveStageKey(source, 'mix');
-    const saved = { version: 1, id: 'existing-original-MIX-generation', saved: 123, files: [{ name: 'ra2.mix', blob: new Blob(['actual-original-selection-worker-fixture']) }] };
+    const saved: SavedArchive = { version: 1, id: 'existing-original-MIX-generation', saved: 123, files: [{ name: 'ra2.mix', blob: new Blob(['actual-original-selection-worker-fixture']) }] };
     await assetCache(key, saved);
     worker.mockClear(); network.mockClear();
-    const recovered = new AssetManager(); expect(await recovered.initialize()).toBe('ready');
+    // All old gameplay art is still usable: only requesting native maps
+    // should require reselection of the new theaters and neutral buildings.
+    if (nativeMaps) {
+      expect(await new AssetManager().initialize()).toBe('ready');
+      expect(worker).not.toHaveBeenCalled();
+    }
+    const recovered = new AssetManager(); expect(await recovered.initialize({ nativeMaps })).toBe('ready');
     expect(network).not.toHaveBeenCalled(); expect(worker).toHaveBeenCalledOnce();
-    expect((await assetCache<any>(key)).id).toBe(saved.id);
-    expect((await assetCache<any>(source)).files).toHaveLength(originals.length);
-    expect(await new AssetManager().initialize()).toBe('ready');
+    const retained = (await assetCache<SavedArchive>(key))!;
+    expect({ id: retained.id, version: retained.version, saved: retained.saved, rejected: retained.rejected }).toEqual({ id: saved.id, version: saved.version, saved: saved.saved, rejected: undefined });
+    expect(retained.files.map(file => file.name)).toEqual(saved.files.map(file => file.name));
+    expect(await retained.files[0].blob.text()).toBe(await saved.files[0].blob.text());
+    const upgraded = (await assetCache<{ files: AssetFile[] }>(source))!.files;
+    expect(upgraded).toHaveLength(CURRENT_SELECTED_FILE_COUNT);
+    expect(upgraded.map(file => file.name).sort()).toEqual(originals.map(file => file.name).sort());
+    if (nativeMaps) {
+      for (const theater of ['TEMPERATE', 'SNOW', 'URBAN'] as const) {
+        expect(recovered.getNativeTerrain(theater, 0, 0), theater).not.toBeNull();
+        expect(recovered.getNativeStructure(theater, 'CAOILD'), theater).not.toBeNull();
+        expect(recovered.getNativeStructure(theater, 'CAAIRP'), theater).not.toBeNull();
+      }
+    }
+    expect(await new AssetManager().initialize({ nativeMaps })).toBe('ready');
     expect(network).not.toHaveBeenCalled(); expect(worker).toHaveBeenCalledOnce();
   }, 60_000);
 

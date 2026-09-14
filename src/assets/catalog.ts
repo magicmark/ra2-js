@@ -1,3 +1,5 @@
+import { nativeTerrainFiles, NATIVE_THEATERS, THEATER_EXTENSION, THEATER_LETTER } from '../game/maps/theater';
+
 export interface AssetSpec { sprite: string; cameo: string; kind: 'building' | 'infantry' | 'vehicle'; overlays?: string[]; bib?: string; turret?: string; footprint?: [number, number] }
 export const CATALOG: Record<string, AssetSpec> = {
   conyard: { sprite: 'gacnst', cameo: 'mcvicon', kind: 'building', overlays: ['gacnst_a', 'gacnst_b'], footprint: [4, 4] },
@@ -30,7 +32,7 @@ export function theaterNames(name: string): string[] {
   // NewTheater buildings replace their second character with T in temperate.
   return /^[gn]a/i.test(name) ? [name[0] + 't' + name.slice(2), name, name[0] + 'g' + name.slice(2)] : [name];
 }
-export const NESTED_MIXES = ['ra2.mix', 'language.mix', 'cache.mix', 'local.mix', 'conquer.mix', 'generic.mix', 'neutral.mix', 'isogen.mix', 'isotemp.mix', 'temperat.mix', 'tem.mix', 'cameo.mix', 'cameomd.mix', 'sidec01.mix', 'sidec02.mix', 'sidec03.mix', 'sidecd01.mix', 'sidecd02.mix'];
+export const NESTED_MIXES = ['ra2.mix', 'language.mix', 'cache.mix', 'local.mix', 'conquer.mix', 'generic.mix', 'neutral.mix', 'isogen.mix', 'isotemp.mix', 'isosnow.mix', 'isourb.mix', 'temperat.mix', 'snow.mix', 'urban.mix', 'tem.mix', 'sno.mix', 'urb.mix', 'cameo.mix', 'cameomd.mix', 'sidec01.mix', 'sidec02.mix', 'sidec03.mix', 'sidecd01.mix', 'sidecd02.mix'];
 export const EFFECT_ANIMATIONS = ['piffpiff', 's_clsn22', 'xgrysml2', 'htrkpuff', 'twlt070', 's_bang48', 's_brnl58', 's_clsn58', 's_tumu60'];
 export const DIALOG_SHAPE_FILES = ['bkgdsm', 'bkgdmd', 'bkgdlg', 'sidebttn'];
 export const DIALOG_PCX_FILES = { 'options-checkbox-on': 'cce_i.pcx', 'options-checkbox-off': 'cue_i.pcx', 'options-slider-thumb': 'trakgrip.pcx' };
@@ -61,5 +63,16 @@ export function wantedFiles(): Set<string> {
   for (let i = 1; i <= 16; i++) for (const prefix of ['glat', 'clat']) names.add(`${prefix}${String(i).padStart(2, '0')}.tem`);
   for (let i = 1; i <= 20; i++) names.add(`clear${String(i).padStart(2, '0')}.tem`);
   for (const name of ['tib01', 'tib02', 'tib03', 'tib04', 'tib05', 'tib06', 'gem01', 'tree01', 'tree02', 'tree03', 'tree04', 'tree05', 'tree06', 'tree07', 'tree08', 'gtree01', 'gtree02', 'explosml', 'explomed', 'explolrg', 's_bang16', 's_bang24', 's_bang34']) { names.add(name + '.shp'); names.add(name + '.tem'); }
+  for (const file of nativeTerrainFiles()) names.add(file);
+  for (const theater of NATIVE_THEATERS) {
+    const extension = THEATER_EXTENSION[theater], letter = THEATER_LETTER[theater];
+    names.add(`iso${extension}.pal`); names.add(`unit${extension}.pal`);
+    for (const name of ['caoild', 'caoild_a', 'caoild_ad', 'caoild_f', 'caairp', 'caairp_a', 'caairp_ad', 'caairp_f'])
+      for (const variant of [name, 'c' + letter + name.slice(2), 'cg' + name.slice(2)]) names.add(variant + '.shp');
+    for (let i = 1; i <= 8; i++) names.add(`tree${String(i).padStart(2, '0')}.${extension}`);
+    for (let i = 1; i <= 6; i++) names.add(`tib${String(i).padStart(2, '0')}.${extension}`);
+    names.add(`gem01.${extension}`);
+  }
+  for (const file of ['temperat.ini', 'snow.ini', 'urban.ini', 'snow.pal', 'urban.pal']) names.add(file);
   return names;
 }

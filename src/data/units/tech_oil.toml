@@ -1,0 +1,11 @@
+[units.tech_oil]
+name = "Tech Oil Derrick"
+category = "structures"
+cost = 0
+hp = 1000
+armor = "steel"
+sight = 4
+footprint = [2, 2]
+sprite = "caoild"
+mapOnly = true
+description = "Capture with an Engineer for an initial cash bonus and recurring income."

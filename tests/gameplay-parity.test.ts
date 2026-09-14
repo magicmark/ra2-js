@@ -20,8 +20,10 @@ function advance(game: Game, seconds: number, hz = 30) { for (let i = 0; i < Mat
 describe('individual TOML definition files', () => {
   it('loads one named entity per file and resolves prerequisites after merging', () => {
     const files = import.meta.glob<string>('../src/data/units/*.toml', { query: '?raw', import: 'default', eager: true });
-    expect(Object.keys(files)).toHaveLength(23);
+    expect(Object.keys(files)).toHaveLength(25);
     expect(parseDefinitionFiles(files)).toEqual(definitions);
+    expect(Object.values(definitions).filter(def => !def.mapOnly)).toHaveLength(23);
+    expect(Object.values(definitions).filter(def => def.mapOnly).map(def => def.id).sort()).toEqual(['tech_airport', 'tech_oil']);
     const tiny = { 'first.toml': '[units.first]\nname="First"\ncategory="structures"\ncost=10\nrequires=["second"]', 'second.toml': '[units.second]\nname="Second"\ncategory="infantry"\ncost=20' };
     expect(parseDefinitionFiles(tiny).first.requires).toEqual(['second']);
     expect(() => parseDefinitionFiles({ 'first.toml': tiny['first.toml'] })).toThrow('unknown unit second');
@@ -218,7 +220,7 @@ describe('simulation frame and speed independence', () => {
   });
 });
 
-const nativeIds: Record<string, string> = { conyard: 'GACNST', power: 'GAPOWR', refinery: 'GAREFN', barracks: 'GAPILE', warfactory: 'GAWEAP', radar: 'GAAIRC', pillbox: 'GAPILL', gi: 'E1', engineer: 'ENGINEER', rocketeer: 'JUMPJET', grizzly: 'MTNK', ifv: 'FV', miner: 'CMIN', power_soviet: 'NAPOWR', refinery_soviet: 'NAREFN', barracks_soviet: 'NAHAND', warfactory_soviet: 'NAWEAP', radar_soviet: 'NARADR', sentry: 'NALASR', conscript: 'E2', rhino: 'HTNK', flak: 'HTK', warminer: 'HARV' };
+const nativeIds: Record<string, string> = { conyard: 'GACNST', power: 'GAPOWR', refinery: 'GAREFN', barracks: 'GAPILE', warfactory: 'GAWEAP', radar: 'GAAIRC', pillbox: 'GAPILL', gi: 'E1', engineer: 'ENGINEER', rocketeer: 'JUMPJET', grizzly: 'MTNK', ifv: 'FV', miner: 'CMIN', power_soviet: 'NAPOWR', refinery_soviet: 'NAREFN', barracks_soviet: 'NAHAND', warfactory_soviet: 'NAWEAP', radar_soviet: 'NARADR', sentry: 'NALASR', conscript: 'E2', rhino: 'HTNK', flak: 'HTK', warminer: 'HARV', tech_oil: 'CAOILD', tech_airport: 'CAAIRP' };
 function ini(source: string): Record<string, Record<string, string>> {
   const result: Record<string, Record<string, string>> = {}; let section: Record<string, string> | undefined;
   for (const line of source.split(/\r?\n/)) {
@@ -235,9 +237,21 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('data verified against original West
     expect(Object.keys(nativeIds).sort()).toEqual(Object.keys(definitions).sort());
     for (const [id, name] of Object.entries(nativeIds)) {
       const def = definitions[id], source = rules[name];
-      expect(def.hp, id).toBe(Number(source.strength)); expect(def.cost, id).toBe(Number(source.cost)); expect(def.sight, id).toBe(Number(source.sight)); expect(def.armor, id).toBe(source.armor);
+      expect(def.hp, id).toBe(Number(source.strength)); expect(def.armor, id).toBe(source.armor);
       expect(def.power, id).toBe(Number(source.power ?? 0));
-      expect(def.buildTime, id).toBeCloseTo(Number(source.cost) / 1000 * Number(rules.GENERAL.buildspeed) * 900 / 30, 8);
+      if (def.mapOnly) {
+        // Neutral tech has no native production cost/timing: verify its capture
+        // rules instead, while retaining native strength, armor and foundation checks.
+        expect(['CAOILD', 'CAAIRP']).toContain(name);
+        expect(source.techlevel, id).toBe('-1'); expect(source.capturable, id).toBe('yes');
+        expect(source.needsengineer, id).toBe('yes'); expect(source.unsellable, id).toBe('yes');
+        expect(def.cost, id).toBe(Number(source.cost ?? 0)); expect(isBuilding(def), id).toBe(true);
+        expect(def.damage, id).toBe(0); expect(def.speed, id).toBe(0); expect(def.producer, id).toBeUndefined();
+        if (source.sight !== undefined) expect(def.sight, id).toBe(Number(source.sight));
+      } else {
+        expect(def.cost, id).toBe(Number(source.cost)); expect(def.sight, id).toBe(Number(source.sight));
+        expect(def.buildTime, id).toBeCloseTo(Number(source.cost) / 1000 * Number(rules.GENERAL.buildspeed) * 900 / 30, 8);
+      }
       if (isBuilding(def)) expect(def.footprint, id).toEqual(art[name].foundation.split('x').map(Number));
       else { expect(def.nativeSpeed, id).toBe(Number(source.speed)); if (id !== 'rocketeer') expect(def.speed, id).toBe(Math.min(255, Math.trunc(Math.min(100, Number(source.speed)) * 256 / 100)) * 30 / 256); if (source.rot) expect(def.rot, id).toBe(Number(source.rot)); }
       if (def.damage > 0) {

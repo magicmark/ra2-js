@@ -1,0 +1,10 @@
+[units.tech_airport]
+name = "Tech Airport"
+category = "structures"
+cost = 0
+hp = 800
+armor = "concrete"
+footprint = [3, 3]
+sprite = "caairp"
+mapOnly = true
+description = "Capture with an Engineer to secure this neutral airfield."

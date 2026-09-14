@@ -1,0 +1,2080 @@
+{
+  "emerald-divide": {
+    "sha256": "3c66033fdbdf534490e2a94311d2abc44d446424516ed8a3fb7f1fb4714543d8",
+    "reference": {
+      "IsoMapPack5": {
+        "bytes": 201700,
+        "sha256": "81b801f6309d792e22dd0fd1fb29ed66db5310cc05d3a0ae5fbf891a75b325d4",
+        "blocks": 25
+      },
+      "OverlayPack": {
+        "bytes": 262144,
+        "sha256": "a1fe5c1dcb4df7dc2b190b940dcd8625df1fe3faf6a87de4e030de1a392a600a",
+        "blocks": 32
+      },
+      "OverlayDataPack": {
+        "bytes": 262144,
+        "sha256": "cb6e06b50b6f59aac17e656660e6c22eb86bfa90670cb1fda81a248e9adea42b",
+        "blocks": 32
+      }
+    },
+    "localCells": 15480,
+    "landCounts": {
+      "clear": 13478,
+      "rough": 152,
+      "beach": 146,
+      "water": 1704
+    },
+    "terrainFiles": [
+      "ruff01.tem",
+      "clear01.tem",
+      "clat08.tem",
+      "clat12.tem",
+      "clat07.tem",
+      "clat10.tem",
+      "clat14.tem",
+      "clat15.tem",
+      "clat13.tem",
+      "shore33.tem",
+      "shore09.tem",
+      "water01.tem",
+      "water02.tem",
+      "shore35.tem",
+      "shore01.tem",
+      "shore15.tem",
+      "shore31.tem",
+      "shore39.tem",
+      "clat04.tem",
+      "pvclr01.tem",
+      "shore25.tem",
+      "shore17.tem",
+      "shore37.tem",
+      "shore07.tem",
+      "shore23.tem"
+    ],
+    "landFraction": 0.8804909560723514,
+    "buildableFraction": 0.8804909560723514,
+    "connectedFraction": 0.9998517969618377,
+    "broadRouteCells": 10023,
+    "minStartSeparation": 41.88078318274385,
+    "nearbyOreBalance": 1,
+    "starts": [
+      {
+        "index": 0,
+        "x": 39,
+        "y": 94,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          25,
+          80,
+          88,
+          89,
+          89,
+          56,
+          47,
+          76,
+          76
+        ]
+      },
+      {
+        "index": 1,
+        "x": 92,
+        "y": 41,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          78,
+          25,
+          57,
+          89,
+          89,
+          85,
+          55,
+          76,
+          76
+        ]
+      },
+      {
+        "index": 2,
+        "x": 128,
+        "y": 63,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          92,
+          34,
+          26,
+          34,
+          92,
+          99,
+          69,
+          82,
+          42
+        ]
+      },
+      {
+        "index": 3,
+        "x": 150,
+        "y": 99,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          87,
+          85,
+          53,
+          22,
+          78,
+          85,
+          63,
+          68,
+          34
+        ]
+      },
+      {
+        "index": 4,
+        "x": 97,
+        "y": 152,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          85,
+          89,
+          88,
+          80,
+          23,
+          54,
+          61,
+          34,
+          70
+        ]
+      },
+      {
+        "index": 5,
+        "x": 62,
+        "y": 129,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          34,
+          92,
+          100,
+          92,
+          34,
+          27,
+          55,
+          42,
+          82
+        ]
+      }
+    ],
+    "structures": [
+      {
+        "id": "0",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 65,
+        "y": 95,
+        "facing": 64
+      },
+      {
+        "id": "1",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 94,
+        "y": 66,
+        "facing": 64
+      },
+      {
+        "id": "2",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 114,
+        "y": 78,
+        "facing": 64
+      },
+      {
+        "id": "3",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 126,
+        "y": 98,
+        "facing": 64
+      },
+      {
+        "id": "4",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 97,
+        "y": 127,
+        "facing": 64
+      },
+      {
+        "id": "5",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 77,
+        "y": 114,
+        "facing": 64
+      },
+      {
+        "id": "6",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 87,
+        "y": 95,
+        "facing": 64
+      },
+      {
+        "id": "7",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 95,
+        "y": 116,
+        "facing": 64
+      },
+      {
+        "id": "8",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 115,
+        "y": 96,
+        "facing": 64
+      }
+    ]
+  },
+  "frostline-basin": {
+    "sha256": "713285291a6a6366435bf3bb4a7209c0710fdfd4383a772a42112f2bc7b98f18",
+    "reference": {
+      "IsoMapPack5": {
+        "bytes": 201700,
+        "sha256": "506813bbb1ade60a3d6e59e63402f6dee552b772a504174b6779a0c94108a283",
+        "blocks": 25
+      },
+      "OverlayPack": {
+        "bytes": 262144,
+        "sha256": "d34ce9a499684d68476a6602d4f5ac72122c6085f4f96360c0c1229213c390ea",
+        "blocks": 32
+      },
+      "OverlayDataPack": {
+        "bytes": 262144,
+        "sha256": "aac757e91f9827ab4c7c9abc6e4f6006c421f82d3a4674c8a45538dba452d421",
+        "blocks": 32
+      }
+    },
+    "localCells": 15480,
+    "landCounts": {
+      "rough": 4088,
+      "clear": 9238,
+      "water": 1275,
+      "beach": 150,
+      "road": 729
+    },
+    "terrainFiles": [
+      "green01.sno",
+      "glat08.sno",
+      "clear01.sno",
+      "glat12.sno",
+      "glat07.sno",
+      "glat10.sno",
+      "glat15.sno",
+      "glat14.sno",
+      "shore33.sno",
+      "shore09.sno",
+      "water01.sno",
+      "water02.sno",
+      "shore07.sno",
+      "shore35.sno",
+      "glat13.sno",
+      "shore01.sno",
+      "shore15.sno",
+      "pvclr01.sno",
+      "shore31.sno",
+      "shore25.sno",
+      "shore17.sno",
+      "shore23.sno",
+      "shore37.sno",
+      "glat04.sno",
+      "shore39.sno"
+    ],
+    "landFraction": 0.9079457364341085,
+    "buildableFraction": 0.9079457364341085,
+    "connectedFraction": 1,
+    "broadRouteCells": 10634,
+    "minStartSeparation": 39.11521443121589,
+    "nearbyOreBalance": 1,
+    "starts": [
+      {
+        "index": 0,
+        "x": 41,
+        "y": 96,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          25,
+          79,
+          94,
+          100,
+          75,
+          54,
+          57,
+          72,
+          89
+        ]
+      },
+      {
+        "index": 1,
+        "x": 93,
+        "y": 44,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          82,
+          22,
+          43,
+          100,
+          84,
+          83,
+          43,
+          72,
+          89
+        ]
+      },
+      {
+        "index": 2,
+        "x": 128,
+        "y": 65,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          96,
+          33,
+          20,
+          46,
+          98,
+          97,
+          55,
+          78,
+          61
+        ]
+      },
+      {
+        "index": 3,
+        "x": 148,
+        "y": 99,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          95,
+          82,
+          61,
+          23,
+          84,
+          83,
+          77,
+          64,
+          39
+        ]
+      },
+      {
+        "index": 4,
+        "x": 96,
+        "y": 151,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          79,
+          85,
+          96,
+          75,
+          29,
+          50,
+          62,
+          36,
+          57
+        ]
+      },
+      {
+        "index": 5,
+        "x": 63,
+        "y": 130,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          28,
+          91,
+          104,
+          87,
+          26,
+          27,
+          67,
+          44,
+          69
+        ]
+      }
+    ],
+    "structures": [
+      {
+        "id": "0",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 64,
+        "y": 100,
+        "facing": 64
+      },
+      {
+        "id": "1",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 94,
+        "y": 67,
+        "facing": 64
+      },
+      {
+        "id": "2",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 111,
+        "y": 71,
+        "facing": 64
+      },
+      {
+        "id": "3",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 131,
+        "y": 108,
+        "facing": 64
+      },
+      {
+        "id": "4",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 88,
+        "y": 126,
+        "facing": 64
+      },
+      {
+        "id": "5",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 78,
+        "y": 115,
+        "facing": 64
+      },
+      {
+        "id": "6",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 92,
+        "y": 88,
+        "facing": 64
+      },
+      {
+        "id": "7",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 96,
+        "y": 115,
+        "facing": 64
+      },
+      {
+        "id": "8",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 117,
+        "y": 111,
+        "facing": 64
+      }
+    ]
+  },
+  "saffron-wash": {
+    "sha256": "4ef885883371b6805ab102d1c51f170e77168551e39008a2142b78fc1c0800ad",
+    "reference": {
+      "IsoMapPack5": {
+        "bytes": 201700,
+        "sha256": "4bb761dd7cd51e349d40ffe58f63dc9c43ea76fac2abe586628d04b668d312c7",
+        "blocks": 25
+      },
+      "OverlayPack": {
+        "bytes": 262144,
+        "sha256": "2463a0d43cf63261bc0362c85263e0c099da2240c4c0c4e568165f3ec187caf1",
+        "blocks": 32
+      },
+      "OverlayDataPack": {
+        "bytes": 262144,
+        "sha256": "985948b83cb859ffbf7e671e8f6c35031a882217792bb802e72885b6a508e99f",
+        "blocks": 32
+      }
+    },
+    "localCells": 15480,
+    "landCounts": {
+      "rough": 13187,
+      "clear": 2144,
+      "beach": 29,
+      "water": 120
+    },
+    "terrainFiles": [
+      "green01.tem",
+      "glat04.tem",
+      "glat08.tem",
+      "clear01.tem",
+      "glat12.tem",
+      "sandy01.tem",
+      "glat13.tem",
+      "glat09.tem",
+      "glat15.tem",
+      "glat10.tem",
+      "glat05.tem",
+      "glat14.tem",
+      "glat07.tem",
+      "glat03.tem",
+      "pvclr01.tem",
+      "dlat08.tem",
+      "dlat14.tem",
+      "dlat07.tem",
+      "shore33.tem",
+      "shore09.tem",
+      "water02.tem",
+      "dlat15.tem",
+      "dlat10.tem",
+      "shore15.tem",
+      "water01.tem",
+      "shore31.tem",
+      "shore17.tem",
+      "shore37.tem",
+      "dlat13.tem"
+    ],
+    "landFraction": 0.990374677002584,
+    "buildableFraction": 0.990374677002584,
+    "connectedFraction": 1,
+    "broadRouteCells": 13131,
+    "minStartSeparation": 40.22437072223754,
+    "nearbyOreBalance": 1,
+    "starts": [
+      {
+        "index": 0,
+        "x": 39,
+        "y": 98,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          25,
+          81,
+          91,
+          97,
+          85,
+          55,
+          54,
+          72,
+          86
+        ]
+      },
+      {
+        "index": 1,
+        "x": 89,
+        "y": 44,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          74,
+          24,
+          56,
+          88,
+          89,
+          80,
+          42,
+          76,
+          76
+        ]
+      },
+      {
+        "index": 2,
+        "x": 127,
+        "y": 64,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          92,
+          35,
+          25,
+          32,
+          88,
+          98,
+          60,
+          78,
+          40
+        ]
+      },
+      {
+        "index": 3,
+        "x": 150,
+        "y": 97,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          95,
+          84,
+          52,
+          22,
+          78,
+          88,
+          71,
+          68,
+          33
+        ]
+      },
+      {
+        "index": 4,
+        "x": 100,
+        "y": 151,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          85,
+          95,
+          83,
+          77,
+          23,
+          53,
+          74,
+          34,
+          66
+        ]
+      },
+      {
+        "index": 5,
+        "x": 63,
+        "y": 132,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          34,
+          91,
+          101,
+          95,
+          38,
+          28,
+          64,
+          46,
+          84
+        ]
+      }
+    ],
+    "structures": [
+      {
+        "id": "0",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 65,
+        "y": 97,
+        "facing": 64
+      },
+      {
+        "id": "1",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 92,
+        "y": 67,
+        "facing": 64
+      },
+      {
+        "id": "2",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 113,
+        "y": 78,
+        "facing": 64
+      },
+      {
+        "id": "3",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 126,
+        "y": 97,
+        "facing": 64
+      },
+      {
+        "id": "4",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 98,
+        "y": 126,
+        "facing": 64
+      },
+      {
+        "id": "5",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 78,
+        "y": 116,
+        "facing": 64
+      },
+      {
+        "id": "6",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 85,
+        "y": 86,
+        "facing": 64
+      },
+      {
+        "id": "7",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 96,
+        "y": 115,
+        "facing": 64
+      },
+      {
+        "id": "8",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 115,
+        "y": 96,
+        "facing": 64
+      }
+    ]
+  },
+  "ironwood-crossing": {
+    "sha256": "2e1a13a9f305ce1b3d98c358eaab227ab1a15ff2cbc14fb9c1ab45f67dba89c3",
+    "reference": {
+      "IsoMapPack5": {
+        "bytes": 201700,
+        "sha256": "d8d94d7c5cda4492b38285c70e233c9b4850ce50a696c9c5e8fcd760322b4c6a",
+        "blocks": 25
+      },
+      "OverlayPack": {
+        "bytes": 262144,
+        "sha256": "c9cb3ac8b8e491cfead46f58df38084055277ef76f5ea4a1f2ad3976a7df2552",
+        "blocks": 32
+      },
+      "OverlayDataPack": {
+        "bytes": 262144,
+        "sha256": "b1b89c6c2dbaa8c6f30b1c773d808594114a9c3f01540b0ea230abd5dbce69dc",
+        "blocks": 32
+      }
+    },
+    "localCells": 15480,
+    "landCounts": {
+      "clear": 14735,
+      "rough": 58,
+      "beach": 62,
+      "water": 304,
+      "road": 321
+    },
+    "terrainFiles": [
+      "ruff01.tem",
+      "clat08.tem",
+      "clear01.tem",
+      "clat12.tem",
+      "clat04.tem",
+      "clat07.tem",
+      "clat10.tem",
+      "shore33.tem",
+      "clat13.tem",
+      "clat15.tem",
+      "clat14.tem",
+      "shore09.tem",
+      "water01.tem",
+      "water02.tem",
+      "shore31.tem",
+      "shore15.tem",
+      "shore17.tem",
+      "shore37.tem",
+      "proad02.tem",
+      "pvclr01.tem",
+      "proad01.tem",
+      "proad03.tem",
+      "shore01.tem",
+      "shore25.tem"
+    ],
+    "landFraction": 0.9763565891472868,
+    "buildableFraction": 0.9763565891472868,
+    "connectedFraction": 1,
+    "broadRouteCells": 11200,
+    "minStartSeparation": 40.8166632639171,
+    "nearbyOreBalance": 1,
+    "starts": [
+      {
+        "index": 0,
+        "x": 40,
+        "y": 93,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          24,
+          78,
+          86,
+          89,
+          88,
+          58,
+          48,
+          76,
+          76
+        ]
+      },
+      {
+        "index": 1,
+        "x": 92,
+        "y": 41,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          77,
+          25,
+          57,
+          89,
+          88,
+          85,
+          48,
+          76,
+          76
+        ]
+      },
+      {
+        "index": 2,
+        "x": 129,
+        "y": 64,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          91,
+          34,
+          26,
+          34,
+          91,
+          99,
+          62,
+          80,
+          42
+        ]
+      },
+      {
+        "index": 3,
+        "x": 150,
+        "y": 99,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          87,
+          85,
+          53,
+          22,
+          77,
+          85,
+          68,
+          66,
+          34
+        ]
+      },
+      {
+        "index": 4,
+        "x": 98,
+        "y": 151,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          86,
+          86,
+          86,
+          78,
+          23,
+          52,
+          68,
+          34,
+          68
+        ]
+      },
+      {
+        "index": 5,
+        "x": 63,
+        "y": 130,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          35,
+          92,
+          100,
+          92,
+          35,
+          27,
+          62,
+          44,
+          82
+        ]
+      }
+    ],
+    "structures": [
+      {
+        "id": "0",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 65,
+        "y": 94,
+        "facing": 64
+      },
+      {
+        "id": "1",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 94,
+        "y": 66,
+        "facing": 64
+      },
+      {
+        "id": "2",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 114,
+        "y": 78,
+        "facing": 64
+      },
+      {
+        "id": "3",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 126,
+        "y": 98,
+        "facing": 64
+      },
+      {
+        "id": "4",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 97,
+        "y": 126,
+        "facing": 64
+      },
+      {
+        "id": "5",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 78,
+        "y": 115,
+        "facing": 64
+      },
+      {
+        "id": "6",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 87,
+        "y": 88,
+        "facing": 64
+      },
+      {
+        "id": "7",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 96,
+        "y": 115,
+        "facing": 64
+      },
+      {
+        "id": "8",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 115,
+        "y": 96,
+        "facing": 64
+      }
+    ]
+  },
+  "slatewater-reach": {
+    "sha256": "015b0a6af2bad3b7d02ff820a7868fb8c818e08389b8b50948ab762255b121f2",
+    "reference": {
+      "IsoMapPack5": {
+        "bytes": 201700,
+        "sha256": "43094dec618ecf35585760f5c3a3f9e419fcae8dda36c23d74c324de475298ef",
+        "blocks": 25
+      },
+      "OverlayPack": {
+        "bytes": 262144,
+        "sha256": "918c1e307235e03492418ebdba2b485afd3c40146a42e7a7acff51a82bfb5dab",
+        "blocks": 32
+      },
+      "OverlayDataPack": {
+        "bytes": 262144,
+        "sha256": "95471916e7c43f7a016a96b5b8ded210a3dbc5bb78d875df2adde52800cc5316",
+        "blocks": 32
+      }
+    },
+    "localCells": 15480,
+    "landCounts": {
+      "clear": 13334,
+      "rough": 193,
+      "beach": 183,
+      "water": 1444,
+      "road": 326
+    },
+    "terrainFiles": [
+      "clear01.urb",
+      "pvclr01.urb",
+      "shore09.urb",
+      "shore07.urb",
+      "shore39.urb",
+      "water02.urb",
+      "water01.urb",
+      "shore15.urb",
+      "proad02.urb",
+      "proad01.urb",
+      "shore33.urb",
+      "shore23.urb",
+      "shore17.urb",
+      "shore37.urb",
+      "shore35.urb",
+      "proad03.urb"
+    ],
+    "landFraction": 0.8948966408268734,
+    "buildableFraction": 0.8948966408268734,
+    "connectedFraction": 1,
+    "broadRouteCells": 11270,
+    "minStartSeparation": 40.8166632639171,
+    "nearbyOreBalance": 1,
+    "starts": [
+      {
+        "index": 0,
+        "x": 39,
+        "y": 94,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          25,
+          65,
+          87,
+          95,
+          89,
+          56,
+          50,
+          76,
+          78
+        ]
+      },
+      {
+        "index": 1,
+        "x": 91,
+        "y": 42,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          76,
+          33,
+          60,
+          99,
+          93,
+          83,
+          47,
+          80,
+          82
+        ]
+      },
+      {
+        "index": 2,
+        "x": 126,
+        "y": 63,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          90,
+          49,
+          25,
+          55,
+          88,
+          97,
+          60,
+          78,
+          44
+        ]
+      },
+      {
+        "index": 3,
+        "x": 150,
+        "y": 97,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          89,
+          90,
+          58,
+          28,
+          78,
+          87,
+          72,
+          68,
+          36
+        ]
+      },
+      {
+        "index": 4,
+        "x": 99,
+        "y": 150,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          85,
+          86,
+          83,
+          70,
+          22,
+          54,
+          68,
+          34,
+          62
+        ]
+      },
+      {
+        "index": 5,
+        "x": 62,
+        "y": 129,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          34,
+          77,
+          99,
+          86,
+          36,
+          27,
+          62,
+          44,
+          78
+        ]
+      }
+    ],
+    "structures": [
+      {
+        "id": "0",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 65,
+        "y": 95,
+        "facing": 64
+      },
+      {
+        "id": "1",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 86,
+        "y": 73,
+        "facing": 64
+      },
+      {
+        "id": "2",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 113,
+        "y": 78,
+        "facing": 64
+      },
+      {
+        "id": "3",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 126,
+        "y": 104,
+        "facing": 64
+      },
+      {
+        "id": "4",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 98,
+        "y": 126,
+        "facing": 64
+      },
+      {
+        "id": "5",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 77,
+        "y": 114,
+        "facing": 64
+      },
+      {
+        "id": "6",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 87,
+        "y": 88,
+        "facing": 64
+      },
+      {
+        "id": "7",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 96,
+        "y": 115,
+        "facing": 64
+      },
+      {
+        "id": "8",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 114,
+        "y": 99,
+        "facing": 64
+      }
+    ]
+  },
+  "copperhead-mesa": {
+    "sha256": "266fd314afde7765d7a1225e1a60e784a1c9e93b98e335482f1511e74c215c3e",
+    "reference": {
+      "IsoMapPack5": {
+        "bytes": 201700,
+        "sha256": "2f7b2662b47ceefcf819bf4196d603cc070c16fba6401b895665e150fd7be4df",
+        "blocks": 25
+      },
+      "OverlayPack": {
+        "bytes": 262144,
+        "sha256": "13f7edc9fb2165a24d427281e5e4dd918e0e4c387c2efd0e9b6a3ee57f7a1225",
+        "blocks": 32
+      },
+      "OverlayDataPack": {
+        "bytes": 262144,
+        "sha256": "fed9ba470ad80a38edf99632ce1a3719cc0aebb8d70ac1770c44a8d154aeff7f",
+        "blocks": 32
+      }
+    },
+    "localCells": 15480,
+    "landCounts": {
+      "rough": 13058,
+      "clear": 2422
+    },
+    "terrainFiles": [
+      "green01.tem",
+      "glat13.tem",
+      "glat15.tem",
+      "clear01.tem",
+      "glat10.tem",
+      "glat07.tem",
+      "glat14.tem",
+      "glat12.tem",
+      "glat08.tem",
+      "dlat12.tem",
+      "dlat08.tem",
+      "dlat04.tem",
+      "sandy01.tem",
+      "pvclr01.tem",
+      "dlat10.tem",
+      "dlat07.tem",
+      "glat03.tem",
+      "glat04.tem",
+      "glat05.tem",
+      "dlat15.tem",
+      "dlat14.tem",
+      "dlat13.tem",
+      "glat02.tem"
+    ],
+    "landFraction": 1,
+    "buildableFraction": 1,
+    "connectedFraction": 1,
+    "broadRouteCells": 12961,
+    "minStartSeparation": 42.190046219457976,
+    "nearbyOreBalance": 1,
+    "starts": [
+      {
+        "index": 0,
+        "x": 39,
+        "y": 94,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          25,
+          79,
+          88,
+          89,
+          88,
+          57,
+          50,
+          76,
+          76
+        ]
+      },
+      {
+        "index": 1,
+        "x": 91,
+        "y": 42,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          76,
+          24,
+          57,
+          89,
+          88,
+          84,
+          46,
+          76,
+          76
+        ]
+      },
+      {
+        "index": 2,
+        "x": 128,
+        "y": 63,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          92,
+          35,
+          26,
+          34,
+          91,
+          100,
+          62,
+          80,
+          42
+        ]
+      },
+      {
+        "index": 3,
+        "x": 150,
+        "y": 99,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          87,
+          86,
+          53,
+          22,
+          77,
+          86,
+          68,
+          66,
+          34
+        ]
+      },
+      {
+        "index": 4,
+        "x": 98,
+        "y": 151,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          85,
+          86,
+          86,
+          78,
+          23,
+          53,
+          68,
+          34,
+          68
+        ]
+      },
+      {
+        "index": 5,
+        "x": 61,
+        "y": 130,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          36,
+          93,
+          102,
+          94,
+          37,
+          28,
+          64,
+          46,
+          84
+        ]
+      }
+    ],
+    "structures": [
+      {
+        "id": "0",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 65,
+        "y": 95,
+        "facing": 64
+      },
+      {
+        "id": "1",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 93,
+        "y": 66,
+        "facing": 64
+      },
+      {
+        "id": "2",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 114,
+        "y": 78,
+        "facing": 64
+      },
+      {
+        "id": "3",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 126,
+        "y": 98,
+        "facing": 64
+      },
+      {
+        "id": "4",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 97,
+        "y": 126,
+        "facing": 64
+      },
+      {
+        "id": "5",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 77,
+        "y": 115,
+        "facing": 64
+      },
+      {
+        "id": "6",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 87,
+        "y": 88,
+        "facing": 64
+      },
+      {
+        "id": "7",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 96,
+        "y": 115,
+        "facing": 64
+      },
+      {
+        "id": "8",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 115,
+        "y": 96,
+        "facing": 64
+      }
+    ]
+  },
+  "whiteout-causeway": {
+    "sha256": "0457da0cd91be1fbf7133a044e5c5f1cff0866726143aea0dc6aa12e09a51edc",
+    "reference": {
+      "IsoMapPack5": {
+        "bytes": 201700,
+        "sha256": "65110469d980c5d1d0be96630e747927e916372cbbaaef3de385c0a0738d3e31",
+        "blocks": 25
+      },
+      "OverlayPack": {
+        "bytes": 262144,
+        "sha256": "a1fe5c1dcb4df7dc2b190b940dcd8625df1fe3faf6a87de4e030de1a392a600a",
+        "blocks": 32
+      },
+      "OverlayDataPack": {
+        "bytes": 262144,
+        "sha256": "cb6e06b50b6f59aac17e656660e6c22eb86bfa90670cb1fda81a248e9adea42b",
+        "blocks": 32
+      }
+    },
+    "localCells": 15480,
+    "landCounts": {
+      "rough": 3049,
+      "clear": 9979,
+      "road": 729,
+      "beach": 160,
+      "water": 1563
+    },
+    "terrainFiles": [
+      "green01.sno",
+      "glat08.sno",
+      "clear01.sno",
+      "glat12.sno",
+      "glat07.sno",
+      "glat10.sno",
+      "glat15.sno",
+      "glat14.sno",
+      "glat13.sno",
+      "pvclr01.sno",
+      "shore33.sno",
+      "shore07.sno",
+      "water01.sno",
+      "shore01.sno",
+      "shore09.sno",
+      "water02.sno",
+      "shore39.sno",
+      "shore35.sno",
+      "glat04.sno",
+      "shore31.sno",
+      "shore15.sno",
+      "shore17.sno",
+      "dlat12.sno",
+      "dlat04.sno",
+      "dlat08.sno",
+      "sandy01.sno",
+      "dlat15.sno",
+      "dlat14.sno",
+      "dlat07.sno",
+      "dlat10.sno",
+      "shore25.sno",
+      "dlat13.sno",
+      "shore23.sno",
+      "shore37.sno"
+    ],
+    "landFraction": 0.8886950904392765,
+    "buildableFraction": 0.8886950904392765,
+    "connectedFraction": 1,
+    "broadRouteCells": 10995,
+    "minStartSeparation": 41.88078318274385,
+    "nearbyOreBalance": 1,
+    "starts": [
+      {
+        "index": 0,
+        "x": 39,
+        "y": 94,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          29,
+          74,
+          61,
+          92,
+          93,
+          56,
+          50,
+          81,
+          80
+        ]
+      },
+      {
+        "index": 1,
+        "x": 92,
+        "y": 41,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          71,
+          26,
+          56,
+          92,
+          93,
+          58,
+          48,
+          81,
+          80
+        ]
+      },
+      {
+        "index": 2,
+        "x": 128,
+        "y": 63,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          97,
+          52,
+          76,
+          49,
+          100,
+          83,
+          74,
+          89,
+          58
+        ]
+      },
+      {
+        "index": 3,
+        "x": 150,
+        "y": 99,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          92,
+          91,
+          54,
+          23,
+          74,
+          57,
+          68,
+          63,
+          32
+        ]
+      },
+      {
+        "index": 4,
+        "x": 97,
+        "y": 152,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          92,
+          91,
+          61,
+          77,
+          26,
+          54,
+          68,
+          35,
+          66
+        ]
+      },
+      {
+        "index": 5,
+        "x": 62,
+        "y": 129,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          51,
+          96,
+          83,
+          99,
+          48,
+          76,
+          72,
+          57,
+          88
+        ]
+      }
+    ],
+    "structures": [
+      {
+        "id": "0",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 65,
+        "y": 88,
+        "facing": 64
+      },
+      {
+        "id": "1",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 88,
+        "y": 66,
+        "facing": 64
+      },
+      {
+        "id": "2",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 100,
+        "y": 91,
+        "facing": 64
+      },
+      {
+        "id": "3",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 126,
+        "y": 101,
+        "facing": 64
+      },
+      {
+        "id": "4",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 101,
+        "y": 127,
+        "facing": 64
+      },
+      {
+        "id": "5",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 91,
+        "y": 100,
+        "facing": 64
+      },
+      {
+        "id": "6",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 87,
+        "y": 88,
+        "facing": 64
+      },
+      {
+        "id": "7",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 100,
+        "y": 116,
+        "facing": 64
+      },
+      {
+        "id": "8",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 115,
+        "y": 100,
+        "facing": 64
+      }
+    ]
+  },
+  "tidal-crown": {
+    "sha256": "6f15b2fb2bc8693170c381b3569924efa83432943190830bda5c2272274cd43a",
+    "reference": {
+      "IsoMapPack5": {
+        "bytes": 201700,
+        "sha256": "aceb7ed0cf4ad5b8fbdefa9b4cb3e78a7281db879d91aaf70850e3d9fb95cb0f",
+        "blocks": 25
+      },
+      "OverlayPack": {
+        "bytes": 262144,
+        "sha256": "bdbdd30b1429b8bfbcd9ceb183d144cac6d34b17e82c7510a08c819564c5818e",
+        "blocks": 32
+      },
+      "OverlayDataPack": {
+        "bytes": 262144,
+        "sha256": "21c9ffcd730a8a05a42adefdd764e457a9725b8b04e56cb28d818c0590cc97ee",
+        "blocks": 32
+      }
+    },
+    "localCells": 15480,
+    "landCounts": {
+      "clear": 12186,
+      "rough": 398,
+      "road": 1875,
+      "beach": 91,
+      "water": 930
+    },
+    "terrainFiles": [
+      "green01.urb",
+      "clear01.urb",
+      "glat13.urb",
+      "glat15.urb",
+      "glat14.urb",
+      "pvclr01.urb",
+      "glat07.urb",
+      "glat10.urb",
+      "glat08.urb",
+      "glat12.urb",
+      "proad02.urb",
+      "ruff01.urb",
+      "glat04.urb",
+      "proad01.urb",
+      "proad03.urb",
+      "shore39.urb",
+      "shore01.urb",
+      "shore09.urb",
+      "shore17.urb",
+      "shore35.urb",
+      "water01.urb",
+      "water02.urb",
+      "shore15.urb",
+      "shore31.urb",
+      "shore33.urb",
+      "shore25.urb",
+      "shore37.urb"
+    ],
+    "landFraction": 0.9340439276485788,
+    "buildableFraction": 0.9340439276485788,
+    "connectedFraction": 1,
+    "broadRouteCells": 11450,
+    "minStartSeparation": 38.47076812334269,
+    "nearbyOreBalance": 1,
+    "starts": [
+      {
+        "index": 0,
+        "x": 40,
+        "y": 93,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          24,
+          77,
+          86,
+          86,
+          87,
+          56,
+          48,
+          75,
+          74
+        ]
+      },
+      {
+        "index": 1,
+        "x": 92,
+        "y": 43,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          75,
+          24,
+          53,
+          84,
+          85,
+          83,
+          46,
+          73,
+          72
+        ]
+      },
+      {
+        "index": 2,
+        "x": 126,
+        "y": 61,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          91,
+          35,
+          26,
+          33,
+          92,
+          99,
+          62,
+          81,
+          40
+        ]
+      },
+      {
+        "index": 3,
+        "x": 148,
+        "y": 97,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          82,
+          80,
+          51,
+          20,
+          78,
+          85,
+          64,
+          67,
+          30
+        ]
+      },
+      {
+        "index": 4,
+        "x": 99,
+        "y": 150,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          86,
+          84,
+          84,
+          79,
+          23,
+          54,
+          68,
+          33,
+          68
+        ]
+      },
+      {
+        "index": 5,
+        "x": 61,
+        "y": 128,
+        "nearestOre": 10,
+        "oreCellsWithin20": 78,
+        "oreUnitsWithin20": 936,
+        "neutralDistances": [
+          35,
+          91,
+          100,
+          95,
+          34,
+          27,
+          62,
+          43,
+          84
+        ]
+      }
+    ],
+    "structures": [
+      {
+        "id": "0",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 65,
+        "y": 94,
+        "facing": 64
+      },
+      {
+        "id": "1",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 94,
+        "y": 67,
+        "facing": 64
+      },
+      {
+        "id": "2",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 113,
+        "y": 77,
+        "facing": 64
+      },
+      {
+        "id": "3",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 126,
+        "y": 95,
+        "facing": 64
+      },
+      {
+        "id": "4",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 96,
+        "y": 126,
+        "facing": 64
+      },
+      {
+        "id": "5",
+        "owner": "Neutral",
+        "type": "CAOILD",
+        "health": 256,
+        "x": 77,
+        "y": 114,
+        "facing": 64
+      },
+      {
+        "id": "6",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 87,
+        "y": 88,
+        "facing": 64
+      },
+      {
+        "id": "7",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 95,
+        "y": 115,
+        "facing": 64
+      },
+      {
+        "id": "8",
+        "owner": "Neutral",
+        "type": "CAAIRP",
+        "health": 256,
+        "x": 115,
+        "y": 94,
+        "facing": 64
+      }
+    ]
+  }
+}

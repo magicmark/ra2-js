@@ -1,10 +1,21 @@
 import type { Entity, GameAPI, Tile, UnitDef, Vec2 } from '../game/types';
 import { GL, type Color, type Texture } from './GL';
 import { Camera } from './Camera';
+import type { NativeMap } from '../game/maps/nativeMap';
+import type { NativeCell } from '../game/maps/nativeMap';
+import type { NativeTheater } from '../game/maps/theater';
 const terrainCodes:Record<Tile['terrain'],number>={grass:1,water:2,rock:3,road:4,sand:5};
 
 export interface OriginalSprite { source: CanvasImageSource; width: number; height: number; offsetX?:number; offsetY?:number; anchorX?:number; anchorY?:number }
 export interface SpriteProvider { ready:boolean; getSprite(name:string,frame?:number,side?:number):OriginalSprite|null; getInfantryFrame(name:string,frame:number,side?:number):OriginalSprite|null; getInfantrySequence(name:string,action:string,facing:number,age:number,side?:number,speedIndex?:number):OriginalSprite|null; getAnimationSprite(name:string,age:number,ticksPerFrame?:number):OriginalSprite|null; getAnimationOpacity(name:string):number; getVehicleSprite(name:string,hull:number,turret:number,side?:number):OriginalSprite|null; getBuildingSprite(name:string,time:number,side?:number,speedIndex?:number):OriginalSprite|null; getTerrain(terrain:string,variant?:number):OriginalSprite|null; getOverlay(kind:'ore'|'tree',variant?:number):OriginalSprite|null }
+export interface NativeSpriteProvider extends SpriteProvider {
+  getNativeTerrain(theater:NativeTheater,tileIndex:number,subTile:number):OriginalSprite|null;
+  getNativeOverlay(theater:string,index:number,data?:number):OriginalSprite|null;
+  getNativeStructure(theater:string,type:string):OriginalSprite|null;
+  getNativeDecoration(theater:string,name:string):OriginalSprite|null;
+  getNativeFoundation(type:string):[number,number];
+}
+export interface NativeMapBounds { left:number; top:number; right:number; bottom:number }
 export class Renderer {
   readonly gl: GL;
   readonly camera = new Camera();
@@ -23,7 +34,18 @@ export class Renderer {
   private terrainSource:CanvasImageSource|null=null;
   private terrainHash=0;
   private frame=0;
-  constructor(readonly canvas:HTMLCanvasElement,readonly game:GameAPI){this.gl=new GL(canvas);}
+  private nativeTerrainMap:NativeMap|null=null;
+  private nativeTerrainProvider:SpriteProvider|null=null;
+  private nativeSurfaces:{x:number;y:number;source:HTMLCanvasElement}[]=[];
+  private nativeSurfacePool:HTMLCanvasElement[]=[];
+  private nativeHeights=new Map<string,number>();
+  private nativeCells=new Map<string,NativeCell>();
+  nativeBounds:NativeMapBounds={left:0,top:0,right:1,bottom:1};
+  constructor(readonly canvas:HTMLCanvasElement,private readonly gameSource?:GameAPI){this.gl=new GL(canvas);}
+  get game():GameAPI {
+    if(!this.gameSource)throw new Error('This renderer is a map preview without a running game.');
+    return this.gameSource;
+  }
   private originals():SpriteProvider{
     if(!this.assets?.ready)throw new Error('Original game artwork is not ready. Load complete game files to continue.');
     return this.assets;
@@ -40,6 +62,86 @@ export class Renderer {
     // Every tile shares the same world-to-screen transform. Rounding each
     // origin separately while retaining fractional extents opens tile seams.
     this.gl.sprite(this.texture(sprite.source),x-anchorX*z,y-anchorY*z,sprite.width*z,sprite.height*z,[shade,shade,shade,alpha]);
+  }
+  private nativeAssets():NativeSpriteProvider {
+    const assets=this.originals() as NativeSpriteProvider;
+    if(typeof assets.getNativeTerrain!=='function')throw new Error('Native map artwork is unavailable.');
+    return assets;
+  }
+  /** Native cell centres retain their FinalAlert coordinates and elevation. */
+  nativePoint(x:number,y:number,height=this.nativeHeights.get(`${Math.floor(x)},${Math.floor(y)}`)??0):Vec2 {
+    const p=this.camera.screen(x,y);return{x:p.x,y:p.y-height*15*this.camera.zoom};
+  }
+  private prepareNativeTerrain(map:NativeMap) {
+    const assets=this.nativeAssets();
+    if(this.nativeTerrainMap===map&&this.nativeTerrainProvider===assets)return;
+    this.nativeTerrainMap=null;this.nativeHeights.clear();this.nativeCells.clear();
+    const byChunk=new Map<string,{x:number;y:number;items:{sprite:OriginalSprite;x:number;y:number}[]}>(),size=512;
+    const bounds:NativeMapBounds={left:Infinity,top:Infinity,right:-Infinity,bottom:-Infinity};
+    const include=(x:number,y:number,w:number,h:number)=>{bounds.left=Math.min(bounds.left,x);bounds.top=Math.min(bounds.top,y);bounds.right=Math.max(bounds.right,x+w);bounds.bottom=Math.max(bounds.bottom,y+h);};
+    for(const cell of [...map.cells].sort((a,b)=>a.x+a.y-b.x-b.y)) {
+      this.nativeHeights.set(`${cell.x},${cell.y}`,cell.height);
+      this.nativeCells.set(`${cell.x},${cell.y}`,cell);
+      const art=this.required(assets.getNativeTerrain(map.theater,cell.tileIndex,cell.subTile),`${map.theater} tile ${cell.tileIndex}:${cell.subTile}`);
+      const p=this.camera.project(cell.x,cell.y),x=p.x-(art.anchorX??30),y=p.y-cell.height*15-(art.anchorY??15);
+      include(x,y,art.width,art.height);
+      for(let cy=Math.floor(y/size);cy<=Math.floor((y+art.height-1)/size);cy++)for(let cx=Math.floor(x/size);cx<=Math.floor((x+art.width-1)/size);cx++) {
+        const key=`${cx},${cy}`;let chunk=byChunk.get(key);if(!chunk){chunk={x:cx*size,y:cy*size,items:[]};byChunk.set(key,chunk);}
+        chunk.items.push({sprite:art,x,y});
+      }
+    }
+    this.nativeSurfaces=[];
+    for(const chunk of byChunk.values()) {
+      const index=this.nativeSurfaces.length,source=this.nativeSurfacePool[index]??document.createElement('canvas');
+      if(!this.nativeSurfacePool[index]){source.width=source.height=size;this.nativeSurfacePool.push(source);}
+      const ctx=source.getContext('2d')!;ctx.clearRect(0,0,size,size);ctx.imageSmoothingEnabled=false;
+      for(const item of chunk.items)ctx.drawImage(item.sprite.source,item.x-chunk.x,item.y-chunk.y);
+      const texture=this.textures.get(source);if(texture)this.gl.updateTexture(texture,source);
+      this.nativeSurfaces.push({x:chunk.x,y:chunk.y,source});
+    }
+    for(const structure of map.structures) {
+      const art=this.required(assets.getNativeStructure(map.theater,structure.type),structure.type),[w,h]=assets.getNativeFoundation(structure.type);
+      const p=this.camera.project(structure.x+(w-1)/2,structure.y+(h-1)/2),height=this.nativeHeights.get(`${structure.x},${structure.y}`)??0;
+      include(p.x-(art.anchorX??art.width/2),p.y-height*15-(art.anchorY??art.height),art.width,art.height);
+    }
+    this.nativeBounds=bounds;this.nativeTerrainMap=map;this.nativeTerrainProvider=assets;
+  }
+  private drawNativeTerrain(map:NativeMap,gameGrid=false) {
+    this.prepareNativeTerrain(map);const c=this.camera,z=c.zoom;
+    for(const chunk of this.nativeSurfaces) {
+      const x=(chunk.x-c.x)*z+c.width/2,y=(chunk.y-c.y+(gameGrid?15:0))*z+c.height/2;
+      if(x+512*z<0||y+512*z<0||x>c.width||y>c.height)continue;
+      this.gl.sprite(this.texture(chunk.source),x,y,512*z,512*z);
+    }
+  }
+  fitNativeMap(map:NativeMap,padding=52) {
+    this.prepareNativeTerrain(map);
+    const rect=this.canvas.getBoundingClientRect(),c=this.camera,b=this.nativeBounds;
+    c.width=rect.width;c.height=rect.height;c.minZoom=.025;c.maxZoom=3;
+    c.zoom=Math.max(c.minZoom,Math.min(c.maxZoom,(rect.width-padding*2)/(b.right-b.left),(rect.height-padding*2)/(b.bottom-b.top)));
+    c.x=(b.left+b.right)/2;c.y=(b.top+b.bottom)/2;
+  }
+  /** Full native battlefield, using the same TMP/SHP sprite pipeline as play. No fog pass. */
+  renderNativeMap(map:NativeMap) {
+    const assets=this.nativeAssets(),rect=this.canvas.getBoundingClientRect(),c=this.camera;
+    if(!rect.width||!rect.height)return;
+    c.width=rect.width;c.height=rect.height;this.gl.begin(c.width,c.height);this.drawNativeTerrain(map);
+    const items:{depth:number;draw:()=>void}[]=[];
+    for(const cell of map.cells)if(cell.overlay!==undefined&&cell.overlay!==255) {
+      const art=this.required(assets.getNativeOverlay(map.theater,cell.overlay,cell.overlayData),`overlay ${cell.overlay}`),p=this.nativePoint(cell.x,cell.y,cell.height);
+      if(p.x<-100||p.x>c.width+100||p.y<-100||p.y>c.height+100)continue;
+      this.drawArt(art,p.x,p.y);
+    }
+    for(const object of map.terrain) {
+      const art=this.required(assets.getNativeDecoration(map.theater,object.type),object.type),p=this.nativePoint(object.x,object.y);
+      items.push({depth:object.x+object.y,draw:()=>this.drawArt(art,p.x,p.y)});
+    }
+    for(const structure of map.structures) {
+      const art=this.required(assets.getNativeStructure(map.theater,structure.type),structure.type),[w,h]=assets.getNativeFoundation(structure.type);
+      const p=this.nativePoint(structure.x+(w-1)/2,structure.y+(h-1)/2,this.nativeHeights.get(`${structure.x},${structure.y}`)??0);
+      items.push({depth:structure.x+structure.y+(w+h)/2,draw:()=>this.drawArt(art,p.x,p.y)});
+    }
+    items.sort((a,b)=>a.depth-b.depth);for(const item of items)item.draw();this.gl.flush();
   }
   visible(entity:Entity){const s=this.game.state;if(entity.side===0)return true;const d=this.game.defs[entity.type];for(let y=Math.floor(entity.y);y<entity.y+d.footprint[1];y++)for(let x=Math.floor(entity.x);x<entity.x+d.footprint[0];x++)if(x>=0&&y>=0&&x<s.width&&y<s.height&&s.fog[y*s.width+x])return true;return false;}
   private visualPosition(entity:Entity):Vec2{const d=this.game.defs[entity.type];if(!entity.previous||d.category==='structures'||d.category==='defenses')return entity;const alpha=Math.max(0,Math.min(1,this.game.interpolation??1));return{x:entity.previous.x+(entity.x-entity.previous.x)*alpha,y:entity.previous.y+(entity.y-entity.previous.y)*alpha};}
@@ -128,6 +230,7 @@ export class Renderer {
     return this.required(assets.getTerrain(tile.terrain,tile.variant),`${tile.terrain} terrain`);
   }
   private drawTerrain(){
+    if(this.game.state.nativeMap){this.drawNativeTerrain(this.game.state.nativeMap,true);return;}
     const s=this.game.state,c=this.camera,assets=this.originals(),terrainSource=this.required(assets.getTerrain('grass',0),'grass terrain').source;
     let hash=s.width*65537+s.height;
     for(const tile of s.tiles)hash=Math.imul(hash^terrainCodes[tile.terrain],16777619)^tile.variant;
@@ -181,12 +284,21 @@ export class Renderer {
       if(!s.explored[i])continue;
       const shade=s.fog[i]?1:.39;
       if(!s.fog[i])this.tileDiamond(x,y,[0,0,0,.61]);
-      if(tile.ore>0)this.drawArt(this.required(assets.getOverlay('ore',tile.variant),'ore'),p.x,p.y,shade);
+      if(tile.ore>0){
+        const native=s.nativeMap,cell=native?this.nativeCells.get(`${x},${y}`):undefined;
+        const sprite=native&&cell?this.nativeAssets().getNativeOverlay(native.theater,cell.overlay,cell.overlayData):assets.getOverlay('ore',tile.variant);
+        this.drawArt(this.required(sprite,'ore'),p.x,p.y-(cell?.height??0)*15*c.zoom,shade);
+      }
     }
     const renderables:{depth:number;draw:()=>void}[]=[];
     for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++){
-      const i=y*s.width+x,t=s.tiles[i];if(!s.explored[i]||t.terrain!=='rock')continue;
+      const i=y*s.width+x,t=s.tiles[i];if(s.nativeMap||!s.explored[i]||t.terrain!=='rock')continue;
       const p=c.screen(x+.5,y+.5);renderables.push({depth:x+y+1,draw:()=>this.drawArt(this.required(assets.getOverlay('tree',t.variant),'tree'),p.x,p.y,s.fog[i]?1:.39)});
+    }
+    if(s.nativeMap)for(const object of s.nativeMap.terrain){
+      const i=object.y*s.width+object.x;if(!s.explored[i])continue;
+      const p=this.nativePoint(object.x+.5,object.y+.5);
+      renderables.push({depth:object.x+object.y+1,draw:()=>this.drawArt(this.required(this.nativeAssets().getNativeDecoration(s.nativeMap!.theater,object.type),object.type),p.x,p.y,s.fog[i]?1:.39)});
     }
     for(const e of s.entities){if(!this.visible(e))continue;const p=this.entityPoint(e);if(p.x<-220||p.x>c.width+220||p.y<-80||p.y>c.height+250)continue;
       const d=this.game.defs[e.type],world=this.visualPosition(e);renderables.push({depth:world.x+world.y+(d.footprint[0]+d.footprint[1])/2,draw:()=>this.drawEntity(e,d,p)});
@@ -225,7 +337,9 @@ export class Renderer {
     const name=e.type==='conyard'&&e.side===1?'conyard_soviet':d.sprite||e.type;
     const assets=this.originals();
     let original:OriginalSprite;
-    if(d.category==='infantry'){
+    if(this.game.state.nativeMap&&/^tech_(oil|airport)$/.test(e.type)){
+      original=this.required(this.nativeAssets().getNativeStructure(this.game.state.nativeMap.theater,e.type==='tech_oil'?'CAOILD':'CAAIRP'),d.name);
+    }else if(d.category==='infantry'){
       const facing=(5-Math.round(heading/(Math.PI*2)*8)+8)%8;
       const action=e.infantryAnimation?.sequence??(e.type==='rocketeer'?(moving?'Fly':'Hover'):e.deployed?'Deployed':moving?'Walk':'Ready');
       const age=e.infantryAnimation?this.game.state.time-e.infantryAnimation.startedAt:e.anim;

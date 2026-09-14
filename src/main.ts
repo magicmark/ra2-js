@@ -6,8 +6,19 @@ import { Controls, detectMobile } from './input/Controls';
 import { UI } from './ui/UI';
 import { AssetManager, DEFAULT_ASSET_URL, HUD_ASSET_FRAMES, DIALOG_ASSET_FRAMES, assetSourceUrl } from './assets/AssetManager';
 import { requestPersistentAssetStorage } from './assets/AssetDownload';
+import { MAP_CATALOG } from './game/maps/catalog';
+import { parseNativeMap, type NativeMap } from './game/maps/nativeMap';
 
-const game=new Game(),audio=new GameAudio(),assets=new AssetManager();
+const requestedMap=new URLSearchParams(location.search).get('map');
+let nativeMap:NativeMap|undefined;
+if(requestedMap){
+  const entry=MAP_CATALOG.find(map=>map.id===requestedMap);
+  if(!entry)throw new Error('This battlefield is not in the map library. Open /admin/ to choose a map.');
+  const response=await fetch(entry.path);
+  if(!response.ok)throw new Error(`Unable to load ${entry.name} (${response.status}). Reload to retry.`);
+  nativeMap=parseNativeMap(await response.text());
+}
+const game=new Game(nativeMap?{map:nativeMap}:{}),audio=new GameAudio(),assets=new AssetManager();
 let renderer:Renderer,controls:Controls;
 let battleStarted=false;
 const SOURCE_STORAGE_KEY='red-alert-command.asset-source';
@@ -33,7 +44,7 @@ const ui=new UI(game,{
   getEffectsVolume:()=>audio.effectsVolume,
   onPreviewSound:()=>audio.acknowledge(),
   onAbort:()=>{
-    battleStarted=false;game.restart();controls.cancelPlacement();controls.setMode('select');renderer.camera.center(16,42);
+    battleStarted=false;game.restart();controls.cancelPlacement();controls.setMode('select');centerStart();
     ui.setLoading(true);progress(assets.status);
   },
   getBindings:()=>controls?.getBindings()??[],
@@ -50,13 +61,14 @@ const ui=new UI(game,{
   onSound:enabled=>{audio.enabled=enabled;if(enabled)audio.acknowledge();},
   onAssetRetry:url=>{void downloadAssets(url);},
   onAssetImport:files=>{void importAssets(files);},
-  onRestart:()=>{game.restart();controls.cancelPlacement();controls.setMode('select');renderer.camera.center(16,42);ui.showToast('New operation started. Good luck, Commander.');},
+  onRestart:()=>{game.restart();controls.cancelPlacement();controls.setMode('select');centerStart();ui.showToast('New operation started. Good luck, Commander.');},
 },{mobile:detectMobile(),assetSource:source});
 
 try{
   renderer=new Renderer(document.querySelector<HTMLCanvasElement>('#game-canvas')!,game);
   controls=new Controls(renderer,game,detectMobile(),{toast:text=>ui.showToast(text),zoom:value=>ui.setZoom(value),mode:value=>ui.setMode(value),cursor:name=>ui.setCursor(name),ack:()=>audio.acknowledge(),enabled:()=>battleStarted&&assets.ready&&!ui.isModalOpen(),category:category=>ui.selectCategory(category),options:()=>ui.openOptions(),briefing:()=>ui.openBriefing()});
   renderer.assets=assets;
+  if(nativeMap)centerStart();
   if(detectMobile())renderer.camera.zoom=.75;
   ui.setZoom(renderer.camera.zoom);
   let last=performance.now(),uiTime=0,eventId=-1,effectTime=0;
@@ -109,7 +121,7 @@ function runAssetOperation(action:()=>Promise<void>){
 function restoreAssets(){
   restoringAssets=true;
   return runAssetOperation(async()=>{
-    try{await assets.initialize({url:source,onProgress:progress});if(assets.status.phase==='ready')installCameos();}
+    try{await assets.initialize({url:source,nativeMaps:!!nativeMap,onProgress:progress});if(assets.status.phase==='ready')installCameos();}
     finally{restoringAssets=false;}
   });
 }
@@ -121,7 +133,7 @@ function downloadAssets(url:string):Promise<void>{
   return runAssetOperation(async()=>{
     void requestPersistentAssetStorage();
     battleStarted=false;ui.setLoading(true);
-    await assets.download({url:source,onProgress:progress});
+    await assets.download({url:source,nativeMaps:!!nativeMap,onProgress:progress});
     if(assets.status.phase==='ready')enterBattle();
   });
 }
@@ -130,7 +142,7 @@ function importAssets(files:File[]):Promise<void>{
   return runAssetOperation(async()=>{
     void requestPersistentAssetStorage();
     battleStarted=false;ui.setLoading(true);
-    await assets.importFiles(files,{url:source,onProgress:progress});
+    await assets.importFiles(files,{url:source,nativeMaps:!!nativeMap,onProgress:progress});
     if(assets.status.phase==='ready')enterBattle();
   });
 }
@@ -140,12 +152,17 @@ function installCameos(){
   ui.setCursors(assets.getCursors());
   game.setAnimationDefinitions(assets.getAnimationDefinitions(),assets.getInfantryAnimationDefinitions());
   for(const def of Object.values(game.defs)){
+    if(def.mapOnly)continue;
     const sprite=assets.getCameo(def.id);
     if(!sprite)throw new Error(`Missing original cameo: ${def.name}. Load complete game files to continue.`);
     const canvas=document.createElement('canvas');canvas.width=sprite.width;canvas.height=sprite.height;canvas.getContext('2d')!.drawImage(sprite.source,0,0);ui.setCameo(def.id,canvas.toDataURL());
   }
   installSidebar();
   ui.setAssetStatus({phase:'ready',detail:assets.status.message,ready:true,progress:1,source,cacheWarning:assets.cacheWarning});
+}
+function centerStart(){
+  const start=nativeMap?.starts.find(start=>start.index===0);
+  renderer.camera.center(start?.x??16,start?.y??42);
 }
 function enterBattle(){
   installCameos();renderer.render();battleStarted=true;
