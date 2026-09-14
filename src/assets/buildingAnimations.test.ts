@@ -1,7 +1,29 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildingLoopFrame, buildingLoops } from './buildingAnimations';
+import { AssetManager } from './AssetManager';
+import { TestCanvas, testShape } from './asset-test-fixtures';
+
+afterEach(() => vi.unstubAllGlobals());
 
 describe('original building idle animation', () => {
+  it('keeps the Soviet construction yard beacon visible above the full-building crane layer', () => {
+    vi.stubGlobal('document', { createElement: () => new TestCanvas() });
+    const assets = new AssetManager(), light = testShape(4), palette = new Uint8Array(768);
+    light[8 + 4 * 24 + 1] = 11;
+    palette[30] = 120; palette[33] = 240;
+    assets.ready = true;
+    Object.assign(assets, {
+      files: new Map([['ngcnst.shp', testShape()], ['ngcnst_a.shp', light], ['ngcnst_b.shp', testShape()], ['ngcnst_c.shp', testShape()]]),
+      unitPalette: palette,
+      buildingLoops: buildingLoops(new TextEncoder().encode('[NACNST_A]\nLoopEnd=2\nLoopCount=-1\nRate=900')),
+    });
+    const first = assets.getBuildingSprite('conyard_soviet', 0, 1)!;
+    const second = assets.getBuildingSprite('conyard_soviet', 1 / 30, 1)!;
+    expect(Array.from((first.source as unknown as TestCanvas).pixels)).toEqual([120, 0, 0, 255]);
+    expect(Array.from((second.source as unknown as TestCanvas).pixels)).toEqual([240, 0, 0, 255]);
+    expect(assets.getBuildingSprite('conyard_soviet', 2 / 30, 1)).toBe(first);
+  });
+
   const art = new TextEncoder().encode(`; [NOT_A_SECTION]
 [GAPILE_A]
 LoopStart=0

@@ -9,7 +9,7 @@ import { assetCache, archiveStageKey, type SavedArchive } from './AssetDownload'
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
-const CURRENT_SELECTED_FILE_COUNT = 748;
+const CURRENT_SELECTED_FILE_COUNT = 762;
 // Fixed historical membership: deriving the old cache by subtracting only the
 // previous update's additions accidentally left hundreds of future map files in it.
 const PRE_NATIVE_NAMES = new Set(readFileSync(new URL('./fixtures/selected-art-pre-native.txt', import.meta.url), 'utf8')
@@ -153,6 +153,26 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('strict loader with actual original 
     }
     expect(await new AssetManager().initialize({ nativeMaps })).toBe('ready');
     expect(network).not.toHaveBeenCalled(); expect(worker).toHaveBeenCalledOnce();
+  }, 60_000);
+
+  it('adds missing urban sale sprites from the saved archive without another download', async () => {
+    await new AssetManager().importFiles([new File(['fixture'], 'ra2.mix')]);
+    const source = '/asset-source', previous = await assetCache<any>(source);
+    const files = previous.files.filter((file: AssetFile) => !/^[gn]u.*mk\.shp$/.test(file.name));
+    expect(files).toHaveLength(748);
+    await assetCache(source, { ...previous, files });
+    await assetCache(archiveStageKey(source, 'mix'), { version: 1, id: 'saved-mixes', saved: 123, files: [{ name: 'ra2.mix', blob: new Blob(['local fixture']) }] } satisfies SavedArchive);
+    worker.mockClear(); network.mockClear();
+    const manager = new AssetManager();
+    expect(await manager.initialize({ nativeMaps: true })).toBe('ready');
+    expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
+    expect((await assetCache<{ files: AssetFile[] }>(source))!.files).toHaveLength(CURRENT_SELECTED_FILE_COUNT);
+    manager.setTheater('URBAN');
+    for (const [name, spec] of Object.entries(CATALOG).filter(([, spec]) => spec.kind === 'building')) {
+      expect(manager.getBuildingSellSprite(name, .5, spec.sprite.startsWith('n') ? 1 : 0), name).not.toBeNull();
+    }
+    expect(await new AssetManager().initialize({ nativeMaps: true })).toBe('ready');
+    expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
   }, 60_000);
 
   it.each(['foundation', 'turret', 'animation'] as const)('rejects missing authored %s files even though the base models exist', async kind => {

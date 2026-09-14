@@ -9,7 +9,7 @@ import { nativeAnimationInterval, nativeAnimationFrame, NATIVE_SPEED_INDEX, read
 import { infantryArt, infantrySequenceFrame, type InfantryArt } from './InfantryAnimation';
 import { buildingSaleFrame } from '../game/buildingSale';
 import type { CustomArt } from './CustomArt';
-import { nativeTileSpec, nativeOverlaySpec, NATIVE_THEATERS, type NativeTheater } from '../game/maps/theater';
+import { nativeTileSpec, nativeOverlaySpec, NATIVE_THEATERS, THEATER_EXTENSION, type NativeTheater } from '../game/maps/theater';
 
 import { AssetDownload, InvalidArchiveError, assetCache, assetCacheKey, assetSourceUrl, selectedAssetCacheKeys, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL, type ArchiveInput, type ArchiveResume, type SavedArchive } from './AssetDownload';
 export { assetCacheKey, assetSourceUrl, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL } from './AssetDownload';
@@ -117,6 +117,7 @@ export class AssetManager {
   private infantry = new Map<string, InfantryArt>();
   private buildingAnchors = new Map<string, number>();
   private nativePalettes = new Map<string, Uint8Array>();
+  private theater: NativeTheater = 'TEMPERATE';
   private pipPalette: Uint8Array = new Uint8Array(768);
   private unitPalette: Uint8Array = new Uint8Array(768);
   private cameoPalette: Uint8Array = new Uint8Array(768);
@@ -379,10 +380,16 @@ export class AssetManager {
     try {
       this.report('decode', 'Decoding original sprites, palettes and vehicle voxels…');
       if (run !== this.run) throw new Error('Asset loading cancelled');
-      this.files = new Map(files.map(f => [f.name.toLowerCase(), f.bytes])); this.shapes.clear(); this.sprites.clear(); this.voxelModels.clear(); this.buildingAnchors.clear(); this.nativePalettes.clear();
+      this.files = new Map(files.map(f => [f.name.toLowerCase(), f.bytes])); this.shapes.clear(); this.sprites.clear(); this.voxelModels.clear(); this.buildingAnchors.clear(); this.nativePalettes.clear(); this.theater = 'TEMPERATE';
       this.missingEnhancements = ['game.fnt', 'mouse.shp', 'mousepal.pal', 'palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'anim.pal', 'tibtre01.tem', 'tree20.tem', 'plat02.tem', 'gapowrmk.shp',
         'side0/sidebar.pal', 'side0/uibkgd.pal', ...DIALOG_SHAPE_FILES.map(name => `side0/${name}.shp`), ...Object.values(DIALOG_PCX_FILES),
         ...EFFECT_ANIMATIONS.map(name => `${name}.shp`)].filter(name => !this.files.has(name));
+      // Earlier selections omitted urban buildup/sale SHPs. Reselect them
+      // from saved MIX archives through the existing optional-art upgrade.
+      for (const spec of Object.values(CATALOG)) if (spec.kind === 'building') {
+        const name = theaterNames(spec.sprite + 'mk', 'URBAN')[0] + '.shp';
+        if (!this.files.has(name)) this.missingEnhancements.push(name);
+      }
       // Native maps extend the selected-art cache. A missing theater causes
       // restore() to reuse the saved MIX stage and select the new files locally.
       // It never invalidates or downloads the original archive on page load.
@@ -483,12 +490,21 @@ export class AssetManager {
   }
   private spec(name: string): AssetSpec | undefined {
     name = name.toLowerCase().replace(/\.(shp|vxl)$/, '');
-    return CATALOG[name] ?? Object.values(CATALOG).find(s => s.sprite === name || s.cameo === name || theaterNames(s.sprite).includes(name));
+    return CATALOG[name] ?? Object.values(CATALOG).find(s => s.sprite === name || s.cameo === name || NATIVE_THEATERS.some(theater => theaterNames(s.sprite, theater).includes(name)));
+  }
+  /** Select gameplay artwork from [Map].Theater, including all building layers. */
+  setTheater(theater: NativeTheater): void {
+    if (theater === this.theater) return;
+    const palette = this.nativePalette(theater, 'unit');
+    this.theater = theater; this.unitPalette = palette;
+    // Rendered sprites and foundation anchors depend on the chosen SHP/palette.
+    // Decoded SHPs remain reusable because they are keyed by actual filename.
+    this.sprites.clear(); this.buildingAnchors.clear();
   }
   private shape(name: string): ShpFile | undefined {
     // Terrain scenery is SHP data with a theater extension, distinct from the
     // TMP terrain templates which also use .tem and are decoded separately.
-    const candidate = theaterNames(name).flatMap(n => [n + '.shp', n + '.tem']).find(n => this.files.has(n)); if (!candidate) return;
+    const candidate = theaterNames(name, this.theater).flatMap(n => [n + '.shp', n + '.' + THEATER_EXTENSION[this.theater]]).find(n => this.files.has(n)); if (!candidate) return;
     let shape = this.shapes.get(candidate);
     if (!shape) { shape = new ShpFile(this.files.get(candidate)!); this.shapes.set(candidate, shape); }
     return shape;
@@ -758,22 +774,21 @@ export class AssetManager {
     const frame = decodeTmp(bytes, subTile), result = sprite(paint(frame, this.nativePalette(theater, 'iso')), 30, 15);
     this.sprites.set(key, result); return result;
   }
-  private nativeShape(theater: string, name: string): ShpFile | undefined {
-    const letter = theater === 'SNOW' ? 's' : theater === 'URBAN' ? 'u' : 't';
-    const extension = theater === 'SNOW' ? 'sno' : theater === 'URBAN' ? 'urb' : 'tem';
+  private nativeShape(theater: NativeTheater, name: string): ShpFile | undefined {
+    const extension = THEATER_EXTENSION[theater];
     name = name.toLowerCase();
-    const variants = /^[cgn]a/.test(name) ? [name[0] + letter + name.slice(2), name[0] + 'g' + name.slice(2), name] : [name];
+    const variants = theaterNames(name, theater);
     const filename = variants.flatMap(value => [`${value}.${extension}`, `${value}.shp`]).find(value => this.files.has(value));
     if (!filename) return;
     let shape = this.shapes.get(filename);
     if (!shape) { shape = new ShpFile(this.requiredFile(filename)); this.shapes.set(filename, shape); }
     return shape;
   }
-  getNativeOverlay(theater: string, index: number, data = 0): Sprite | null {
+  getNativeOverlay(theater: NativeTheater, index: number, data = 0): Sprite | null {
     const spec = nativeOverlaySpec(index);
     return spec ? this.getNativeDecoration(theater, spec.name, data, true) : null;
   }
-  getNativeDecoration(theater: string, name: string, frame = 0, overlay = false): Sprite | null {
+  getNativeDecoration(theater: NativeTheater, name: string, frame = 0, overlay = false): Sprite | null {
     if (!this.ready) return null;
     const key = `native-decoration:${theater}:${name}:${frame}:${overlay}`;
     if (this.sprites.has(key)) return this.sprites.get(key)!;
@@ -796,7 +811,7 @@ export class AssetManager {
     const art = this.art.get(type.toLowerCase()), match = /^(\d+)x(\d+)$/i.exec(art?.foundation ?? '');
     return match ? [Number(match[1]), Number(match[2])] : type.toUpperCase() === 'CAAIRP' ? [3, 3] : [2, 2];
   }
-  getNativeStructure(theater: string, type: string, time = 0, side = -1, speedIndex = NATIVE_SPEED_INDEX): Sprite | null {
+  getNativeStructure(theater: NativeTheater, type: string, time = 0, side = -1, speedIndex = NATIVE_SPEED_INDEX): Sprite | null {
     if (!this.ready) return null;
     type = type.toLowerCase();
     const art = this.art.get(type), shape = this.nativeShape(theater, art?.image ?? type); if (!shape) return null;

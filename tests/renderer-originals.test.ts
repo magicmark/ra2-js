@@ -2,6 +2,9 @@ import { describe, expect, it, vi } from 'vitest';
 import { Renderer, type SpriteProvider } from '../src/render/Renderer';
 import type { GameAPI } from '../src/game/types';
 import type { NativeMap } from '../src/game/maps/nativeMap';
+import { readFileSync } from 'node:fs';
+import { MAP_CATALOG } from '../src/game/maps/catalog';
+import { parseNativeMap } from '../src/game/maps/nativeMap';
 
 vi.mock('../src/render/GL', () => ({ GL: class { begin = vi.fn(); rect = vi.fn(); line = vi.fn(); polygon = vi.fn(); flush = vi.fn(); } }));
 
@@ -12,6 +15,27 @@ function renderer() {
 }
 
 describe('original artwork renderer', () => {
+  it('selects each map file’s FinalAlert theater before requesting gameplay artwork, and resets for training', () => {
+    const view = renderer(), setTheater = vi.fn();
+    view.assets = { ready: true, setTheater } as any;
+    vi.spyOn(view as any, 'drawTerrain').mockImplementation(() => {
+      expect(setTheater).toHaveBeenLastCalledWith(view.game.state.nativeMap?.theater ?? 'TEMPERATE');
+    });
+    vi.spyOn(view as any, 'drawShroud').mockImplementation(() => {});
+    view.render();
+    expect(setTheater).toHaveBeenLastCalledWith('TEMPERATE');
+    for (const entry of MAP_CATALOG) {
+      const map = parseNativeMap(readFileSync(`public${entry.path}`, 'utf8'));
+      expect(map.theater).toBe(entry.theater);
+      view.game.state.nativeMap = { ...map, terrain: [], structures: [] };
+      view.render();
+      expect(setTheater).toHaveBeenLastCalledWith(map.theater);
+    }
+    view.game.state.nativeMap = undefined;
+    view.render();
+    expect(setTheater).toHaveBeenLastCalledWith('TEMPERATE');
+  });
+
   it('renders native preview objects without a Game instance or any fog pass', () => {
     const canvas = { getBoundingClientRect: () => ({ width: 390, height: 650 }) } as HTMLCanvasElement;
     const view = new Renderer(canvas), art = { source: {}, width: 60, height: 30 } as any;
@@ -48,7 +72,7 @@ describe('original artwork renderer', () => {
 
   it('reports missing original terrain instead of drawing a substitute', () => {
     const view = renderer();
-    view.assets = { ready: true, getBuildingHeight: () => 2, getHarvestSprite: () => null, getPipSprite: () => null, getSprite: () => null, getInfantryFrame: () => null, getInfantrySequence: () => null, getAnimationSprite: () => null, getAnimationOpacity: () => 1, getVehicleSprite: () => null, getBuildingSprite: () => null, getTerrain: () => null, getOverlay: () => null } satisfies SpriteProvider;
+    view.assets = { ready: true, setTheater: vi.fn(), getBuildingHeight: () => 2, getHarvestSprite: () => null, getPipSprite: () => null, getSprite: () => null, getInfantryFrame: () => null, getInfantrySequence: () => null, getAnimationSprite: () => null, getAnimationOpacity: () => 1, getVehicleSprite: () => null, getBuildingSprite: () => null, getTerrain: () => null, getOverlay: () => null } satisfies SpriteProvider;
     expect(() => view.render()).toThrow('Missing original artwork: grass terrain');
   });
 
@@ -57,7 +81,7 @@ describe('original artwork renderer', () => {
     view.camera.center(.5, .5);
     view.game.state.tiles[0] = { terrain: 'rock', variant: 0, ore: 50 };
     view.game.state.explored[0] = 1;
-    view.assets = { ready: true, getOverlay: () => art } as any;
+    view.assets = { ready: true, setTheater: vi.fn(), getOverlay: () => art } as any;
     vi.spyOn(view as any, 'drawTerrain').mockImplementation(() => {});
     vi.spyOn(view as any, 'drawShroud').mockImplementation(() => {});
     const draw = vi.spyOn(view as any, 'drawArt').mockImplementation(() => {});
@@ -105,7 +129,7 @@ describe('original artwork renderer', () => {
 
   it('draws the native 18×4 infantry health frame with alternating pips and no corner box', () => {
     const view = renderer(), art = { source: {}, width: 20, height: 30, anchorY: 24 } as any;
-    view.assets = { ready: true, getSprite: () => art, getInfantrySequence: () => art } as any;
+    view.assets = { ready: true, setTheater: vi.fn(), getSprite: () => art, getInfantrySequence: () => art } as any;
     vi.spyOn(view as any, 'drawArt').mockImplementation(() => {});
     const unit = { id: 1, type: 'gi', x: 1, y: 1, facing: 0, side: 0, anim: 0, cooldown: 0, hp: 10, maxHp: 10, path: [], selected: true } as any;
     const def = { category: 'infantry', sprite: 'gi', footprint: [1, 1] } as any;
@@ -118,7 +142,7 @@ describe('original artwork renderer', () => {
   it('passes independently interpolated hull and turret orientations to original voxels', () => {
     const view = renderer(), getVehicleSprite = vi.fn(() => ({ source: {}, width: 1, height: 1 }));
     Object.assign(view.game, { interpolation: .5 });
-    view.assets = { ready: true, getVehicleSprite } as any;
+    view.assets = { ready: true, setTheater: vi.fn(), getVehicleSprite } as any;
     vi.spyOn(view as any, 'drawArt').mockImplementation(() => {});
     const def = { category: 'vehicles', turret: true, sprite: 'mtnk', footprint: [1, 1] } as any;
     const unit = { type: 'grizzly', x: 1, y: 1, facing: Math.PI / 2, previousFacing: 0, turretFacing: Math.PI, previousTurretFacing: Math.PI / 2, side: 0, anim: 0, hp: 10, maxHp: 10, path: [] } as any;
@@ -129,7 +153,7 @@ describe('original artwork renderer', () => {
   it('renders original impact frames from event time and captured interval without substituting generic death art', () => {
     const view=renderer(), art={source:{},width:20,height:16} as any;
     const getAnimationSprite=vi.fn((_name:string,_age:number,_interval?:number)=>art);
-    view.assets={ready:true,getAnimationSprite,getAnimationOpacity:()=>.5} as any;
+    view.assets={ready:true,setTheater:vi.fn(),getAnimationSprite,getAnimationOpacity:()=>.5} as any;
     vi.spyOn(view as any,'drawTerrain').mockImplementation(()=>{});
     vi.spyOn(view as any,'drawShroud').mockImplementation(()=>{});
     const draw=vi.spyOn(view as any,'drawArt').mockImplementation(()=>{});

@@ -1,8 +1,12 @@
 import type { Tile } from './types';
 import type { NativeCell } from './maps/nativeMap';
+import type { NativeTheater } from './maps/theater';
 import { applyLandTransitions, applyShorelines, SHORE_CORNERS } from './maps/terrainTopology';
 
 export const MAP_SIZE = 64;
+// Field Command is generated in code, with the same theater as a native
+// FinalAlert [Map] Theater=TEMPERATE battlefield.
+export const TRAINING_THEATER: NativeTheater = 'TEMPERATE';
 
 function noise(x: number, y: number): number {
   const n = Math.imul(x + 93, 374761393) ^ Math.imul(y + 317, 668265263);
@@ -55,7 +59,7 @@ export function createMap(width = MAP_SIZE, height = MAP_SIZE): Tile[] {
   const cells: NativeCell[] = tiles.map((tile, i) => ({ x: i % width, y: Math.floor(i / width), tileIndex: tile.terrain === 'sand' ? 493 : tile.terrain === 'rock' ? 131 : tile.terrain === 'road' ? 293 + Math.floor(tile.variant / 16) : 0, subTile: tile.terrain === 'road' ? tile.variant % 16 : 0, height: 0, iceGrowth: 0, overlay: 255, overlayData: 0 }));
   const water = new Set(cells.filter(c => tiles[c.y * width + c.x].terrain === 'water').map(c => c.x + 512 * c.y));
   applyShorelines(cells, water, 493);
-  applyLandTransitions(cells, 'TEMPERATE');
+  applyLandTransitions(cells, TRAINING_THEATER);
   for (const cell of cells) {
     const tile = tiles[cell.y * width + cell.x], shore = SHORE_CORNERS[cell.tileIndex];
     if (shore !== undefined || cell.tileIndex === 314) { tile.terrain = cell.tileIndex === 314 || shore & 1 << cell.subTile ? 'water' : 'sand'; tile.ore = 0; }

@@ -2,7 +2,8 @@ export type NativeTheater = 'TEMPERATE' | 'SNOW' | 'URBAN';
 export type NativeTerrainKind = 'clear' | 'grass' | 'rough' | 'sand' | 'pavement' | 'road' | 'water' | 'shore';
 export const NATIVE_THEATERS: readonly NativeTheater[] = ['TEMPERATE', 'SNOW', 'URBAN'];
 export const THEATER_EXTENSION = { TEMPERATE: 'tem', SNOW: 'sno', URBAN: 'urb' } as const;
-export const THEATER_LETTER = { TEMPERATE: 't', SNOW: 's', URBAN: 'u' } as const;
+// NewTheater SHPs use A (Arctic) for snow; .sno is the terrain extension.
+export const THEATER_LETTER = { TEMPERATE: 't', SNOW: 'a', URBAN: 'u' } as const;
 export function nativeDecorationNames(theater: NativeTheater): string[] {
   return [...Array.from({ length: 8 }, (_, i) => `tree${String(i + 1).padStart(2, '0')}`), ...(theater === 'TEMPERATE' ? ['tree20', 'tree21', 'tree22', 'tree23'] : []), 'tibtre01'];
 }

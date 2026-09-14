@@ -1,9 +1,11 @@
-import { nativeTerrainFiles, nativeDecorationNames, NATIVE_THEATERS, THEATER_EXTENSION, THEATER_LETTER } from '../game/maps/theater';
+import { nativeTerrainFiles, nativeDecorationNames, NATIVE_THEATERS, THEATER_EXTENSION, THEATER_LETTER, type NativeTheater } from '../game/maps/theater';
 
 export interface AssetSpec { sprite: string; cameo: string; kind: 'building' | 'infantry' | 'vehicle'; overlays?: string[]; bib?: string; turret?: string; footprint?: [number, number] }
 export const CATALOG: Record<string, AssetSpec> = {
   conyard: { sprite: 'gacnst', cameo: 'mcvicon', kind: 'building', overlays: ['gacnst_a', 'gacnst_b'], footprint: [4, 4] },
-  conyard_soviet: { sprite: 'nacnst', cameo: 'smcvicon', kind: 'building', overlays: ['nacnst_a', 'nacnst_b', 'nacnst_c'], footprint: [4, 4] },
+  // Draw the crane/tower before the beacon: the production SHP includes the
+  // whole building and otherwise paints over NACNST_A's flashing light.
+  conyard_soviet: { sprite: 'nacnst', cameo: 'smcvicon', kind: 'building', overlays: ['nacnst_b', 'nacnst_c', 'nacnst_a'], footprint: [4, 4] },
   power: { sprite: 'gapowr', cameo: 'powricon', kind: 'building', overlays: ['gapowr_a'], footprint: [2, 2] },
   // art.ini also mentions GAREFNL4, but the original archive has no such SHP.
   refinery: { sprite: 'garefn', cameo: 'reficon', kind: 'building', bib: 'garefnbb', overlays: ['garefnl1', 'garefnl2', 'garefnl3'], footprint: [4, 3] },
@@ -28,9 +30,11 @@ export const CATALOG: Record<string, AssetSpec> = {
   flak: { sprite: 'htk', cameo: 'htkicon', kind: 'vehicle' },
   warminer: { sprite: 'harv', cameo: 'harvicon', kind: 'vehicle' },
 };
-export function theaterNames(name: string): string[] {
-  // NewTheater buildings replace their second character with T in temperate.
-  return /^[gn]a/i.test(name) ? [name[0] + 't' + name.slice(2), name, name[0] + 'g' + name.slice(2)] : [name];
+export function theaterNames(name: string, theater: NativeTheater = 'TEMPERATE'): string[] {
+  name = name.toLowerCase();
+  // FinalAlert/RA2 NewTheater: current theater first, then G (generic).
+  // The INI's A name is Arctic artwork, never a fallback on a dry map.
+  return /^[cgn]a/.test(name) ? [name[0] + THEATER_LETTER[theater] + name.slice(2), name[0] + 'g' + name.slice(2)] : [name];
 }
 export const NESTED_MIXES = ['ra2.mix', 'language.mix', 'cache.mix', 'local.mix', 'conquer.mix', 'generic.mix', 'neutral.mix', 'isogen.mix', 'isotemp.mix', 'isosnow.mix', 'isourb.mix', 'temperat.mix', 'snow.mix', 'urban.mix', 'tem.mix', 'sno.mix', 'urb.mix', 'cameo.mix', 'cameomd.mix', 'sidec01.mix', 'sidec02.mix', 'sidec03.mix', 'sidecd01.mix', 'sidecd02.mix'];
 export const EFFECT_ANIMATIONS = ['piffpiff', 's_clsn22', 'xgrysml2', 'htrkpuff', 'twlt070', 's_bang48', 's_brnl58', 's_clsn58', 's_tumu60'];
@@ -50,8 +54,9 @@ export const UI_HASH_FILES = {
 export function wantedFiles(): Set<string> {
   const names = new Set(['palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'unittem.pal', 'unitsno.pal', 'isotem.pal', 'temperat.pal', 'cameo.pal', 'anim.pal', 'voxels.vpl', 'art.ini', 'rules.ini', 'game.fnt', 'mouse.shp', 'mousepal.pal', ...Object.values(DIALOG_PCX_FILES), ...EFFECT_ANIMATIONS.map(name => name + '.shp')]);
   for (const spec of Object.values(CATALOG)) {
-    if (spec.kind === 'building') for (const variant of theaterNames(spec.sprite + 'mk')) names.add(variant + '.shp');
-    for (const name of [spec.sprite, ...(spec.overlays ?? []), ...(spec.bib ? [spec.bib] : []), ...(spec.turret ? [spec.turret] : [])]) for (const variant of theaterNames(name)) {
+    const variants = (name: string) => NATIVE_THEATERS.flatMap(theater => theaterNames(name, theater));
+    if (spec.kind === 'building') for (const variant of variants(spec.sprite + 'mk')) names.add(variant + '.shp');
+    for (const name of [spec.sprite, ...(spec.overlays ?? []), ...(spec.bib ? [spec.bib] : []), ...(spec.turret ? [spec.turret] : [])]) for (const variant of variants(name)) {
       names.add(`${variant}.shp`); names.add(`${variant}.vxl`); names.add(`${variant}.hva`);
       names.add(`${variant}tur.vxl`); names.add(`${variant}tur.hva`); names.add(`${variant}barl.vxl`); names.add(`${variant}barl.hva`);
     }
@@ -66,10 +71,10 @@ export function wantedFiles(): Set<string> {
   for (const name of ['tib01', 'tib02', 'tib03', 'tib04', 'tib05', 'tib06', 'gem01', 'tree01', 'tree02', 'tree03', 'tree04', 'tree05', 'tree06', 'tree07', 'tree08', 'gtree01', 'gtree02', 'explosml', 'explomed', 'explolrg', 's_bang16', 's_bang24', 's_bang34']) { names.add(name + '.shp'); names.add(name + '.tem'); }
   for (const file of nativeTerrainFiles()) names.add(file);
   for (const theater of NATIVE_THEATERS) {
-    const extension = THEATER_EXTENSION[theater], letter = THEATER_LETTER[theater];
+    const extension = THEATER_EXTENSION[theater];
     names.add(`iso${extension}.pal`); names.add(`unit${extension}.pal`);
     for (const name of ['caoild', 'caoild_a', 'caoild_ad', 'caoild_f', 'caairp', 'caairp_a', 'caairp_ad', 'caairp_f'])
-      for (const variant of [name, 'c' + letter + name.slice(2), 'cg' + name.slice(2)]) names.add(variant + '.shp');
+      for (const variant of theaterNames(name, theater)) names.add(variant + '.shp');
     for (const name of nativeDecorationNames(theater)) names.add(`${name}.${extension}`);
     for (let i = 1; i <= 6; i++) names.add(`tib${String(i).padStart(2, '0')}.${extension}`);
     names.add(`gem01.${extension}`);

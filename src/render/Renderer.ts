@@ -4,18 +4,19 @@ import { Camera } from './Camera';
 import type { NativeMap } from '../game/maps/nativeMap';
 import type { NativeCell } from '../game/maps/nativeMap';
 import { nativeTileSpec, type NativeTheater } from '../game/maps/theater';
+import { TRAINING_THEATER } from '../game/map';
 import { oreMineFrame } from '../game/oreMines';
 import { placementCells } from '../game/placement';
 import { INSPECTION_RULES } from '../game/customUnits';
 const terrainCodes:Record<Tile['terrain'],number>={grass:1,water:2,rock:3,road:4,sand:5};
 
 export interface OriginalSprite { source: CanvasImageSource; width: number; height: number; offsetX?:number; offsetY?:number; anchorX?:number; anchorY?:number }
-export interface SpriteProvider { ready:boolean; getBuildingHeight(name:string):number; getHarvestSprite(facing:number,time:number):OriginalSprite|null; getPipSprite(kind:'veteran'|'elite'|'cargo-empty'|'cargo-ore'|'building-empty'|'building-green'|'building-yellow'|'building-red'):OriginalSprite|null; getSprite(name:string,frame?:number,side?:number):OriginalSprite|null; getInfantryFrame(name:string,frame:number,side?:number):OriginalSprite|null; getInfantrySequence(name:string,action:string,facing:number,age:number,side?:number,speedIndex?:number):OriginalSprite|null; getAnimationSprite(name:string,age:number,ticksPerFrame?:number):OriginalSprite|null; getAnimationOpacity(name:string):number; getVehicleSprite(name:string,hull:number,turret:number,side?:number):OriginalSprite|null; getBuildingSprite(name:string,time:number,side?:number,speedIndex?:number):OriginalSprite|null; getBuildingSellSprite?(name:string,progress:number,side?:number):OriginalSprite|null; getTerrain(terrain:string,variant?:number):OriginalSprite|null; getOverlay(kind:'ore'|'tree',variant?:number):OriginalSprite|null }
+export interface SpriteProvider { ready:boolean; setTheater(theater:NativeTheater):void; getBuildingHeight(name:string):number; getHarvestSprite(facing:number,time:number):OriginalSprite|null; getPipSprite(kind:'veteran'|'elite'|'cargo-empty'|'cargo-ore'|'building-empty'|'building-green'|'building-yellow'|'building-red'):OriginalSprite|null; getSprite(name:string,frame?:number,side?:number):OriginalSprite|null; getInfantryFrame(name:string,frame:number,side?:number):OriginalSprite|null; getInfantrySequence(name:string,action:string,facing:number,age:number,side?:number,speedIndex?:number):OriginalSprite|null; getAnimationSprite(name:string,age:number,ticksPerFrame?:number):OriginalSprite|null; getAnimationOpacity(name:string):number; getVehicleSprite(name:string,hull:number,turret:number,side?:number):OriginalSprite|null; getBuildingSprite(name:string,time:number,side?:number,speedIndex?:number):OriginalSprite|null; getBuildingSellSprite?(name:string,progress:number,side?:number):OriginalSprite|null; getTerrain(terrain:string,variant?:number):OriginalSprite|null; getOverlay(kind:'ore'|'tree',variant?:number):OriginalSprite|null }
 export interface NativeSpriteProvider extends SpriteProvider {
   getNativeTerrain(theater:NativeTheater,tileIndex:number,subTile:number):OriginalSprite|null;
-  getNativeOverlay(theater:string,index:number,data?:number):OriginalSprite|null;
-  getNativeStructure(theater:string,type:string,time?:number,side?:number,speedIndex?:number):OriginalSprite|null;
-  getNativeDecoration(theater:string,name:string,frame?:number):OriginalSprite|null;
+  getNativeOverlay(theater:NativeTheater,index:number,data?:number):OriginalSprite|null;
+  getNativeStructure(theater:NativeTheater,type:string,time?:number,side?:number,speedIndex?:number):OriginalSprite|null;
+  getNativeDecoration(theater:NativeTheater,name:string,frame?:number):OriginalSprite|null;
   getNativeFoundation(type:string):[number,number];
 }
 export interface NativeMapBounds { left:number; top:number; right:number; bottom:number }
@@ -321,6 +322,7 @@ export class Renderer {
   render(){
     const assets=this.originals();
     const rect=this.canvas.getBoundingClientRect(),c=this.camera,s=this.game.state;
+    assets.setTheater(s.nativeMap?.theater??TRAINING_THEATER);
     if(rect.width<=0||rect.height<=0)return;
     c.width=rect.width;c.height=rect.height;this.gl.begin(rect.width,rect.height);this.frame++;
     const corners=[c.world(-200,-200),c.world(c.width+200,-200),c.world(0,c.height+220),c.world(c.width+200,c.height+220)];
