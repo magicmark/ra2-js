@@ -105,6 +105,7 @@ export interface GameAPI {
   orderHarvest(ids: number[], x: number, y: number): void;
   stop(ids: number[]): void;
   enterTransport?(ids: number[], targetId: number): boolean;
+  canEnterTransport?(entity: Entity, transport: Entity): boolean;
   activateSuperweapon?(type: 'chronosphere' | 'weather', destination: Vec2, source?: Vec2, side?: number): boolean;
   sell(id: number): boolean;
   repair(id: number): boolean;

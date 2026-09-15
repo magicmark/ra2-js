@@ -306,6 +306,23 @@ describe('retail keyboard commands', () => {
 
 
 describe('native contextual cursors', () => {
+  it('offers IFV entry only to eligible infantry and clicks board only infantry in a mixed selection', () => {
+    const { game, controls, pointer, pick, click } = fixture();
+    const tank = game.state.entities.find(e => e.type === 'grizzly')!, gi = game.state.entities.find(e => e.type === 'gi')!;
+    const ifv = (game as any).spawn('ifv', 0, gi.x + 1, gi.y) as Entity;
+    pick(ifv); pointer('pointermove', 500, 350);
+    game.select([tank.id]); expect(controls.cursor).toBe('select');
+    click(ifv); game.tick(.1); expect(tank.transportId).toBeUndefined();
+    game.select([gi.id]); expect(controls.cursor).toBe('enter');
+    game.select([tank.id, gi.id]); expect(controls.cursor).toBe('enter');
+    click(ifv); game.tick(.1);
+    expect(ifv.passengers).toEqual([gi]); expect(gi.transportId).toBe(ifv.id); expect(tank.transportId).toBeUndefined();
+    const other = game.state.entities.find(e => e.type === 'gi' && e !== gi)!;
+    game.select([other.id]); expect(controls.cursor).toBe('select');
+    game.deploy([ifv.id]); expect(controls.cursor).toBe('enter');
+    game.select([ifv.id]); expect(controls.cursor).toBe('select');
+    ifv.type = 'transport'; game.select([tank.id]); expect(controls.cursor).toBe('enter');
+  });
   it('tracks selection, modifiers, terrain and real repair/sell eligibility without issuing orders', () => {
     const { game, controls, pointer, camera, pick, callbacks, key } = fixture();
     const tank = game.state.entities.find(e => e.type === 'grizzly')!, gi = game.state.entities.find(e => e.type === 'gi')!, power = game.state.entities.find(e => e.type === 'power')!;

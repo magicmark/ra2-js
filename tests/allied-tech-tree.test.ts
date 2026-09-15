@@ -177,3 +177,29 @@ describe('complete British Allied production tree', () => {
     expect((g as any).weaponFor(ifv).damage).toBe(0);
   });
 });
+
+describe('IFV passenger eligibility', () => {
+  it.each(['grizzly', 'miner', 'mirage_tank', 'harrier', 'destroyer', 'nighthawk', 'ifv', 'power'])('rejects %s without issuing a boarding order', type => {
+    const g = arena(), ifv = spawn(g, 'ifv', 0, 22.5, 42.5), unit = spawn(g, type, 0, 21.5, 42.5);
+    const order = unit.order;
+    expect(g.enterTransport([unit.id], ifv.id)).toBe(false);
+    expect(unit.order).toBe(order); advance(g, .2);
+    expect(unit.transportId).toBeUndefined(); expect(ifv.passengers ?? []).toHaveLength(0);
+  });
+  it.each(['gi', 'engineer', 'spy', 'sniper', 'tanya', 'chrono_legionnaire', 'attack_dog'])('boards and unloads %s', type => {
+    const g = arena(), ifv = spawn(g, 'ifv', 0, 22.5, 42.5), unit = spawn(g, type, 0, 21.5, 42.5);
+    expect(g.enterTransport([unit.id], ifv.id)).toBe(true); advance(g, .2);
+    expect(unit.transportId).toBe(ifv.id); expect(ifv.passengers).toEqual([unit]);
+    g.deploy([ifv.id]); expect(unit.transportId).toBeUndefined(); expect(ifv.passengers).toHaveLength(0);
+  });
+  it('boards only one infantry from a mixed selection and preserves vehicle-capable transports', () => {
+    const g = arena(), ifv = spawn(g, 'ifv', 0, 22.5, 42.5), tank = spawn(g, 'grizzly', 0, 21.5, 42.5);
+    const gi = spawn(g, 'gi', 0, 22.5, 41.5), engineer = spawn(g, 'engineer', 0, 23.5, 42.5);
+    expect(g.enterTransport([tank.id, gi.id, engineer.id], ifv.id)).toBe(true); advance(g, .2);
+    expect(ifv.passengers).toEqual([gi]); expect(tank.transportId).toBeUndefined(); expect(engineer.transportId).toBeUndefined();
+    expect(g.enterTransport([engineer.id], ifv.id)).toBe(false);
+    const transport = spawn(g, 'transport', 0, 20.5, 42.5);
+    expect(g.enterTransport([tank.id], transport.id)).toBe(true); advance(g, .2);
+    expect(tank.transportId).toBe(transport.id);
+  });
+});

@@ -181,7 +181,7 @@ export class Controls {
     if (mobile && alt) return clear ? 'move' : 'move-blocked';
     if (this.engineerRepair(target)) return 'repair';
     if (target && !own && isBuilding(this.game.defs[target.type]) && selected.some(entity => entity.type === 'engineer' || this.game.defs[entity.type].ability === 'spy')) return 'enter';
-    if (target && own && this.game.defs[target.type].passengers && selected.some(e => e.id !== target.id)) return 'enter';
+    if (target && own && selected.some(e => this.game.canEnterTransport?.(e, target))) return 'enter';
     if (target && own) return target.selected && this.game.defs[target.type].deployedRange !== undefined ? 'deploy' : 'select';
     if (target && selected.length && !own && armed) return 'attack';
     return mobile ? clear ? 'move' : 'move-blocked' : 'default';

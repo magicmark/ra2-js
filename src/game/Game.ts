@@ -1223,15 +1223,19 @@ export class Game implements GameAPI {
     yard.constructing = { startedAt: this.state.time, duration: BUILDING_CONSTRUCTION_SECONDS };
     this.rebuildBlocked(); this.updateVision();
   }
+  canEnterTransport(entity: Entity, transport: Entity): boolean {
+    const unit = this.defs[entity.type], def = this.defs[transport.type];
+    if (entity.id === transport.id || entity.side !== transport.side || entity.hp <= 0 || entity.selling || entity.constructing || entity.factoryExit || entity.transportId !== undefined
+      || !this.operational(transport) || !def.passengers || isBuilding(unit) || unit.movement === 'air' || unit.movement === 'water' || unit.passengers || def.infantryOnly && unit.category !== 'infantry') return false;
+    const load = (transport.passengers ?? []).reduce((n, p) => n + (this.defs[p.type].size ?? 1), 0);
+    return load + (unit.size ?? 1) <= def.passengers;
+  }
   enterTransport(ids: number[], targetId: number): boolean {
     const transport = this.state.entities.find(e => e.id === targetId && e.side === 0 && this.operational(e));
     if (!transport || !this.defs[transport.type].passengers) return false;
-    const def = this.defs[transport.type]; let assigned = false;
+    let assigned = false;
     for (const entity of this.commandable(ids, 0)) {
-      const unit = this.defs[entity.type];
-      if (entity.id === transport.id || isBuilding(unit) || unit.movement === 'air' || unit.movement === 'water' || unit.passengers || def.infantryOnly && unit.category !== 'infantry') continue;
-      const load = (transport.passengers ?? []).reduce((n, p) => n + (this.defs[p.type].size ?? 1), 0);
-      if (load + (unit.size ?? 1) > def.passengers!) continue;
+      if (!this.canEnterTransport(entity, transport)) continue;
       this.issueMove([entity], transport, false); this.memory(entity).transportTarget = transport.id; assigned = true;
     }
     return assigned;
@@ -1268,13 +1272,9 @@ export class Game implements GameAPI {
     if (def.recharge && this.operational(entity)) entity.recharge = Math.min(def.recharge, (entity.recharge ?? 0) + dt);
     if (memory.transportTarget !== undefined) {
       const transport = this.state.entities.find(e => e.id === memory.transportTarget && e.side === entity.side && this.operational(e));
-      if (!transport) { memory.transportTarget = undefined; return false; }
+      if (!transport || !this.canEnterTransport(entity, transport)) { memory.transportTarget = undefined; return false; }
       if (distance(entity, transport) < 2) {
-        const capacity = this.defs[transport.type].passengers ?? 0;
-        const load = (transport.passengers ?? []).reduce((n, p) => n + (this.defs[p.type].size ?? 1), 0);
-        if (load + (def.size ?? 1) <= capacity) {
-          (transport.passengers ??= []).push(entity); entity.transportId = transport.id; entity.selected = false; entity.path = []; entity.targetId = null;
-        }
+        (transport.passengers ??= []).push(entity); entity.transportId = transport.id; entity.selected = false; entity.path = []; entity.targetId = null;
         memory.transportTarget = undefined; return entity.transportId !== undefined;
       }
       if (!entity.path.length || memory.repath <= 0) {
