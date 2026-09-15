@@ -20,7 +20,7 @@ if(requestedMap){
   if(!response.ok)throw new Error(`Unable to load ${entry.name} (${response.status}). Reload to retry.`);
   nativeMap=parseNativeMap(await response.text());
 }
-const game=new Game(nativeMap?{map:nativeMap}:{}),audio=new GameAudio(),assets=new AssetManager();
+const game=new Game(nativeMap?{map:nativeMap}:{}),assets=new AssetManager(),audio=new GameAudio(()=>assets.getSounds());
 let renderer:Renderer,controls:Controls;
 let battleStarted=false;
 const SOURCE_STORAGE_KEY='red-alert-command.asset-source';
@@ -44,9 +44,9 @@ const ui=new UI(game,{
   getScrollRate:()=>controls?.scrollRate??1,
   onEffectsVolume:value=>{audio.effectsVolume=Math.max(0,Math.min(10,value));},
   getEffectsVolume:()=>audio.effectsVolume,
-  onPreviewSound:()=>audio.acknowledge(),
+  onPreviewSound:()=>audio.preview(),
   onAbort:()=>{
-    battleStarted=false;game.restart();controls.cancelPlacement();controls.setMode('select');centerStart();
+    battleStarted=false;audio.reset();game.restart();controls.cancelPlacement();controls.setMode('select');centerStart();
     ui.setLoading(true);progress(assets.status);
   },
   getBindings:()=>controls?.getBindings()??[],
@@ -64,7 +64,7 @@ const ui=new UI(game,{
   onSound:enabled=>{audio.enabled=enabled;if(enabled)audio.acknowledge();},
   onAssetRetry:url=>{void downloadAssets(url);},
   onAssetImport:files=>{void importAssets(files);},
-  onRestart:()=>{game.restart();controls.cancelPlacement();controls.setMode('select');centerStart();ui.showToast('New operation started. Good luck, Commander.');},
+  onRestart:()=>{audio.reset();game.restart();controls.cancelPlacement();controls.setMode('select');centerStart();ui.showToast('New operation started. Good luck, Commander.');},
 },{mobile:detectMobile(),assetSource:source});
 
 try{
@@ -74,7 +74,8 @@ try{
   if(nativeMap)centerStart();
   if(detectMobile())renderer.camera.zoom=.75;
   ui.setZoom(renderer.camera.zoom);
-  let last=performance.now(),uiTime=0,eventId=-1,effectTime=0;
+  let last=performance.now(),uiTime=0;
+  for(const event of ['pointerdown','keydown'])document.addEventListener(event,()=>audio.unlock(),{capture:true});
   document.addEventListener('visibilitychange',()=>{last=performance.now();});
   const frame=(now:number)=>{
     const dt=Math.max(0,(now-last)/1000);last=now;
@@ -82,14 +83,17 @@ try{
       try{requireOriginals();game.tick(dt);controls.tick(dt);renderer.render();}
       catch(error){handleBattleError(error);}
     }uiTime+=dt;
-    if(uiTime>.1){ui.update();uiTime=0;const event=game.state.events.at(-1);if(battleStarted&&event&&event.id!==eventId){eventId=event.id;if(event.kind==='warning')audio.warning();else if(event.kind==='success')audio.ready();}}
-    if(game.state.time!==effectTime){effectTime=game.state.time;for(const effect of game.state.effects){if(effect.life<effect.maxLife-dt*game.state.speed*1.5)continue;if(effect.kind==='shot')audio.shot();if(effect.kind==='explosion')audio.explosion();}}
+    if(uiTime>.1){ui.update();uiTime=0;if(battleStarted&&!document.hidden&&!ui.isModalOpen())audio.notifications(game.state.events);}
+    if(battleStarted&&!document.hidden&&!ui.isModalOpen())audio.effects(game.state.effects,effect=>{
+      const x=Math.floor(effect.x),y=Math.floor(effect.y),p=renderer.camera.screen(effect.x,effect.y);
+      return x>=0&&y>=0&&x<game.state.width&&y<game.state.height&&!!game.state.fog[y*game.state.width+x]&&p.x>=0&&p.y>=0&&p.x<renderer.camera.width&&p.y<renderer.camera.height;
+    });
     requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);
   // Diagnostics keep actual runtime state and controls accessible for reproducible
   // browser smoke checks and mod development. No hidden game cheats are enabled.
-  Object.assign(window,{__rts:{game,renderer,controls,assets,ui}});
+  Object.assign(window,{__rts:{game,renderer,controls,assets,ui,audio}});
   if(import.meta.env.DEV)void import('./dev/LocalTools').then(({installLocalTools})=>installLocalTools(game,renderer,controls,()=>battleStarted&&assets.ready&&!ui.isModalOpen()));
   ui.setLoading(true);
   void restoreAssets();

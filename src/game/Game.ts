@@ -546,13 +546,13 @@ export class Game implements GameAPI {
         item.progress = 1;
         if (isBuilding(def)) {
           item.ready = true;
-          if (side.id === 0) this.notify(`${def.name} ready. Choose a location in your base.`, 'success');
+          if (side.id === 0) this.notify(`${def.name} ready. Choose a location in your base.`, 'success', 'EVA_ConstructionComplete');
         } else {
           const unit = this.spawnFrom(producer, item.type);
           if (!unit) continue; // Exit is blocked. Keep the paid unit until a cell opens.
           queue.shift();
           if (producer.rally && !def.harvester) this.issueMove([unit], producer.rally, false);
-          if (side.id === 0) this.notify(`${def.name} ready`, 'success');
+          if (side.id === 0) this.notify(`${def.name} ready`, 'success', 'EVA_UnitReady');
         }
       }
     }
@@ -581,7 +581,7 @@ export class Game implements GameAPI {
       target.promotedAt = this.state.time;
       george.inspection.elapsed = 0;
       target.inspectionProgress = 0;
-      if (target.side === 0) this.notify(`${this.defs[target.type].name} promoted to ${rankName(target)}`, 'success');
+      if (target.side === 0) this.notify(`${this.defs[target.type].name} promoted to ${rankName(target)}`, 'success', 'EVA_UnitPromoted');
       if (target.rank === INSPECTION_RULES.maxRank) {
         george.inspection = undefined; target.inspectedBy = undefined; target.inspectionProgress = undefined;
       }
@@ -1059,7 +1059,7 @@ export class Game implements GameAPI {
     const burst = def.burst ?? 1, nextBurstIndex = (memory.burstIndex ?? 0) + 1;
     entity.cooldown = nextBurstIndex < burst ? this.randomCombatFrames(3, 5) * STEP : fireRate + this.randomCombatFrames(0, 2) * STEP;
     memory.burstIndex = nextBurstIndex % burst;
-    this.state.effects.push({ kind: 'shot', ...this.center(entity), to: { ...to }, life: .16, maxLife: .16, side: entity.side, startedAt: this.state.time, damage });
+    this.state.effects.push({ kind: 'shot', ...this.center(entity), to: { ...to }, life: .16, maxLife: .16, side: entity.side, sourceType: entity.type, passengerType: entity.type === 'ifv' ? entity.passengers?.[0]?.type : undefined, deployed: entity.deployed, airTarget: !!target && this.defs[target.type].movement === 'air', startedAt: this.state.time, damage });
     if (target) {
       this.damageTarget(entity, target, entity.type === 'attack_dog' ? target.maxHp : damage, verses);
       if (def.ability === 'prism') for (const other of this.state.entities.filter(e => e.id !== target.id && e.side !== entity.side && e.side >= 0 && e.hp > 0 && this.canTarget(entity, e) && distance(this.center(e), to) < 2).slice(0, 3)) this.damageTarget(entity, other, damage * .5, verses);
@@ -1382,7 +1382,7 @@ export class Game implements GameAPI {
       const choices = this.defs[entity.type].deathAnimations;
       if (choices?.length) this.addAnimation(choices[this.randomCombatValue() % choices.length], this.center(entity), entity.side, 'explosion');
       else this.state.effects.push({ kind: 'explosion', ...this.center(entity), life: 0.65, maxLife: 0.65, side: entity.side });
-      if (entity.side === 0) this.notify(`${this.defs[entity.type].name} lost`, 'warning');
+      if (entity.side === 0) this.notify(`${this.defs[entity.type].name} lost`, 'warning', isBuilding(this.defs[entity.type]) ? undefined : 'EVA_UnitLost');
     }
     for (const passenger of entity.passengers ?? []) { passenger.hp = 0; this.removeEntity(passenger, false); }
     this.state.entities = this.state.entities.filter(e => e.id !== entity.id);
@@ -1490,7 +1490,7 @@ export class Game implements GameAPI {
     const surviving = this.state.sides.filter(side => !side.defeated);
     if (surviving.length < this.state.sides.length) {
       this.state.winner = surviving[0]?.id ?? 1;
-      this.notify(this.state.winner === 0 ? 'Mission accomplished. Soviet base eliminated.' : 'Mission failed. Your base has been destroyed.', this.state.winner === 0 ? 'success' : 'warning');
+      this.notify(this.state.winner === 0 ? 'Mission accomplished. Soviet base eliminated.' : 'Mission failed. Your base has been destroyed.', this.state.winner === 0 ? 'success' : 'warning', this.state.winner === 0 ? 'EVA_MissionAccomplished' : 'EVA_MissionFailed');
     }
   }
 
@@ -1515,8 +1515,8 @@ export class Game implements GameAPI {
   private constrain(point: Vec2): Vec2 {
     return { x: clamp(point.x, 0, this.state.width - 0.001), y: clamp(point.y, 0, this.state.height - 0.001) };
   }
-  private notify(text: string, kind: 'info' | 'warning' | 'success'): void {
-    this.state.events.push({ id: this.nextEventId++, text, kind, time: this.state.time });
+  private notify(text: string, kind: 'info' | 'warning' | 'success', sound?: string): void {
+    this.state.events.push({ id: this.nextEventId++, text, kind, time: this.state.time, ...(sound ? { sound } : {}) });
     if (this.state.events.length > 40) this.state.events.shift();
   }
   private addOrderEffect(x: number, y: number, side: number): void {

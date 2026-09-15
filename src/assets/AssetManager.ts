@@ -3,6 +3,7 @@ import { decodeHva, decodePalette, decodeTmp, decodeVpl, decodeVxl, ShpFile, typ
 import { RA2_NORMALS } from './voxelNormals';
 import { buildingLoopFrame, buildingLoops, type BuildingLoop } from './buildingAnimations';
 import { NativeFont } from './NativeFont';
+import { prepareSounds, type OriginalSounds } from './AudioBank';
 import { NativeCursors } from './NativeCursor';
 import { decodePcx } from './Pcx';
 import { nativeAnimationInterval, nativeAnimationFrame, NATIVE_SPEED_INDEX, readArtSections, type NativeAnimationDefinition } from './NativeAnimation';
@@ -106,6 +107,8 @@ export class AssetManager {
   private readonly archiveMemory = new Map<string, SavedArchive>();
   readonly diagnostics: string[] = [];
   private files = new Map<string, Uint8Array>();
+  private sounds: OriginalSounds = new Map();
+  getSounds(): OriginalSounds | undefined { return this.ready ? this.sounds : undefined; }
   private font: NativeFont | null = null;
   private cursors: NativeCursors | null = null;
   private shapes = new Map<string, ShpFile>();
@@ -375,7 +378,7 @@ export class AssetManager {
     } catch (error) { throw new Error(`Invalid original sprite ${name}: ${error instanceof Error ? error.message : String(error)}`); }
   }
   private async prepare(files: AssetFile[], run = this.run): Promise<void> {
-    this.ready = false; this.preparingRun = run;
+    this.ready = false; this.preparingRun = run; this.sounds = new Map();
     let validated = false;
     try {
       this.report('decode', 'Decoding original sprites, palettes and vehicle voxels…');
@@ -398,6 +401,7 @@ export class AssetManager {
         const tile = nativeTileSpec(theater, 0); if (tile) this.requiredFile(tile.fileName);
         for (const type of ['caoild', 'caairp']) if (!this.nativeShape(theater, type)) throw new Error(`Missing original native structure: ${theater} ${type}. Import complete game MIX files.`);
       }
+      this.sounds = prepareSounds(this.files);
       this.art = readArtSections(this.requiredFile('art.ini'));
       this.buildingLoops = buildingLoops(this.requiredFile('art.ini'));
       this.effectDefinitions = {};

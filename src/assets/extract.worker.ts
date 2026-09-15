@@ -1,4 +1,5 @@
 import SevenZip from '7z-wasm';
+import { selectAudioFiles } from './AudioBank';
 import wasmUrl from '7z-wasm/7zz.wasm?url';
 import { MixArchive } from './formats';
 import { NESTED_MIXES, UI_FILES, UI_HASH_FILES, wantedFiles } from './catalog';
@@ -69,6 +70,7 @@ worker.onmessage = async ({ data }) => {
         if (bytes) { selected.push({ name, bytes: bytes.slice() }); break; }
       }
     }
+    selected.push(...selectAudioFiles(archives));
     // Side MIXes reuse filenames with different pixels and palettes. Keep the
     // faction namespace; global last-archive-wins would paint Allied chrome red.
     for (const side of [0, 1]) {

@@ -25,7 +25,8 @@ never executed. The supplied 206,530,229-byte installer is NSIS 2 / solid LZMA.
 Only game MIX archives are extracted. Nested MIX indexes, including their RSA
 wrapped Blowfish keys, are decoded in the worker. The selected original
 SHP, VXL, HVA, TMP, palette and art files are saved to IndexedDB alongside the
-reusable original archive stages. Unrelated movie/audio files are not extracted.
+reusable original archive stages. Unrelated movies and music are not selected. Consumed effects and EVA speech
+are selected from the original audio MIX bank; see [original audio](../../docs/ORIGINAL_AUDIO.md).
 
 The browser fetches the displayed public URL directly, with no Vite proxy.
 `ORIGINAL_ASSET_URL` in `AssetDownload.ts` (also re-exported by `AssetManager.ts`)
@@ -50,7 +51,8 @@ menu pressed frames and scroll enabled, pressed and disabled frames. Missing or 
 consumed files fail validation with their names. Unused movies, soundtracks,
 snow artwork and nonexistent optional vehicle parts are not required. Original
 filename aliases and multipart composition remain supported; generated artwork
-and substitute palettes/material lighting are absent.
+and substitute palettes/material lighting are absent. Consumed original sound
+definitions and samples also validate before the game becomes ready.
 
 The animation/Options catalog contains 265 files. It also validates nine ground
 impact/vehicle-death SHPs against `anim.pal`, the consumed infantry sequences
@@ -82,6 +84,8 @@ storage removes them. No archive bytes are bundled with the application.
 
 ## Renderer API
 
+- `getSounds()` supplies the decoded original effect/EVA bank only after asset
+  validation succeeds. Samples preserve authored variants and volume.
 - `getSprite(idOrOriginalFilename, frame = 0, side = 0)` returns original art as a
   synchronous canvas sprite after initialization. Building layers are composited;
   infantry uses SHP animation sequences; vehicles combine hull, turret and barrel

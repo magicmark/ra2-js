@@ -1,3 +1,6 @@
+import { EFFECT_SOUNDS, EVA_SOUNDS } from './AudioBank';
+import { audioBagWave } from './AudioSample';
+
 /** Minimal pixel surface for exercising original decoders without a browser. */
 export class TestCanvas {
   width = 1;
@@ -58,4 +61,14 @@ export function testCursorShape(frameCount = 450): Uint8Array {
     data.setUint16(10 + frame * 24, 9, true);
   }
   return bytes;
+}
+
+/** Small original-format fixture shared by strict cache/loader tests. */
+export function testAudioFiles() {
+  const bytes = new Uint8Array([0, 0, 0, 64, 0, 192, 0, 0]);
+  return [
+    { name: 'sound.ini', bytes: new TextEncoder().encode(EFFECT_SOUNDS.map(name => `[${name}]\nSounds=fixture\nVolume=60`).join('\n')) },
+    { name: 'eva.ini', bytes: new TextEncoder().encode(EVA_SOUNDS.map(name => `[${name}]\nAllied=fixture`).join('\n')) },
+    { name: 'audio/fixture.wav', bytes: audioBagWave({name:'fixture',offset:0,size:bytes.length,sampleRate:22050,flags:6,chunkSize:0}, bytes) },
+  ];
 }

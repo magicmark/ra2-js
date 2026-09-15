@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 const harness = vi.hoisted(() => ({ assets: {} as any, game: {} as any, renderer: {} as any, actions: {} as any, status: {} as any, customArt: vi.fn(), loading: true, modal: false, runtimeError: '', frame: (_now: number) => {}, visibility: () => {} }));
 vi.mock('../src/assets/CustomArt', () => ({ CustomArt: { load: harness.customArt } }));
 vi.mock('../src/game/Game', () => ({ Game: class { constructor() { return harness.game; } } }));
-vi.mock('../src/game/Audio', () => ({ GameAudio: class {} }));
+vi.mock('../src/game/Audio', () => ({ GameAudio: class { unlock() {} reset() {} notifications() {} effects() {} } }));
 vi.mock('../src/render/Renderer', () => ({ Renderer: class { constructor() { return harness.renderer; } } }));
 vi.mock('../src/input/Controls', () => ({ detectMobile: () => false, Controls: class { tick() {} cancelPlacement() {} setMode() {} } }));
 vi.mock('../src/dev/LocalTools', () => ({ installLocalTools: vi.fn() }));

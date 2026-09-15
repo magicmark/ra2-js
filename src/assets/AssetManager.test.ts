@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AssetManager, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL, assetCacheKey, assetSourceUrl, HUD_ASSET_FRAMES, REQUIRED_TERRAIN } from './AssetManager';
 
 import { assetCache, archiveStageKey, LEGACY_ASSET_URL, type SavedArchive } from './AssetDownload';
-import { TestCanvas, testShape, testFont, testCursorShape, testPcx } from './asset-test-fixtures';
+import { TestCanvas, testShape, testFont, testCursorShape, testPcx, testAudioFiles } from './asset-test-fixtures';
 import { DIALOG_PCX_FILES, DIALOG_SHAPE_FILES, EFFECT_ANIMATIONS } from './catalog';
 
 // Keep the persistence tests small while exercising real palette/SHP/TMP
@@ -33,6 +33,7 @@ function files(): AssetFile[] {
   const vpl = new Uint8Array(784 + 8192); new DataView(vpl.buffer).setUint32(8, 32, true);
   for (let i = 784; i < vpl.length; i++) vpl[i] = (i - 784) % 256;
   return [
+    ...testAudioFiles(),
     ...['palette.pal', 'unittem.pal', 'cameo.pal', 'isotem.pal', 'temperat.pal', 'anim.pal', 'side0/sidebar.pal', 'side0/uibkgd.pal'].map(name => ({ name, bytes: palette.slice() })),
     { name: 'art.ini', bytes: new TextEncoder().encode('[gi]\nCameo=giicon\nSequence=GISequence\nFireUp=2\n[GISequence]\nReady=0,1,1\nWalk=8,6,6\nFireUp=164,6,6\nDeploy=300,15,0\nDeployed=292,1,1\nDeployedFire=315,6,6\nUndeploy=276,2,2') },
     { name: 'game.fnt', bytes: testFont() },
@@ -108,6 +109,29 @@ beforeEach(() => {
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 describe('durable extracted asset cache', () => {
+  it('reselects missing original sounds from saved MIX files without downloading or rejecting archives', async () => {
+    await new AssetManager().download();
+    const saved = (await entry())!, key = archiveStageKey('/asset-source', 'mix');
+    const archive = await assetCache<SavedArchive>(key);
+    await entry('/asset-source', { ...saved, files: saved.files.filter(file => !file.name.startsWith('audio/')) });
+    download.mockClear(); makeWorker.mockClear();
+    const manager = new AssetManager(); expect(await manager.initialize()).toBe('ready');
+    expect(manager.getSounds()?.get('MenuClick')?.samples[0].sampleRate).toBe(22050);
+    expect(download).not.toHaveBeenCalled(); expect(makeWorker).toHaveBeenCalledOnce();
+    expect((await assetCache<SavedArchive>(key))?.id).toBe(archive?.id);
+    expect((await assetCache<SavedArchive>(key))?.rejected).toBeUndefined();
+  });
+
+  it('asks for an explicit source when an old artwork-only cache has no sound or reusable archive', async () => {
+    const old = { version: 8, files: files().filter(file => !file.name.startsWith('audio/')), saved: 1 };
+    await entry('/asset-source', old);
+    const manager = new AssetManager(); expect(await manager.initialize()).toBe('invalid');
+    expect(manager.ready).toBe(false); expect(manager.getSounds()).toBeUndefined();
+    expect(manager.status.phase).toBe('awaiting-source'); expect(manager.status.message).toContain('sound');
+    expect(download).not.toHaveBeenCalled(); expect(makeWorker).not.toHaveBeenCalled();
+    expectEntry(await entry(), old);
+  });
+
   it('continues immediately with already validated same-source artwork without re-reading storage or decoding', async () => {
     const manager = new AssetManager(); await manager.download();
     const sprite = manager.getSprite('gi'), font = manager.getFont(), phases: string[] = [];
@@ -119,7 +143,7 @@ describe('durable extracted asset cache', () => {
     expect(open).not.toHaveBeenCalled(); expect(download).not.toHaveBeenCalled(); expect(makeWorker).not.toHaveBeenCalled();
   });
 
-  it('starts the 126-file artwork-only legacy cache without fonts or new optional art, archives, or a download', async () => {
+  it('starts legacy artwork with its sound bank without fonts, optional art, archives, or a download', async () => {
     const optional = new Set(['game.fnt', 'mouse.shp', 'mousepal.pal', 'palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'anim.pal', 'side0/uibkgd.pal',
       ...DIALOG_SHAPE_FILES.map(name => `side0/${name}.shp`), ...Object.values(DIALOG_PCX_FILES), ...EFFECT_ANIMATIONS.map(name => `${name}.shp`)]);
     const savedFiles = files().filter(file => !optional.has(file.name));

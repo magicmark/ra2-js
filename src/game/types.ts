@@ -58,9 +58,10 @@ export interface AnimationDefinition { frames: number; ticksPerFrame: number; no
 export interface InfantryAnimationDefinition { sequences: Record<string, AnimationDefinition>; fireFrame: number; idleFrequency?: number }
 export interface Effect extends Vec2 {
   kind: 'shot' | 'impact' | 'explosion' | 'order' | 'smoke'; life: number; maxLife: number; to?: Vec2; side?: number;
+  sourceType?: string; passengerType?: string; deployed?: boolean; airTarget?: boolean;
   animation?: string; animationTicksPerFrame?: number; startedAt?: number; damage?: number;
 }
-export interface GameEvent { id: number; text: string; kind: 'info' | 'warning' | 'success'; time: number }
+export interface GameEvent { id: number; text: string; kind: 'info' | 'warning' | 'success'; time: number; sound?: string }
 export interface GameState {
   nativeMap?: NativeMap;
   oreMines?: OreMine[];

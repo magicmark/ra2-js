@@ -1,3 +1,4 @@
+import { selectAudioFiles } from './AudioBank';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { IDBFactory } from 'fake-indexeddb';
@@ -9,7 +10,8 @@ import { assetCache, archiveStageKey, type SavedArchive } from './AssetDownload'
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
-const CURRENT_SELECTED_FILE_COUNT = 901;
+// Existing 901 artwork files, two INIs and 70 consumed original audio samples.
+const CURRENT_SELECTED_FILE_COUNT = 973;
 // Fixed historical membership: deriving the old cache by subtracting only the
 // previous update's additions accidentally left hundreds of future map files in it.
 const PRE_NATIVE_NAMES = new Set(readFileSync(new URL('./fixtures/selected-art-pre-native.txt', import.meta.url), 'utf8')
@@ -39,6 +41,7 @@ describe.skipIf(!process.env.RA2_ASSET_DIR && !process.env.RA2_SELECTED_ART)('st
       const bytes = [...archives].reverse().map(archive => archive.get(name)).find(Boolean);
       if (bytes) originals.push({ name, bytes: bytes.slice() });
     }
+    originals.push(...selectAudioFiles(archives));
     for (const side of [0, 1]) {
       const archive = archives.find(archive => archive.name.endsWith(`sidec0${side + 1}.mix`))!;
       for (const name of UI_FILES) { const bytes = archive.get(name); if (bytes) originals.push({ name: `side${side}/${name}`, bytes: bytes.slice() }); }

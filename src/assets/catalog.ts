@@ -63,7 +63,7 @@ export function theaterNames(name: string, theater: NativeTheater = 'TEMPERATE')
   // The INI's A name is Arctic artwork, never a fallback on a dry map.
   return /^[cgn]a/.test(name) && !name.endsWith('icon') ? [name[0] + THEATER_LETTER[theater] + name.slice(2), name[0] + 'g' + name.slice(2)] : [name];
 }
-export const NESTED_MIXES = ['ra2.mix', 'language.mix', 'cache.mix', 'local.mix', 'conquer.mix', 'generic.mix', 'neutral.mix', 'isogen.mix', 'isotemp.mix', 'isosnow.mix', 'isourb.mix', 'temperat.mix', 'snow.mix', 'urban.mix', 'tem.mix', 'sno.mix', 'urb.mix', 'cameo.mix', 'cameomd.mix', 'sidec01.mix', 'sidec02.mix', 'sidec03.mix', 'sidecd01.mix', 'sidecd02.mix'];
+export const NESTED_MIXES = ['ra2.mix', 'language.mix', 'audio.mix', 'cache.mix', 'local.mix', 'conquer.mix', 'generic.mix', 'neutral.mix', 'isogen.mix', 'isotemp.mix', 'isosnow.mix', 'isourb.mix', 'temperat.mix', 'snow.mix', 'urban.mix', 'tem.mix', 'sno.mix', 'urb.mix', 'cameo.mix', 'cameomd.mix', 'sidec01.mix', 'sidec02.mix', 'sidec03.mix', 'sidecd01.mix', 'sidecd02.mix'];
 export const EFFECT_ANIMATIONS = ['wclbolt1', 'wclbolt2', 'wclbolt3', 'chronofd', 'chronotg', 'piffpiff', 's_clsn22', 'xgrysml2', 'htrkpuff', 'twlt070', 's_bang48', 's_brnl58', 's_clsn58', 's_tumu60'];
 export const DIALOG_SHAPE_FILES = ['bkgdsm', 'bkgdmd', 'bkgdlg', 'sidebttn'];
 export const DIALOG_PCX_FILES = { 'options-checkbox-on': 'cce_i.pcx', 'options-checkbox-off': 'cue_i.pcx', 'options-slider-thumb': 'trakgrip.pcx' };
@@ -79,7 +79,7 @@ export const UI_HASH_FILES = {
   'command-background.shp': 0x26034352, 'command-left.shp': 0x593cbe20, 'command-right.shp': 0xbc1580c2,
 };
 export function wantedFiles(): Set<string> {
-  const names = new Set(['palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'unittem.pal', 'unitsno.pal', 'isotem.pal', 'temperat.pal', 'cameo.pal', 'anim.pal', 'voxels.vpl', 'art.ini', 'rules.ini', 'game.fnt', 'mouse.shp', 'mousepal.pal', ...Object.values(DIALOG_PCX_FILES), ...EFFECT_ANIMATIONS.map(name => name + '.shp')]);
+  const names = new Set(['palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'unittem.pal', 'unitsno.pal', 'isotem.pal', 'temperat.pal', 'cameo.pal', 'anim.pal', 'voxels.vpl', 'art.ini', 'rules.ini', 'sound.ini', 'eva.ini', 'game.fnt', 'mouse.shp', 'mousepal.pal', ...Object.values(DIALOG_PCX_FILES), ...EFFECT_ANIMATIONS.map(name => name + '.shp')]);
   for (const spec of Object.values(CATALOG)) {
     const variants = (name: string) => NATIVE_THEATERS.flatMap(theater => theaterNames(name, theater));
     if (spec.kind === 'building') for (const variant of variants(spec.sprite + 'mk')) names.add(variant + '.shp');
