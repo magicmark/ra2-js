@@ -2,6 +2,8 @@
 
 A playable Red Alert 2 browser skirmish built with TypeScript, Vite and WebGL, with original artwork, construction, unit movement, ore mining, separate sides, a Soviet opponent, and mobile controls.
 
+https://ra2.larah.lol/
+
 ## Run
 
 Use Node.js 22.12 or newer.
