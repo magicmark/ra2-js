@@ -12,8 +12,8 @@ import { assetCache, archiveStageKey, type SavedArchive } from './AssetDownload'
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
-// Existing artwork/audio, passenger IFV turrets, Sniper voices, and miner warp effects.
-const CURRENT_SELECTED_FILE_COUNT = 1001;
+// Existing artwork/audio plus all twelve retail paved road ends.
+const CURRENT_SELECTED_FILE_COUNT = 1013;
 // Fixed historical membership: deriving the old cache by subtracting only the
 // previous update's additions accidentally left hundreds of future map files in it.
 const PRE_NATIVE_NAMES = new Set(readFileSync(new URL('./fixtures/selected-art-pre-native.txt', import.meta.url), 'utf8')
@@ -176,6 +176,31 @@ describe.skipIf(!process.env.RA2_ASSET_DIR && !process.env.RA2_SELECTED_ART)('st
     expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
     expect(new Set([0, 1, 2, 3].map(variant => manager.getVehicleSprite('ifv', 0, 0, 0, variant))).size).toBe(4);
     expect((await assetCache<{ files: AssetFile[] }>(source))!.files).toHaveLength(CURRENT_SELECTED_FILE_COUNT);
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
+  }, 60_000);
+
+  it('upgrades road ends from saved MIXes and renders every original theater subtile', async () => {
+    await new AssetManager().importFiles([new File(['fixture'], 'ra2.mix')]);
+    const source = '/asset-source', previous = await assetCache<any>(source);
+    await assetCache(source, { ...previous, files: previous.files.filter((file: AssetFile) => !file.name.startsWith('p_end')) });
+    await assetCache(archiveStageKey(source, 'mix'), { version: 1, id: 'saved-mixes', saved: 123, files: [{ name: 'ra2.mix', blob: new Blob(['local fixture']) }] } satisfies SavedArchive);
+    worker.mockClear(); network.mockClear();
+    const manager = new AssetManager(); expect(await manager.initialize()).toBe('ready');
+    for (const theater of ['TEMPERATE', 'SNOW', 'URBAN'] as const) for (let end = 0; end < 4; end++) {
+      const tileIndex = (theater === 'SNOW' ? 430 : 445) + end;
+      for (let subTile = 0; subTile < 3; subTile++) {
+        const sprite = manager.getNativeTerrain(theater, tileIndex, subTile)!;
+        expect(sprite).not.toBeNull();
+        expect((sprite.source as unknown as TestCanvas).pixels.some((v, i) => i % 4 === 3 && v > 0)).toBe(true);
+        if (theater === 'TEMPERATE') {
+          const training = manager.getTerrain(`p_end0${end + 1}`, subTile)!;
+          expect((training.source as unknown as TestCanvas).pixels).toEqual((sprite.source as unknown as TestCanvas).pixels);
+        }
+      }
+      expect(() => manager.getNativeTerrain(theater, tileIndex, 3)).toThrow(/Invalid native subtile/);
+    }
+    expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
     expect(await new AssetManager().initialize()).toBe('ready');
     expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
   }, 60_000);

@@ -12,8 +12,8 @@ type TileRange = readonly [first: number, count: number, prefix: string, kind: N
 // Cumulative TilesInSet indices from the retail temperat.ini, snow.ini, urban.ini.
 // Only original sets used by this authored catalog are requested from MIX archives.
 const common: readonly TileRange[] = [[0, 1, 'clear', 'clear'], [89, 42, 'shore', 'shore'], [131, 1, 'ruff', 'grass'], [132, 16, 'clat', 'grass'], [293, 3, 'proad', 'road'], [314, 14, 'water', 'water']];
-const temperate: readonly TileRange[] = [[418, 1, 'sandy', 'rough'], [419, 16, 'dlat', 'rough'], [463, 16, 'plat', 'pavement'], [493, 1, 'green', 'sand'], [494, 16, 'glat', 'sand'], [534, 1, 'pvclr', 'pavement']];
-const snow: readonly TileRange[] = [[696, 1, 'sandy', 'rough'], [697, 16, 'dlat', 'rough'], [713, 1, 'green', 'sand'], [714, 16, 'glat', 'sand'], [734, 1, 'pvclr', 'pavement'], [749, 16, 'plat', 'pavement']];
+const temperate: readonly TileRange[] = [[418, 1, 'sandy', 'rough'], [419, 16, 'dlat', 'rough'], [445, 4, 'p_end', 'road'], [463, 16, 'plat', 'pavement'], [493, 1, 'green', 'sand'], [494, 16, 'glat', 'sand'], [534, 1, 'pvclr', 'pavement']];
+const snow: readonly TileRange[] = [[430, 4, 'p_end', 'road'], [696, 1, 'sandy', 'rough'], [697, 16, 'dlat', 'rough'], [713, 1, 'green', 'sand'], [714, 16, 'glat', 'sand'], [734, 1, 'pvclr', 'pavement'], [749, 16, 'plat', 'pavement']];
 export function nativeTileSpec(theater: NativeTheater, tileIndex: number): NativeTileSpec | undefined {
   if (tileIndex === 65535 || tileIndex === -1) tileIndex = 0;
   for (const [first, count, prefix, kind] of [...common, ...(theater === 'SNOW' ? snow : temperate)])

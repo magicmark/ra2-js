@@ -128,6 +128,33 @@ merely capped in place. No ending exists to inspect on the five road-free maps.
 
 ## Method, reproduction and limitations
 
+### Endpoint repair verification — ra2-js-aaa (2026-09-15)
+
+The endpoint findings above describe the audit baseline. The generators now place
+13 complete retail caps (39 subtiles), with outward termination directions:
+
+| Map | Centreline endpoints |
+|---|---|
+| Training | (5,30) -x; (58,30) +x; (23,18) -y; (23,54) +y |
+| Ironwood | (60,95) -x; (139,95) +x; (95,52) -y |
+| Slatewater | (59,95) -x; (139,95) +x; (95,53) -y |
+| Tidal | (60,95) -x; (137,95) +x; (95,54) -y |
+
+Each cap and its inward straight template retain all three row-major subtiles.
+Tech-pad entrances remain open. Lake/coast fragments and the isolated southern
+street remain the scope of ra2-js-6lv; the training drill remains ra2-js-cwf.
+Decoded comparisons against 796b412 show exactly nine tile-ID changes in each
+changed native map, with all other cells, metadata and objects unchanged.
+
+`tests/road-ends.test.ts` checks the placements against the retail inventory and
+rejects partial-template placement. The retail loader test checks all 36 cap
+subtiles across three theaters, the separate training lookup, and local cache
+upgrade without network access. Direct retail-TMP crops of all 13 endpoints were
+visually checked against the original join reference above. Validation: 607
+default tests passed; 13 retail-loader tests passed; all three changed maps passed
+independent native acceptance; production build passed. The sandboxed acceptance
+attempts stalled in their Python child; rerunning with subprocess access passed.
+
 Original `ra2.mix`, `language.mix`, and `theme.mix` were imported into Chromium
 through the Map Viewer; AssetManager reported ready with 999 files. The audit used
 the repository renderer and theater palettes, not colored terrain stand-ins.

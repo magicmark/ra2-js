@@ -5,6 +5,7 @@ import { nativeMapCoordinates, nativeDisplayPosition, type NativeMap, type Nativ
 import { nativeTileSpec } from '../src/game/maps/theater.ts';
 import { writeNativeMap } from './nativeMapWriter.ts';
 import { applyLandTransitions, applyShorelines, SHORE_CORNERS } from '../src/game/maps/terrainTopology.ts';
+import { applyRoadEnds } from '../src/game/maps/roadEnds.ts';
 
 const SIZE = 96;
 const hash = (x: number, y: number, seed = 0) => {
@@ -141,6 +142,11 @@ export function authorMap(entry: MapCatalogEntry, seed: number): NativeMap {
     if (hash(c.x, c.y, seed + 20) < density && (seed !== 3 || c.tileIndex === 131)) map.terrain.push({ x: c.x, y: c.y, type: `TREE${String(trees[Math.floor(hash(c.y, c.x, seed) * trees.length)]).padStart(2, '0')}` });
   }
   applyLandTransitions(cells, map.theater);
+  // Outer streets end at the base reserves. Keep tech-pad entrances open;
+  // coastal fragments and the southern clearing are separate topology repairs.
+  if (seed === 3) applyRoadEnds(cells, map.theater, [[60, 95, '-x'], [139, 95, '+x'], [95, 52, '-y']]);
+  if (seed === 4) applyRoadEnds(cells, map.theater, [[59, 95, '-x'], [139, 95, '+x'], [95, 53, '-y']]);
+  if (seed === 7) applyRoadEnds(cells, map.theater, [[60, 95, '-x'], [137, 95, '+x'], [95, 54, '-y']]);
   return map;
 }
 

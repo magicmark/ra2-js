@@ -12,7 +12,7 @@ import { nativeAnimationInterval, nativeAnimationFrame, NATIVE_SPEED_INDEX, read
 import { infantryArt, infantrySequenceFrame, type InfantryArt } from './InfantryAnimation';
 import { buildingSaleFrame } from '../game/buildingSale';
 import type { CustomArt } from './CustomArt';
-import { nativeTileSpec, nativeOverlaySpec, NATIVE_THEATERS, THEATER_EXTENSION, type NativeTheater } from '../game/maps/theater';
+import { nativeTileSpec, nativeOverlaySpec, nativeTerrainFiles, NATIVE_THEATERS, THEATER_EXTENSION, type NativeTheater } from '../game/maps/theater';
 
 import { AssetDownload, InvalidArchiveError, assetCache, assetCacheKey, assetSourceUrl, selectedAssetCacheKeys, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL, type ArchiveInput, type ArchiveResume, type SavedArchive } from './AssetDownload';
 export { assetCacheKey, assetSourceUrl, DEFAULT_ASSET_URL, ORIGINAL_ASSET_URL } from './AssetDownload';
@@ -392,6 +392,7 @@ export class AssetManager {
       if (run !== this.run) throw new Error('Asset loading cancelled');
       this.files = new Map(files.map(f => [f.name.toLowerCase(), f.bytes])); this.shapes.clear(); this.sprites.clear(); this.voxelModels.clear(); this.buildingAnchors.clear(); this.nativePalettes.clear(); this.theater = 'TEMPERATE';
       this.missingEnhancements = ['game.fnt', 'mouse.shp', 'mousepal.pal', 'palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'anim.pal', 'tibtre01.tem', 'tree20.tem', 'plat02.tem', 'gapowrmk.shp',
+        ...nativeTerrainFiles().filter(name => name.startsWith('p_end')),
         'side0/sidebar.pal', 'side0/uibkgd.pal', ...DIALOG_SHAPE_FILES.map(name => `side0/${name}.shp`), ...Object.values(DIALOG_PCX_FILES),
         ...EFFECT_ANIMATIONS.map(name => `${name}.shp`), ...PROJECTILE_SHAPES.map(name => `${name}.shp`), ...IFV_TURRET_FILES].filter(name => !this.files.has(name));
       // Earlier selections omitted urban buildup/sale SHPs. Reselect them
@@ -822,7 +823,7 @@ export class AssetManager {
   }
   getTerrain(terrain: string, variant = 0): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;
-    const names = /^(proad|green|ruff|sandy|glat|clat|shore|dlat|plat|water|pvclr|clear)\d+$/.test(terrain) ? [terrain] : terrain === 'water' ? ['water01', 'water02'] : terrain === 'road' ? ['pave01'] : terrain === 'sand' ? ['green01', 'sand01', 'rough01'] : terrain === 'rock' ? ['ruff01', 'rough01', 'rough02'] : ['clear01'];
+    const names = /^(proad|p_end|green|ruff|sandy|glat|clat|shore|dlat|plat|water|pvclr|clear)\d+$/.test(terrain) ? [terrain] : terrain === 'water' ? ['water01', 'water02'] : terrain === 'road' ? ['pave01'] : terrain === 'sand' ? ['green01', 'sand01', 'rough01'] : terrain === 'rock' ? ['ruff01', 'rough01', 'rough02'] : ['clear01'];
     const available = names.filter(name => this.files.has(name + '.tem'));
     const name = available[terrain === 'sand' || terrain === 'rock' ? 0 : variant % available.length], key = `terrain:${name}:${variant % 16}`;
     if (this.sprites.has(key)) return this.sprites.get(key)!;

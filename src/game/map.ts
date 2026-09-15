@@ -2,6 +2,7 @@ import type { Tile } from './types';
 import type { NativeCell } from './maps/nativeMap';
 import type { NativeTheater } from './maps/theater';
 import { applyLandTransitions, applyShorelines, SHORE_CORNERS } from './maps/terrainTopology';
+import { applyRoadEnds } from './maps/roadEnds';
 
 export const MAP_SIZE = 64;
 // Field Command is generated in code, with the same theater as a native
@@ -60,6 +61,8 @@ export function createMap(width = MAP_SIZE, height = MAP_SIZE): Tile[] {
   const water = new Set(cells.filter(c => tiles[c.y * width + c.x].terrain === 'water').map(c => c.x + 512 * c.y));
   applyShorelines(cells, water, 493);
   applyLandTransitions(cells, TRAINING_THEATER);
+  // The four outer ends are deliberate; lake-side road breaks need topology repair.
+  applyRoadEnds(cells, TRAINING_THEATER, [[5, 30, '-x'], [58, 30, '+x'], [23, 18, '-y'], [23, 54, '+y']]);
   for (const cell of cells) {
     const tile = tiles[cell.y * width + cell.x], shore = SHORE_CORNERS[cell.tileIndex];
     if (shore !== undefined || cell.tileIndex === 314) { tile.terrain = cell.tileIndex === 314 || shore & 1 << cell.subTile ? 'water' : 'sand'; tile.ore = 0; }
