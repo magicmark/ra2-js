@@ -1,4 +1,4 @@
-import './admin.css';
+import './map-viewer.css';
 import { AssetManager, DEFAULT_ASSET_URL, assetSourceUrl, type AssetProgress } from '../assets/AssetManager';
 import { requestPersistentAssetStorage } from '../assets/AssetDownload';
 import { MAP_CATALOG, type MapCatalogEntry } from '../game/maps/catalog';
@@ -10,20 +10,20 @@ const theaterName = (value: string) => value === 'SNOW' ? 'Snow' : value === 'UR
 const SOURCE_KEY = 'red-alert-command.asset-source';
 
 export function startMapViewer() {
-  document.documentElement.classList.add('map-admin');
+  document.documentElement.classList.add('map-viewer');
   let remembered = '';
   try { remembered = localStorage.getItem(SOURCE_KEY) ?? ''; } catch { /* Optional preference. */ }
   let source = assetSourceUrl(new URLSearchParams(location.search).get('asset_url') || remembered || DEFAULT_ASSET_URL);
   const app = document.querySelector<HTMLElement>('#app')!;
   app.innerHTML = `<div class="map-shell">
-    <header class="map-topbar"><a class="map-brand" href="/">RED ALERT <b>II</b></a><span class="map-admin-label">ADMIN / MAP LIBRARY</span><span id="map-preview-title" class="map-preview-title" hidden></span><a class="map-back" id="map-back" href="/">Return to game <span aria-hidden="true">↗</span></a></header>
+    <header class="map-topbar"><a class="map-brand" href="/">RED ALERT <b>II</b></a><span class="map-viewer-label">MAP VIEWER</span><span id="map-preview-title" class="map-preview-title" hidden></span><a class="map-back" id="map-back" href="/">Return to game <span aria-hidden="true">↗</span></a></header>
     <aside class="map-sidebar" aria-label="Map selector"><label class="map-mobile-picker" for="map-mobile-select">Battlefield<select id="map-mobile-select">${MAP_CATALOG.map(entry => `<option value="${entry.id}">${escape(entry.name)}</option>`).join('')}</select></label><div class="map-library-heading"><span class="map-eyebrow">BATTLEFIELDS</span><span class="map-count">${MAP_CATALOG.length.toString().padStart(2, '0')}</span></div><p class="map-library-intro">Medium maps. Six starting positions.</p>
-      <nav class="map-list" aria-label="Choose a map">${MAP_CATALOG.map((entry, index) => `<a class="map-choice" href="/admin/${entry.id}" data-map-id="${entry.id}"><span class="map-number">${(index + 1).toString().padStart(2, '0')}</span><span class="map-choice-copy"><strong>${escape(entry.name)}</strong><small>${theaterName(entry.theater)} <span>·</span> ${entry.size.join(' × ')}</small></span><span class="map-choice-arrow" aria-hidden="true">↗</span></a>`).join('')}</nav>
+      <nav class="map-list" aria-label="Choose a map">${MAP_CATALOG.map((entry, index) => `<a class="map-choice" href="/maps/${entry.id}" data-map-id="${entry.id}"><span class="map-number">${(index + 1).toString().padStart(2, '0')}</span><span class="map-choice-copy"><strong>${escape(entry.name)}</strong><small>${theaterName(entry.theater)} <span>·</span> ${entry.size.join(' × ')}</small></span><span class="map-choice-arrow" aria-hidden="true">↗</span></a>`).join('')}</nav>
       <div class="map-library-footer"><span class="map-visibility-dot"></span><div><strong>Full map visibility</strong><p>Fog and shroud disabled</p></div></div>
     </aside>
     <main class="map-main"><header class="map-heading"><div><p class="map-eyebrow" id="map-kicker">MAP OVERVIEW</p><h1 id="map-title">Map library</h1><p id="map-description">Choose a battlefield from the sidebar.</p></div><a id="map-preview" class="map-primary-link" hidden>Preview map <span aria-hidden="true">↗</span></a></header>
       <div class="map-facts" id="map-facts"></div>
-      <section class="map-stage" aria-label="Full map viewer"><canvas id="admin-map-canvas" tabindex="0" aria-label="Full native map. Drag to pan, scroll or pinch to zoom. Press F to fit the map."></canvas><div id="map-starts" class="map-starts"></div>
+      <section class="map-stage" aria-label="Full map viewer"><canvas id="map-viewer-canvas" tabindex="0" aria-label="Full native map. Drag to pan, scroll or pinch to zoom. Press F to fit the map."></canvas><div id="map-starts" class="map-starts"></div>
         <div class="map-status" id="map-status" role="status" aria-live="polite"><span class="map-spinner"></span><span id="map-status-text">Preparing map library…</span></div>
         <div class="map-error" id="map-error" role="alert" hidden><strong id="map-error-title">Unable to load map</strong><p id="map-error-message"></p><button id="map-retry" class="map-button">Retry map</button></div>
         <section class="map-assets" id="map-assets" aria-labelledby="map-assets-title" hidden><span class="map-eyebrow">ORIGINAL GAME ARTWORK</span><h2 id="map-assets-title">Prepare your map viewer</h2><p id="map-assets-detail">Load the original game files to explore every tile and structure.</p><form id="map-assets-form"><label for="map-asset-url">Game archive URL</label><input id="map-asset-url" type="url" value="${escape(source)}" required spellcheck="false"><button type="submit" class="map-button map-button-primary">Load game files</button></form><label class="map-import">Import local game files<input id="map-asset-files" type="file" multiple accept=".mix,.exe,.zip"></label><small>Use an installer, or ra2.mix and language.mix together. Saved files are shared with the game.</small></section>
@@ -32,9 +32,9 @@ export function startMapViewer() {
       <footer class="map-footer"><span><i class="map-start-symbol">1</i> Player starts <span class="map-footer-divider">/</span> Ore & neutral tech buildings</span><span class="map-control-hint">Drag to pan · Scroll to zoom · F to fit</span><a id="map-download" hidden>Download .map ↓</a></footer>
     </main></div>`;
   const el = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
-  for (const link of app.querySelectorAll<HTMLAnchorElement>('[data-map-id]')) link.href = `/admin/${link.dataset.mapId}${location.search}`;
+  for (const link of app.querySelectorAll<HTMLAnchorElement>('[data-map-id]')) link.href = `/maps/${link.dataset.mapId}${location.search}`;
   // Native preview has no Game instance, game tick, AI, or visibility state.
-  const canvas = el<HTMLCanvasElement>('admin-map-canvas'), assets = new AssetManager(), renderer = new Renderer(canvas);
+  const canvas = el<HTMLCanvasElement>('map-viewer-canvas'), assets = new AssetManager(), renderer = new Renderer(canvas);
   renderer.assets = assets;
   const cache = new Map<string, NativeMap>();
   let selected: MapCatalogEntry | undefined, map: NativeMap | null = null, displayed: NativeMap | null = null;
@@ -97,23 +97,23 @@ export function startMapViewer() {
     el('map-starts').replaceChildren(); markers.length = 0;
     renderer.gl.begin(canvas.clientWidth || 1, canvas.clientHeight || 1); renderer.gl.flush();
     app.querySelector('.map-shell')!.classList.toggle('is-preview', previewMode);
-    const pathname = `/admin/${entry.id}${previewMode ? '/preview' : ''}`, path = `${pathname}${location.search}`;
+    const pathname = `/maps/${entry.id}${previewMode ? '/preview' : ''}`, path = `${pathname}${location.search}`;
     if (navigation === 'replace') history.replaceState(null, '', path);
     else if (navigation === 'push' && location.pathname !== pathname) history.pushState(null, '', path);
     for (const link of app.querySelectorAll<HTMLAnchorElement>('[data-map-id]')) {
       const active = link.dataset.mapId === entry.id; link.classList.toggle('is-selected', active);
       if (active) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
     }
-    document.title = `${entry.name} · ${previewMode ? 'Map Preview' : 'Map Library'} · Red Alert II`;
+    document.title = `${entry.name} · ${previewMode ? 'Map Preview' : 'Map Viewer'} · Red Alert II`;
     el<HTMLSelectElement>('map-mobile-select').value = entry.id;
     el('map-preview-title').textContent = entry.name; el('map-preview-title').hidden = !previewMode;
     const back = el<HTMLAnchorElement>('map-back');
     back.textContent = previewMode ? '← Back to maps' : 'Return to game ↗';
-    back.href = previewMode ? `/admin/${entry.id}${location.search}` : '/';
+    back.href = previewMode ? `/maps/${entry.id}${location.search}` : '/';
     el('map-title').textContent = entry.name; el('map-description').textContent = entry.description;
     el('map-kicker').textContent = `${theaterName(entry.theater)} / ${entry.style}`;
     el('map-facts').innerHTML = `<span><strong>6</strong> player starts</span><span><strong>${entry.size.join(' × ')}</strong> medium</span><span class="map-fog-tag">Fog disabled</span>`;
-    const preview = el<HTMLAnchorElement>('map-preview'); preview.hidden = false; preview.href = `/admin/${entry.id}/preview${location.search}`; preview.title = 'Explore the full map with no fog or active match';
+    const preview = el<HTMLAnchorElement>('map-preview'); preview.hidden = false; preview.href = `/maps/${entry.id}/preview${location.search}`; preview.title = 'Explore the full map with no fog or active match';
     const download = el<HTMLAnchorElement>('map-download'); download.hidden = false; download.href = entry.path; download.download = `${entry.id}.map`;
     updateStatus();
     try {
@@ -128,16 +128,16 @@ export function startMapViewer() {
     } catch (error) { if (ticket === generation && !(error instanceof DOMException && error.name === 'AbortError')) { mapLoading = false; fail(error); } }
   }
   function route() {
-    const match = /^\/admin(?:\/([a-z0-9-]+))?(?:\/(preview))?\/?$/.exec(location.pathname);
+    const match = /^\/maps(?:\/([a-z0-9-]+))?(?:\/(preview))?\/?$/.exec(location.pathname);
     previewMode = !!match?.[2];
     if (match && !match[1]) { void select(MAP_CATALOG[0], 'replace'); return; }
     const entry = match && MAP_CATALOG.find(value => value.id === match[1]);
     if (entry) { void select(entry, 'none'); return; }
     generation++; fetchController?.abort(); map = displayed = null; selected = undefined; mapLoading = false;
     previewMode = false; app.querySelector('.map-shell')!.classList.remove('is-preview'); el('map-preview-title').hidden = true;
-    el<HTMLAnchorElement>('map-back').href = '/admin/'; el('map-back').textContent = '← Back to maps';
+    el<HTMLAnchorElement>('map-back').href = '/maps/'; el('map-back').textContent = '← Back to maps';
     renderer.gl.begin(canvas.clientWidth || 1, canvas.clientHeight || 1); renderer.gl.flush();
-    document.title = 'Map not found · Map Library · Red Alert II';
+    document.title = 'Map not found · Map Viewer · Red Alert II';
     el('map-title').textContent = 'Map not found'; el('map-description').textContent = 'Choose one of the eight battlefields in the sidebar.';
     el('map-preview').hidden = el('map-download').hidden = true; el('map-facts').replaceChildren();
     for (const link of app.querySelectorAll('[data-map-id]')) { link.classList.remove('is-selected'); link.removeAttribute('aria-current'); }

@@ -9,7 +9,7 @@ export function installLocalTools(game: Game, renderer: Renderer, controls: Cont
   if (!import.meta.env.DEV) return;
   const panel = document.createElement('details');
   panel.className = 'local-tools';
-  panel.innerHTML = `<summary>Local admin</summary><div class="local-tools-body">
+  panel.innerHTML = `<summary>Local tools</summary><div class="local-tools-body">
     <label>Game speed <select data-local="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label>
     <label><input type="checkbox" data-local="instant"> Instant build</label>
     <label><input type="checkbox" data-local="free"> Free production and repairs</label>

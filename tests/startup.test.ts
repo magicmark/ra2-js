@@ -6,7 +6,7 @@ vi.mock('../src/game/Game', () => ({ Game: class { constructor() { return harnes
 vi.mock('../src/game/Audio', () => ({ GameAudio: class {} }));
 vi.mock('../src/render/Renderer', () => ({ Renderer: class { constructor() { return harness.renderer; } } }));
 vi.mock('../src/input/Controls', () => ({ detectMobile: () => false, Controls: class { tick() {} cancelPlacement() {} setMode() {} } }));
-vi.mock('../src/admin/LocalTools', () => ({ installLocalTools: vi.fn() }));
+vi.mock('../src/dev/LocalTools', () => ({ installLocalTools: vi.fn() }));
 vi.mock('../src/assets/AssetManager', () => ({
   DEFAULT_ASSET_URL: 'https://example.test/game.exe', assetSourceUrl: (url: string) => url,
   HUD_ASSET_FRAMES: { side1: [0], radar: [32], tab00: [1, 2] },

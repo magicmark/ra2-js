@@ -15,7 +15,7 @@ const requestedMap=new URLSearchParams(location.search).get('map');
 let nativeMap:NativeMap|undefined;
 if(requestedMap){
   const entry=MAP_CATALOG.find(map=>map.id===requestedMap);
-  if(!entry)throw new Error('This battlefield is not in the map library. Open /admin/ to choose a map.');
+  if(!entry)throw new Error('This battlefield is not in the map library. Open /maps/ in the Map Viewer to choose a map.');
   const response=await fetch(entry.path);
   if(!response.ok)throw new Error(`Unable to load ${entry.name} (${response.status}). Reload to retry.`);
   nativeMap=parseNativeMap(await response.text());
@@ -90,7 +90,7 @@ try{
   // Diagnostics keep actual runtime state and controls accessible for reproducible
   // browser smoke checks and mod development. No hidden game cheats are enabled.
   Object.assign(window,{__rts:{game,renderer,controls,assets,ui}});
-  if(import.meta.env.DEV)void import('./admin/LocalTools').then(({installLocalTools})=>installLocalTools(game,renderer,controls,()=>battleStarted&&assets.ready&&!ui.isModalOpen()));
+  if(import.meta.env.DEV)void import('./dev/LocalTools').then(({installLocalTools})=>installLocalTools(game,renderer,controls,()=>battleStarted&&assets.ready&&!ui.isModalOpen()));
   ui.setLoading(true);
   void restoreAssets();
 }catch(error){
