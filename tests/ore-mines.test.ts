@@ -1,8 +1,58 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { Game } from '../src/game/Game';
-import { oreMineFrame, updateOreMines } from '../src/game/oreMines';
+import { createMap, MAP_SIZE, TRAINING_THEATER } from '../src/game/map';
+import { MAP_CATALOG } from '../src/game/maps/catalog';
+import { parseNativeMap } from '../src/game/maps/nativeMap';
+import { DEFAULT_ORE_MINES, oreMineFrame, updateOreMines } from '../src/game/oreMines';
+
+// Original theater INI ranges, independently extracted in the visual audit.
+// Include bends, slopes, bits and ends, not just the three straight/junction IDs.
+const { originalRoadSets } = JSON.parse(readFileSync('tests/artifacts/map-visual-audit/inventory.json', 'utf8')) as {
+  originalRoadSets: { file: string; first: number; count: number }[];
+};
 
 describe('original ore mines', () => {
+  for (const id of ['training', ...MAP_CATALOG.map(entry => entry.id)]) it(`${id}: every drill avoids original road art before and after initialization`, () => {
+    const map = id === 'training' ? undefined : parseNativeMap(readFileSync(`public/maps/${id}.map`, 'utf8'));
+    const before = map ? structuredClone(map.cells) : createMap().map((t, i) => ({ x: i % MAP_SIZE, y: Math.floor(i / MAP_SIZE), ...t.nativeArt! }));
+    const positions = map ? map.terrain.filter(t => t.type.toUpperCase() === 'TIBTRE01') : DEFAULT_ORE_MINES;
+    const theater = map?.theater ?? TRAINING_THEATER;
+    const ini = { TEMPERATE: 'temperat.ini', SNOW: 'snow.ini', URBAN: 'urban.ini' }[theater];
+    const roads = originalRoadSets.filter(set => set.file === ini);
+    expect(roads.length).toBeGreaterThan(0);
+    const after = new Game({ map, ai: false }).state;
+    expect(positions).toHaveLength(map ? 12 : 6);
+    expect(after.oreMines!.map(({ x, y }) => ({ x, y }))).toEqual(positions.map(({ x, y }) => ({ x, y })));
+    for (const { x, y } of positions) {
+      const source = before.find(c => c.x === x && c.y === y)!;
+      // Native rendering reads nativeMap.cells; training reads Tile.nativeArt.
+      const initialized = after.nativeMap ? after.nativeMap.cells.find(c => c.x === x && c.y === y)! : after.tiles[y * after.width + x].nativeArt!;
+      for (const art of [source, initialized]) {
+        expect(art, `${id} (${x},${y}) must have original artwork`).toBeDefined();
+        expect(roads.some(set => art.tileIndex >= set.first && art.tileIndex < set.first + set.count),
+          `${id} (${x},${y}) tile ${art.tileIndex}/${art.subTile} overlaps original road art`).toBe(false);
+      }
+      expect([initialized.tileIndex, initialized.subTile]).toEqual([source.tileIndex, source.subTile]);
+    }
+  });
+
+  it('keeps the southern training road clear and the relocated drill in its ore field', () => {
+    const before = createMap(), state = new Game({ ai: false }).state;
+    const mine = state.oreMines!.find(m => m.x === 20 && m.y === 51)!;
+    expect(mine).toBeDefined();
+    expect(before[51 * MAP_SIZE + 20]).toMatchObject({ terrain: 'grass', nativeArt: { tileIndex: 0 } });
+    expect(before[51 * MAP_SIZE + 20].ore).toBeGreaterThan(0);
+    expect(mine.fieldCells.length).toBeGreaterThan(0);
+    expect(mine.initialOre).toBeGreaterThan(0);
+    expect(mine.fieldCells.some(i => Math.hypot(i % MAP_SIZE - mine.x, Math.floor(i / MAP_SIZE) - mine.y) <= 1)).toBe(true);
+    for (let x = 22; x <= 24; x++) {
+      const i = 51 * MAP_SIZE + x;
+      expect(state.tiles[i]).toEqual(before[i]);
+      expect(state.tiles[i]).toMatchObject({ terrain: 'road', ore: 0, nativeArt: { tileIndex: 294, subTile: x - 22 } });
+    }
+  });
+
   it('places the original mine at each default field and animates with authored timing', () => {
     const game = new Game({ ai: false }), mine = game.state.oreMines![0];
     expect(game.state.oreMines).toHaveLength(6);

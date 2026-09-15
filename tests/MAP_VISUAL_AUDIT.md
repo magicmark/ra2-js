@@ -57,6 +57,40 @@ The generated Field Command map is the training battlefield, not a tenth map.
 
 ### ra2-js-cwf — training drill on the road
 
+**Repair verification (2026-09-15, following `d095e8c`):** the drill moves from
+`(22,51)` to `(20,51)`, two cells into the existing ore field. Its original ground
+is `0/subtile0` (`clear01.tem`) before and after initialization. The former
+anchor retains road `294/subtile0` (`proad02.tem`), and all three road cells
+`x=22..24, y=51` retain their original art, collision terrain and zero ore.
+The new drill has 17 nearby ore cells containing 13,141 ore after initialization;
+its occupied cell previously contained 862 ore and is cleared as usual.
+Only this drill coordinate changes in production code. The five other training
+drills, eight native map files and prior road repairs are unchanged.
+
+Visually accepted in Chromium at 1440×1100, using the original `ra2.mix`,
+`language.mix` and `theme.mix` from `/tmp/ra2-8vl-mixes`, a paused initialized
+Game, revealed fog and the actual renderer at 100% zoom:
+[road/drill details](artifacts/ore-drill-relocation/training-details.webp) and
+[all six training drills](artifacts/ore-drill-relocation/training-drills.webp).
+The relocated drill and shadow stand clear of the road; the southern original
+end cap remains intact. These are browser checks, not native-engine execution.
+Reproduce with the existing `browser-capture.js` helper below, passing
+`{revision:'ra2-js-cwf', views:{training:[[20,51,'relocated drill'],[22,51,'clear road'],[23,54,'road end'],[20,49,'ore access']]}}`
+to `install()`, then calling `details('training')` and `drills('training')`.
+
+[Focused regression checks](ore-mines.test.ts) inspect all **6 training + 96
+catalog anchors before and after initialization**, using original theater INI
+road ranges from the audit inventory, including bends, slopes, bits and ends.
+They read the artwork used by each renderer (`Tile.nativeArt` for training,
+`nativeMap.cells` for catalog maps), independently of semantic terrain labels.
+The baseline failed explicitly on `(22,51)` tile `294/0`; the fix passes all
+14 ore-mine tests. Full `npm test`: **625 passed, 37 optional tests skipped**.
+Original-asset TerrainArtwork and original-loader suites: **17 passed** with
+`RA2_ASSET_DIR=/tmp/ra2-8vl-mixes`. `npm run build` and scoped diff checks passed.
+Exact pushed SHA and Cloudflare release evidence are recorded in Beads.
+
+The observations below describe the original audit baseline.
+
 At **(22,51)**, one of six training drills stands on original **294/subtile0**,
 `proad02.tem`; the road is x=22..24. [Training details, upper left](artifacts/map-visual-audit/training-details.png)
 show the drill occupying the asphalt. All other 101 drills visually inspected are

@@ -3,7 +3,7 @@ import type { GameState, UnitDef, Vec2 } from './types';
 // Retail rules.ini [TIBTRE01]: AnimationRate=3, AnimationProbability=.003,
 // SpawnsTiberium=yes. Its theater SHP has 11 frames plus 11 shadow frames.
 export const ORE_MINE_ANIMATION = { frames: 11, ticksPerFrame: 3, probability: .003 } as const;
-export const DEFAULT_ORE_MINES: readonly Vec2[] = [[8, 51], [22, 51], [54, 11], [40, 8], [20, 27], [44, 39]].map(([x, y]) => ({ x, y }));
+export const DEFAULT_ORE_MINES: readonly Vec2[] = [[8, 51], [20, 51], [54, 11], [40, 8], [20, 27], [44, 39]].map(([x, y]) => ({ x, y }));
 export interface OreMine extends Vec2 { animationStartedAt?: number; randomState: number; fieldCells: number[]; initialOre: number }
 export function initializeOreMines(state: GameState): OreMine[] {
   const positions = state.nativeMap ? state.nativeMap.terrain.filter(t => t.type.toUpperCase() === 'TIBTRE01') : DEFAULT_ORE_MINES;
