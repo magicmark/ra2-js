@@ -733,50 +733,31 @@ export class Game implements GameAPI {
     const collision = this.state.entities.find(other => other.id !== entity.id && other.hp > 0 && other.transportId === undefined && this.sameLayer(entity, other) && !isBuilding(this.defs[other.type]) && Math.hypot(other.x - nx, other.y - ny) < 0.48);
     if (collision) {
       memory.stuck += dt;
-      if (def.category === 'vehicles') {
-        // Commit to a short clear detour. Re-aiming at the original path point
-        // after every tiny sidestep made crowded traffic oscillate in place.
-        if (memory.stuck > .15 && !memory.avoidancePoint && d > .001 && (memory.detourRetryAt ?? 0) <= this.state.time) {
-          // A failed route search must not repeat every logic frame in a crowd.
-          memory.detourRetryAt = this.state.time + .5;
-          const forward = Math.atan2(dy, dx);
-          for (const turn of [Math.PI / 3, -Math.PI / 3, Math.PI / 2, -Math.PI / 2, Math.PI * 2 / 3, -Math.PI * 2 / 3]) {
-            const angle = forward + turn, detour = { x: entity.x + Math.cos(angle), y: entity.y + Math.sin(angle) };
-            let clear = true, previous = { x: Math.floor(entity.x), y: Math.floor(entity.y) };
-            for (let step = 1; step <= 10; step++) {
-              const px = entity.x + (detour.x - entity.x) * step / 10, py = entity.y + (detour.y - entity.y) * step / 10;
-              const tx = Math.floor(px), ty = Math.floor(py);
-              if (!this.isPassable(tx, ty, entity) || (tx !== previous.x && ty !== previous.y && (!this.isPassable(tx, previous.y, entity) || !this.isPassable(previous.x, ty, entity))) ||
-                this.state.entities.some(other => other.id !== entity.id && other.hp > 0 && !isBuilding(this.defs[other.type]) && Math.hypot(other.x - px, other.y - py) < .49)) { clear = false; break; }
-              previous = { x: tx, y: ty };
-            }
-            if (!clear) continue;
-            const final = entity.path[entity.path.length - 1];
-            const onward = this.path({ ...entity, ...detour }, final, true);
-            if (!onward.length && distance(detour, final) > .2) break;
-            entity.path = [detour, ...onward]; memory.avoidancePoint = detour; memory.stuck = 0;
-            // A collision stopped translation before this new route was chosen.
-            // Depart like a stationary order, rather than sliding while turning.
-            memory.turningBeforeMove = !!def.rot;
-            break;
+      // Commit to a short clear detour. Re-aiming at the original path point
+      // after every tiny sidestep made crowded traffic oscillate in place.
+      if (memory.stuck > .15 && !memory.avoidancePoint && d > .001 && (memory.detourRetryAt ?? 0) <= this.state.time) {
+        // A failed route search must not repeat every logic frame in a crowd.
+        memory.detourRetryAt = this.state.time + .5;
+        const forward = Math.atan2(dy, dx), detourLength = def.category === 'vehicles' ? 1 : .5;
+        for (const turn of [Math.PI / 3, -Math.PI / 3, Math.PI / 2, -Math.PI / 2, Math.PI * 2 / 3, -Math.PI * 2 / 3]) {
+          const angle = forward + turn, detour = { x: entity.x + Math.cos(angle) * detourLength, y: entity.y + Math.sin(angle) * detourLength };
+          let clear = true, previous = { x: Math.floor(entity.x), y: Math.floor(entity.y) };
+          for (let step = 1; step <= 10; step++) {
+            const px = entity.x + (detour.x - entity.x) * step / 10, py = entity.y + (detour.y - entity.y) * step / 10;
+            const tx = Math.floor(px), ty = Math.floor(py);
+            if (!this.isPassable(tx, ty, entity) || (tx !== previous.x && ty !== previous.y && (!this.isPassable(tx, previous.y, entity) || !this.isPassable(previous.x, ty, entity))) ||
+              this.state.entities.some(other => other.id !== entity.id && other.hp > 0 && !isBuilding(this.defs[other.type]) && Math.hypot(other.x - px, other.y - py) < (def.category === 'vehicles' ? .49 : .48))) { clear = false; break; }
+            previous = { x: tx, y: ty };
           }
-        }
-      } else {
-        // A* works in cells, while units may meet partway through one. A short
-        // collision-safe sidestep lets opposing traffic separate before rerouting.
-        if (memory.stuck > 0.15 && d > 0.001) {
-          const forward = Math.atan2(dy, dx);
-          for (const turn of [Math.PI / 3, -Math.PI / 3, Math.PI / 2, -Math.PI / 2, Math.PI * 2 / 3, -Math.PI * 2 / 3]) {
-            const angle = forward + turn;
-            const px = entity.x + Math.cos(angle) * amount, py = entity.y + Math.sin(angle) * amount;
-            const tx = Math.floor(px), ty = Math.floor(py), sx = Math.floor(entity.x), sy = Math.floor(entity.y);
-            if (!this.isPassable(tx, ty, entity) || (tx !== sx && ty !== sy && (!this.isPassable(tx, sy, entity) || !this.isPassable(sx, ty, entity)))) continue;
-            if (this.state.entities.some(other => other.id !== entity.id && other.hp > 0 && !isBuilding(this.defs[other.type]) && Math.hypot(other.x - px, other.y - py) < 0.48)) continue;
-            entity.x = px;
-            entity.y = py;
-            memory.heading = angle;
-            break;
-          }
+          if (!clear) continue;
+          const final = entity.path[entity.path.length - 1];
+          const onward = this.path({ ...entity, ...detour }, final, true);
+          if (!onward.length && distance(detour, final) > .2) continue;
+          entity.path = [detour, ...onward]; memory.avoidancePoint = detour; memory.stuck = 0;
+          // A collision stopped translation before this new route was chosen.
+          // Depart like a stationary order, rather than sliding while turning.
+          memory.turningBeforeMove = !!def.rot;
+          break;
         }
       }
       if (memory.stuck > 0.6) {

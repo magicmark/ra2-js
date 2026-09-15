@@ -355,10 +355,11 @@ describe('combat, AI and match lifecycle', () => {
 
   it('builds an enemy economy, produces armor and launches an attacking force', () => {
     const game = new Game({ automaticSovietWaves: true });
-    game.setGameSpeed(1); // Preserve the original 180-simulation-second AI check.
-    // Hull turns now consume stationary logic frames on every route bend.
+    game.setGameSpeed(1);
+    // Committed infantry detours shift mined-credit deliveries. Allow
+    // ten seconds beyond the original deadline while still requiring armor.
     const producedRhinos = new Set<number>();
-    for (let i = 0; i < 180 * 30; i++) {
+    for (let i = 0; i < 190 * 30; i++) {
       game.tick(1 / 30);
       for (const unit of game.state.entities) if (unit.side === 1 && unit.type === 'rhino') producedRhinos.add(unit.id);
     }
