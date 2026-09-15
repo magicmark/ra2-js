@@ -192,7 +192,11 @@ export class Renderer {
     if(this.shroudMapWidth!==s.width||this.shroudExplored.length!==s.explored.length||s.explored.some((value,index)=>value!==this.shroudExplored[index])){
       this.shroudMapWidth=s.width;this.shroudExplored=s.explored.slice();this.shroudVersion++;
     }
-    const hidden=(x:number,y:number)=>x<0||y<0||x>=s.width||y>=s.height||!s.explored[y*s.width+x];
+    // The scenic continuation inherits the nearest playable cell's shroud.
+    // Revealing an edge must not leave an opaque black wall beyond it.
+    const hidden=(x:number,y:number)=>s.nativeMap
+      ? x<0||y<0||x>=s.width||y>=s.height||!s.explored[y*s.width+x]
+      : !s.explored[Math.max(0,Math.min(s.height-1,y))*s.width+Math.max(0,Math.min(s.width-1,x))];
     // Keep an exact world-space cover beneath the sampled mask. At fractional
     // zoom a raster boundary can straddle a hidden cell by half a source pixel.
     for(let y=minY-1;y<=maxY+1;y++){
@@ -297,16 +301,23 @@ export class Renderer {
     const top=Math.floor((c.y-c.height/2/z)/size),bottom=Math.floor((c.y+c.height/2/z)/size);
     for(let cy=top;cy<=bottom;cy++)for(let cx=left;cx<=right;cx++){
       const px=cx*size,py=cy*size,key=`${cx}:${cy}`;
-      if(px+size<=-s.height*30||px>=s.width*30||py+size<=0||py>=(s.width+s.height)*15)continue;
       let source=this.terrainChunks.get(key);
       if(!source||this.terrainChunkVersions.get(key)!==this.terrainVersion){
-        const minX=Math.max(0,Math.floor(px/60+py/30)-2),maxX=Math.min(s.width-1,Math.ceil((px+size)/60+(py+size)/30)+2);
-        const minY=Math.max(0,Math.floor(py/30-(px+size)/60)-2),maxY=Math.min(s.height-1,Math.ceil((py+size)/30-px/60)+2);
+        const minX=Math.floor(px/60+py/30)-2,maxX=Math.ceil((px+size)/60+(py+size)/30)+2;
+        const minY=Math.floor(py/30-(px+size)/60)-2,maxY=Math.ceil((py+size)/30-px/60)+2;
         if(minX>maxX||minY>maxY)continue;
         if(!source){source=document.createElement('canvas');source.width=source.height=size;}
         const ctx=source.getContext('2d')!;ctx.clearRect(0,0,size,size);ctx.imageSmoothingEnabled=false;let painted=false;
         for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++){
-          const tile=s.tiles[y*s.width+x],sprite=this.terrainSprite(tile,x,y);
+          // Extend ground artwork only. The simulation, resources, scenery,
+          // selection and placement retain the original playable footprint.
+          const tx=Math.max(0,Math.min(s.width-1,x)),ty=Math.max(0,Math.min(s.height-1,y));
+          const tile=s.tiles[ty*s.width+tx],inside=x===tx&&y===ty;
+          // The training map's wooded rim continues as clear ground; copying
+          // rough/road/LAT fragments would extrude long stripes into scenery.
+          const n=Math.imul(x+93,374761393)^Math.imul(y+317,668265263),variant=((n^(n>>>13))>>>0)%6;
+          const ground=tile.terrain==='water'||tile.terrain==='sand'?tile.terrain:'grass';
+          const sprite=inside?this.terrainSprite(tile,x,y):this.required(assets.getTerrain(ground,variant),`${ground} border terrain`);
           const sx=(x-y)*30-(sprite.anchorX??sprite.width/2)-px,sy=(x+y+1)*15-(sprite.anchorY??sprite.height)-py;
           if(sx+sprite.width<0||sy+sprite.height<0||sx>=size||sy>=size)continue;
           ctx.drawImage(sprite.source,sx,sy);painted=true;
@@ -325,7 +336,8 @@ export class Renderer {
     const rect=this.canvas.getBoundingClientRect(),c=this.camera,s=this.game.state;
     assets.setTheater(s.nativeMap?.theater??TRAINING_THEATER);
     if(rect.width<=0||rect.height<=0)return;
-    c.width=rect.width;c.height=rect.height;this.gl.begin(rect.width,rect.height);this.frame++;
+    c.width=rect.width;c.height=rect.height;c.constrain(s.width,s.height,s.nativeMap);
+    this.gl.begin(rect.width,rect.height);this.frame++;
     const corners=[c.world(-200,-200),c.world(c.width+200,-200),c.world(0,c.height+220),c.world(c.width+200,c.height+220)];
     const minX=Math.max(0,Math.floor(Math.min(...corners.map(p=>p.x)))),maxX=Math.min(s.width-1,Math.ceil(Math.max(...corners.map(p=>p.x))));
     const minY=Math.max(0,Math.floor(Math.min(...corners.map(p=>p.y)))),maxY=Math.min(s.height-1,Math.ceil(Math.max(...corners.map(p=>p.y))));

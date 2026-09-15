@@ -35,6 +35,7 @@ export class Controls {
   private hover: Vec2 | null = null;
   private modifiers = { ctrl: false, shift: false, alt: false };
   private lastCursor: NativeCursorName | null = null;
+  private lastCameraZoom: number | null = null;
   private healthBand = 0;
   private selectionHistory: number[][] = [];
   private waypointOrders = new Map<number, Vec2[]>();
@@ -146,11 +147,11 @@ export class Controls {
       const vertical = p.y < 12 ? 'n' : p.y > camera.height - 12 ? 's' : '';
       if (horizontal || vertical) {
         const direction = `${vertical}${horizontal}`;
-        const current = camera.world(camera.width / 2, camera.height / 2);
-        const wanted = camera.world(camera.width / 2 + (horizontal === 'w' ? -1 : horizontal === 'e' ? 1 : 0), camera.height / 2 + (vertical === 'n' ? -1 : vertical === 's' ? 1 : 0));
-        const x = Math.max(-3, Math.min(this.game.state.width + 3, wanted.x));
-        const y = Math.max(-3, Math.min(this.game.state.height + 3, wanted.y));
-        const blocked = Math.hypot(x - current.x, y - current.y) < 1e-6;
+        const state = this.game.state;
+        const wanted = camera.constrainedPosition(state.width, state.height,
+          camera.x + (horizontal === 'w' ? -1 : horizontal === 'e' ? 1 : 0) / camera.zoom,
+          camera.y + (vertical === 'n' ? -1 : vertical === 's' ? 1 : 0) / camera.zoom, state.nativeMap);
+        const blocked = Math.hypot(wanted.x - camera.x, wanted.y - camera.y) < 1e-6;
         return `scroll-${direction}${blocked ? '-blocked' : ''}` as NativeCursorName;
       }
     }
@@ -465,6 +466,8 @@ export class Controls {
         camera.center(previous.x + (unit.x - previous.x) * alpha, previous.y + (unit.y - previous.y) * alpha);
       } else this.followId = null;
     }
-    camera.constrain(this.game.state.width, this.game.state.height); this.updateCursor();
+    camera.constrain(this.game.state.width, this.game.state.height, this.game.state.nativeMap);
+    if (this.lastCameraZoom !== camera.zoom) { this.callbacks.zoom(camera.zoom); this.lastCameraZoom = camera.zoom; }
+    this.updateCursor();
   }
 }
