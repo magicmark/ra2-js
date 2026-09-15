@@ -702,6 +702,27 @@ export class AssetManager {
     const result = trimSprite(this.renderBuilding(shape, spec, side, 0, frames));
     this.sprites.set(key, result); return result;
   }
+  /** Original factory art is authored to sandwich a departing vehicle between
+   * UnderDoorAnim (_1) and DeployingAnim (_2), instead of the complete body SHP.
+   */
+  getFactoryExitSprite(name: string, layer: 'back' | 'front', time = 0, side = 0, speedIndex = NATIVE_SPEED_INDEX): Sprite | null {
+    if (!this.ready) return null;
+    const spec = this.spec(name);
+    if (!spec || !['gaweap', 'naweap'].includes(spec.sprite)) return null;
+    const shape = this.shape(spec.sprite); if (!shape) return null;
+    // Prime the shared ground anchor from the complete factory before trimming
+    // either partial layer (the under-door piece has a different painted foot).
+    this.getBuildingSprite(name, 0, side, speedIndex);
+    const overlays = (spec.overlays ?? []).filter(name => layer === 'back' ? name.endsWith('_1') : !name.endsWith('_1'));
+    const frames = overlays.map(name => {
+      const shape = this.shape(name);
+      return shape ? buildingLoopFrame(this.buildingLoops.get(name), time, shape.frameCount / 2, speedIndex) : 0;
+    });
+    const key = `factory-exit:${spec.sprite}:${layer}:${side}:${frames.join(',')}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const result = trimSprite(this.renderBuilding(shape, { ...spec, bib: layer === 'back' ? spec.bib : undefined, overlays }, side, 0, frames, false));
+    this.sprites.set(key, result); return result;
+  }
   /** Sale replays the original buildup SHP backwards, including its own shadow. */
   getBuildingSellSprite(name: string, progress: number, side = 0): Sprite | null {
     return this.getBuildingTransitionSprite(name, progress, side, true);
@@ -758,9 +779,9 @@ export class AssetManager {
     const rendered = this.renderVehicle(spec.sprite, hull, side, true, turret);
     const result = rendered ? trimSprite(rendered) : null; this.sprites.set(key, result); return result;
   }
-  private renderBuilding(shape: ShpFile, spec: AssetSpec, side: number, facing: number, overlayFrames: number[] = []): Sprite {
+  private renderBuilding(shape: ShpFile, spec: AssetSpec, side: number, facing: number, overlayFrames: number[] = [], includeBody = true): Sprite {
     const result = canvas(shape.width, shape.height), ctx = result.getContext('2d')!;
-    const layers = [{ shape: spec.bib ? this.shape(spec.bib) : undefined, frame: 0 }, { shape, frame: 0 }, ...(spec.overlays ?? []).map((name, index) => ({ shape: this.shape(name), frame: overlayFrames[index] ?? 0 }))].filter((layer): layer is { shape: ShpFile; frame: number } => !!layer.shape);
+    const layers = [{ shape: spec.bib ? this.shape(spec.bib) : undefined, frame: 0 }, ...(includeBody ? [{ shape, frame: 0 }] : []), ...(spec.overlays ?? []).map((name, index) => ({ shape: this.shape(name), frame: overlayFrames[index] ?? 0 }))].filter((layer): layer is { shape: ShpFile; frame: number } => !!layer.shape);
     const draw = ({ shape: s, frame: index }: { shape: ShpFile; frame: number }, isShadow = false) => {
       const frame = s.frame(index + (isShadow ? s.frameCount / 2 : 0));
       ctx.drawImage(isShadow ? shadow(frame) : paint(frame, this.unitPalette, side), frame.x + (shape.width - s.width) / 2, frame.y + (shape.height - s.height) / 2);

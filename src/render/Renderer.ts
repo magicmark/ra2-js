@@ -1,4 +1,5 @@
 import { revealedEntity } from '../game/visibility';
+import { factoryForExit, isWarFactory } from '../game/factoryExit';
 import type { Entity, GameAPI, Tile, UnitDef, Vec2 } from '../game/types';
 import { GL, type Color, type Texture } from './GL';
 import { Camera } from './Camera';
@@ -12,7 +13,7 @@ import { INSPECTION_RULES } from '../game/customUnits';
 const terrainCodes:Record<Tile['terrain'],number>={grass:1,water:2,rock:3,road:4,sand:5};
 
 export interface OriginalSprite { source: CanvasImageSource; width: number; height: number; offsetX?:number; offsetY?:number; anchorX?:number; anchorY?:number }
-export interface SpriteProvider { ready:boolean; setTheater(theater:NativeTheater):void; getBuildingHeight(name:string):number; getHarvestSprite(facing:number,time:number):OriginalSprite|null; getPipSprite(kind:'veteran'|'elite'|'cargo-empty'|'cargo-ore'|'building-empty'|'building-green'|'building-yellow'|'building-red'):OriginalSprite|null; getSprite(name:string,frame?:number,side?:number):OriginalSprite|null; getInfantryFrame(name:string,frame:number,side?:number):OriginalSprite|null; getInfantrySequence(name:string,action:string,facing:number,age:number,side?:number,speedIndex?:number):OriginalSprite|null; getAnimationSprite(name:string,age:number,ticksPerFrame?:number):OriginalSprite|null; getAnimationOpacity(name:string):number; getProjectileSprite?(name:string,heading:number):OriginalSprite|null; getVehicleSprite(name:string,hull:number,turret:number,side?:number):OriginalSprite|null; getBuildingSprite(name:string,time:number,side?:number,speedIndex?:number):OriginalSprite|null; getBuildingSellSprite?(name:string,progress:number,side?:number):OriginalSprite|null; getBuildingBuildSprite?(name:string,progress:number,side?:number):OriginalSprite|null; getSpriteVehicle?(name:string,facing:number,time:number,side?:number,firing?:boolean):OriginalSprite|null; getTerrain(terrain:string,variant?:number):OriginalSprite|null; getOverlay(kind:'ore'|'tree',variant?:number):OriginalSprite|null }
+export interface SpriteProvider { ready:boolean; setTheater(theater:NativeTheater):void; getBuildingHeight(name:string):number; getHarvestSprite(facing:number,time:number):OriginalSprite|null; getPipSprite(kind:'veteran'|'elite'|'cargo-empty'|'cargo-ore'|'building-empty'|'building-green'|'building-yellow'|'building-red'):OriginalSprite|null; getSprite(name:string,frame?:number,side?:number):OriginalSprite|null; getInfantryFrame(name:string,frame:number,side?:number):OriginalSprite|null; getInfantrySequence(name:string,action:string,facing:number,age:number,side?:number,speedIndex?:number):OriginalSprite|null; getAnimationSprite(name:string,age:number,ticksPerFrame?:number):OriginalSprite|null; getAnimationOpacity(name:string):number; getProjectileSprite?(name:string,heading:number):OriginalSprite|null; getVehicleSprite(name:string,hull:number,turret:number,side?:number):OriginalSprite|null; getBuildingSprite(name:string,time:number,side?:number,speedIndex?:number):OriginalSprite|null; getFactoryExitSprite?(name:string,layer:'back'|'front',time:number,side?:number,speedIndex?:number):OriginalSprite|null; getBuildingSellSprite?(name:string,progress:number,side?:number):OriginalSprite|null; getBuildingBuildSprite?(name:string,progress:number,side?:number):OriginalSprite|null; getSpriteVehicle?(name:string,facing:number,time:number,side?:number,firing?:boolean):OriginalSprite|null; getTerrain(terrain:string,variant?:number):OriginalSprite|null; getOverlay(kind:'ore'|'tree',variant?:number):OriginalSprite|null }
 export interface NativeSpriteProvider extends SpriteProvider {
   getNativeTerrain(theater:NativeTheater,tileIndex:number,subTile:number):OriginalSprite|null;
   getNativeOverlay(theater:NativeTheater,index:number,data?:number):OriginalSprite|null;
@@ -370,7 +371,7 @@ export class Renderer {
       const art=this.nativeAssets().getNativeDecoration('TEMPERATE','TIBTRE01',oreMineFrame(mine,s.time));
       if(art)renderables.push({depth:mine.x+mine.y+1,draw:()=>this.drawArt(art,p.x,p.y)});
     }
-    for(const e of s.entities){if(!this.visible(e))continue;const p=this.entityPoint(e);if(p.x<-220||p.x>c.width+220||p.y<-80||p.y>c.height+250)continue;
+    for(const e of s.entities){if(!this.visible(e)||factoryForExit(e,s.entities))continue;const p=this.entityPoint(e);if(p.x<-220||p.x>c.width+220||p.y<-80||p.y>c.height+250)continue;
       const d=this.game.defs[e.type],world=this.visualPosition(e);renderables.push({depth:world.x+world.y+(d.footprint[0]+d.footprint[1])/2,draw:()=>this.drawEntity(e,d,p)});
     }
     // Shroud covers unexplored terrain; contact visibility is filtered separately.
@@ -495,7 +496,17 @@ export class Renderer {
       const turret=Math.round(angle/(Math.PI*2)*32);
       original=this.required(assets.getVehicleSprite(name,frame,turret,e.side),`${name} hull/turret`);
     }else original=this.required(building&&e.type!=='sentry'?assets.getBuildingSprite(name,this.game.state.time,e.side,this.game.nativeGameSpeedIndex):assets.getSprite(name,frame,e.side),name);
-    if(d.ability==='mirage'&&!moving&&this.game.state.time-(e.firedAt??-Infinity)>3&&!selected&&!hover)original=assets.getOverlay('tree',e.id%8)??original;
+    if(d.ability==='mirage'&&!e.factoryExit&&!moving&&this.game.state.time-(e.firedAt??-Infinity)>3&&!selected&&!hover)original=assets.getOverlay('tree',e.id%8)??original;
+    if(isWarFactory(e.type)&&!e.selling&&!e.constructing){
+      const departing=this.game.state.entities.filter(unit=>unit.hp>0&&unit.factoryExit?.factoryId===e.id&&this.visible(unit));
+      if(departing.length){
+        const back=this.required(assets.getFactoryExitSprite?.(name,'back',this.game.state.time,e.side,this.game.nativeGameSpeedIndex)??null,`${name} under-door`);
+        const front=this.required(assets.getFactoryExitSprite?.(name,'front',this.game.state.time,e.side,this.game.nativeGameSpeedIndex)??null,`${name} foreground`);
+        this.drawArt(back,p.x,p.y);
+        for(const unit of departing)this.drawEntity(unit,this.game.defs[unit.type],this.entityPoint(unit));
+        this.drawArt(front,p.x,p.y);
+      }else this.drawArt(original,p.x,p.y);
+    }else
     this.drawArt(original,p.x,p.y-(d.movement==='air'&&d.category==='vehicles'&&!e.landed&&e.rearm===undefined?32*c.zoom:0));
     if(e.selling||e.constructing)return;
     if(d.harvester&&e.harvesting&&e.order==='harvest'&&!moving){
