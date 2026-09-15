@@ -564,134 +564,147 @@ html:not(.mobile-controls) .selection-panel.inspection-selection:not([hidden]) {
   .options-assets-page .settings-content,.options-briefing-page .settings-content { padding:20px 16px; }
 }
 .native-cursors .build-sidebar,.native-cursors .build-sidebar button,.native-cursors .statusbar,.native-cursors .statusbar button { cursor:var(--native-pointer); }
-
-/* Radar Console: a shared CRT command well beside a physical production key.
-   The two control rows and safe area are also reserved by the battlefield. */
-.mobile-console-label, .mobile-console-screen { display: none; }
-html.mobile-controls { --footer-height: calc(116px + env(safe-area-inset-bottom, 0px)); }
-.mobile-controls #command-ui .build-sidebar { bottom: var(--footer-height); }
-.mobile-controls #command-ui .mobile-commandbar {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 76px;
-  grid-template-rows: 44px 44px;
-  gap: 4px 8px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+/* Editorial command index: paper, typography, rules, and one production tile. */
+.mobile-commandbar.editorial-commandbar {
+  --paper: #f1ecdf;
+  --ink: #171714;
+  display: none;
+  position: absolute;
+  inset: auto 0 0;
   height: var(--footer-height);
-  padding: 17px 12px calc(5px + env(safe-area-inset-bottom, 0px));
-  border: 2px solid #77827e;
-  border-bottom: 0;
-  border-radius: 22px 9px 0 0;
-  background: linear-gradient(110deg, #99aaa1 0, #4b5a54 3%, #26332d 7%, #4e5d55 72%, #9ba79f 86%, #364139 100%);
-  box-shadow: inset 0 2px #c9d2c5, inset 0 5px #26332e, inset 3px 0 #101711, 0 -3px 0 #0a0e0b, 0 -6px 12px #0006;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(96px, .9fr);
+  grid-template-rows: 19px 44px 44px;
+  gap: 0;
+  padding: 5px max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+  border: 0;
+  border-top: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: none;
+  z-index: 30;
 }
-.mobile-controls .mobile-console-label {
-  display: block;
-  position: absolute;
-  top: 4px;
-  left: 26px;
-  color: #d4dfcf;
-  font: bold 8px/10px Tahoma, Arial, sans-serif;
-  letter-spacing: 2px;
-  text-shadow: 0 1px #000;
-  pointer-events: none;
+.editorial-commandbar .editorial-masthead {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--ink);
+  font: 9px/1 Arial, sans-serif;
+  letter-spacing: 1px;
 }
-.mobile-controls .mobile-console-screen {
-  display: block;
-  position: absolute;
-  inset: 14px 94px calc(3px + env(safe-area-inset-bottom, 0px)) 8px;
-  border: 3px solid #121b16;
-  border-radius: 12px 5px 7px 7px;
-  background:
-    repeating-linear-gradient(0deg, #a5ffbc09 0 1px, transparent 1px 3px),
-    repeating-radial-gradient(circle at 42% 50%, transparent 0 18px, #73c7881d 19px 20px, transparent 21px 38px),
-    linear-gradient(90deg, transparent 49.7%, #5cb97825 50%, transparent 50.3%),
-    radial-gradient(ellipse at center, #183a23, #020b06 85%);
-  box-shadow: 0 0 0 1px #8c9c8f, inset 0 4px 11px #000;
-  pointer-events: none;
-}
-.mobile-controls #command-ui .mobile-commandbar > button {
+.editorial-commandbar .editorial-masthead b { font-weight: 900; }
+.editorial-commandbar .editorial-masthead > span { color: #625f55; font-size: 8px; }
+.mobile-commandbar.editorial-commandbar > button {
   position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  gap: 9px;
   min-width: 44px;
   min-height: 44px;
-  padding: 5px 9px;
-  color: #a9e7ae;
-  border: 1px solid transparent;
+  gap: 7px;
+  padding: 7px;
+  border: 0;
+  border-right: 1px solid #17171440;
+  border-bottom: 1px solid #17171440;
   border-radius: 0;
   background: transparent;
-  text-shadow: 0 0 5px #84ee7059, 0 1px #000;
-  box-shadow: none;
+  color: var(--ink);
+  touch-action: manipulation;
+}
+.mobile-commandbar.editorial-commandbar > button > small {
+  align-self: flex-start;
+  padding-top: 2px;
+  font: 9px/1 Arial, sans-serif;
+  letter-spacing: -.3px;
+}
+.mobile-commandbar.editorial-commandbar > button > span {
+  font: 800 clamp(20px, 5.5vw, 25px)/1 Arial, sans-serif;
+  letter-spacing: -1px;
+}
+.mobile-commandbar.editorial-commandbar > button.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.mobile-commandbar.editorial-commandbar > button:active {
+  background: #d6cdb9;
+  color: var(--ink);
+}
+.mobile-commandbar.editorial-commandbar > button:focus-visible {
+  outline: 3px solid #196dba;
+  outline-offset: -4px;
   z-index: 1;
 }
-.mobile-controls #command-ui .mobile-commandbar > button svg { width: 23px; height: 23px; }
-.mobile-controls #command-ui .mobile-commandbar > button span {
-  font: bold 10px/1 Tahoma, Arial, sans-serif;
+.mobile-commandbar.editorial-commandbar > .mobile-build-button {
+  grid-column: 3;
+  grid-row: 2 / 4;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  padding: 9px;
+  border: 0;
+  background: #d93627;
+  color: #fff7e9;
+}
+.mobile-commandbar.editorial-commandbar > .mobile-build-button > small {
+  font-size: 11px;
+  letter-spacing: .1px;
+}
+.mobile-commandbar.editorial-commandbar > .mobile-build-button > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px;
+  font-size: 25px;
+}
+.editorial-commandbar .editorial-arrow { font: 22px/1 Arial, sans-serif; }
+.mobile-commandbar.editorial-commandbar > .mobile-build-button[aria-expanded="true"] {
+  background: #a72219;
+  box-shadow: inset 0 0 0 3px var(--ink);
+}
+.editorial-commandbar .mobile-build-button[aria-expanded="true"] .editorial-arrow { transform: rotate(180deg); }
+.mobile-commandbar.editorial-commandbar .mobile-build-button i {
+  display: none;
+  position: absolute;
+  top: 29px;
+  right: 9px;
+  width: auto;
+  height: auto;
+  padding: 3px 4px;
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 800 7px/1 Arial, sans-serif;
   letter-spacing: .5px;
 }
-.mobile-controls #command-ui .mobile-commandbar > [data-mode="select"] { grid-area: 1 / 1; }
-.mobile-controls #command-ui .mobile-commandbar > [data-mode="pan"] { grid-area: 1 / 2; }
-.mobile-controls #command-ui .mobile-commandbar > [data-mode="attack"] { grid-area: 2 / 1; }
-.mobile-controls #command-ui .mobile-commandbar > [data-action="stop"] { grid-area: 2 / 2; color: #edc4a2; }
-.mobile-controls #command-ui .mobile-commandbar > button.active {
-  color: #e4ffca;
-  background: #81c16b19;
-  border-color: #a0d782;
-  box-shadow: inset 3px 0 #caff9f, inset 0 0 13px #7bb5482e;
-}
-.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button {
-  grid-area: 1 / 3 / 3 / 4;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-  padding: 8px 3px;
-  color: #0e2834;
-  border: 2px solid #171d18;
-  border-radius: 4px 11px 8px 4px;
-  background: linear-gradient(110deg, #d2d7cb, #98ada2 45%, #718878 49%, #9dad9d 56%, #cad0bc);
-  box-shadow: inset 2px 2px #f0f1db, inset -3px -4px #465951, 0 2px 0 #10130f;
-  text-shadow: 0 1px #dae2d2;
-}
-.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button svg { width: 32px; height: 32px; stroke-width: 2; }
-.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button span { font-size: 11px; letter-spacing: 1px; }
-.mobile-controls #command-ui .mobile-build-button[aria-expanded="true"] {
-  color: #e4ffca;
-  background: linear-gradient(#233b2f, #34583b);
-  border-color: #a0d782;
-  box-shadow: inset 2px 3px 7px #0008;
-  text-shadow: 0 0 5px #8cdd67;
-}
-.mobile-controls #command-ui .mobile-build-button i {
-  display: none;
-  top: 6px;
-  right: 7px;
-  width: 7px;
-  height: 7px;
-  border: 1px solid #123a12;
-  border-radius: 1px;
-  background: #c7ff81;
-  box-shadow: 0 0 4px #8af46a;
-}
-.mobile-controls #command-ui .mobile-build-button i.visible { display: block; }
-.mobile-controls #command-ui .mobile-commandbar > button:active { filter: brightness(1.3); }
-.mobile-controls #command-ui .mobile-commandbar > button:focus-visible { outline: 2px solid #fff1a1; outline-offset: -3px; }
-@media (max-width: 360px) {
-  .mobile-controls #command-ui .mobile-commandbar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 64px; gap: 4px; }
-  .mobile-controls .mobile-console-screen { right: 78px; }
-  .mobile-controls #command-ui .mobile-commandbar > button { padding-inline: 5px; gap: 6px; }
-  .mobile-controls #command-ui .mobile-commandbar > button span { font-size: 9px; letter-spacing: 0; }
+.editorial-commandbar .mobile-build-button i::after { content: 'READY'; }
+.mobile-commandbar.editorial-commandbar .mobile-build-button i.visible { display: block; }
+html.mobile-controls { --footer-height: calc(122px + max(0px, env(safe-area-inset-bottom) - 8px)); }
+html.mobile-controls .editorial-commandbar { display: grid; }
+html.mobile-controls .build-sidebar { bottom: var(--footer-height); }
+html.mobile-controls .production-well { min-height: 0; }
+@media (max-width: 760px), (max-height: 530px) {
+  :root { --footer-height: calc(122px + max(0px, env(safe-area-inset-bottom) - 8px)); }
+  .mobile-commandbar.editorial-commandbar { display: grid; }
+  .build-sidebar { bottom: var(--footer-height); }
+  .production-well { min-height: 0; }
 }
 @media (min-width: 600px) {
-  .mobile-controls #command-ui .mobile-commandbar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 112px; padding-inline: 22px; }
-  .mobile-controls .mobile-console-screen { left: 17px; right: 144px; }
-  .mobile-controls #command-ui .mobile-commandbar > button { justify-content: center; gap: 16px; }
-  .mobile-controls #command-ui .mobile-commandbar > button span { font-size: 12px; letter-spacing: 2px; }
+  html.mobile-controls { --footer-height: calc(78px + max(0px, env(safe-area-inset-bottom) - 8px)); }
+  .mobile-commandbar.editorial-commandbar {
+    grid-template-columns: 1.25fr 1fr 1.15fr 1fr 1.3fr;
+    grid-template-rows: 15px 48px;
+  }
+  .mobile-commandbar.editorial-commandbar > .mobile-build-button {
+    grid-column: 5;
+    grid-row: 2;
+    flex-direction: row;
+    align-items: center;
+  }
+  .mobile-commandbar.editorial-commandbar .mobile-build-button i { top: 1px; right: 2px; }
 }
-
-/* Keep production scrolling inside the taller command console clearance. */
-.mobile-controls #command-ui .build-sidebar .production-well { min-height: 0; }
+@media (min-width: 600px) and (max-width: 760px), (min-width: 600px) and (max-height: 530px) {
+  :root { --footer-height: calc(78px + max(0px, env(safe-area-inset-bottom) - 8px)); }
+}

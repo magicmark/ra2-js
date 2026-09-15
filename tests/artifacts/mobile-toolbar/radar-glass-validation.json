@@ -1,43 +1,52 @@
 {
   "ticket": "ra2-js-sb9",
-  "design": "Radar Console",
-  "mainBase": "8c739d888a5709751caa5c2cdeb1595341877a01",
-  "capturedAt": "2026-09-15T05:21:21.050106+00:00",
+  "revision": 3,
+  "design": "Field Editorial",
+  "mainBase": "f7caa375e54853b993a2abcca7f129fcce7cd7ea",
+  "capturedAt": "2026-09-15T07:15:34.122743+00:00",
   "sourceFiles": {
-    "src/style.css": "7b0bb6074daf8f77e253a1250bee0d378c789014cfe5c5c920411740eb88dd19",
-    "src/ui/UI.ts": "97e861c8ca982034e0558e88f0571ce302ac45c25ebd5267fc485f7af1329228"
+    "src/style.css": "861458d55f6f4821a25f6ae50ca3fb2d2fc0cc98d3b5b60e2ca4c7f2be9bdc1a",
+    "src/ui/UI.ts": "9e1b2d4710221e4c57be9bdc38a1618b28d6753c69559a87ed5c641aa2527a2a"
   },
   "build": {
     "command": "npm run build",
     "passed": true,
     "assets": {
       "MapViewer-CrtlUGtL.css": "b16a06413995ee7fbcea307cb06f410a8db88ccfcb884e8de500691729d2eb81",
-      "MapViewer-DSmFl9F4.js": "0695920d3d8352b3f8e97cdb615449b525d429c2d3450e92105d1ad4901945a9",
-      "Renderer-DUh3B_eb.js": "21b95d6d6198f308a0f106a2e3a11608ca3b591daf79a65ad27f3a87b12eb26b",
-      "extract.worker-03ghh7fo.js": "1385801f5d38a8e5034608529d9925bc3defdf3d43a813753fc1759427e9fcb3",
-      "index-CkT3ULAF.js": "e0c4ec6f86acb0f095fb30612af6e92bc363c7583a5c7262fd1406ad6beb5a2f",
-      "main-8rV1KPYb.js": "f79e2b9ae22124ba1c72289fb50bae7a92928dae33fda3591d59c606f5a4aecd",
-      "main-Bsr15oF9.css": "7bdcda3ae1ddbd7e3dfbe216fbe7f7dd08e30c4c02a0a835ff5cd920f99d71c4"
+      "MapViewer-DXBlWHbO.js": "7ffeb389b50707e8ff6275aa01d6d2e1d1626ccf3f012242424a7c5e865137dd",
+      "Renderer-CrEPnDrt.js": "5f50ea2b3c771e3d4cc623f7b0504d84ceafcfcf6a0535ba3f3f0e6a73022314",
+      "extract.worker-DiZzjMZ2.js": "6cec822cbc513d9ff2184054541e1ffcbe8c9dde7ec15d648dc0eb5b23d586b2",
+      "index-iXT3mZFQ.js": "0d71f73f0f351dd52def62d010974a20c8919a2be18cd02bd337f37c09ccea7b",
+      "main-CUjv8_76.js": "bb89c14e77719fe2b4b44828cbeabbdb0abd6d493ec518ee416b971eb1f5947b",
+      "main-jTtDUFAw.css": "cfc5f0b1319d30b064cb9b9d7af949cff4c15271518fd2e89e305a50ffab97c5"
     }
   },
   "sharedControls": {
     "command": "npm test -- --maxWorkers=2 tests/mobile-controls.test.ts tests/desktop-controls.test.ts",
-    "passed": 35
+    "passed": 36
   },
-  "browser": "Chromium production builds; 974 original assets, mobile/touch emulation; explicit force_mobile=1 at wide desktop; startup confirmed before visibility measurements. Native mobile hardware not tested.",
   "smoke": {
     "modes": [
-      "pan",
-      "attack",
-      "select"
+      {
+        "mode": "pan",
+        "pass": true
+      },
+      {
+        "mode": "attack",
+        "pass": true
+      },
+      {
+        "mode": "select",
+        "pass": true
+      }
     ],
     "stop": {
       "before": "move",
       "after": "guard"
     },
     "buildDrawer": true,
-    "placementCancelKeepsReady": true,
     "readyIndicator": true,
+    "placementCancelKeepsReady": true,
     "assets": {
       "phase": "ready",
       "message": "Original game assets loaded from this browser.",
@@ -46,416 +55,7 @@
     }
   },
   "layouts": {
-    "portrait": {
-      "url": "http://localhost:5183/radar-glass.html?force_mobile=1",
-      "viewport": [
-        390,
-        844
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 0,
-        "y": 728,
-        "w": 390,
-        "h": 116,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 14,
-          "y": 747,
-          "w": 135,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 157,
-          "y": 747,
-          "w": 135,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 14,
-          "y": 795,
-          "w": 135,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 157,
-          "y": 795,
-          "w": 135,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 300,
-          "y": 747,
-          "w": 76,
-          "h": 92,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "false"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 390,
-        "h": 728,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 390,
-        "y": 0,
-        "w": 168,
-        "h": 728,
-        "display": "flex",
-        "visibility": "hidden"
-      },
-      "overflow": false
-    },
-    "narrow": {
-      "url": "http://localhost:5183/radar-glass.html?force_mobile=1",
-      "viewport": [
-        320,
-        740
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 0,
-        "y": 624,
-        "w": 320,
-        "h": 116,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 14,
-          "y": 643,
-          "w": 110,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 128,
-          "y": 643,
-          "w": 110,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 14,
-          "y": 691,
-          "w": 110,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 128,
-          "y": 691,
-          "w": 110,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 242,
-          "y": 643,
-          "w": 64,
-          "h": 92,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "false"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 320,
-        "h": 624,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 320,
-        "y": 0,
-        "w": 168,
-        "h": 624,
-        "display": "flex",
-        "visibility": "hidden"
-      },
-      "overflow": false
-    },
-    "landscape": {
-      "url": "http://localhost:5183/radar-glass.html?force_mobile=1",
-      "viewport": [
-        844,
-        390
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 0,
-        "y": 274,
-        "w": 844,
-        "h": 116,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 24,
-          "y": 293,
-          "w": 334,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 366,
-          "y": 293,
-          "w": 334,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 24,
-          "y": 341,
-          "w": 334,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 366,
-          "y": 341,
-          "w": 334,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 708,
-          "y": 293,
-          "w": 112,
-          "h": 92,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "true"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 844,
-        "h": 274,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 676,
-        "y": 0,
-        "w": 168,
-        "h": 274,
-        "display": "flex",
-        "visibility": "visible"
-      },
-      "overflow": false
-    },
-    "forced": {
-      "url": "http://localhost:5183/radar-glass.html?force_mobile=1",
-      "viewport": [
-        1280,
-        800
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 0,
-        "y": 684,
-        "w": 1280,
-        "h": 116,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 24,
-          "y": 703,
-          "w": 552,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 584,
-          "y": 703,
-          "w": 552,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 24,
-          "y": 751,
-          "w": 552,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 584,
-          "y": 751,
-          "w": 552,
-          "h": 44,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 1144,
-          "y": 703,
-          "w": 112,
-          "h": 92,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "false"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 1280,
-        "h": 684,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 1280,
-        "y": 0,
-        "w": 168,
-        "h": 684,
-        "display": "flex",
-        "visibility": "hidden"
-      },
-      "overflow": false
-    },
     "desktop": {
-      "url": "http://localhost:5183/radar-glass.html",
       "viewport": [
         1280,
         800
@@ -472,67 +72,62 @@
       },
       "buttons": [
         {
-          "label": "Select units mode; cancel building placement",
+          "label": "01Select",
           "x": 0,
           "y": 0,
           "w": 0,
           "h": 0,
-          "display": "inline-block",
+          "display": "flex",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": "true",
           "expanded": null
         },
         {
-          "label": "Pan camera mode",
+          "label": "02Pan",
           "x": 0,
           "y": 0,
           "w": 0,
           "h": 0,
-          "display": "inline-block",
+          "display": "flex",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": "false",
           "expanded": null
         },
         {
-          "label": "Attack move mode",
+          "label": "03Attack",
           "x": 0,
           "y": 0,
           "w": 0,
           "h": 0,
-          "display": "inline-block",
+          "display": "flex",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": "false",
           "expanded": null
         },
         {
-          "label": "Stop selected units",
+          "label": "04Stop",
           "x": 0,
           "y": 0,
           "w": 0,
           "h": 0,
-          "display": "inline-block",
+          "display": "flex",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": null,
           "expanded": null
         },
         {
-          "label": "BUILD",
+          "label": "05Build\u2197",
           "x": 0,
           "y": 0,
           "w": 0,
           "h": 0,
-          "display": "inline-block",
+          "display": "flex",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": null,
           "expanded": "false"
         }
@@ -555,116 +150,539 @@
         "visibility": "visible"
       },
       "overflow": false
-    }
-  },
-  "drawerChecks": {
-    "radar-glass-drawer": {
+    },
+    "forced": {
+      "viewport": [
+        1280,
+        800
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 0,
+        "y": 722,
+        "w": 1280,
+        "h": 78,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "01Select",
+          "x": 8,
+          "y": 744,
+          "w": 277.1875,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "02Pan",
+          "x": 285.1875,
+          "y": 744,
+          "w": 221.75,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "03Attack",
+          "x": 506.9375,
+          "y": 744,
+          "w": 255.015625,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "04Stop",
+          "x": 761.953125,
+          "y": 744,
+          "w": 221.765625,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "05Build\u2197",
+          "x": 983.71875,
+          "y": 744,
+          "w": 288.28125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "false"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 1280,
+        "h": 722,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 1280,
+        "y": 0,
+        "w": 168,
+        "h": 722,
+        "display": "flex",
+        "visibility": "hidden"
+      },
+      "overflow": false
+    },
+    "medium": {
+      "viewport": [
+        600,
+        375
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 0,
+        "y": 297,
+        "w": 600,
+        "h": 78,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "01Select",
+          "x": 8,
+          "y": 319,
+          "w": 128.0625,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "02Pan",
+          "x": 136.0625,
+          "y": 319,
+          "w": 102.453125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "03Attack",
+          "x": 238.515625,
+          "y": 319,
+          "w": 117.828125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "04Stop",
+          "x": 356.34375,
+          "y": 319,
+          "w": 102.453125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "05Build\u2197",
+          "x": 458.796875,
+          "y": 319,
+          "w": 133.203125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 600,
+        "h": 297,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 432,
+        "y": 0,
+        "w": 168,
+        "h": 297,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
+    },
+    "narrow": {
+      "viewport": [
+        320,
+        740
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 0,
+        "y": 618,
+        "w": 320,
+        "h": 122,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "01Select",
+          "x": 8,
+          "y": 644,
+          "w": 104,
+          "h": 44,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "02Pan",
+          "x": 112,
+          "y": 644,
+          "w": 104,
+          "h": 44,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "03Attack",
+          "x": 8,
+          "y": 688,
+          "w": 104,
+          "h": 44,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "04Stop",
+          "x": 112,
+          "y": 688,
+          "w": 104,
+          "h": 44,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "05Build\u2197",
+          "x": 216,
+          "y": 644,
+          "w": 96,
+          "h": 88,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 618,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 152,
+        "y": 0,
+        "w": 168,
+        "h": 618,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
+    },
+    "landscape": {
       "viewport": [
         844,
         390
       ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 0,
+        "y": 312,
+        "w": 844,
+        "h": 78,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "01Select",
+          "x": 8,
+          "y": 334,
+          "w": 181.578125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "02Pan",
+          "x": 189.578125,
+          "y": 334,
+          "w": 145.25,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "03Attack",
+          "x": 334.828125,
+          "y": 334,
+          "w": 167.0625,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "04Stop",
+          "x": 501.890625,
+          "y": 334,
+          "w": 145.265625,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "05Build\u2197",
+          "x": 647.15625,
+          "y": 334,
+          "w": 188.84375,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 844,
+        "h": 312,
+        "display": "block",
+        "visibility": "visible"
+      },
       "drawer": {
         "x": 676,
         "y": 0,
         "w": 168,
-        "h": 274
+        "h": 312,
+        "display": "flex",
+        "visibility": "visible"
       },
-      "well": {
-        "x": 676,
-        "y": 117,
-        "w": 168,
-        "h": 88
+      "overflow": false
+    },
+    "portrait": {
+      "viewport": [
+        390,
+        844
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 0,
+        "y": 722,
+        "w": 390,
+        "h": 122,
+        "display": "grid",
+        "visibility": "visible"
       },
-      "scroll": {
-        "client": 88,
-        "total": 198
-      },
-      "controls": [
+      "buttons": [
         {
-          "label": "Close build panel",
-          "x": 644,
-          "y": 0,
-          "w": 32,
-          "h": 28,
-          "hit": true
-        },
-        {
-          "label": "Scroll production down",
-          "x": 714,
-          "y": 212,
-          "w": 46,
-          "h": 25,
-          "hit": true
-        },
-        {
-          "label": "Scroll production up",
-          "x": 760,
-          "y": 212,
-          "w": 46,
-          "h": 25,
-          "hit": true
-        },
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 24,
-          "y": 293,
-          "w": 334,
+          "label": "01Select",
+          "x": 8,
+          "y": 748,
+          "w": 128.953125,
           "h": 44,
-          "hit": true
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
         },
         {
-          "label": "Pan camera mode",
-          "x": 366,
-          "y": 293,
-          "w": 334,
+          "label": "02Pan",
+          "x": 136.953125,
+          "y": 748,
+          "w": 128.96875,
           "h": 44,
-          "hit": true
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
         },
         {
-          "label": "Attack move mode",
-          "x": 24,
-          "y": 341,
-          "w": 334,
+          "label": "03Attack",
+          "x": 8,
+          "y": 792,
+          "w": 128.953125,
           "h": 44,
-          "hit": true
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
         },
         {
-          "label": "Stop selected units",
-          "x": 366,
-          "y": 341,
-          "w": 334,
+          "label": "04Stop",
+          "x": 136.953125,
+          "y": 792,
+          "w": 128.96875,
           "h": 44,
-          "hit": true
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
         },
         {
-          "label": "BUILD",
-          "x": 708,
-          "y": 293,
-          "w": 112,
-          "h": 92,
-          "hit": true
+          "label": "05Build\u2197",
+          "x": 265.921875,
+          "y": 748,
+          "w": 116.0625,
+          "h": 88,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "false"
         }
       ],
-      "pass": true
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 722,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 390,
+        "y": 0,
+        "w": 168,
+        "h": 722,
+        "display": "flex",
+        "visibility": "hidden"
+      },
+      "overflow": false
     }
+  },
+  "shortDrawer": {
+    "drawer": {
+      "top": 0,
+      "bottom": 297
+    },
+    "barTop": 297,
+    "controls": [
+      {
+        "class": "build-tab active",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab ",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab ",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab category-unavailable",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "queue-panel",
+        "y": 254,
+        "bottom": 297,
+        "inside": true
+      }
+    ],
+    "pass": true
   },
   "screenshots": {
     "portrait": {
-      "file": "tests/artifacts/mobile-toolbar/radar-glass-portrait.png",
-      "sha256": "8c2552eb9865d2056993665a9ce15a1e2e8219af3463227660583e15fdb1a811"
+      "path": "tests/artifacts/mobile-toolbar/radar-glass-portrait.png",
+      "sha256": "a5e52692344408974316cd66cafc44d84bde63a515ca9418db655dc5fd3b2a39"
     },
     "landscape": {
-      "file": "tests/artifacts/mobile-toolbar/radar-glass-landscape.png",
-      "sha256": "3dff7156d62a6cc1db82cd10ee81b0d2eea1bd2ac264be5de9e132f0f768d3d6"
+      "path": "tests/artifacts/mobile-toolbar/radar-glass-landscape.png",
+      "sha256": "3c5f3eaa4f6a1473697703c1acfb4395903cd6e5ce7cd500f8a73133c5af716c"
     }
   },
-  "visualReview": {
-    "root": "All ten actual game captures inspected against retail command/sidebar references. Five substantially different framing/arrangement/surface/illustration directions. Labels, selected modes, open Build and touch targets clear.",
-    "independent": "All ten captures plus final drawer corrections reviewed by separate same-ticket helper; PASS, no blocking findings.",
-    "references": [
-      "tests/artifacts/video-reference/command-strip-native-comparison.png",
-      "tests/artifacts/video-reference/retail-production-0203-0219.jpg"
-    ]
-  },
-  "scope": "Toolbar markup, artwork and CSS plus review artifacts. Actions/gameplay unchanged. Human selection required before merge."
+  "visualReview": "Independent astra-high reviewer inspected all ten new actual-game captures and refreshed affected pairs; five substantially different compositions, modern glass confirmed, no blocking findings.",
+  "evidenceScope": "Final captures checked against final built asset filenames. Initial six-layout/action suite retained where final edits only added initial aria-pressed attributes or removed an unmatched CSS selector (no layout/action change). Glass production-well minimum-height correction rechecked on final build at600x375.",
+  "limits": "Chromium touch emulation with original assets; physical hardware not tested. Human selection required before merge."
 }
