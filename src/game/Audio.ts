@@ -79,7 +79,9 @@ export class GameAudio {
     };
     this.sources.add(source); this.lastPlayed.set(name, now); source.start();
   }
-  async acknowledge() { await this.unlock(); this.play('CommandBar'); }
+  async acknowledge(selection: readonly string[] = []) {
+    await this.unlock(); this.play(selection.includes('sniper') ? 'SniperSelect' : 'CommandBar');
+  }
   async tabChanged() { await this.unlock(); this.play('MenuTab'); }
   async preview() { await this.unlock(); this.play('MenuClick'); }
   notifications(events: readonly GameEvent[]) {

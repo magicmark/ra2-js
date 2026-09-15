@@ -34,6 +34,54 @@ function fixture() {
   return { game, controls, camera, renderer, callbacks, events, key, click, pointer, pick: (entity?: Entity) => { picked = entity; }, settings: (value: boolean) => { settingsOpen = value; }, enable: (value: boolean) => { enabled = value; } };
 }
 
+describe('unit selection feedback', () => {
+  it.each(['mouse', 'touch'])('acknowledges a %s Sniper selection once and keeps orders and deselection separate', pointerType => {
+    const { game, click, callbacks } = fixture();
+    const sniper = (game as any).spawn('sniper', 0, 20, 20) as Entity;
+    click(sniper, { pointerType });
+    expect(sniper.selected).toBe(true); expect(callbacks.ack).toHaveBeenCalledExactlyOnceWith(['sniper']);
+    callbacks.ack.mockClear(); click(undefined, { pointerType });
+    expect(callbacks.ack).toHaveBeenCalledExactlyOnceWith();
+    callbacks.ack.mockClear(); click(sniper, { pointerType, shiftKey: true });
+    expect(sniper.selected).toBe(false); expect(callbacks.ack).not.toHaveBeenCalled();
+    click(undefined, { button: 2, pointerType }); expect(callbacks.ack).not.toHaveBeenCalled();
+  });
+
+  it('acknowledges drag selection once and ignores empty or disabled selections', () => {
+    const { game, renderer, pointer, callbacks, click, enable } = fixture();
+    const sniper = (game as any).spawn('sniper', 0, 20, 20) as Entity;
+    renderer.entityPoint = e => e.id === sniper.id ? { x: 200, y: 200 } : { x: 500, y: 500 };
+    pointer('pointerdown', 100, 100); pointer('pointermove', 300, 300); pointer('pointerup', 300, 300);
+    expect(callbacks.ack).toHaveBeenCalledExactlyOnceWith(['sniper']);
+    callbacks.ack.mockClear();
+    pointer('pointerdown', 100, 100); pointer('pointermove', 150, 150); pointer('pointerup', 150, 150);
+    expect(callbacks.ack).not.toHaveBeenCalled();
+    enable(false); click(sniper); expect(callbacks.ack).not.toHaveBeenCalled();
+  });
+
+  it('voices keyboard selection and group recall, filtering stale group members', () => {
+    const { game, key, callbacks, click } = fixture();
+    const sniper = (game as any).spawn('sniper', 0, 20, 20) as Entity;
+    click(sniper); key('1', { ctrlKey: true });
+    const gi = game.state.entities.find(e => e.side === 0 && e.type === 'gi')!;
+    click(gi); callbacks.ack.mockClear(); key('1');
+    expect(callbacks.ack).toHaveBeenCalledExactlyOnceWith(['sniper']);
+    for (const command of ['t', 'p', 'u']) {
+      callbacks.ack.mockClear(); key(command);
+      expect(callbacks.ack).toHaveBeenCalledTimes(1);
+      expect(callbacks.ack.mock.calls[0][0]).toContain('sniper');
+    }
+    click(sniper); click(gi); callbacks.ack.mockClear(); key('n');
+    expect(callbacks.ack).toHaveBeenCalledExactlyOnceWith(['sniper']);
+    game.select([Math.max(...game.state.entities.filter(e => e.side === 0 && e.id < sniper.id).map(e => e.id))]);
+    callbacks.ack.mockClear(); key('m');
+    expect(callbacks.ack).toHaveBeenCalledExactlyOnceWith(['sniper']);
+    sniper.transportId = 123; callbacks.ack.mockClear(); key('1');
+    expect(callbacks.ack).not.toHaveBeenCalled();
+    sniper.transportId = undefined; sniper.hp = 0; key('1'); expect(callbacks.ack).not.toHaveBeenCalled();
+  });
+});
+
 // Keep the real keyboard -> UI -> Controls placement path; only presentation
 // rendering is stubbed here. Browser checks exercise the actual DOM/cameos.
 function productionFixture() {

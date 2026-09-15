@@ -8,7 +8,7 @@ export { GAME_SPEED_STEPS, SCROLL_RATE_STEPS, type BindingId, type BindingInfo, 
 export type ControlMode = 'select' | 'pan' | 'attack' | 'repair' | 'sell' | 'chrono-source' | 'chrono-destination' | 'weather';
 export type ControlCommand = 'team1' | 'team2' | 'type' | 'deploy' | 'guard' | 'planning';
 export interface ControlCallbacks {
-  toast(text: string): void; zoom(value: number): void; mode(value: ControlMode): void; ack(): void;
+  toast(text: string): void; zoom(value: number): void; mode(value: ControlMode): void; ack(selection?: readonly string[]): void;
   category?(category: Category): void; options?(): void; briefing?(): void; enabled?(): boolean; cursor?(name: NativeCursorName): void;
 }
 export const detectMobile = () => new URLSearchParams(location.search).get('force_mobile') === '1' || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && matchMedia('(pointer: coarse)').matches);
@@ -78,12 +78,17 @@ export class Controls {
     return !!target && !target.selling && target.side === 0 && target.hp < target.maxHp && isBuilding(this.game.defs[target.type])
       && this.game.state.entities.some(entity => entity.selected && entity.side === 0 && entity.hp > 0 && entity.type === 'engineer');
   }
-  private select(ids: number[], additive = false): void {
+  private select(ids: number[], additive = false, feedback = true): void {
     const previous = this.ids();
     this.game.select(ids, additive);
     if (previous.length && previous.join(',') !== this.ids().join(',')) this.selectionHistory.push(previous);
     if (this.selectionHistory.length > 64) this.selectionHistory.shift();
     this.followId = null;
+    if (feedback) this.selectionAck(ids);
+  }
+  private selectionAck(ids: number[]): void {
+    const types = this.game.state.entities.filter(e => ids.includes(e.id) && e.selected && e.side === 0 && e.hp > 0 && e.transportId === undefined).map(e => e.type);
+    if (types.length) this.callbacks.ack(types);
   }
   private cancelGesture(): void {
     this.pointers.clear(); this.start = null; this.last = null; this.multiTouch = false;
@@ -280,7 +285,7 @@ export class Controls {
     if (this.renderer.selectionBox) {
       const { from, to } = this.renderer.selectionBox, minX = Math.min(from.x, to.x), maxX = Math.max(from.x, to.x), minY = Math.min(from.y, to.y), maxY = Math.max(from.y, to.y);
       const ids = this.ownUnits().filter(entity => { const q = this.renderer.entityPoint(entity); return q.x >= minX && q.x <= maxX && q.y >= minY && q.y <= maxY; }).map(e => e.id);
-      this.select(ids, e.shiftKey); if (ids.length) this.callbacks.ack();
+      this.select(ids, e.shiftKey);
     } else if (!this.moved && e.button !== 1) this.click(p, e);
     this.renderer.selectionBox = null; this.start = null; this.last = null; this.updateCursor();
   }
@@ -316,11 +321,11 @@ export class Controls {
     else if (entity && this.engineerRepair(entity)) this.game.orderAttack(ids, entity.id);
     else if (entity && entity.side === 0 && this.mode !== 'attack') {
       const now = performance.now(), double = this.lastClick.id === entity.id && now - this.lastClick.time < 320;
-      if (e.shiftKey && entity.selected) this.select(ids.filter(id => id !== entity.id));
+      if (e.shiftKey && entity.selected) this.select(ids.filter(id => id !== entity.id), false, false);
       else if (double && this.game.defs[entity.type].deployedRange === undefined) this.select(this.ownUnits().filter(other => other.type === entity.type && this.renderer.visible(other)).map(other => other.id), e.shiftKey);
-      else if (entity.selected && !e.shiftKey && (this.game.defs[entity.type].deployedRange !== undefined || entity.type === 'mcv' || this.game.defs[entity.type].passengers)) this.game.deploy([entity.id]);
+      else if (entity.selected && !e.shiftKey && (this.game.defs[entity.type].deployedRange !== undefined || entity.type === 'mcv' || this.game.defs[entity.type].passengers)) { this.game.deploy([entity.id]); this.callbacks.ack(); }
       else this.select([entity.id], e.shiftKey);
-      this.lastClick = { id: entity.id, time: now }; this.callbacks.ack(); return;
+      this.lastClick = { id: entity.id, time: now }; return;
     } else if (ids.length) {
       if (this.planning) {
         this.queueWaypoint(ids, w); return;
@@ -365,7 +370,7 @@ export class Controls {
     } else if (command === 'type') {
       const types = new Set(this.game.state.entities.filter(e => e.selected).map(e => e.type)), now = performance.now(), all = now - this.lastTypeTime < 400;
       this.select(this.ownUnits().filter(e => types.has(e.type) && (all || this.renderer.visible(e))).map(e => e.id), options.shift);
-      this.lastTypeTime = now; this.callbacks.ack();
+      this.lastTypeTime = now;
     } else {
       const key = command === 'team1' ? '1' : '2';
       if (options.clear) { this.groups.delete(key); this.callbacks.toast(`Control group ${key} disbanded.`); }
@@ -408,14 +413,14 @@ export class Controls {
     else if (command === 'scatter') { this.game.scatter(ids); this.callbacks.ack(); }
     else if (command === 'deploy') this.executeCommand('deploy');
     else if (command === 'repair' || command === 'sell') this.setMode(this.mode === command ? 'select' : command);
-    else if (command === 'selectAll') { this.select(this.ownUnits().map(e => e.id)); this.callbacks.ack(); }
+    else if (command === 'selectAll') this.select(this.ownUnits().map(e => e.id));
     else if (command === 'selectType') this.executeCommand('type', { shift: e.shiftKey });
     else if (command === 'next') {
       const units = this.ownUnits().sort((a, b) => a.id - b.id);
       const next = units.find(unit => unit.id > (ids.at(-1) ?? -1)) ?? units[0];
       if (next) this.select([next.id]);
     } else if (command === 'previous') {
-      const previous = this.selectionHistory.pop(); if (previous) this.game.select(previous);
+      const previous = this.selectionHistory.pop(); if (previous) { this.game.select(previous); this.selectionAck(previous); }
     } else if (command === 'health') {
       const units = this.ownUnits();
       for (let attempt = 0; attempt < 3; attempt++) {

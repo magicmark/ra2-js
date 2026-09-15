@@ -72,7 +72,7 @@ const ui=new UI(game,{
 
 try{
   renderer=new Renderer(document.querySelector<HTMLCanvasElement>('#game-canvas')!,game);
-  controls=new Controls(renderer,game,detectMobile(),{toast:text=>ui.showToast(text),zoom:value=>ui.setZoom(value),mode:value=>ui.setMode(value),cursor:name=>ui.setCursor(name),ack:()=>audio.acknowledge(),enabled:()=>battleStarted&&assets.ready&&!ui.isModalOpen(),category:category=>ui.selectCategory(category,true),options:()=>ui.openOptions(),briefing:()=>ui.openBriefing()});
+  controls=new Controls(renderer,game,detectMobile(),{toast:text=>ui.showToast(text),zoom:value=>ui.setZoom(value),mode:value=>ui.setMode(value),cursor:name=>ui.setCursor(name),ack:selection=>audio.acknowledge(selection),enabled:()=>battleStarted&&assets.ready&&!ui.isModalOpen(),category:category=>ui.selectCategory(category,true),options:()=>ui.openOptions(),briefing:()=>ui.openBriefing()});
   renderer.assets=assets;
   if(nativeMap)centerStart();
   if(detectMobile())renderer.camera.zoom=.75;

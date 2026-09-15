@@ -12,8 +12,8 @@ import { assetCache, archiveStageKey, type SavedArchive } from './AssetDownload'
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
-// Existing artwork/audio plus three passenger IFV turret VXL/HVA pairs.
-const CURRENT_SELECTED_FILE_COUNT = 995;
+// Existing artwork/audio, passenger IFV turrets, and four Sniper selection voices.
+const CURRENT_SELECTED_FILE_COUNT = 999;
 // Fixed historical membership: deriving the old cache by subtracting only the
 // previous update's additions accidentally left hundreds of future map files in it.
 const PRE_NATIVE_NAMES = new Set(readFileSync(new URL('./fixtures/selected-art-pre-native.txt', import.meta.url), 'utf8')
@@ -175,6 +175,23 @@ describe.skipIf(!process.env.RA2_ASSET_DIR && !process.env.RA2_SELECTED_ART)('st
     expect(await manager.initialize()).toBe('ready');
     expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
     expect(new Set([0, 1, 2, 3].map(variant => manager.getVehicleSprite('ifv', 0, 0, 0, variant))).size).toBe(4);
+    expect((await assetCache<{ files: AssetFile[] }>(source))!.files).toHaveLength(CURRENT_SELECTED_FILE_COUNT);
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
+  }, 60_000);
+
+  it('upgrades missing Sniper selection voices from saved MIX files and reuses the upgraded cache', async () => {
+    await new AssetManager().importFiles([new File(['fixture'], 'ra2.mix')]);
+    const source = '/asset-source', previous = await assetCache<any>(source);
+    const files = previous.files.filter((file: AssetFile) => !/^audio\/isnise[a-d]\.wav$/.test(file.name));
+    expect(files).toHaveLength(CURRENT_SELECTED_FILE_COUNT - 4);
+    await assetCache(source, { ...previous, files });
+    await assetCache(archiveStageKey(source, 'mix'), { version: 1, id: 'saved-mixes', saved: 123, files: [{ name: 'ra2.mix', blob: new Blob(['local fixture']) }] } satisfies SavedArchive);
+    worker.mockClear(); network.mockClear();
+    const manager = new AssetManager(); expect(await manager.initialize()).toBe('ready');
+    expect(manager.getSounds()?.get('SniperSelect')?.samples).toHaveLength(4);
+    expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
+    expect((await assetCache<SavedArchive>(archiveStageKey(source, 'mix')))?.id).toBe('saved-mixes');
     expect((await assetCache<{ files: AssetFile[] }>(source))!.files).toHaveLength(CURRENT_SELECTED_FILE_COUNT);
     expect(await new AssetManager().initialize()).toBe('ready');
     expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();

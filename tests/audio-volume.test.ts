@@ -5,7 +5,7 @@ import type { OriginalSounds } from '../src/assets/AudioBank';
 
 function fixture() {
   const sample = { sampleRate: 22050, channels: [new Float32Array([0, .5, -.5, 0])] };
-  const bank: OriginalSounds = new Map(['MenuClick', 'MenuTab', 'CommandBar', 'MenuScold', 'GIAttack', 'GIAttackDeployed', 'IFVAttackGround', 'SealAttack', 'GrizzlyTankAttack', 'Explosion01', 'EVA_UnitReady', 'EVA_ConstructionComplete'].map(name => [name, { samples: [sample], volume: .6, speech: name.startsWith('EVA_') }]));
+  const bank: OriginalSounds = new Map(['MenuClick', 'MenuTab', 'CommandBar', 'SniperSelect', 'MenuScold', 'GIAttack', 'GIAttackDeployed', 'IFVAttackGround', 'SealAttack', 'GrizzlyTankAttack', 'Explosion01', 'EVA_UnitReady', 'EVA_ConstructionComplete'].map(name => [name, { samples: [sample], volume: name === 'SniperSelect' ? .9 : .6, speech: name.startsWith('EVA_') }]));
   const gains: { gain: { setValueAtTime: ReturnType<typeof vi.fn> }; connect: ReturnType<typeof vi.fn>; disconnect: ReturnType<typeof vi.fn> }[] = [];
   const sources: { buffer: unknown; start: ReturnType<typeof vi.fn>; stop: ReturnType<typeof vi.fn>; connect: ReturnType<typeof vi.fn>; disconnect: ReturnType<typeof vi.fn>; onended?: () => void }[] = [];
   const context = {
@@ -20,6 +20,26 @@ function fixture() {
   return { audio, context, constructor, gains, sources, available: (value: boolean) => { available = value; } };
 }
 afterEach(() => vi.unstubAllGlobals());
+
+it('voices Sniper selection through effects settings while orders retain their command cue', async () => {
+  const { audio, context, gains, sources } = fixture(), played = vi.spyOn(audio, 'play');
+  audio.effectsVolume = 5; audio.musicVolume = 0;
+  await audio.acknowledge(['gi', 'sniper', 'sniper']);
+  expect(played).toHaveBeenLastCalledWith('SniperSelect'); expect(sources).toHaveLength(1);
+  expect(gains[0].gain.setValueAtTime).toHaveBeenLastCalledWith(.5, 1);
+  expect(gains[1].gain.setValueAtTime).toHaveBeenLastCalledWith(.9, 1);
+  context.currentTime++; audio.effectsVolume = 0; await audio.acknowledge(['sniper']);
+  audio.effectsVolume = 10; audio.enabled = false; await audio.acknowledge(['sniper']);
+  expect(sources).toHaveLength(1);
+  audio.enabled = true; context.state = 'suspended';
+  context.resume.mockRejectedValueOnce(new Error('blocked')); await audio.acknowledge(['sniper']);
+  expect(sources).toHaveLength(1);
+  await audio.acknowledge(['sniper']); expect(sources).toHaveLength(2);
+  context.currentTime++; await audio.acknowledge();
+  expect(played).toHaveBeenLastCalledWith('CommandBar');
+  context.currentTime++; await audio.acknowledge(['gi']);
+  expect(played).toHaveBeenLastCalledWith('CommandBar'); expect(sources).toHaveLength(4);
+});
 
 it('plays the original tab cue through effects settings, independently of music volume', async () => {
   const { audio, context, gains, sources } = fixture();

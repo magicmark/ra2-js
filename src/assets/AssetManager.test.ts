@@ -177,6 +177,22 @@ describe('durable extracted asset cache', () => {
     expect((await assetCache<SavedArchive>(key))?.rejected).toBeUndefined();
   });
 
+  it('recovers missing Sniper selection samples from saved MIXes and reuses the upgraded cache', async () => {
+    await new AssetManager().download();
+    const saved = (await entry())!, key = archiveStageKey('/asset-source', 'mix');
+    const archive = await assetCache<SavedArchive>(key);
+    await entry('/asset-source', { ...saved, files: saved.files.map(file => file.name === 'sound.ini'
+      ? { ...file, bytes: new TextEncoder().encode(new TextDecoder().decode(file.bytes).replace('[SniperSelect]\nSounds=fixture', '[SniperSelect]\nSounds=isnisea')) } : file) });
+    download.mockClear(); makeWorker.mockClear();
+    const manager = new AssetManager(); expect(await manager.initialize()).toBe('ready');
+    expect(manager.getSounds()?.get('SniperSelect')?.samples[0].sampleRate).toBe(22050);
+    expect(makeWorker).toHaveBeenCalledOnce(); expect(download).not.toHaveBeenCalled();
+    expect((await assetCache<SavedArchive>(key))?.id).toBe(archive?.id);
+    expect((await assetCache<SavedArchive>(key))?.rejected).toBeUndefined();
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(makeWorker).toHaveBeenCalledOnce(); expect(download).not.toHaveBeenCalled();
+  });
+
   it('asks for an explicit source when an old artwork-only cache has no sound or reusable archive', async () => {
     const old = { version: 8, files: files().filter(file => !file.name.startsWith('audio/')), saved: 1 };
     await entry('/asset-source', old);
