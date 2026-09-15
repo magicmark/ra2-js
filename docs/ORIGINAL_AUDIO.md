@@ -8,8 +8,8 @@ separately from the existing game-asset source.
 
 The extraction worker indexes `language.mix/audio.mix`. Its `audio.idx` names
 samples in `audio.bag`; `sound.ini` supplies effect variants and volume, and
-`eva.ini` supplies the Allied announcements. The current selection has 38 cues
-using 70 unique samples. Only these samples, wrapped in WAV headers, enter the
+`eva.ini` supplies the Allied announcements. The current selection has 39 cues
+using 71 unique samples. Only these samples, wrapped in WAV headers, enter the
 selected-asset cache; the complete BAG stays inside the reusable MIX archive.
 Original standalone WAV overrides are supported too.
 
@@ -65,6 +65,10 @@ starts the first track. Music does not depend on the simulation speed.
 - A player pointer/key gesture unlocks Web Audio; loading alone stays silent.
 - Commands use `CommandBar`; Options preview and generic success use `MenuClick`;
   generic warnings use `MenuScold`.
+- Changing production tabs uses `MenuTab` (`utab`, authored volume 60%) through
+  the effects channel. Pointer/touch clicks and Q/W/E/R share one change handler;
+  selecting the current tab stays silent, including Q/W ready-building pickup.
+  Existing selections recover the added sample from saved MIX files locally.
 - Shots use the simulated unit's weapon Report, including deployed GI, anti-air
   flak and the implemented IFV passenger weapons. Unknown/custom weapons have no
   invented substitute. Existing explosion events use `Explosion01`.

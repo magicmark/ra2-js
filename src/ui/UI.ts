@@ -37,6 +37,7 @@ export interface UIActions {
   onMusicVolume?(value: number): void;
   getMusicVolume?(): number;
   onPreviewSound?(): void;
+  onCategoryChange?(): void;
   onAbort?(): void;
   onShowHidden?(enabled: boolean): void;
   getShowHidden?(): boolean;
@@ -332,7 +333,9 @@ export class UI {
 
   selectCategory(category: Category, placeReady = false) {
     if (this.isModalOpen()) return;
+    const changed = this.category !== category;
     this.category = category; this.renderCards(); this.update();
+    if (changed) this.actions.onCategoryChange?.();
     if (placeReady && (category === 'structures' || category === 'defenses')) {
       const ready = this.game.state.sides[0].queues[category][0];
       if (ready?.ready) this.beginPlacement(ready.type);

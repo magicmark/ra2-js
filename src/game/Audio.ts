@@ -80,6 +80,7 @@ export class GameAudio {
     this.sources.add(source); this.lastPlayed.set(name, now); source.start();
   }
   async acknowledge() { await this.unlock(); this.play('CommandBar'); }
+  async tabChanged() { await this.unlock(); this.play('MenuTab'); }
   async preview() { await this.unlock(); this.play('MenuClick'); }
   notifications(events: readonly GameEvent[]) {
     for (const event of events) if (!this.seenEvents.has(event)) { this.seenEvents.add(event); this.notification(event); }

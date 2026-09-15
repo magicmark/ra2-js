@@ -47,6 +47,7 @@ const ui=new UI(game,{
   onMusicVolume:value=>{audio.musicVolume=value;},
   getMusicVolume:()=>audio.musicVolume,
   onPreviewSound:()=>audio.preview(),
+  onCategoryChange:()=>audio.tabChanged(),
   onAbort:()=>{
     battleStarted=false;audio.reset();game.restart();controls.cancelPlacement();controls.setMode('select');centerStart();
     ui.setLoading(true);progress(assets.status);
