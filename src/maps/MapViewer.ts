@@ -17,8 +17,8 @@ export function startMapViewer() {
   const app = document.querySelector<HTMLElement>('#app')!;
   app.innerHTML = `<div class="map-shell">
     <header class="map-topbar"><a class="map-brand" href="/">RED ALERT <b>II</b></a><span class="map-viewer-label">MAP VIEWER</span><span id="map-preview-title" class="map-preview-title" hidden></span><a class="map-back" id="map-back" href="/">Return to game <span aria-hidden="true">↗</span></a></header>
-    <aside class="map-sidebar" aria-label="Map selector"><label class="map-mobile-picker" for="map-mobile-select">Battlefield<select id="map-mobile-select">${MAP_CATALOG.map(entry => `<option value="${entry.id}">${escape(entry.name)}</option>`).join('')}</select></label><div class="map-library-heading"><span class="map-eyebrow">BATTLEFIELDS</span><span class="map-count">${MAP_CATALOG.length.toString().padStart(2, '0')}</span></div><p class="map-library-intro">Medium maps. Six starting positions.</p>
-      <nav class="map-list" aria-label="Choose a map">${MAP_CATALOG.map((entry, index) => `<a class="map-choice" href="/maps/${entry.id}" data-map-id="${entry.id}"><span class="map-number">${(index + 1).toString().padStart(2, '0')}</span><span class="map-choice-copy"><strong>${escape(entry.name)}</strong><small>${theaterName(entry.theater)} <span>·</span> ${entry.size.join(' × ')}</small></span><span class="map-choice-arrow" aria-hidden="true">↗</span></a>`).join('')}</nav>
+    <aside class="map-sidebar" aria-label="Map selector"><label class="map-mobile-picker" for="map-mobile-select">Battlefield<select id="map-mobile-select">${MAP_CATALOG.map(entry => `<option value="${entry.id}">${escape(entry.name)}</option>`).join('')}</select></label><div class="map-library-heading"><span class="map-eyebrow">BATTLEFIELDS</span><span class="map-count">${MAP_CATALOG.length.toString().padStart(2, '0')}</span></div><p class="map-library-intro">Six starting positions per map.</p>
+      <nav class="map-list" aria-label="Choose a map">${MAP_CATALOG.map((entry, index) => `<a class="map-choice" href="/maps/${entry.id}" data-map-id="${entry.id}"><span class="map-number">${(index + 1).toString().padStart(2, '0')}</span><span class="map-choice-copy"><strong>${escape(entry.name)}</strong><small>${theaterName(entry.theater)} <span>·</span> <span data-map-size="${entry.id}">${entry.size.join(' × ')} full map</span></small></span><span class="map-choice-arrow" aria-hidden="true">↗</span></a>`).join('')}</nav>
       <div class="map-library-footer"><span class="map-visibility-dot"></span><div><strong>Full map visibility</strong><p>Fog and shroud disabled</p></div></div>
     </aside>
     <main class="map-main"><header class="map-heading"><div><p class="map-eyebrow" id="map-kicker">MAP OVERVIEW</p><h1 id="map-title">Map library</h1><p id="map-description">Choose a battlefield from the sidebar.</p></div><a id="map-preview" class="map-primary-link" hidden>Preview map <span aria-hidden="true">↗</span></a></header>
@@ -87,7 +87,6 @@ export function startMapViewer() {
         button.addEventListener('click', () => { renderer.camera.center(start.x, start.y); renderer.camera.setZoom(1); fitted = false; redraw(); canvas.focus(); });
         markers.push({ button, x: start.x, y: start.y }); el('map-starts').append(button);
       }
-      el('map-facts').innerHTML = `<span><strong>${map.starts.length}</strong> player starts</span><span><strong>${selected!.size.join(' × ')}</strong> medium</span><span><strong>${theaterName(map.theater)}</strong> theater</span><span><strong>${map.structures.filter(value => value.type.toUpperCase() === 'CAOILD').length}</strong> oil derricks</span><span><strong>${map.structures.filter(value => value.type.toUpperCase() === 'CAAIRP').length}</strong> airports</span><span class="map-fog-tag">Fog disabled</span>`;
       render(); updateStatus();
     } catch (error) { fail(error); }
   }
@@ -112,7 +111,7 @@ export function startMapViewer() {
     back.href = previewMode ? `/maps/${entry.id}${location.search}` : '/';
     el('map-title').textContent = entry.name; el('map-description').textContent = entry.description;
     el('map-kicker').textContent = `${theaterName(entry.theater)} / ${entry.style}`;
-    el('map-facts').innerHTML = `<span><strong>6</strong> player starts</span><span><strong>${entry.size.join(' × ')}</strong> medium</span><span class="map-fog-tag">Fog disabled</span>`;
+    el('map-facts').innerHTML = `<span><strong>6</strong> player starts</span><span>Loading dimensions…</span><span class="map-fog-tag">Fog disabled</span>`;
     const preview = el<HTMLAnchorElement>('map-preview'); preview.hidden = false; preview.href = `/maps/${entry.id}/preview${location.search}`; preview.title = 'Explore the full map with no fog or active match';
     const download = el<HTMLAnchorElement>('map-download'); download.hidden = false; download.href = entry.path; download.download = `${entry.id}.map`;
     updateStatus();
@@ -124,7 +123,12 @@ export function startMapViewer() {
         loaded = parseNativeMap(await response.text()); cache.set(entry.id, loaded);
       }
       if (ticket !== generation) return;
-      map = loaded; mapLoading = false; showMap();
+      map = loaded; mapLoading = false;
+      // Dimensions describe the native map, independently of artwork loading.
+      const fullSize = map.size.slice(2).join(' × '), playableSize = map.localSize.slice(2).join(' × ');
+      app.querySelector<HTMLElement>(`[data-map-size="${entry.id}"]`)!.textContent = `${fullSize} full map`;
+      el('map-facts').innerHTML = `<span><strong>${map.starts.length}</strong> player starts</span><span><strong>${fullSize}</strong> full map</span><span><strong>${playableSize}</strong> playable area</span><span><strong>${theaterName(map.theater)}</strong> theater</span><span><strong>${map.structures.filter(value => value.type.toUpperCase() === 'CAOILD').length}</strong> oil derricks</span><span><strong>${map.structures.filter(value => value.type.toUpperCase() === 'CAAIRP').length}</strong> airports</span><span class="map-fog-tag">Fog disabled</span><span class="map-size-note">Full map includes the outer border. Dimensions use the map grid; isometric tiles appear twice as wide as tall.</span>`;
+      showMap();
     } catch (error) { if (ticket === generation && !(error instanceof DOMException && error.name === 'AbortError')) { mapLoading = false; fail(error); } }
   }
   function route() {

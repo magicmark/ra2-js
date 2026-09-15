@@ -55,6 +55,8 @@ it('ships eight distinct complete native six-player medium maps', () => {
   for (const entry of MAP_CATALOG) {
     const text = textOf(entry.id), map = parseNativeMap(text);
     expect(map.size).toEqual([0, 0, 96, 96]);
+    expect(entry.size, `${entry.id} sidebar dimensions must match the map file`).toEqual(map.size.slice(2));
+    expect(map.localSize).toEqual([3, 4, 90, 86]);
     expect(map.cells).toHaveLength(18336);
     expect(new Set(map.cells.map(c => key(c.x, c.y))).size).toBe(18336);
     expect(map.starts.map(s => s.index)).toEqual([0, 1, 2, 3, 4, 5]);

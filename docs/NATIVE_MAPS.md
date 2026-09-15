@@ -22,6 +22,14 @@ class: 96 × 96 is close to the 100 × 100 six-player convention, with ample exp
 space without a 120 × 120 large-map footprint. The native dimensions describe an
 isometric rectangle; they are not a 96 × 96 Cartesian tile array.
 
+The Map Viewer labels 96 × 96 as the **full map** and 90 × 86 as the
+**playable area**, excluding the outer border. All eight authored files use these
+same extents; their terrain layouts differ. Detail dimensions come from the
+loaded file's `Size` and `LocalSize`, even before original artwork is available.
+Sidebar catalog dimensions are checked against the shipped files in tests and
+refreshed from each file when selected. The 60 × 30 pixel isometric tiles explain
+why equal native width and height render as a wide rectangle.
+
 All six native waypoints have separated clear base areas, two identical nearby
 ore fields (49 + 29 full-density ore cells per start), and access to the main land
 component. Each map contains six Neutral `CAOILD` oil derricks and three Neutral
