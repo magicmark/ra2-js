@@ -1,6 +1,6 @@
 # Native six-player map collection
 
-Eight original maps live in `public/maps/*.map`; the typed application catalog is
+Eight project-authored maps live in `public/maps/*.map`; the typed application catalog is
 `src/game/maps/catalog.ts`. These are normal FinalAlert2 / Red Alert 2 INI maps.
 Their terrain is native chunked LZO1X `IsoMapPack5`; ore uses native Format80/LCW
 `OverlayPack` and `OverlayDataPack`. No custom section substitutes for terrain.
@@ -15,6 +15,23 @@ Their terrain is native chunked LZO1X `IsoMapPack5`; ore uses native Format80/LC
 | Copperhead Mesa | Temperate | Flat mineral bands, sand shelves, radial open approaches |
 | Whiteout Causeway | Snow | Twin lakes, broad central crossing, open outer routes |
 | Tidal Crown | Urban | Crescent inlet with connected coastal parks and pavement |
+
+## Names and map selection
+
+The Map Viewer identifies maps by name and stable URL slug, without list-position
+numbers. Numbered player-start markers still identify the six native waypoints.
+
+The eight names above were checked against the
+[CnCNet RA2/Yuri's Revenge map catalog at revision `15e60a4`](https://github.com/CnCNet/cncnet-yr-client-package/blob/15e60a40185dbfb4b45208a8c73d1805d257a1ae/package/INI/MPMaps.ini).
+None matches any of its 573 map descriptions, including 211 entries attributed to
+Westwood (some are variants). The comparison removes player-count prefixes,
+ignores case, and strips punctuation and spaces. The
+[mirrored Westwood map-pack release descriptions](https://www.cnclabs.com/maps/redalert2/westwood-maps.aspx?all=1&page=1)
+for RA2 packs 1–12 and the cumulative Yuri's Revenge pack 5 also contain no matching
+name. No renames were needed. This checks the original-game names represented in
+those sources; it is not a claim of uniqueness across every community map or mod.
+
+## Dimensions and layout
 
 Each map has `Size=0,0,96,96` (18,336 native diamond cells) and
 `LocalSize=3,4,90,86`. “Medium” is a design choice, not a documented fixed RA2 size
