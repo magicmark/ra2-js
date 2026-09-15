@@ -1,11 +1,15 @@
 import { WEAPON_SOUNDS, IFV_SOUNDS, type OriginalSounds } from '../assets/AudioBank';
 import type { DecodedAudioSample } from '../assets/AudioSample';
 import type { Effect, GameEvent } from './types';
+import type { OriginalMusic } from '../assets/MusicBank';
+import { GameMusic } from './Music';
 
 /** Original MIX samples only. AudioContext is unlocked by a player gesture. */
 export class GameAudio {
   private muted = false;
   private volume = 10;
+  private musicLevel = 5;
+  private music: GameMusic | null;
   private context: AudioContext | null = null;
   private master: GainNode | null = null;
   private buffers = new WeakMap<DecodedAudioSample, AudioBuffer>();
@@ -16,21 +20,34 @@ export class GameAudio {
   private seenEvents = new WeakSet<GameEvent>();
   private seenEffects = new WeakSet<Effect>();
   private lastPlayed = new Map<string, number>();
-  constructor(private readonly originals: () => OriginalSounds | undefined) {}
+  constructor(private readonly originals: () => OriginalSounds | undefined, music?: () => OriginalMusic | undefined) {
+    this.music = music ? new GameMusic(music) : null;
+  }
   get enabled() { return !this.muted; }
   set enabled(value: boolean) { this.muted = !value; if (!value) this.speechQueue = []; this.updateGain(); }
   get effectsVolume() { return this.volume; }
   set effectsVolume(value: number) { this.volume = Number.isFinite(value) ? Math.max(0, Math.min(10, value)) : 0; if (this.volume === 0) this.speechQueue = []; this.updateGain(); }
-  private updateGain() { if (this.master && this.context) this.master.gain.setValueAtTime(this.enabled ? this.volume / 10 : 0, this.context.currentTime); }
+  get musicVolume() { return this.musicLevel; }
+  set musicVolume(value: number) { this.musicLevel = Number.isFinite(value) ? Math.max(0, Math.min(10, value)) : 0; this.updateGain(); }
+  setMusicPlaying(active: boolean) { this.music?.setPlaying(active); }
+  private updateGain() {
+    if (this.master && this.context) this.master.gain.setValueAtTime(this.enabled ? this.volume / 10 : 0, this.context.currentTime);
+    this.music?.setLevel(this.enabled ? this.musicLevel / 10 : 0);
+  }
 
   async unlock() {
-    if (!this.enabled || this.volume <= 0 || !this.originals()?.size) return;
+    // Remember the import/Continue gesture before async asset loading finishes.
+    // Music remains inactive until the battlefield is ready, even with a running context.
+    if (!this.music && (!this.enabled || this.volume <= 0 || !this.originals()?.size)) return;
     try {
       if (!this.context) {
         this.context = new AudioContext(); this.master = this.context.createGain();
         this.master.connect(this.context.destination); this.updateGain();
+        this.music?.attach(this.context);
+        this.context.onstatechange = () => this.music?.sync();
       }
       if (this.context.state === 'suspended') await this.context.resume();
+      this.music?.sync();
     } catch { /* Unsupported/blocked audio must not stop gameplay; the next gesture may retry. */ }
   }
 
@@ -86,6 +103,7 @@ export class GameAudio {
     }
   }
   reset() {
+    this.music?.reset();
     this.speech = null; this.speechName = null; this.speechQueue = [];
     for (const source of this.sources) source.stop();
     this.sources.clear(); this.seenEvents = new WeakSet(); this.lastPlayed.clear(); this.seenEffects = new WeakSet();

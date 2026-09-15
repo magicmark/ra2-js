@@ -20,7 +20,7 @@ if(requestedMap){
   if(!response.ok)throw new Error(`Unable to load ${entry.name} (${response.status}). Reload to retry.`);
   nativeMap=parseNativeMap(await response.text());
 }
-const game=new Game(nativeMap?{map:nativeMap}:{}),assets=new AssetManager(),audio=new GameAudio(()=>assets.getSounds());
+const game=new Game(nativeMap?{map:nativeMap}:{}),assets=new AssetManager(),audio=new GameAudio(()=>assets.getSounds(),()=>assets.getMusic());
 let renderer:Renderer,controls:Controls;
 let battleStarted=false;
 const SOURCE_STORAGE_KEY='red-alert-command.asset-source';
@@ -44,6 +44,8 @@ const ui=new UI(game,{
   getScrollRate:()=>controls?.scrollRate??1,
   onEffectsVolume:value=>{audio.effectsVolume=Math.max(0,Math.min(10,value));},
   getEffectsVolume:()=>audio.effectsVolume,
+  onMusicVolume:value=>{audio.musicVolume=value;},
+  getMusicVolume:()=>audio.musicVolume,
   onPreviewSound:()=>audio.preview(),
   onAbort:()=>{
     battleStarted=false;audio.reset();game.restart();controls.cancelPlacement();controls.setMode('select');centerStart();
@@ -75,8 +77,8 @@ try{
   if(detectMobile())renderer.camera.zoom=.75;
   ui.setZoom(renderer.camera.zoom);
   let last=performance.now(),uiTime=0;
-  for(const event of ['pointerdown','keydown'])document.addEventListener(event,()=>audio.unlock(),{capture:true});
-  document.addEventListener('visibilitychange',()=>{last=performance.now();});
+  for(const event of ['pointerdown','keydown'])document.addEventListener(event,event=>{if(event.isTrusted)void audio.unlock();},{capture:true});
+  document.addEventListener('visibilitychange',()=>{last=performance.now();audio.setMusicPlaying(battleStarted&&assets.ready&&!document.hidden);});
   const frame=(now:number)=>{
     const dt=Math.max(0,(now-last)/1000);last=now;
     if(battleStarted&&!document.hidden&&!ui.isModalOpen()){
@@ -88,6 +90,7 @@ try{
       const x=Math.floor(effect.x),y=Math.floor(effect.y),p=renderer.camera.screen(effect.x,effect.y);
       return x>=0&&y>=0&&x<game.state.width&&y<game.state.height&&!!game.state.fog[y*game.state.width+x]&&p.x>=0&&p.y>=0&&p.x<renderer.camera.width&&p.y<renderer.camera.height;
     });
+    audio.setMusicPlaying(battleStarted&&assets.ready&&!document.hidden);
     requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);
@@ -109,10 +112,11 @@ function requireOriginals(){
   if(!assets.ready||assets.status.phase!=='ready')throw new Error('Complete original game files are required to enter the battlefield.');
 }
 function showAssetError(error:unknown){
-  battleStarted=false;ui.setLoading(true);
+  battleStarted=false;audio.reset();ui.setLoading(true);
   ui.setAssetStatus({phase:'error',error:error instanceof Error?error.message:String(error),detail:'Choose complete original game files, then press Enter or import them to retry.',source});
 }
 function handleBattleError(error:unknown){
+  audio.reset();
   const message=error instanceof Error?error.message:String(error);
   if(message.includes('bundled artwork')){battleStarted=false;ui.showRuntimeError(message);return;}
   if(assets.ready&&assets.status.phase==='ready'&&!/^(Missing original|Invalid original|Original game artwork|Complete original)/.test(message)){
@@ -141,7 +145,7 @@ function downloadAssets(url:string):Promise<void>{
   ui.setAssetSource(source);
   return runAssetOperation(async()=>{
     void requestPersistentAssetStorage();
-    battleStarted=false;ui.setLoading(true);
+    battleStarted=false;audio.reset();ui.setLoading(true);
     await assets.download({url:source,nativeMaps:!!nativeMap,onProgress:progress});
     if(assets.status.phase==='ready')enterBattle();
   });
@@ -150,7 +154,7 @@ function importAssets(files:File[]):Promise<void>{
   if(assetOperation&&restoringAssets)return assetOperation.then(()=>importAssets(files));
   return runAssetOperation(async()=>{
     void requestPersistentAssetStorage();
-    battleStarted=false;ui.setLoading(true);
+    battleStarted=false;audio.reset();ui.setLoading(true);
     await assets.importFiles(files,{url:source,nativeMaps:!!nativeMap,onProgress:progress});
     if(assets.status.phase==='ready')enterBattle();
   });
@@ -177,6 +181,7 @@ function centerStart(){
 function enterBattle(){
   installCameos();renderer.render();battleStarted=true;
   ui.setLoading(false);
+  audio.setMusicPlaying(!document.hidden);
 }
 
 function installSidebar(){

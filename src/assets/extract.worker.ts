@@ -1,5 +1,6 @@
 import SevenZip from '7z-wasm';
 import { selectAudioFiles } from './AudioBank';
+import { MissingMusicError, selectMusicFiles } from './MusicBank';
 import wasmUrl from '7z-wasm/7zz.wasm?url';
 import { MixArchive } from './formats';
 import { NESTED_MIXES, UI_FILES, UI_HASH_FILES, wantedFiles } from './catalog';
@@ -32,7 +33,7 @@ worker.onmessage = async ({ data }) => {
           : 'Extraction failed; the saved download is kept for retry.';
         return new Error(`7-Zip code ${code}: ${reason}`);
       };
-      try { archive.callMain(['e', '/input/source.exe', 'ra2.mix', 'language.mix', 'expand*.mix', '-r', '-o/output', '-y']); }
+      try { archive.callMain(['e', '/input/source.exe', 'ra2.mix', 'language.mix', 'theme.mix', 'expand*.mix', '-r', '-o/output', '-y']); }
       catch (error) {
         const code = error && typeof error === 'object' && 'status' in error ? Number(error.status) : NaN;
         if (code > 1) throw extractionError(code);
@@ -47,7 +48,7 @@ worker.onmessage = async ({ data }) => {
       }
       archive.FS.unmount('/input');
     }
-    if (!raw.size) { invalidArchive = true; throw new Error('No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix and language.mix.'); }
+    if (!raw.size) { invalidArchive = true; throw new Error('No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix, language.mix and theme.mix.'); }
     // Successful installer extraction remains reusable even if a later nested
     // MIX decoder fails. Only direct MIX input is rejected by its index parser;
     // WASM startup, interruption and browser allocation errors stay retryable.
@@ -59,7 +60,7 @@ worker.onmessage = async ({ data }) => {
       for (const nested of NESTED_MIXES) { const content = mix.get(nested); if (content?.length) visit(name + '/' + nested, content, depth + 1); }
     };
     for (const [name, bytes] of raw) { worker.postMessage({ kind: 'progress', message: `Indexing ${name}…` }); visit(name, bytes, 0); }
-    if (!archives.length) throw new Error('No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix and language.mix.');
+    if (!archives.length) throw new Error('No game MIX files found. Choose the RA2 multiplayer installer, or ra2.mix, language.mix and theme.mix.');
     if (!archives.some(archive => archive.get('unittem.pal'))) throw new Error('The game unit palette was not found. Import ra2.mix from a complete Red Alert 2 installation.');
     invalidArchive = false;
     if (data.includeMixStage !== false) worker.postMessage({ kind: 'mix', files: [...raw].map(([name, bytes]) => ({ name, blob: new Blob([bytes as Uint8Array<ArrayBuffer>]) })) });
@@ -70,7 +71,7 @@ worker.onmessage = async ({ data }) => {
         if (bytes) { selected.push({ name, bytes: bytes.slice() }); break; }
       }
     }
-    selected.push(...selectAudioFiles(archives));
+    selected.push(...selectAudioFiles(archives), ...selectMusicFiles(archives));
     // Side MIXes reuse filenames with different pixels and palettes. Keep the
     // faction namespace; global last-archive-wins would paint Allied chrome red.
     for (const side of [0, 1]) {
@@ -89,6 +90,6 @@ worker.onmessage = async ({ data }) => {
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     if (/out of memory|allocation failed|array buffer allocation/i.test(message)) invalidArchive = false;
-    worker.postMessage({ kind: 'error', invalidArchive, message });
+    worker.postMessage({ kind: 'error', invalidArchive, missingMusic: error instanceof MissingMusicError, message });
   }
 };

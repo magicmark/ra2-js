@@ -78,11 +78,12 @@ let extracted: AssetFile[];
 let workerFailure: string | undefined;
 let workerInvalid = false;
 let workerMixThenFailure = false;
+let workerMissingMusic = false;
 let workerInputs: { files: { name: string; blob: Blob }[] }[];
 let download: ReturnType<typeof vi.fn>;
 let makeWorker: ReturnType<typeof vi.fn>;
 beforeEach(() => {
-  extracted = files(); workerFailure = undefined; workerInvalid = false; workerMixThenFailure = false; workerInputs = [];
+  extracted = files(); workerFailure = undefined; workerInvalid = false; workerMixThenFailure = false; workerMissingMusic = false; workerInputs = [];
   vi.stubGlobal('indexedDB', new IDBFactory());
   vi.stubGlobal('document', { createElement: () => new TestCanvas() });
   download = vi.fn(async () => new Response(new Uint8Array([77, 90, 0, 0]), { status: 200 }));
@@ -97,6 +98,10 @@ beforeEach(() => {
         workerInputs.push(input);
         queueMicrotask(() => {
           if (this.terminated) return;
+          if (workerMissingMusic && input.files.every(file => /\.mix$/i.test(file.name))) {
+            this.onmessage?.({ data: { kind: 'error', missingMusic: true, invalidArchive: false, message: 'Missing original music asset: grinder.wav. Import the complete installer, or ra2.mix, language.mix and theme.mix.' } });
+            return;
+          }
           if ((!workerFailure || workerMixThenFailure) && input.includeMixStage !== false) this.onmessage?.({ data: { kind: 'mix', files: [{ name: 'ra2.mix', blob: new Blob(['validated MIX fixture']) }] } });
           this.onmessage?.({ data: workerFailure
             ? { kind: 'error', message: workerFailure, invalidArchive: workerInvalid }
@@ -110,6 +115,55 @@ beforeEach(() => {
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 describe('durable extracted asset cache', () => {
+  it('recovers omitted music from the saved installer when old MIX caches lack theme.mix, then reopens without extraction', async () => {
+    await new AssetManager().download();
+    const saved = (await entry())!, key = archiveStageKey('/asset-source', 'mix');
+    const archive = await assetCache<SavedArchive>(key);
+    await entry('/asset-source', { ...saved, files: saved.files.filter(file => file.name !== 'theme.ini' && !file.name.startsWith('music/')) });
+    workerMissingMusic = true; download.mockClear(); makeWorker.mockClear(); workerInputs = [];
+    const manager = new AssetManager(); expect(await manager.initialize()).toBe('ready');
+    expect(manager.getMusic()?.map(track => track.name)).toEqual(['Fixture']);
+    expect(workerInputs.map(input => input.files[0].name)).toEqual(['ra2.mix', 'Red-Alert-2-Multiplayer.exe']);
+    expect(download).not.toHaveBeenCalled(); expect(makeWorker).toHaveBeenCalledTimes(2);
+    expect((await assetCache<SavedArchive>(key))?.id).toBe(archive?.id);
+    expect((await assetCache<SavedArchive>(key))?.rejected).toBeUndefined();
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(makeWorker).toHaveBeenCalledTimes(2); expect(download).not.toHaveBeenCalled();
+  });
+
+  it('keeps missing music at the explicit source gate without an installer, preserving valid partial MIXes', async () => {
+    await new AssetManager().download();
+    const saved = (await entry())!, key = archiveStageKey('/asset-source', 'mix');
+    const archive = await assetCache<SavedArchive>(key);
+    const old = { ...saved, files: saved.files.filter(file => !file.name.startsWith('music/')) };
+    await entry('/asset-source', old);
+    await assetCache(archiveStageKey('/asset-source', 'installer'), null);
+    workerMissingMusic = true; download.mockClear(); makeWorker.mockClear();
+    const manager = new AssetManager(); expect(await manager.initialize()).toBe('invalid');
+    expect(manager.getMusic()).toBeUndefined(); expect(manager.status.phase).toBe('awaiting-source');
+    expect(manager.status.message).toContain('theme.mix');
+    expect(download).not.toHaveBeenCalled(); expect(makeWorker).toHaveBeenCalledOnce();
+    expect((await assetCache<SavedArchive>(key))?.id).toBe(archive?.id);
+    expect((await assetCache<SavedArchive>(key))?.rejected).toBeUndefined();
+    expectEntry(await entry(), old);
+    // Explicit submission can replace incomplete old inputs; initialization never fetches.
+    await manager.download();
+    expect(manager.ready).toBe(true); expect(download).toHaveBeenCalledOnce();
+  });
+
+  it('repairs corrupt selected music from saved MIXes without fetching or losing the archive', async () => {
+    await new AssetManager().download();
+    const saved = (await entry())!, key = archiveStageKey('/asset-source', 'mix');
+    const archive = await assetCache<SavedArchive>(key);
+    await entry('/asset-source', { ...saved, files: saved.files.map(file => file.name === 'music/fixture.wav' ? { ...file, bytes: new Uint8Array(5) } : file) });
+    download.mockClear(); makeWorker.mockClear();
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(makeWorker).toHaveBeenCalledOnce(); expect(download).not.toHaveBeenCalled();
+    expect((await assetCache<SavedArchive>(key))?.rejected).toBeUndefined();
+    expect((await assetCache<SavedArchive>(key))?.id).toBe(archive?.id);
+    expect(await new AssetManager().initialize()).toBe('ready'); expect(makeWorker).toHaveBeenCalledOnce();
+  });
+
   it('reselects missing original sounds from saved MIX files without downloading or rejecting archives', async () => {
     await new AssetManager().download();
     const saved = (await entry())!, key = archiveStageKey('/asset-source', 'mix');

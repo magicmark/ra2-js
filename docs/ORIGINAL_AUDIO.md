@@ -1,4 +1,4 @@
-# Original game sounds
+# Original game audio
 
 The game plays samples from the player's original MIX files. Generated oscillator
 feedback has been removed. No original audio bytes are bundled or downloaded
@@ -30,6 +30,36 @@ and [OpenRA WAV decoding](https://github.com/OpenRA/OpenRA/blob/bleed/OpenRA.Mod
 Cue mappings were checked against the supplied `rules.ini`, `sound.ini` and
 `eva.ini`, including IFV passenger weapon Report entries.
 
+## Gameplay music
+
+The installer contains standalone `theme.mix`, which earlier extraction skipped.
+Music also had no playback implementation. Extraction now includes that archive
+and selects the 13 gameplay tracks declared by `theme.ini` in its authored order.
+Menu/credits tracks and disabled declarations are excluded. The supplied selection
+is 66,404,108 encoded bytes; no original music bytes are bundled in this repository.
+
+The selected cache stores `theme.ini` and `music/*.wav`. WAV containers and every
+IMA block header are validated without allocating decoded PCM for the playlist.
+Playback decodes only the current track, then releases it at the next track.
+The playlist repeats after the last track. Older selections are recovered from
+saved MIX files, or the saved complete installer when the old MIX stage omitted
+`theme.mix`. Valid partial MIX caches are retained. Without a complete local
+source, the existing source gate requests an explicit import or download.
+
+Music starts when the player enters the battlefield after a pointer/key gesture.
+The import/Continue gesture unlocks Web Audio before asynchronous loading, and a
+blocked context retries on the next gesture. Loading alone never plays music.
+This follows [Chrome's Web Audio autoplay lifecycle](https://developer.chrome.com/blog/web-audio-autoplay).
+
+Sound Options has independent Music (default 5/10) and existing Sound volume
+controls; both persist in the existing preferences entry. Music zero and the
+existing master mute pause music; raising volume/unmuting resumes its position.
+Effects volume zero does not silence music. Foreground Options/manual pause keep
+music playing so volume adjustments can be heard. Hiding the tab pauses music
+immediately and returning resumes its position. Abort, restart, asset replacement
+and runtime errors stop playback and discard the current track; a new battle
+starts the first track. Music does not depend on the simulation speed.
+
 ## Playback behavior
 
 - A player pointer/key gesture unlocks Web Audio; loading alone stays silent.
@@ -49,12 +79,15 @@ Cue mappings were checked against the supplied `rules.ini`, `sound.ini` and
   Per-cue rate limiting and a bounded number of sources prevent burst overload.
 
 This is original-sample playback for the events the app already implements. It
-does not implement music, unit-specific command voice sets, stereo positional
+does not implement unit-specific command voice sets, stereo positional
 mixing, or the original engine's full priority, pitch/volume variation and range
 rules. Generic explosion selection remains shared across existing explosion
 events.
 
 ## Verification
+
+See [gameplay music verification](../tests/MUSIC_VERIFICATION.md) for original
+track/cache checks, live browser output, controls and lifecycle evidence.
 
 Meaningful regression coverage includes format corruption/bounds and decode
 goldens, required-cache recovery without network access, gesture blocking,
