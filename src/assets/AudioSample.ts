@@ -65,7 +65,7 @@ export function audioBagWave(entry: AudioIndexEntry, bag: Uint8Array): Uint8Arra
 const IMA_INDEX = [-1, -1, -1, -1, 2, 4, 6, 8];
 const IMA_STEP = [7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 19, 21, 23, 25, 28, 31, 34, 37, 41, 45, 50, 55, 60, 66, 73, 80, 88, 97, 107, 118, 130, 143, 157, 173, 190, 209, 230, 253, 279, 307, 337, 371, 408, 449, 494, 544, 598, 658, 724, 796, 876, 963, 1060, 1166, 1282, 1411, 1552, 1707, 1878, 2066, 2272, 2499, 2749, 3024, 3327, 3660, 4026, 4428, 4871, 5358, 5894, 6484, 7132, 7845, 8630, 9493, 10442, 11487, 12635, 13899, 15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767];
 
-export function decodeWave(bytes: Uint8Array): DecodedAudioSample {
+function readWave(bytes: Uint8Array) {
   check(bytes.length >= 12 && text(bytes.subarray(0, 4)) === 'RIFF' && text(bytes.subarray(8, 12)) === 'WAVE', 'Invalid WAV header');
   const data = view(bytes), end = data.getUint32(4, true) + 8;
   check(end >= 12 && end <= bytes.length, 'Truncated WAV RIFF container');
@@ -85,25 +85,38 @@ export function decodeWave(bytes: Uint8Array): DecodedAudioSample {
   check(sampleRate > 0 && sampleRate <= 384000, 'Invalid WAV sample rate');
   if (codec === 1) {
     check((bits === 8 || bits === 16) && blockAlign === channelCount * bits / 8 && body.length % blockAlign === 0, 'Invalid PCM WAV format or sample alignment');
-    const frames = body.length / blockAlign, pcm = view(body), channels = Array.from({ length: channelCount }, () => new Float32Array(frames));
-    for (let i = 0; i < frames; i++) for (let c = 0; c < channelCount; c++) {
-      const offset = (i * channelCount + c) * bits / 8;
-      channels[c][i] = bits === 8 ? (body[offset] - 128) / 128 : pcm.getInt16(offset, true) / 32768;
-    }
-    return { sampleRate, channels };
+    return { codec, channelCount, sampleRate, blockAlign, bits, frames: body.length / blockAlign, body };
   }
   check(codec === 0x11 && bits === 4, 'Unsupported WAV audio codec');
   const available = imaFrameCount(body.length, blockAlign, channelCount), samplesPerBlock = 1 + (blockAlign - 4 * channelCount) * 2 / channelCount;
   check(format.length >= 20 && fmt.getUint16(16, true) >= 2 && fmt.getUint16(16, true) + 18 <= format.length && fmt.getUint16(18, true) === samplesPerBlock, 'Invalid IMA WAV format extension');
   const frames = fact ?? available;
   check(frames > 0 && frames <= available, 'Invalid IMA WAV fact sample count');
+  for (let block = 0; block < body.length; block += blockAlign) for (let c = 0; c < channelCount; c++) {
+    const at = block + c * 4;
+    check(body[at + 2] <= 88 && body[at + 3] === 0, 'Invalid IMA WAV block state');
+  }
+  return { codec, channelCount, sampleRate, blockAlign, bits, frames, body };
+}
+
+/** Validate compressed music without allocating minutes of decoded PCM. */
+export function validateWave(bytes: Uint8Array): void { readWave(bytes); }
+
+export function decodeWave(bytes: Uint8Array): DecodedAudioSample {
+  const { codec, channelCount, sampleRate, blockAlign, bits, frames, body } = readWave(bytes);
   const channels = Array.from({ length: channelCount }, () => new Float32Array(frames)), encoded = view(body);
+  if (codec === 1) {
+    for (let i = 0; i < frames; i++) for (let c = 0; c < channelCount; c++) {
+      const offset = (i * channelCount + c) * bits / 8;
+      channels[c][i] = bits === 8 ? (body[offset] - 128) / 128 : encoded.getInt16(offset, true) / 32768;
+    }
+    return { sampleRate, channels };
+  }
   let frameBase = 0;
   for (let block = 0; block < body.length; block += blockAlign) {
     const blockEnd = Math.min(body.length, block + blockAlign), predictor: number[] = [], index: number[] = [];
     for (let c = 0; c < channelCount; c++) {
       const at = block + c * 4; predictor[c] = encoded.getInt16(at, true); index[c] = body[at + 2];
-      check(index[c] <= 88 && body[at + 3] === 0, 'Invalid IMA WAV block state');
       if (frameBase < frames) channels[c][frameBase] = predictor[c] / 32768;
     }
     let cursor = block + channelCount * 4, frame = frameBase + 1;

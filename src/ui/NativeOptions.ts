@@ -7,7 +7,7 @@ export const SPEED_LABELS = ['Slowest', 'Slower', 'Slow', 'Medium', 'Fast', 'Fas
 const SPEED_STEPS = GAME_SPEED_STEPS;
 const SCROLL_STEPS = SCROLL_RATE_STEPS;
 export const OPTIONS_STORAGE_KEY = 'ra2-game-options:v1';
-export interface OptionsPreferences { speed?: number; scroll?: number; effects?: number; targetLines?: boolean; tooltips?: boolean }
+export interface OptionsPreferences { speed?: number; scroll?: number; effects?: number; music?: number; targetLines?: boolean; tooltips?: boolean }
 export function readOptionsPreferences(storage: Pick<Storage, 'getItem'>): OptionsPreferences {
   try {
     const raw = JSON.parse(storage.getItem(OPTIONS_STORAGE_KEY) ?? '{}'), value: OptionsPreferences = {};
@@ -15,6 +15,7 @@ export function readOptionsPreferences(storage: Pick<Storage, 'getItem'>): Optio
     if ((SPEED_STEPS as readonly number[]).includes(raw.speed)) value.speed = raw.speed;
     if ((SCROLL_STEPS as readonly number[]).includes(raw.scroll)) value.scroll = raw.scroll;
     if (Number.isInteger(raw.effects) && raw.effects >= 0 && raw.effects <= 10) value.effects = raw.effects;
+    if (Number.isInteger(raw.music) && raw.music >= 0 && raw.music <= 10) value.music = raw.music;
     for (const key of ['targetLines', 'tooltips'] as const) if (typeof raw[key] === 'boolean') value[key] = raw[key];
     return value;
   } catch { return {}; }
@@ -41,7 +42,7 @@ export function optionsMarkup(sourcePane: string, briefingPane: string): string 
         ${slider('game-speed','Game Speed')}${slider('scroll-rate','Scroll Rate')}
         <div class="native-checks">${checkbox('target-lines','Target Lines')}${checkbox('tooltips','Tooltips')}${checkbox('show-hidden','Show Hidden Objects')}</div>
       </div></div>
-      <div class="options-page" data-options-page="sound" hidden><div class="native-sound-form">${slider('effects-volume','Sound',10)}<p class="options-explanation">Sound effects volume</p><button type="button" class="native-menu-button" data-options-action="preview-sound">${text('Play')}</button></div></div>
+      <div class="options-page" data-options-page="sound" hidden><div class="native-sound-form">${slider('music-volume','Music',10)}${slider('effects-volume','Sound',10)}<p class="options-explanation">Music and sound effects volume</p><button type="button" class="native-menu-button" data-options-action="preview-sound">${text('Play')}</button></div></div>
       <div class="options-page" data-options-page="keyboard" hidden><div class="native-keyboard-form">
         <label for="keyboard-category">${text('Category')}</label><select id="keyboard-category"></select>
         <label for="keyboard-command">${text('Command')}</label><select id="keyboard-command" size="7"></select>
@@ -100,6 +101,7 @@ export class NativeOptions {
       if (input.id === 'game-speed') { if (this.actions.onSpeed) this.actions.onSpeed(SPEED_STEPS[value]); else this.game.state.speed = SPEED_STEPS[value]; this.remember('speed',SPEED_STEPS[value]); }
       if (input.id === 'scroll-rate') { this.actions.onScrollRate?.(SCROLL_STEPS[value]); this.remember('scroll',SCROLL_STEPS[value]); }
       if (input.id === 'effects-volume') { this.actions.onEffectsVolume?.(value); this.remember('effects',value); }
+      if (input.id === 'music-volume') { this.actions.onMusicVolume?.(value); this.remember('music',value); }
       this.update();
     });
     root.addEventListener('change', event => {
@@ -136,6 +138,7 @@ export class NativeOptions {
     if (value.speed !== undefined) this.actions.onSpeed?.(value.speed);
     if (value.scroll !== undefined) this.actions.onScrollRate?.(value.scroll);
     if (value.effects !== undefined) this.actions.onEffectsVolume?.(value.effects);
+    if (value.music !== undefined) this.actions.onMusicVolume?.(value.music);
     if (value.targetLines !== undefined) this.actions.onTargetLines?.(value.targetLines);
     if (value.tooltips !== undefined) this.hooks.tooltips(value.tooltips);
   }
@@ -162,7 +165,7 @@ export class NativeOptions {
     this.root.style.setProperty('--options-rows-height', `${layout.rows * 50}px`);
     const nearest = (steps: readonly number[], value: number) => steps.reduce((best,v,index) => Math.abs(v-value)<Math.abs(steps[best]-value)?index:best,0);
     const speed = nearest(SPEED_STEPS,this.game.state.speed), scroll = nearest(SCROLL_STEPS,this.actions.getScrollRate?.() ?? 1);
-    for (const [id,value,label] of [['game-speed',speed,SPEED_LABELS[speed]],['scroll-rate',scroll,SPEED_LABELS[scroll]],['effects-volume',this.actions.getEffectsVolume?.() ?? 10,String(this.actions.getEffectsVolume?.() ?? 10)]] as const) {
+    for (const [id,value,label] of [['game-speed',speed,SPEED_LABELS[speed]],['scroll-rate',scroll,SPEED_LABELS[scroll]],['music-volume',this.actions.getMusicVolume?.() ?? 5,String(this.actions.getMusicVolume?.() ?? 5)],['effects-volume',this.actions.getEffectsVolume?.() ?? 10,String(this.actions.getEffectsVolume?.() ?? 10)]] as const) {
       if (document.activeElement !== this.input(id)) this.input(id).value = String(value);
       this.input(id).setAttribute('aria-valuetext',String(label));
       this.paint(this.el(`${id}-value`),String(label));
@@ -173,6 +176,7 @@ export class NativeOptions {
     this.input('tooltips').checked = this.hooks.tooltips();
     this.input('show-hidden').checked = this.actions.getShowHidden?.() ?? false;
     this.el('show-hidden-row').hidden = !this.actions.onShowHidden;
+    this.input('music-volume').closest<HTMLElement>('.native-setting')!.hidden = !this.actions.onMusicVolume;
     this.root.querySelector<HTMLElement>('[data-options-screen="sound"]')!.hidden = !this.actions.onEffectsVolume;
     this.root.querySelector<HTMLElement>('[data-options-screen="keyboard"]')!.hidden = !this.actions.getBindings;
     this.root.querySelector<HTMLElement>('[data-options-screen="abort"]')!.hidden = !this.actions.onAbort;

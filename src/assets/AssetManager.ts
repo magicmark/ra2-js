@@ -4,6 +4,7 @@ import { RA2_NORMALS } from './voxelNormals';
 import { buildingLoopFrame, buildingLoops, type BuildingLoop } from './buildingAnimations';
 import { NativeFont } from './NativeFont';
 import { prepareSounds, type OriginalSounds } from './AudioBank';
+import { MissingMusicError, prepareMusic, type OriginalMusic } from './MusicBank';
 import { NativeCursors } from './NativeCursor';
 import { decodePcx } from './Pcx';
 import { nativeAnimationInterval, nativeAnimationFrame, NATIVE_SPEED_INDEX, readArtSections, type NativeAnimationDefinition } from './NativeAnimation';
@@ -109,6 +110,8 @@ export class AssetManager {
   private files = new Map<string, Uint8Array>();
   private sounds: OriginalSounds = new Map();
   getSounds(): OriginalSounds | undefined { return this.ready ? this.sounds : undefined; }
+  private music: OriginalMusic = [];
+  getMusic(): OriginalMusic | undefined { return this.ready ? this.music : undefined; }
   private font: NativeFont | null = null;
   private cursors: NativeCursors | null = null;
   private shapes = new Map<string, ShpFile>();
@@ -227,8 +230,10 @@ export class AssetManager {
           return this.cacheResult;
         } catch (error) {
           if (run !== this.run) return 'cancelled';
-          if (attempt === 0 && error instanceof InvalidArchiveError) {
-            const alternative = await archives.resume();
+          // Older extractors omitted standalone theme.mix. Reuse the saved
+          // installer without declaring its valid ra2/language MIXes corrupt.
+          if (attempt === 0 && (error instanceof InvalidArchiveError || error instanceof MissingMusicError && local.stage.startsWith('mix'))) {
+            const alternative = await archives.resume({ skipMix: error instanceof MissingMusicError });
             if (run !== this.run) return 'cancelled';
             if (alternative && (alternative.stage !== local.stage || alternative.id !== local.id)) {
               local = alternative; continue;
@@ -244,6 +249,7 @@ export class AssetManager {
             return 'ready';
           }
           this.cacheResult = 'invalid';
+          if (downloading && error instanceof MissingMusicError) break;
           if (downloading) throw error;
           this.report('awaiting-source', `${this.cacheProblem} Press Enter to retry using saved work, or choose another source.`);
           return 'invalid';
@@ -284,7 +290,7 @@ export class AssetManager {
     const archives = this.archiveDownload(run, this.source);
     try {
       const inputs = Array.from(files, file => ({ name: file.name, blob: file }));
-      if (!inputs.length) throw new Error('Choose the Red Alert 2 installer, or ra2.mix and language.mix.');
+      if (!inputs.length) throw new Error('Choose the Red Alert 2 installer, or ra2.mix, language.mix and theme.mix.');
       const input = await archives.remember(inputs);
       if (run === this.run) await this.load(inputs, run, archives, input);
     } catch (error) { if (run === this.run) this.fail(error); }
@@ -309,7 +315,7 @@ export class AssetManager {
     this.report('error', this.error);
   }
   private async load(files: ArchiveInput[], run: number, archives: AssetDownload, input: ArchiveResume): Promise<void> {
-    if (!files.length) throw new Error('Choose the Red Alert 2 installer, or ra2.mix and language.mix.');
+    if (!files.length) throw new Error('Choose the Red Alert 2 installer, or ra2.mix, language.mix and theme.mix.');
     const phase = input.stage.startsWith('mix') ? 'cache' : 'extract';
     this.report(phase, input.stage.startsWith('mix') ? 'Preparing saved game files from MIX archives…' : 'Opening the saved installer in the browser…');
     if (run !== this.run) return;
@@ -324,7 +330,7 @@ export class AssetManager {
           if (data.kind === 'mix') staged = staged.then(() => archives.extracted(input, data.files));
           if (data.kind === 'error') {
             worker.terminate(); this.worker = undefined; this.pendingReject = undefined;
-            reject(data.invalidArchive ? new InvalidArchiveError(data.message) : new Error(data.message));
+            reject(data.invalidArchive ? new InvalidArchiveError(data.message) : data.missingMusic ? new MissingMusicError(data.message) : new Error(data.message));
           }
           if (data.kind === 'complete') {
             this.diagnostics.splice(0, this.diagnostics.length, ...data.archives.map((a: { name: string; entries: number; encrypted: boolean }) => `${a.name}: ${a.entries} files${a.encrypted ? ' (encrypted index)' : ''}`));
@@ -378,7 +384,7 @@ export class AssetManager {
     } catch (error) { throw new Error(`Invalid original sprite ${name}: ${error instanceof Error ? error.message : String(error)}`); }
   }
   private async prepare(files: AssetFile[], run = this.run): Promise<void> {
-    this.ready = false; this.preparingRun = run; this.sounds = new Map();
+    this.ready = false; this.preparingRun = run; this.sounds = new Map(); this.music = [];
     let validated = false;
     try {
       this.report('decode', 'Decoding original sprites, palettes and vehicle voxels…');
@@ -402,6 +408,7 @@ export class AssetManager {
         for (const type of ['caoild', 'caairp']) if (!this.nativeShape(theater, type)) throw new Error(`Missing original native structure: ${theater} ${type}. Import complete game MIX files.`);
       }
       this.sounds = prepareSounds(this.files);
+      this.music = prepareMusic(this.files);
       this.art = readArtSections(this.requiredFile('art.ini'));
       this.buildingLoops = buildingLoops(this.requiredFile('art.ini'));
       this.effectDefinitions = {};
