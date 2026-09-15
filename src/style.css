@@ -565,156 +565,29 @@ html:not(.mobile-controls) .selection-panel.inspection-selection:not([hidden]) {
 }
 .native-cursors .build-sidebar,.native-cursors .build-sidebar button,.native-cursors .statusbar,.native-cursors .statusbar button { cursor:var(--native-pointer); }
 
-/* Cameo Deck: illustrated command cards and black caption footplates,
-   inspired by the original sidebar production cameos. */
-html.mobile-controls {
-  --footer-height: calc(98px + env(safe-area-inset-bottom, 0px));
-}
-.mobile-controls #command-ui .build-sidebar {
-  bottom: var(--footer-height);
-}
-.mobile-controls #command-ui .mobile-commandbar {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(44px, 1fr));
-  align-items: end;
-  position: absolute;
-  left: 50%;
-  right: auto;
-  bottom: env(safe-area-inset-bottom, 0px);
-  transform: translateX(-50%);
-  width: min(480px, calc(100% - 12px));
-  height: 98px;
-  padding: 6px 7px 9px;
-  gap: 5px;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
-  isolation: isolate;
-}
-.mobile-controls #command-ui .mobile-commandbar::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 3px;
-  height: 18px;
-  z-index: -1;
-  border: 2px solid;
-  border-color: #bcc4ba #242d34 #090d12 #788a93;
-  background: repeating-linear-gradient(90deg, #121a22 0 5px, #4d5960 5px 7px, #242e36 7px 9px);
-  box-shadow: inset 0 2px #e0e1c95c, 0 2px 3px #000;
-}
-.mobile-controls #command-ui .mobile-commandbar > button {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: stretch;
-  gap: 0;
-  height: 78px;
-  min-height: 44px;
-  min-width: 44px;
-  padding: 3px;
-  border: 2px solid;
-  border-color: #cbd1c5 #35444e #080e14 #83939b;
-  border-radius: 4px 4px 1px 1px;
-  background: linear-gradient(130deg, #dee0cf, #718790 16%, #182737 44%, #657a83 74%, #101c29);
-  box-shadow: inset 1px 1px #f3efce77, inset -1px -1px #05070bcc, 0 2px 3px #000;
-  color: #f4f1dc;
-  text-shadow: 1px 1px #000;
-  overflow: visible;
-}
-.mobile-controls #command-ui .mobile-commandbar > button:nth-child(2),
-.mobile-controls #command-ui .mobile-commandbar > button:nth-child(4) {
-  height: 70px;
-}
-.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button {
-  height: 86px;
-  border-color: #e1d9a0 #4d5147 #141a1c #adaf84;
-}
-.mobile-controls #command-ui .mobile-commandbar > button .command-cameo {
-  display: block;
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  overflow: hidden;
-  border: 1px solid #07121c;
-  border-bottom: 0;
-  background: #839994;
-  box-shadow: inset 0 1px #ffffff55;
-}
-.mobile-controls #command-ui .mobile-commandbar .command-cameo svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  image-rendering: pixelated;
-  filter: saturate(.72) contrast(1.13);
-}
-.mobile-controls #command-ui .mobile-commandbar .command-cameo::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(0deg, #00000012 0 1px, transparent 1px 3px);
-  box-shadow: inset 1px 1px 3px #0009;
-}
-.mobile-controls #command-ui .mobile-commandbar > button .command-caption {
-  display: block;
-  flex: 0 0 16px;
-  width: 100%;
-  padding-top: 2px;
-  border: 1px solid #05090d;
-  border-top: 1px solid #a4ad8759;
-  background: linear-gradient(#1b201c, #050907);
-  color: inherit;
-  font: bold 10px/12px Tahoma, Arial, sans-serif;
-  letter-spacing: .1px;
-  text-align: center;
-}
-.mobile-controls #command-ui .mobile-commandbar > button.active,
-.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button[aria-expanded="true"] {
-  border-color: #ffef94 #d1af4d #7b6120 #e6c56c;
-  background: linear-gradient(130deg, #fff7ae, #c2a859 20%, #564d2c 50%, #a49351);
-  color: #fff5a5;
-  box-shadow: inset 1px 1px #fffbd1aa, 0 0 0 1px #15170f, 0 2px 3px #000;
-}
-.mobile-controls #command-ui .mobile-commandbar > button.active::after,
-.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button[aria-expanded="true"]::after {
-  content: '';
-  position: absolute;
-  left: calc(50% - 5px);
-  top: -6px;
-  width: 10px;
-  height: 4px;
-  background: #fff5ae;
-  border: 1px solid #d2b059;
-  box-shadow: 0 0 4px #ffe489;
-}
-.mobile-controls #command-ui .mobile-commandbar > button:active {
-  filter: brightness(1.2);
-  transform: translateY(1px);
-}
-.mobile-controls #command-ui .mobile-commandbar > button:focus-visible {
-  outline: 2px solid #fff7ae;
-  outline-offset: 2px;
-}
-.mobile-controls #command-ui .mobile-build-button i.visible {
-  display: block;
-  width: 8px;
-  height: 8px;
-  top: 7px;
-  right: 7px;
-  border-radius: 0;
-  border: 1px solid #eaffe0;
-  background: #7ceb61;
-  box-shadow: 0 0 0 2px #112710, 0 0 6px #afff7d;
-}
-@media (max-height: 530px) {
-  html.mobile-controls { --footer-height: calc(90px + env(safe-area-inset-bottom, 0px)); }
-  .mobile-controls #command-ui .mobile-commandbar { height: 90px; }
-  .mobile-controls #command-ui .mobile-commandbar > button { height: 70px; }
-  .mobile-controls #command-ui .mobile-commandbar > button:nth-child(2),
-  .mobile-controls #command-ui .mobile-commandbar > button:nth-child(4) { height: 64px; }
-  .mobile-controls #command-ui .mobile-commandbar > .mobile-build-button { height: 78px; }
-}
+/* Mobile toolbar alternative; desktop and action hooks remain unchanged. */
+.mobile-controls { --footer-height:calc(100px + env(safe-area-inset-bottom)); }
+.mobile-controls .build-sidebar { bottom:var(--footer-height); height:auto; }
+.mobile-controls .production-well { min-height:0; }
+.mobile-controls #command-ui .mobile-commandbar { position:absolute; z-index:30; display:grid; left:10px; right:10px; bottom:calc(10px + env(safe-area-inset-bottom)); height:80px; padding:8px; gap:6px; grid-template-columns:repeat(5,minmax(0,1fr)); border:0; }
+.mobile-controls #command-ui .mobile-commandbar > button { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; min-width:44px; min-height:44px; padding:4px 2px; margin:0; }
+.mobile-controls #command-ui .mobile-commandbar > button svg { width:23px; height:23px; }
+.mobile-controls #command-ui .mobile-commandbar > button span { font:700 10px Arial,sans-serif; letter-spacing:0; }
+.mobile-controls #command-ui .mobile-commandbar > button:focus-visible { outline:3px solid white; outline-offset:-5px; }
+.mobile-controls #command-ui .mobile-commandbar > button:active { filter:brightness(.8); }
+.mobile-controls #command-ui .mobile-commandbar .mobile-build-button i.visible { display:block; width:7px; height:7px; top:5px; right:5px; border-radius:50%; background:#e5ff58; box-shadow:0 0 0 2px #151515; }
+@media(min-width:600px) { .mobile-controls #command-ui .mobile-commandbar { left:calc(50% - 270px); right:calc(50% - 270px); } }
+/* Cloud Pad: soft molded gamepad with a thumb-sized mode cluster. */
+.mobile-controls { --footer-height:calc(142px + env(safe-area-inset-bottom)); }
+.mobile-controls #command-ui .mobile-commandbar { height:122px; max-width:360px; margin:auto; grid-template-columns:repeat(3,minmax(44px,1fr)) 72px; grid-template-rows:repeat(2,48px); background:#bdd2fa; padding:10px 14px; gap:5px 7px; border:2px solid #f0f5ff; border-radius:36px 36px 48px 48px; box-shadow:inset 0 -7px #8ca9de,0 7px 20px #0006; }
+.mobile-controls #command-ui .mobile-commandbar > button { border:0; border-radius:24px; background:#eaf0ff; color:#354d88; box-shadow:0 3px 0 #7e99cc; flex-direction:row; gap:3px; }
+.mobile-controls #command-ui .mobile-commandbar > button svg { width:19px; height:19px; }
+.mobile-controls #command-ui .mobile-commandbar > button span { font:700 9px 'Trebuchet MS',Arial,sans-serif; text-transform:capitalize; }
+.mobile-controls #command-ui .mobile-commandbar > button.active { background:#586ce8; color:#fff; box-shadow:inset 0 3px #3649a4; }
+.mobile-controls #command-ui .mobile-commandbar > [data-mode=select] { grid-column:2; grid-row:1; }
+.mobile-controls #command-ui .mobile-commandbar > [data-mode=pan] { grid-column:1; grid-row:2; }
+.mobile-controls #command-ui .mobile-commandbar > [data-mode=attack] { grid-column:3; grid-row:2; }
+.mobile-controls #command-ui .mobile-commandbar > [data-action=stop] { grid-column:2; grid-row:2; background:#dbe4f5; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button { grid-column:4; grid-row:1/3; height:72px; width:72px; align-self:center; flex-direction:column; border-radius:50%; background:#ee89bd; color:#482947; box-shadow:0 5px #bc5f92,inset 0 2px #ffc1e1; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button[aria-expanded=true] { background:#a63674; color:white; box-shadow:inset 0 4px #70264f; }
+@media(min-width:600px) { .mobile-controls #command-ui .mobile-commandbar { left:calc(50% - 180px); right:calc(50% - 180px); } }

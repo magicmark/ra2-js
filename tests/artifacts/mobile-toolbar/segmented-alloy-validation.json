@@ -1,44 +1,52 @@
 {
   "ticket": "ra2-js-sb9",
-  "design": "Cameo Deck",
-  "mainBase": "8c739d888a5709751caa5c2cdeb1595341877a01",
-  "capturedAt": "2026-09-15T05:21:21.448477+00:00",
+  "revision": 3,
+  "design": "Cloud Pad",
+  "mainBase": "f7caa375e54853b993a2abcca7f129fcce7cd7ea",
+  "capturedAt": "2026-09-15T07:15:34.304446+00:00",
   "sourceFiles": {
-    "src/style.css": "2ca6ec482f69322593114874ab2a5ac3a7cce4605b3d34504ac211751ef5833c",
-    "src/ui/UI.ts": "fa096c8b3f3d5e3b4d2792b9462a7e3b1f8fc73180469178555805ad8c4edfb3",
-    "src/ui/MobileCameos.ts": "1bbc9f254fd30105ed3a09825dac547a692e736f402c44550dc3041268bd3eb3"
+    "src/style.css": "6ee16335c629d0f5da316e868758623b32542595b5dc9a9b8af882332c6e720c",
+    "src/ui/UI.ts": "303728f28272347679bf260b08af373df42b9672273c4ffab4374c94b95e1df0"
   },
   "build": {
     "command": "npm run build",
     "passed": true,
     "assets": {
       "MapViewer-CrtlUGtL.css": "b16a06413995ee7fbcea307cb06f410a8db88ccfcb884e8de500691729d2eb81",
-      "MapViewer-DSmFl9F4.js": "0695920d3d8352b3f8e97cdb615449b525d429c2d3450e92105d1ad4901945a9",
-      "Renderer-DUh3B_eb.js": "21b95d6d6198f308a0f106a2e3a11608ca3b591daf79a65ad27f3a87b12eb26b",
-      "extract.worker-03ghh7fo.js": "1385801f5d38a8e5034608529d9925bc3defdf3d43a813753fc1759427e9fcb3",
-      "index-BDoVdWrR.js": "fa24ab082176b72a244cba84e2e0dd7e53b6f9afd640fd77df0d33cda59382cc",
-      "main-B36WPaaX.css": "35b356de81e6f6a8234ed8a0d7b19c27f850a7f8bf9254b63bd8161875ecb4f6",
-      "main-QSm7usrR.js": "b8b0ca272cc1eeebcbfb3433dbe69b75eadcfd053acebbb2e166fdb3beced5c6"
+      "MapViewer-DXBlWHbO.js": "7ffeb389b50707e8ff6275aa01d6d2e1d1626ccf3f012242424a7c5e865137dd",
+      "Renderer-CrEPnDrt.js": "5f50ea2b3c771e3d4cc623f7b0504d84ceafcfcf6a0535ba3f3f0e6a73022314",
+      "extract.worker-DiZzjMZ2.js": "6cec822cbc513d9ff2184054541e1ffcbe8c9dde7ec15d648dc0eb5b23d586b2",
+      "index-D081gWbn.js": "dbf0bd08dbd16836fa2419311ccb9be3a5e7a423eb1cd73406e87d7d995643a2",
+      "main-BipkzdAu.js": "a3cce5fdc6f35551c9e7db7cb919b209d1e0b4e906b8b07398264c8f28f8e4b6",
+      "main-CZqb0sBj.css": "5ae1bca7742f797fb6ef40ea95c9abd6bf9b7afd072d9fa128ea2d2fa7ca8444"
     }
   },
   "sharedControls": {
     "command": "npm test -- --maxWorkers=2 tests/mobile-controls.test.ts tests/desktop-controls.test.ts",
-    "passed": 35
+    "passed": 36
   },
-  "browser": "Chromium production builds; 974 original assets, mobile/touch emulation; explicit force_mobile=1 at wide desktop; startup confirmed before visibility measurements. Native mobile hardware not tested.",
   "smoke": {
     "modes": [
-      "pan",
-      "attack",
-      "select"
+      {
+        "mode": "pan",
+        "pass": true
+      },
+      {
+        "mode": "attack",
+        "pass": true
+      },
+      {
+        "mode": "select",
+        "pass": true
+      }
     ],
     "stop": {
       "before": "move",
       "after": "guard"
     },
     "buildDrawer": true,
-    "placementCancelKeepsReady": true,
     "readyIndicator": true,
+    "placementCancelKeepsReady": true,
     "assets": {
       "phase": "ready",
       "message": "Original game assets loaded from this browser.",
@@ -47,416 +55,7 @@
     }
   },
   "layouts": {
-    "portrait": {
-      "url": "http://localhost:5183/segmented-alloy.html?force_mobile=1",
-      "viewport": [
-        390,
-        844
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 6,
-        "y": 746,
-        "w": 378,
-        "h": 98,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 13,
-          "y": 760,
-          "w": 68.796875,
-          "h": 78,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 86.796875,
-          "y": 768,
-          "w": 68.796875,
-          "h": 70,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 160.59375,
-          "y": 760,
-          "w": 68.796875,
-          "h": 78,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 234.390625,
-          "y": 768,
-          "w": 68.796875,
-          "h": 70,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 308.1875,
-          "y": 752,
-          "w": 68.8125,
-          "h": 86,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "false"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 390,
-        "h": 746,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 390,
-        "y": 0,
-        "w": 168,
-        "h": 746,
-        "display": "flex",
-        "visibility": "hidden"
-      },
-      "overflow": false
-    },
-    "narrow": {
-      "url": "http://localhost:5183/segmented-alloy.html?force_mobile=1",
-      "viewport": [
-        320,
-        740
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 6,
-        "y": 642,
-        "w": 308,
-        "h": 98,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 13,
-          "y": 656,
-          "w": 54.796875,
-          "h": 78,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 72.796875,
-          "y": 664,
-          "w": 54.796875,
-          "h": 70,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 132.59375,
-          "y": 656,
-          "w": 54.796875,
-          "h": 78,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 192.390625,
-          "y": 664,
-          "w": 54.796875,
-          "h": 70,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 252.1875,
-          "y": 648,
-          "w": 54.796875,
-          "h": 86,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "false"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 320,
-        "h": 642,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 320,
-        "y": 0,
-        "w": 168,
-        "h": 642,
-        "display": "flex",
-        "visibility": "hidden"
-      },
-      "overflow": false
-    },
-    "landscape": {
-      "url": "http://localhost:5183/segmented-alloy.html?force_mobile=1",
-      "viewport": [
-        844,
-        390
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 182,
-        "y": 300,
-        "w": 480,
-        "h": 90,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 189,
-          "y": 314,
-          "w": 89.1875,
-          "h": 70,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 283.1875,
-          "y": 320,
-          "w": 89.203125,
-          "h": 64,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 377.390625,
-          "y": 314,
-          "w": 89.203125,
-          "h": 70,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 471.59375,
-          "y": 320,
-          "w": 89.203125,
-          "h": 64,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 565.796875,
-          "y": 306,
-          "w": 89.1875,
-          "h": 78,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "true"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 844,
-        "h": 300,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 676,
-        "y": 0,
-        "w": 168,
-        "h": 300,
-        "display": "flex",
-        "visibility": "visible"
-      },
-      "overflow": false
-    },
-    "forced": {
-      "url": "http://localhost:5183/segmented-alloy.html?force_mobile=1",
-      "viewport": [
-        1280,
-        800
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 400,
-        "y": 702,
-        "w": 480,
-        "h": 98,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 407,
-          "y": 716,
-          "w": 89.1875,
-          "h": 78,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 501.1875,
-          "y": 724,
-          "w": 89.203125,
-          "h": 70,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 595.390625,
-          "y": 716,
-          "w": 89.203125,
-          "h": 78,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 689.59375,
-          "y": 724,
-          "w": 89.203125,
-          "h": 70,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 783.796875,
-          "y": 708,
-          "w": 89.1875,
-          "h": 86,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "false"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 1280,
-        "h": 702,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 1280,
-        "y": 0,
-        "w": 168,
-        "h": 702,
-        "display": "flex",
-        "visibility": "hidden"
-      },
-      "overflow": false
-    },
     "desktop": {
-      "url": "http://localhost:5183/segmented-alloy.html",
       "viewport": [
         1280,
         800
@@ -473,7 +72,7 @@
       },
       "buttons": [
         {
-          "label": "Select units mode; cancel building placement",
+          "label": "SELECT",
           "x": 0,
           "y": 0,
           "w": 0,
@@ -481,12 +80,11 @@
           "display": "inline-block",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
-          "pressed": "true",
+          "pressed": null,
           "expanded": null
         },
         {
-          "label": "Pan camera mode",
+          "label": "PAN",
           "x": 0,
           "y": 0,
           "w": 0,
@@ -494,12 +92,11 @@
           "display": "inline-block",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
-          "pressed": "false",
+          "pressed": null,
           "expanded": null
         },
         {
-          "label": "Attack move mode",
+          "label": "ATTACK",
           "x": 0,
           "y": 0,
           "w": 0,
@@ -507,12 +104,11 @@
           "display": "inline-block",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
-          "pressed": "false",
+          "pressed": null,
           "expanded": null
         },
         {
-          "label": "Stop selected units",
+          "label": "STOP",
           "x": 0,
           "y": 0,
           "w": 0,
@@ -520,7 +116,6 @@
           "display": "inline-block",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": null,
           "expanded": null
         },
@@ -533,7 +128,6 @@
           "display": "inline-block",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": null,
           "expanded": "false"
         }
@@ -556,26 +150,579 @@
         "visibility": "visible"
       },
       "overflow": false
-    }
-  },
-  "drawerChecks": {},
-  "screenshots": {
-    "portrait": {
-      "file": "tests/artifacts/mobile-toolbar/segmented-alloy-portrait.png",
-      "sha256": "205853fbfe4bb916d16d6fea1490b7e7ea4076d14cb5fb4eec2d82701213a620"
+    },
+    "forced": {
+      "viewport": [
+        1280,
+        800
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 460,
+        "y": 668,
+        "w": 360,
+        "h": 122,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "SELECT",
+          "x": 561.328125,
+          "y": 680,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "PAN",
+          "x": 476,
+          "y": 733,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "ATTACK",
+          "x": 646.65625,
+          "y": 733,
+          "w": 78.34375,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "STOP",
+          "x": 561.328125,
+          "y": 733,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "BUILD",
+          "x": 732,
+          "y": 694.5,
+          "w": 72,
+          "h": 72,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "false"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 1280,
+        "h": 658,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 1280,
+        "y": 0,
+        "w": 168,
+        "h": 658,
+        "display": "flex",
+        "visibility": "hidden"
+      },
+      "overflow": false
+    },
+    "medium": {
+      "viewport": [
+        600,
+        375
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 120,
+        "y": 243,
+        "w": 360,
+        "h": 122,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "SELECT",
+          "x": 221.328125,
+          "y": 255,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "PAN",
+          "x": 136,
+          "y": 308,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "ATTACK",
+          "x": 306.65625,
+          "y": 308,
+          "w": 78.34375,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "STOP",
+          "x": 221.328125,
+          "y": 308,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "BUILD",
+          "x": 392,
+          "y": 269.5,
+          "w": 72,
+          "h": 72,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 600,
+        "h": 233,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 432,
+        "y": 0,
+        "w": 168,
+        "h": 233,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
+    },
+    "narrow": {
+      "viewport": [
+        320,
+        740
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 10,
+        "y": 608,
+        "w": 300,
+        "h": 122,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "SELECT",
+          "x": 91.328125,
+          "y": 620,
+          "w": 58.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "PAN",
+          "x": 26,
+          "y": 673,
+          "w": 58.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "ATTACK",
+          "x": 156.65625,
+          "y": 673,
+          "w": 58.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "STOP",
+          "x": 91.328125,
+          "y": 673,
+          "w": 58.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "BUILD",
+          "x": 221.984375,
+          "y": 634.5,
+          "w": 72,
+          "h": 72,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 598,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 152,
+        "y": 0,
+        "w": 168,
+        "h": 598,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
     },
     "landscape": {
-      "file": "tests/artifacts/mobile-toolbar/segmented-alloy-landscape.png",
-      "sha256": "f78a56b86d0597769dedf67b98c7e34eb4ba4ca93735db899160b3e33bb62948"
+      "viewport": [
+        844,
+        390
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 242,
+        "y": 258,
+        "w": 360,
+        "h": 122,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "SELECT",
+          "x": 343.328125,
+          "y": 270,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "PAN",
+          "x": 258,
+          "y": 323,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "ATTACK",
+          "x": 428.65625,
+          "y": 323,
+          "w": 78.34375,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "STOP",
+          "x": 343.328125,
+          "y": 323,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "BUILD",
+          "x": 514,
+          "y": 284.5,
+          "w": 72,
+          "h": 72,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 844,
+        "h": 248,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 676,
+        "y": 0,
+        "w": 168,
+        "h": 248,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
+    },
+    "portrait": {
+      "viewport": [
+        390,
+        844
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 15,
+        "y": 712,
+        "w": 360,
+        "h": 122,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "SELECT",
+          "x": 116.328125,
+          "y": 724,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "PAN",
+          "x": 31,
+          "y": 777,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "ATTACK",
+          "x": 201.65625,
+          "y": 777,
+          "w": 78.34375,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "STOP",
+          "x": 116.328125,
+          "y": 777,
+          "w": 78.328125,
+          "h": 48,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "BUILD",
+          "x": 287,
+          "y": 738.5,
+          "w": 72,
+          "h": 72,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "false"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 702,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 390,
+        "y": 0,
+        "w": 168,
+        "h": 702,
+        "display": "flex",
+        "visibility": "hidden"
+      },
+      "overflow": false
     }
   },
-  "visualReview": {
-    "root": "All ten actual game captures inspected against retail command/sidebar references. Five substantially different framing/arrangement/surface/illustration directions. Labels, selected modes, open Build and touch targets clear.",
-    "independent": "All ten captures plus final drawer corrections reviewed by separate same-ticket helper; PASS, no blocking findings.",
-    "references": [
-      "tests/artifacts/video-reference/command-strip-native-comparison.png",
-      "tests/artifacts/video-reference/retail-production-0203-0219.jpg"
-    ]
+  "shortDrawer": {
+    "drawer": {
+      "top": 0,
+      "bottom": 233
+    },
+    "barTop": 243,
+    "controls": [
+      {
+        "class": "build-tab active",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab ",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab ",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab category-unavailable",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "queue-panel",
+        "y": 190,
+        "bottom": 233,
+        "inside": true
+      }
+    ],
+    "pass": true
   },
-  "scope": "Toolbar markup, artwork and CSS plus review artifacts. Actions/gameplay unchanged. Human selection required before merge."
+  "screenshots": {
+    "portrait": {
+      "path": "tests/artifacts/mobile-toolbar/segmented-alloy-portrait.png",
+      "sha256": "e104c175ce21985e662257eb86d32cd5c6c8083345dbd6ae34dbdba1be16a115"
+    },
+    "landscape": {
+      "path": "tests/artifacts/mobile-toolbar/segmented-alloy-landscape.png",
+      "sha256": "a00fb326ababfb05421f9f5696384cfbbec90bd802d43e056b6e5d9260887083"
+    }
+  },
+  "visualReview": "Independent astra-high reviewer inspected all ten new actual-game captures and refreshed affected pairs; five substantially different compositions, modern glass confirmed, no blocking findings.",
+  "evidenceScope": "Final captures checked against final built asset filenames. Initial six-layout/action suite retained where final edits only added initial aria-pressed attributes or removed an unmatched CSS selector (no layout/action change). Glass production-well minimum-height correction rechecked on final build at600x375.",
+  "limits": "Chromium touch emulation with original assets; physical hardware not tested. Human selection required before merge.",
+  "narrowLabels": {
+    "labels": [
+      {
+        "label": "SELECT",
+        "buttonWidth": 58.328125,
+        "textWidth": 35.515625,
+        "contained": true,
+        "iconClear": true
+      },
+      {
+        "label": "PAN",
+        "buttonWidth": 58.328125,
+        "textWidth": 18.34375,
+        "contained": true,
+        "iconClear": true
+      },
+      {
+        "label": "ATTACK",
+        "buttonWidth": 58.328125,
+        "textWidth": 35.671875,
+        "contained": true,
+        "iconClear": true
+      },
+      {
+        "label": "STOP",
+        "buttonWidth": 58.328125,
+        "textWidth": 24.34375,
+        "contained": true,
+        "iconClear": true
+      },
+      {
+        "label": "BUILD",
+        "buttonWidth": 72,
+        "textWidth": 27.5,
+        "contained": true,
+        "iconClear": true
+      }
+    ],
+    "pass": true
+  }
 }
