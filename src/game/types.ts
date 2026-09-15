@@ -58,10 +58,11 @@ export interface Side {
 export interface AnimationDefinition { frames: number; ticksPerFrame: number; normalized?: boolean; facing?: number }
 export interface InfantryAnimationDefinition { sequences: Record<string, AnimationDefinition>; fireFrame: number; idleFrequency?: number }
 export interface Effect extends Vec2 {
-  kind: 'shot' | 'missile' | 'impact' | 'explosion' | 'order' | 'smoke'; life: number; maxLife: number; to?: Vec2; side?: number;
+  kind: 'shot' | 'beam' | 'missile' | 'impact' | 'explosion' | 'order' | 'smoke'; life: number; maxLife: number; to?: Vec2; side?: number;
   sourceType?: string; passengerType?: string; deployed?: boolean; airTarget?: boolean;
   animation?: string; animationTicksPerFrame?: number; startedAt?: number; damage?: number;
   height?: number;
+  beam?: { fragment: boolean };
   missile?: {
     image: 'DRAGON'; targetId?: number; groundTarget?: boolean; impact?: string; verses?: number[];
     previous: Vec2 & { height: number }; targetHeight: number; facing: number;

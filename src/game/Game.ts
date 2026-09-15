@@ -1041,6 +1041,13 @@ export class Game implements GameAPI {
     const airborne = target && this.defs[target.type].movement === 'air' && !target.landed && target.rearm === undefined;
     return airborne && this.defs[target!.type].category === 'vehicles' ? 32 : 0;
   }
+  private addPrismBeam(from: Vec2, to: Vec2, side: number, height = 0, fragment = false): void {
+    // rules.ini [Comet], [CometFragment], [PrismShot]: LaserDuration=15.
+    // Keep beams separate from the single attack/audio event and snapshot both ends.
+    const life = 15 * STEP;
+    this.state.effects.push({ kind: 'beam', ...from, to: { ...to }, side, height,
+      beam: { fragment }, life, maxLife: life, startedAt: this.state.time });
+  }
   private tickMissiles(dt: number): void {
     // Iterate a snapshot: arrival appends an impact effect to the same list.
     for (const effect of [...this.state.effects]) {
@@ -1094,6 +1101,14 @@ export class Game implements GameAPI {
     entity.cooldown = nextBurstIndex < burst ? this.randomCombatFrames(3, 5) * STEP : fireRate + this.randomCombatFrames(0, 2) * STEP;
     memory.burstIndex = nextBurstIndex % burst;
     this.state.effects.push({ kind: 'shot', ...this.center(entity), to: { ...to }, life: .16, maxLife: .16, side: entity.side, sourceType: entity.type, passengerType: entity.type === 'ifv' ? entity.passengers?.[0]?.type : undefined, deployed: entity.deployed, airTarget: !!target && this.defs[target.type].movement === 'air', startedAt: this.state.time, damage });
+    if (def.ability === 'prism') {
+      const origin = this.center(entity), facing = entity.turretFacing ?? entity.facing;
+      // art.ini [SREF] Weapon1FLH=48,0,184. [GAPRIS] PrimaryFireFLH=0,0,378
+      // plus PrimaryFirePixelOffset=0,-4. Use the existing 256-lepton/30px projection.
+      const tower = isBuilding(def), forward = tower ? 0 : 48 / 256;
+      this.addPrismBeam({ x: origin.x + Math.cos(facing) * forward, y: origin.y + Math.sin(facing) * forward },
+        to, entity.side, tower ? 378 / 256 * 30 + 4 : 184 / 256 * 30);
+    }
     if (def.projectile === 'DRAGON') {
       const facing = entity.turretFacing ?? entity.facing, origin = this.center(entity), flh = IFV_MISSILE_FLH;
       // Alternate the launcher side for the two independently fired rockets.
@@ -1105,7 +1120,10 @@ export class Game implements GameAPI {
         missile: { image: def.projectile, targetId: groundTarget ? undefined : target?.id, groundTarget, impact: def.impact, verses: verses?.slice(), previous: { x, y, height }, targetHeight: this.missileTargetHeight(groundTarget ? undefined : target), facing, trail: [] } });
     } else if (target) {
       this.damageTarget(entity, target, entity.type === 'attack_dog' ? target.maxHp : damage, verses);
-      if (def.ability === 'prism') for (const other of this.state.entities.filter(e => e.id !== target.id && e.side !== entity.side && e.side >= 0 && e.hp > 0 && this.canTarget(entity, e) && distance(this.center(e), to) < 2).slice(0, 3)) this.damageTarget(entity, other, damage * .5, verses);
+      if (def.ability === 'prism') for (const other of this.state.entities.filter(e => e.id !== target.id && e.side !== entity.side && e.side >= 0 && e.hp > 0 && this.canTarget(entity, e) && distance(this.center(e), to) < 2).slice(0, 3)) {
+        this.addPrismBeam(to, this.center(other), entity.side, 0, true);
+        this.damageTarget(entity, other, damage * .5, verses);
+      }
       if (def.ability === 'chrono' && target.hp > 0) target.disabledUntil = this.state.time + fireRate + .2;
     }
     if (def.ammo) {

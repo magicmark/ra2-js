@@ -381,6 +381,20 @@ export class Renderer {
       if(!s.explored[Math.floor(e.y)*s.width+Math.floor(e.x)])continue;
       const p=c.screen(e.x,e.y),progress=1-e.life/e.maxLife;
       p.y-=(e.height??0)*c.zoom;
+      if(e.beam&&e.to){
+        // IsLaser/IsHouseColor are procedural in the original rules (Image=none).
+        // A beam records the firing position; it never follows a hidden contact.
+        const inSight=(point:Vec2)=>point.x>=0&&point.y>=0&&point.x<s.width&&point.y<s.height&&!!s.fog[Math.floor(point.y)*s.width+Math.floor(point.x)];
+        if(!inSight(e)||!inSight(e.to))continue;
+        const to=c.screen(e.to.x,e.to.y),hex=s.sides.find(side=>side.id===e.side)?.color??'#ffffff';
+        const rgb=[1,3,5].map(offset=>parseInt(hex.slice(offset,offset+2),16)/255);
+        const opacity=Math.min(1,e.life/(e.maxLife*.4)),width=c.zoom*(e.beam.fragment ? .65 : 1);
+        // Colored glow and a bright core keep the pulse legible over terrain.
+        this.gl.line(p.x,p.y,to.x,to.y,6*width,[rgb[0],rgb[1],rgb[2],.22*opacity]);
+        this.gl.line(p.x,p.y,to.x,to.y,3*width,[rgb[0],rgb[1],rgb[2],.85*opacity]);
+        this.gl.line(p.x,p.y,to.x,to.y,Math.max(1,width),[.7+.3*rgb[0],.7+.3*rgb[1],.7+.3*rgb[2],opacity]);
+        continue;
+      }
       if(e.missile){
         const flight=e.missile,alpha=Math.max(0,Math.min(1,this.game.interpolation??1));
         const x=flight.previous.x+(e.x-flight.previous.x)*alpha,y=flight.previous.y+(e.y-flight.previous.y)*alpha;

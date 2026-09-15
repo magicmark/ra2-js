@@ -15,6 +15,45 @@ function renderer() {
 }
 
 describe('original artwork renderer', () => {
+  it('renders house-colored Prism cores/glow and thinner fragments at projected muzzle height and zoom', () => {
+    const view = renderer();
+    view.assets = { ready: true, setTheater: vi.fn() } as any;
+    vi.spyOn(view as any, 'drawTerrain').mockImplementation(() => {});
+    vi.spyOn(view as any, 'drawShroud').mockImplementation(() => {});
+    view.game.state.explored.fill(1); view.game.state.fog.fill(1);
+    view.game.state.sides = [{ id: 0, color: '#2269d4' }, { id: 1, color: '#ff1919' }] as any;
+    const beam = { kind: 'beam' as const, x: .1, y: .5, height: 184 / 256 * 30,
+      to: { x: .9, y: .5 }, life: .5, maxLife: .5, side: 0, beam: { fragment: false } };
+    view.game.state.effects = [beam]; view.camera.zoom = 2; view.render();
+    const from = view.camera.screen(beam.x, beam.y), to = view.camera.screen(beam.to.x, beam.to.y);
+    const calls = vi.mocked(view.gl.line).mock.calls;
+    expect(calls).toHaveLength(3);
+    for (const call of calls) expect(call.slice(0, 4)).toEqual([from.x, from.y - beam.height * 2, to.x, to.y]);
+    expect(calls.map(call => call[4])).toEqual([12, 6, 2]);
+    expect(calls[1][5]).toEqual([34 / 255, 105 / 255, 212 / 255, .85]);
+    expect(calls[2][5][3]).toBe(1);
+    vi.mocked(view.gl.line).mockClear();
+    beam.beam.fragment = true; beam.side = 1; beam.life = .1; view.render();
+    const fragment = vi.mocked(view.gl.line).mock.calls;
+    for (let i = 0; i < 3; i++) expect(fragment[i][4]).toBeCloseTo([7.8, 3.9, 1.3][i]);
+    expect(fragment[1][5]).toEqual([1, 25 / 255, 25 / 255, .425]);
+    expect(fragment[2][5][3]).toBe(.5);
+  });
+  it('hides Prism beams when either endpoint loses current sight, including explored terrain and off-map endpoints', () => {
+    const view = renderer();
+    view.assets = { ready: true, setTheater: vi.fn() } as any;
+    vi.spyOn(view as any, 'drawTerrain').mockImplementation(() => {});
+    vi.spyOn(view as any, 'drawShroud').mockImplementation(() => {});
+    Object.assign(view.game.state, { width: 2, height: 1, tiles: [{ terrain: 'grass', ore: 0 }, { terrain: 'grass', ore: 0 }],
+      fog: new Uint8Array([1, 1]), explored: new Uint8Array([1, 1]), sides: [{ id: 0, color: '#2269d4' }] });
+    const beam = { kind: 'beam' as const, x: .5, y: .5, to: { x: 1.5, y: .5 }, life: .5, maxLife: .5, side: 0, beam: { fragment: false } };
+    view.game.state.effects = [beam]; view.render(); expect(view.gl.line).toHaveBeenCalledTimes(3);
+    for (const [start, end] of [[0, 1], [1, 0], [0, 0]]) {
+      vi.mocked(view.gl.line).mockClear(); view.game.state.fog.set([start, end]); view.render();
+      expect(view.gl.line).not.toHaveBeenCalled();
+    }
+    view.game.state.fog.fill(1); beam.to.x = 2.5; view.render(); expect(view.gl.line).not.toHaveBeenCalled();
+  });
   it('draws interpolated original rocket facings and the authored trail above the ground', () => {
     const view = renderer(), art = { source: {}, width: 10, height: 6 } as any;
     const getProjectileSprite = vi.fn(() => art);
