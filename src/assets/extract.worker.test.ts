@@ -18,13 +18,13 @@ afterEach(() => vi.unstubAllGlobals());
 it('keeps completed installer bytes reusable after a nested MIX decoder failure', async () => {
   await import('./extract.worker');
   await worker.onmessage!({ data: { files: [{ name: 'game.exe', blob: new Blob(['installer']) }] } });
-  expect(worker.postMessage).toHaveBeenLastCalledWith({ kind: 'error', invalidArchive: false, message: 'Invalid MIX index' });
+  expect(worker.postMessage).toHaveBeenLastCalledWith({ kind: 'error', invalidArchive: false, missingMusic: false, message: 'Invalid MIX index' });
 });
 
 it('reports structurally invalid direct MIX bytes as a MIX input failure', async () => {
   await import('./extract.worker');
   await worker.onmessage!({ data: { files: [{ name: 'ra2.mix', blob: new Blob(['damaged']) }] } });
-  expect(worker.postMessage).toHaveBeenLastCalledWith({ kind: 'error', invalidArchive: true, message: 'Invalid MIX index' });
+  expect(worker.postMessage).toHaveBeenLastCalledWith({ kind: 'error', invalidArchive: true, missingMusic: false, message: 'Invalid MIX index' });
 });
 
 it('still rejects a non-game installer with no MIX output', async () => {

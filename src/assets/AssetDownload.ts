@@ -112,10 +112,11 @@ export class AssetDownload {
     try { await assetCache(archiveStageKey(this.source, stage), null, this.alive); }
     catch (error) { if (this.alive()) this.warning(`cleanup-${stage}`, `Could not remove temporary ${stageName(stage)}: ${details(error)}`); }
   }
-  async resume(): Promise<ArchiveResume | undefined> {
+  async resume(options: { skipMix?: boolean } = {}): Promise<ArchiveResume | undefined> {
     // Always reuse the furthest completed stage, including when installer
     // promotion failed but the extracted MIX inputs were saved successfully.
     for (const stage of ['mix-pending', 'mix', 'download', 'installer'] as const) {
+      if (options.skipMix && stage.startsWith('mix')) continue;
       const entry = await this.read(stage);
       if (!this.alive()) return;
       if (entry && (!entry.rejected || !entry.rejectionKind && (legacyArtworkRejection(entry.rejected) || legacyExtractorRejection(entry.rejected)

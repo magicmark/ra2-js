@@ -84,11 +84,27 @@ it('registers authored sidebar rows and Back at the traced 800×600 coordinates'
 });
 
 it('restores only valid game preferences and tolerates unavailable browser storage', () => {
-  const getItem = vi.fn(() => JSON.stringify({ speed: 2, scroll: 3, effects: 0, targetLines: false, tooltips: false, assetSource: 'ignored' }));
-  expect(readOptionsPreferences({ getItem })).toEqual({ speed: 2, scroll: 3, effects: 0, targetLines: false, tooltips: false });
+  const getItem = vi.fn(() => JSON.stringify({ speed: 2, scroll: 3, effects: 0, music: 7, targetLines: false, tooltips: false, assetSource: 'ignored' }));
+  expect(readOptionsPreferences({ getItem })).toEqual({ speed: 2, scroll: 3, effects: 0, music: 7, targetLines: false, tooltips: false });
   expect(getItem).toHaveBeenCalledExactlyOnceWith(OPTIONS_STORAGE_KEY);
-  expect(readOptionsPreferences({ getItem: () => JSON.stringify({ speed: 900, scroll: -1, effects: 11, targetLines: 'false' }) })).toEqual({});
+  expect(readOptionsPreferences({ getItem: () => JSON.stringify({ speed: 900, scroll: -1, effects: 11, music: -1, targetLines: 'false' }) })).toEqual({});
   expect(readOptionsPreferences({ getItem: () => { throw new Error('Storage unavailable'); } })).toEqual({});
+});
+
+it('persists a live music slider change and restores it independently of existing effects preferences', () => {
+  let saved = JSON.stringify({ effects: 2 });
+  vi.stubGlobal('localStorage', { getItem: () => saved, setItem: (_key: string, value: string) => { saved = value; } });
+  try {
+    const listeners = new Map<string, (event: { target: unknown }) => void>();
+    const root = { addEventListener: (type: string, listener: (event: { target: unknown }) => void) => listeners.set(type,listener), querySelector: () => ({ addEventListener: vi.fn() }) };
+    const music = vi.fn(), effects = vi.fn();
+    const create = () => new NativeOptions(root as unknown as HTMLElement, {} as GameAPI, { onMusicVolume: music, onEffectsVolume: effects } as unknown as UIActions, { paint:vi.fn(), close:vi.fn(), tooltips:()=>true, bindingsChanged:vi.fn() });
+    const options = create(); vi.spyOn(options,'update').mockImplementation(() => {}); options.applyPreferences();
+    expect(effects).toHaveBeenLastCalledWith(2); expect(music).not.toHaveBeenCalled();
+    listeners.get('input')!({ target: { id: 'music-volume', type: 'range', value: '0' } });
+    expect(music).toHaveBeenLastCalledWith(0); expect(JSON.parse(saved)).toEqual({ effects: 2, music: 0 });
+    music.mockClear(); create().applyPreferences(); expect(music).toHaveBeenLastCalledWith(0);
+  } finally { vi.unstubAllGlobals(); }
 });
 
 it('applies a native checkbox input/change sequence before reflecting model state', () => {

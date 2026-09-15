@@ -57,7 +57,7 @@ The source can be configured in any of these ways:
 - Set `VITE_ASSET_URL` before starting Vite or building the application.
 - Open `/?asset_url=` followed by a URL-encoded same-origin path or CORS-enabled URL.
 - Enter an archive URL on the first-launch screen or in **Options → Game Files**, then press **Enter** or **Load / Retry**. The source is remembered in this browser.
-- Import the downloaded installer, a ZIP containing the MIX files, or the installation's `ra2.mix` and `language.mix` together.
+- Import the downloaded installer, a ZIP containing the MIX files, or the installation's `ra2.mix`, `language.mix` and `theme.mix` together.
 
 A custom remote source must permit CORS. Its URL is requested as entered, without a proxy or an automatic alternative source. Static hosting needs no asset proxy; `VITE_ASSET_URL` can select another CORS-enabled source. No original game archives or runtime asset files are bundled; verification screenshots may show rendered game artwork.
 
@@ -129,7 +129,7 @@ The Allied player uses the British roster, including the Sniper. Campaigns, mult
 
 ## Verification
 
-The regular suite runs without original game files. An additional integration test verifies the complete current art catalog against your own extracted `ra2.mix` and `language.mix`:
+The regular suite runs without original game files. An additional integration test verifies the complete current art catalog against your own extracted `ra2.mix`, `language.mix` and `theme.mix`:
 
 ```sh
 RA2_ASSET_DIR=/path/to/extracted/mixes npm test
