@@ -1,3 +1,4 @@
+import { IFV_TURRET_FILES } from './IFVArtwork';
 import { selectAudioFiles } from './AudioBank';
 import { selectMusicFiles } from './MusicBank';
 import { readFileSync } from 'node:fs';
@@ -11,8 +12,8 @@ import { assetCache, archiveStageKey, type SavedArchive } from './AssetDownload'
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
-// Existing 974 artwork/effect files, theme.ini and 13 original gameplay tracks.
-const CURRENT_SELECTED_FILE_COUNT = 988;
+// Existing artwork/audio plus three passenger IFV turret VXL/HVA pairs.
+const CURRENT_SELECTED_FILE_COUNT = 995;
 // Fixed historical membership: deriving the old cache by subtracting only the
 // previous update's additions accidentally left hundreds of future map files in it.
 const PRE_NATIVE_NAMES = new Set(readFileSync(new URL('./fixtures/selected-art-pre-native.txt', import.meta.url), 'utf8')
@@ -162,6 +163,21 @@ describe.skipIf(!process.env.RA2_ASSET_DIR && !process.env.RA2_SELECTED_ART)('st
     }
     expect(await new AssetManager().initialize({ nativeMaps })).toBe('ready');
     expect(network).not.toHaveBeenCalled(); expect(worker).toHaveBeenCalledOnce();
+  }, 60_000);
+
+  it('upgrades missing IFV passenger turrets from saved MIX files and reuses the upgraded cache', async () => {
+    await new AssetManager().importFiles([new File(['fixture'], 'ra2.mix')]);
+    const source = '/asset-source', previous = await assetCache<any>(source);
+    await assetCache(source, { ...previous, files: previous.files.filter((file: AssetFile) => !IFV_TURRET_FILES.includes(file.name)) });
+    await assetCache(archiveStageKey(source, 'mix'), { version: 1, id: 'saved-mixes', saved: 123, files: [{ name: 'ra2.mix', blob: new Blob(['local fixture']) }] } satisfies SavedArchive);
+    worker.mockClear(); network.mockClear();
+    const manager = new AssetManager();
+    expect(await manager.initialize()).toBe('ready');
+    expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
+    expect(new Set([0, 1, 2, 3].map(variant => manager.getVehicleSprite('ifv', 0, 0, 0, variant))).size).toBe(4);
+    expect((await assetCache<{ files: AssetFile[] }>(source))!.files).toHaveLength(CURRENT_SELECTED_FILE_COUNT);
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
   }, 60_000);
 
   it('adds missing urban sale sprites from the saved archive without another download', async () => {

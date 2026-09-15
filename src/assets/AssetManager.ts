@@ -1,3 +1,4 @@
+import { IFV_TURRET_FILES } from './IFVArtwork';
 import { CATALOG, DIALOG_PCX_FILES, DIALOG_SHAPE_FILES, EFFECT_ANIMATIONS, PROJECTILE_SHAPES, theaterNames, type AssetSpec } from './catalog';
 import { decodeHva, decodePalette, decodeTmp, decodeVpl, decodeVxl, ShpFile, type IndexedFrame, type VoxelLimb } from './formats';
 import { RA2_NORMALS } from './voxelNormals';
@@ -392,7 +393,7 @@ export class AssetManager {
       this.files = new Map(files.map(f => [f.name.toLowerCase(), f.bytes])); this.shapes.clear(); this.sprites.clear(); this.voxelModels.clear(); this.buildingAnchors.clear(); this.nativePalettes.clear(); this.theater = 'TEMPERATE';
       this.missingEnhancements = ['game.fnt', 'mouse.shp', 'mousepal.pal', 'palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'anim.pal', 'tibtre01.tem', 'tree20.tem', 'plat02.tem', 'gapowrmk.shp',
         'side0/sidebar.pal', 'side0/uibkgd.pal', ...DIALOG_SHAPE_FILES.map(name => `side0/${name}.shp`), ...Object.values(DIALOG_PCX_FILES),
-        ...EFFECT_ANIMATIONS.map(name => `${name}.shp`), ...PROJECTILE_SHAPES.map(name => `${name}.shp`)].filter(name => !this.files.has(name));
+        ...EFFECT_ANIMATIONS.map(name => `${name}.shp`), ...PROJECTILE_SHAPES.map(name => `${name}.shp`), ...IFV_TURRET_FILES].filter(name => !this.files.has(name));
       // Earlier selections omitted urban buildup/sale SHPs. Reselect them
       // from saved MIX archives through the existing optional-art upgrade.
       for (const spec of Object.values(CATALOG)) if (spec.kind === 'building' && !spec.noBuildup) {
@@ -466,6 +467,7 @@ export class AssetManager {
         });
       }
       if (this.files.has('water02.tem')) this.decodeFile('water02.tem', bytes => { for (let frame = 0; frame < 6; frame++) decodeTmp(bytes, frame); });
+      for (const name of IFV_TURRET_FILES) if (this.files.has(name)) this.decodeFile(name, bytes => name.endsWith('.vxl') ? decodeVxl(bytes) : decodeHva(bytes));
       let done = 0;
       for (const [name, spec] of Object.entries(CATALOG)) {
         if (spec.kind === 'vehicle') {
@@ -774,16 +776,19 @@ export class AssetManager {
     this.sprites.set(key, result); return result;
   }
   /** Hull and turret use independent, quantized original VXL orientations. */
-  getVehicleSprite(name: string, hull: number, turret: number, side = 0): Sprite | null {
+  getVehicleSprite(name: string, hull: number, turret: number, side = 0, turretVariant = 0): Sprite | null {
     if (!this.ready && this.preparingRun !== this.run) return null;
     const spec = this.spec(name); if (spec?.kind !== 'vehicle') return null;
     hull = ((Math.round(hull) % 32) + 32) % 32; turret = ((Math.round(turret) % 32) + 32) % 32;
-    if (hull === turret) return this.getSprite(name, hull, side);
+    // Older artwork-only caches stay usable until their optional art upgrade.
+    const variant = spec.sprite === 'fv' && [1, 2, 3].includes(turretVariant)
+      && this.files.has(`fvtur${turretVariant}.vxl`) && this.files.has(`fvtur${turretVariant}.hva`) ? turretVariant : 0;
+    if (hull === turret && !variant) return this.getSprite(name, hull, side);
     // Floating point angles never become cache keys: each model/side has at
     // most 32×32 authored facing combinations, created only when displayed.
-    const key = `vehicle:${spec.sprite}:${hull}:${turret}:${side}`;
+    const key = `vehicle:${spec.sprite}:${variant}:${hull}:${turret}:${side}`;
     if (this.sprites.has(key)) return this.sprites.get(key)!;
-    const rendered = this.renderVehicle(spec.sprite, hull, side, true, turret);
+    const rendered = this.renderVehicle(spec.sprite, hull, side, true, turret, variant);
     const result = rendered ? trimSprite(rendered) : null; this.sprites.set(key, result); return result;
   }
   private renderBuilding(shape: ShpFile, spec: AssetSpec, side: number, facing: number, overlayFrames: number[] = [], includeBody = true): Sprite {
@@ -929,15 +934,16 @@ export class AssetManager {
   getOverlay(kind: 'ore' | 'tree', variant = 0): Sprite | null {
     return this.getDecoration(kind === 'ore' ? `tib${String(variant % 6 + 1).padStart(2, '0')}` : `tree${String(variant % 8 + 1).padStart(2, '0')}`, kind === 'ore' ? 8 : 0);
   }
-  private vehicleModel(name: string): PreparedVoxel[] {
-    if (this.voxelModels.has(name)) return this.voxelModels.get(name)!;
+  private vehicleModel(name: string, turretVariant = 0): PreparedVoxel[] {
+    const key = `${name}:${turretVariant}`;
+    if (this.voxelModels.has(key)) return this.voxelModels.get(key)!;
     const result: PreparedVoxel[] = [];
-    for (const part of [name, name + 'tur', name + 'barl']) {
+    for (const part of [name, name + 'tur' + (turretVariant || ''), name + 'barl' + (turretVariant || '')]) {
       const bytes = this.files.get(part + '.vxl'); if (!bytes) continue;
       const transforms = this.decodeFile(part + '.hva', decodeHva);
       for (const limb of decodeVxl(bytes)) this.prepareLimb(limb, transforms.get(limb.name), result, part !== name);
     }
-    this.voxelModels.set(name, result); return result;
+    this.voxelModels.set(key, result); return result;
   }
   private prepareLimb(limb: VoxelLimb, transform: number[] | undefined, result: PreparedVoxel[], turret = false): void {
     const [sx, sy, sz] = limb.size, b = limb.bounds, scale = [(b[3] - b[0]) / sx, (b[4] - b[1]) / sy, (b[5] - b[2]) / sz];
@@ -955,8 +961,8 @@ export class AssetManager {
       result.push({ x, y: -y, z, color: v.color, nx, ny: -ny, nz, turret });
     }
   }
-  private renderVehicle(name: string, facing: number, side: number, castShadow = true, turretFacing = facing): Sprite | null {
-    const model = this.vehicleModel(name); if (!model.length) return null;
+  private renderVehicle(name: string, facing: number, side: number, castShadow = true, turretFacing = facing, turretVariant = 0): Sprite | null {
+    const model = this.vehicleModel(name, turretVariant); if (!model.length) return null;
     // Large ships must retain their bow/stern at every facing. Integer centers
     // preserve the native pixel positions of the existing vehicle artwork.
     const radius = model.reduce((max, voxel) => Math.max(max, Math.hypot(voxel.x, voxel.y) + Math.abs(voxel.z) + 16), 0);

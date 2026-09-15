@@ -1,3 +1,4 @@
+import { Game } from '../src/game/Game';
 import { describe, expect, it, vi } from 'vitest';
 import { Renderer, type SpriteProvider } from '../src/render/Renderer';
 import type { GameAPI } from '../src/game/types';
@@ -249,6 +250,32 @@ describe('original artwork renderer', () => {
     expect(view.gl.line).not.toHaveBeenCalled();
   });
 
+  it('refreshes IFV art through actual boarding, passenger replacement and unloading', () => {
+    const game = new Game({ ai: false }); game.setGameSpeed(1);
+    game.state.entities = game.state.entities.filter(e => e.type === 'conyard'); game.state.fog.fill(1); game.state.explored.fill(1);
+    for (const tile of game.state.tiles) { tile.terrain = 'grass'; tile.ore = 0; }
+    const view = new Renderer({ getBoundingClientRect: () => ({ width: 640, height: 480 }) } as HTMLCanvasElement, game);
+    const getVehicleSprite = vi.fn(() => ({ source: {}, width: 1, height: 1 }));
+    view.assets = { ready: true, getVehicleSprite } as any;
+    vi.spyOn(view as any, 'drawArt').mockImplementation(() => {});
+    const ifv = (game as any).spawn('ifv', 0, 22.5, 42.5);
+    const draw = (variant: number) => {
+      (view as any).drawEntity(ifv, game.defs.ifv, { x: 100, y: 100 });
+      expect(getVehicleSprite.mock.lastCall).toEqual(['fv', expect.any(Number), expect.any(Number), 0, variant]);
+    };
+    draw(0);
+    for (const [type, variant] of [['gi', 1], ['engineer', 2], ['chrono_legionnaire', 3], ['sniper', 1], ['spy', 1], ['tanya', 1], ['conscript', 1], ['attack_dog', 0]] as const) {
+      const passenger = (game as any).spawn(type, 0, 21.5, 42.5);
+      (game as any).rebuildBlocked();
+      expect(game.enterTransport([passenger.id], ifv.id)).toBe(true);
+      for (let i = 0; i < 6; i++) game.tick(1 / 30);
+      expect(passenger.transportId).toBe(ifv.id); draw(variant);
+      game.deploy([ifv.id]);
+      expect(passenger.transportId).toBeUndefined(); draw(0);
+      game.state.entities = game.state.entities.filter(e => e === ifv || e.type === 'conyard');
+    }
+  });
+
   it('passes independently interpolated hull and turret orientations to original voxels', () => {
     const view = renderer(), getVehicleSprite = vi.fn(() => ({ source: {}, width: 1, height: 1 }));
     Object.assign(view.game, { interpolation: .5 });
@@ -257,7 +284,7 @@ describe('original artwork renderer', () => {
     const def = { category: 'vehicles', turret: true, sprite: 'mtnk', footprint: [1, 1] } as any;
     const unit = { type: 'grizzly', x: 1, y: 1, facing: Math.PI / 2, previousFacing: 0, turretFacing: Math.PI, previousTurretFacing: Math.PI / 2, side: 0, anim: 0, hp: 10, maxHp: 10, path: [] } as any;
     (view as any).drawEntity(unit, def, { x: 100, y: 100 });
-    expect(getVehicleSprite).toHaveBeenCalledWith('mtnk', 4, 12, 0);
+    expect(getVehicleSprite).toHaveBeenCalledWith('mtnk', 4, 12, 0, 0);
   });
 
   it('renders original impact frames from event time and captured interval without substituting generic death art', () => {

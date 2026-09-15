@@ -1,3 +1,4 @@
+import { IFV_TURRET_FILES } from './IFVArtwork';
 import { nativeTerrainFiles, nativeDecorationNames, NATIVE_THEATERS, THEATER_EXTENSION, THEATER_LETTER, type NativeTheater } from '../game/maps/theater';
 
 export interface AssetSpec { sprite: string; cameo: string; kind: 'building' | 'infantry' | 'vehicle' | 'spriteVehicle'; noBuildup?: boolean; overlays?: string[]; bib?: string; turret?: string; footprint?: [number, number] }
@@ -82,6 +83,7 @@ export const UI_HASH_FILES = {
 export function wantedFiles(): Set<string> {
   const names = new Set(['palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'unittem.pal', 'unitsno.pal', 'isotem.pal', 'temperat.pal', 'cameo.pal', 'anim.pal', 'voxels.vpl', 'art.ini', 'rules.ini', 'sound.ini', 'eva.ini', 'game.fnt', 'mouse.shp', 'mousepal.pal', ...Object.values(DIALOG_PCX_FILES), ...EFFECT_ANIMATIONS.map(name => name + '.shp')]);
   for (const name of PROJECTILE_SHAPES) names.add(`${name}.shp`);
+  for (const name of IFV_TURRET_FILES) names.add(name);
   for (const spec of Object.values(CATALOG)) {
     const variants = (name: string) => NATIVE_THEATERS.flatMap(theater => theaterNames(name, theater));
     if (spec.kind === 'building') for (const variant of variants(spec.sprite + 'mk')) names.add(variant + '.shp');
