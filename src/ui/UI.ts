@@ -503,14 +503,31 @@ export class UI {
       const rank = (id: string) => { const index = ALLIED_STRUCTURE_ORDER.indexOf(id); return index < 0 ? 999 : index; };
       return rank(a.id) - rank(b.id);
     });
-    this.el('category-name').textContent = CATEGORY_NAMES[this.category]; this.el('category-count').textContent = `${String(defs.length).padStart(2, '0')} AVAILABLE`;
+    this.el('category-name').textContent = CATEGORY_NAMES[this.category];
     this.el('build-grid').innerHTML = defs.map(def => `<button class="build-card" data-build="${escapeHTML(def.id)}" data-tooltip="${escapeHTML(def.name)}&#10;$${def.cost}" aria-label="Build ${escapeHTML(def.name)}, ${def.cost} credits"><div class="cameo"><img src="${escapeHTML(this.cameos.get(def.id)!)}" alt="${escapeHTML(def.name)}" draggable="false"/><span class="card-corner"></span><span class="card-queue"></span><span class="card-state"></span><span class="card-progress"></span></div><span class="card-requirement"></span></button>`).join('');
     if (this.category === 'defenses') this.el('build-grid').insertAdjacentHTML('beforeend', ['chronosphere', 'weather_control'].map(id => {
       const def = this.game.defs[id]; if (!def || !this.cameos.has(id)) return '';
       return `<button class="build-card superweapon-card" data-superweapon="${def.superweapon}" hidden disabled aria-label="${id === 'chronosphere' ? 'Activate Chronosphere' : 'Activate Lightning Storm'}"><div class="cameo"><img src="${this.cameos.get(id)}" alt=""/><span class="card-state"></span></div><span class="card-requirement"></span></button>`;
     }).join(''));
     this.cardElements.clear(); this.el('build-grid').querySelectorAll<HTMLElement>('[data-build]').forEach(card => this.cardElements.set(card.dataset.build!, card));
+    this.updateCardVisibility();
     this.updateScrollButtons();
+  }
+
+  private updateCardVisibility(owned = this.game.state.entities.filter(entity => entity.side === 0 && entity.hp > 0 && !entity.selling && !entity.constructing && entity.transportId === undefined)) {
+    const ownedTypes = new Set(owned.map(entity => entity.type)), side = this.game.state.sides[0];
+    let visible = 0;
+    for (const [type, card] of this.cardElements) {
+      const def = this.game.defs[type], building = def.category === 'structures' || def.category === 'defenses';
+      const queued = side.queues[def.category].some(item => item.type === type);
+      // Capacity and funds do not lock technology. Keep paid/queued work accessible
+      // when a prerequisite is lost, including buildings ready for placement.
+      const unlocked = def.requires.every(required => ownedTypes.has(required))
+        && owned.some(entity => def.factory ? entity.type === def.factory : this.game.defs[entity.type].producer?.includes(def.category));
+      card.hidden = building && !unlocked && !queued;
+      if (!card.hidden) visible++;
+    }
+    this.el('category-count').textContent = `${String(visible).padStart(2, '0')} AVAILABLE`;
   }
 
   private updateScrollButtons() {
@@ -620,6 +637,7 @@ export class UI {
     this.options?.update();
 
     const friendly = state.entities.filter(entity => entity.side === 0 && entity.hp > 0 && !entity.selling && !entity.constructing && entity.transportId === undefined);
+    this.updateCardVisibility(friendly);
     let totalQueue = 0, hasReady = false;
     for (const category of CATEGORIES) {
       const queue = side.queues[category], ready = queue.some(item => item.ready); totalQueue += queue.length; hasReady ||= ready;
