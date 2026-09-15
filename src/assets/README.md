@@ -25,8 +25,12 @@ never executed. The supplied 206,530,229-byte installer is NSIS 2 / solid LZMA.
 Only game MIX archives are extracted. Nested MIX indexes, including their RSA
 wrapped Blowfish keys, are decoded in the worker. The selected original
 SHP, VXL, HVA, TMP, palette and art files are saved to IndexedDB alongside the
-reusable original archive stages. Unrelated movies and music are not selected. Consumed effects and EVA speech
-are selected from the original audio MIX bank; see [original audio](../../docs/ORIGINAL_AUDIO.md).
+reusable original archive stages. Consumed effects and EVA speech are selected
+from the original audio MIX bank. The 13 gameplay tracks declared by `theme.ini`
+are selected from `theme.mix`; movies, menu music and credits music are excluded.
+Music stays compressed in the selected cache and is validated without allocating
+decoded PCM for the whole soundtrack. Playback decodes one track at a time; see
+[original audio](../../docs/ORIGINAL_AUDIO.md).
 
 The browser fetches the displayed public URL directly, with no Vite proxy.
 `ORIGINAL_ASSET_URL` in `AssetDownload.ts` (also re-exported by `AssetManager.ts`)
@@ -48,11 +52,11 @@ Before `ready` becomes true, the loader decodes the required original palettes,
 animations, six ore and eight tree variants, map terrain/road/edge files, and
 the Allied sidebar frames exported in `HUD_ASSET_FRAMES`, including original
 menu pressed frames and scroll enabled, pressed and disabled frames. Missing or corrupt
-consumed files fail validation with their names. Unused movies, soundtracks,
+consumed files fail validation with their names. Unused movies, menu tracks,
 snow artwork and nonexistent optional vehicle parts are not required. Original
 filename aliases and multipart composition remain supported; generated artwork
 and substitute palettes/material lighting are absent. Consumed original sound
-definitions and samples also validate before the game becomes ready.
+definitions, samples and gameplay music also validate before the game becomes ready.
 
 The animation/Options catalog contains 265 files. It also validates nine ground
 impact/vehicle-death SHPs against `anim.pal`, the consumed infantry sequences
@@ -64,7 +68,11 @@ the cache schema or the saved installer/MIX generation.
 Compatible cache versions are checked against those same requirements. A cache
 version change alone does not discard usable files. Missing or invalid selected
 artwork is rebuilt locally from saved MIX inputs, or from the saved installer if
-extraction did not finish. MIX recovery starts no 7-Zip/WASM extraction. These
+extraction did not finish. Older extractors omitted standalone `theme.mix`; that
+specific missing-music case also reopens the saved installer locally, preserving
+the valid existing MIX generation. Imports from an installed game require
+`ra2.mix`, `language.mix` and `theme.mix`. Recovery directly from complete MIX
+inputs starts no 7-Zip/WASM extraction. These
 operations display “Preparing saved game files” and never authorize a network
 request. Old releases that saved only selected artwork cannot recover absent
 original bytes; if no reusable archive stage exists, the source form requires an

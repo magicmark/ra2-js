@@ -66,9 +66,12 @@ export function testCursorShape(frameCount = 450): Uint8Array {
 /** Small original-format fixture shared by strict cache/loader tests. */
 export function testAudioFiles() {
   const bytes = new Uint8Array([0, 0, 0, 64, 0, 192, 0, 0]);
+  const wave = audioBagWave({name:'fixture',offset:0,size:bytes.length,sampleRate:22050,flags:6,chunkSize:0}, bytes);
   return [
     { name: 'sound.ini', bytes: new TextEncoder().encode(EFFECT_SOUNDS.map(name => `[${name}]\nSounds=fixture\nVolume=60`).join('\n')) },
     { name: 'eva.ini', bytes: new TextEncoder().encode(EVA_SOUNDS.map(name => `[${name}]\nAllied=fixture`).join('\n')) },
-    { name: 'audio/fixture.wav', bytes: audioBagWave({name:'fixture',offset:0,size:bytes.length,sampleRate:22050,flags:6,chunkSize:0}, bytes) },
+    { name: 'audio/fixture.wav', bytes: wave },
+    { name: 'theme.ini', bytes: new TextEncoder().encode('[Themes]\n1=Fixture\n[Fixture]\nSound=fixture\nNormal=yes') },
+    { name: 'music/fixture.wav', bytes: wave.slice() },
   ];
 }
