@@ -1,0 +1,688 @@
+{
+  "ticket": "ra2-js-sb9",
+  "revision": 3,
+  "design": "Frosted Orbit",
+  "mainBase": "f7caa375e54853b993a2abcca7f129fcce7cd7ea",
+  "capturedAt": "2026-09-15T07:15:34.030313+00:00",
+  "sourceFiles": {
+    "src/style.css": "94415fa6109e494d11f7a2f24fabf1127887117ed1d355fb7035e9b401e2cb5f",
+    "src/ui/UI.ts": "67c0fde14c9dcde2bac18e6916ee5e28be0e37e2b164479acc24aa22f2633438"
+  },
+  "build": {
+    "command": "npm run build",
+    "passed": true,
+    "assets": {
+      "MapViewer-CrtlUGtL.css": "b16a06413995ee7fbcea307cb06f410a8db88ccfcb884e8de500691729d2eb81",
+      "MapViewer-DXBlWHbO.js": "7ffeb389b50707e8ff6275aa01d6d2e1d1626ccf3f012242424a7c5e865137dd",
+      "Renderer-CrEPnDrt.js": "5f50ea2b3c771e3d4cc623f7b0504d84ceafcfcf6a0535ba3f3f0e6a73022314",
+      "extract.worker-DiZzjMZ2.js": "6cec822cbc513d9ff2184054541e1ffcbe8c9dde7ec15d648dc0eb5b23d586b2",
+      "index-CNr8D-lt.js": "7a901751650214c625b25280f38c0fd4703e82a21a9f8a19b3056c6014d920a8",
+      "main-Dhj-07wF.css": "86f443b3ce2e73df78733a00c36fd54b9b33bec1a1dfe836435170a3f2d3fc1f",
+      "main-airiDQ_n.js": "04d26d1ef0b2f56e8bc87016a343cd6ecab5b0af540e09f08836d98b22ee81e6"
+    }
+  },
+  "sharedControls": {
+    "command": "npm test -- --maxWorkers=2 tests/mobile-controls.test.ts tests/desktop-controls.test.ts",
+    "passed": 36
+  },
+  "smoke": {
+    "modes": [
+      {
+        "mode": "pan",
+        "pass": true
+      },
+      {
+        "mode": "attack",
+        "pass": true
+      },
+      {
+        "mode": "select",
+        "pass": true
+      }
+    ],
+    "stop": {
+      "before": "move",
+      "after": "guard"
+    },
+    "buildDrawer": true,
+    "readyIndicator": true,
+    "placementCancelKeepsReady": true,
+    "assets": {
+      "phase": "ready",
+      "message": "Original game assets loaded from this browser.",
+      "loaded": 1,
+      "total": 1
+    }
+  },
+  "layouts": {
+    "desktop": {
+      "viewport": [
+        1280,
+        800
+      ],
+      "mobile": false,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "display": "none",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "Select",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "display": "inline-block",
+          "visibility": "visible",
+          "hit": false,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "Pan",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "display": "inline-block",
+          "visibility": "visible",
+          "hit": false,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Attack",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "display": "inline-block",
+          "visibility": "visible",
+          "hit": false,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Stop",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "display": "inline-block",
+          "visibility": "visible",
+          "hit": false,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "Build",
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0,
+          "display": "inline-block",
+          "visibility": "visible",
+          "hit": false,
+          "pressed": null,
+          "expanded": "false"
+        }
+      ],
+      "targetsPass": false,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 1112,
+        "h": 770,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 1112,
+        "y": 0,
+        "w": 168,
+        "h": 800,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
+    },
+    "forced": {
+      "viewport": [
+        1280,
+        800
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 420,
+        "y": 710,
+        "w": 440,
+        "h": 76,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "Select",
+          "x": 427,
+          "y": 719,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "Pan",
+          "x": 515.5,
+          "y": 719,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Attack",
+          "x": 604,
+          "y": 719,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Stop",
+          "x": 692.5,
+          "y": 719,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "Build",
+          "x": 789,
+          "y": 717,
+          "w": 64,
+          "h": 64,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "false"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 1280,
+        "h": 800,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 1280,
+        "y": 0,
+        "w": 168,
+        "h": 696,
+        "display": "flex",
+        "visibility": "hidden"
+      },
+      "overflow": false
+    },
+    "medium": {
+      "viewport": [
+        600,
+        375
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 80,
+        "y": 285,
+        "w": 440,
+        "h": 76,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "Select",
+          "x": 87,
+          "y": 294,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "Pan",
+          "x": 175.5,
+          "y": 294,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Attack",
+          "x": 264,
+          "y": 294,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Stop",
+          "x": 352.5,
+          "y": 294,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "Build",
+          "x": 449,
+          "y": 292,
+          "w": 64,
+          "h": 64,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 600,
+        "h": 375,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 432,
+        "y": 0,
+        "w": 168,
+        "h": 271,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
+    },
+    "narrow": {
+      "viewport": [
+        320,
+        740
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 12,
+        "y": 650,
+        "w": 296,
+        "h": 76,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "Select",
+          "x": 19,
+          "y": 659,
+          "w": 50.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "Pan",
+          "x": 71.5,
+          "y": 659,
+          "w": 50.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Attack",
+          "x": 124,
+          "y": 659,
+          "w": 50.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Stop",
+          "x": 176.5,
+          "y": 659,
+          "w": 50.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "Build",
+          "x": 237,
+          "y": 657,
+          "w": 64,
+          "h": 64,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 740,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 152,
+        "y": 0,
+        "w": 168,
+        "h": 636,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
+    },
+    "landscape": {
+      "viewport": [
+        844,
+        390
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 202,
+        "y": 300,
+        "w": 440,
+        "h": 76,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "Select",
+          "x": 209,
+          "y": 309,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "Pan",
+          "x": 297.5,
+          "y": 309,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Attack",
+          "x": 386,
+          "y": 309,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Stop",
+          "x": 474.5,
+          "y": 309,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "Build",
+          "x": 571,
+          "y": 307,
+          "w": 64,
+          "h": 64,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 844,
+        "h": 390,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 676,
+        "y": 0,
+        "w": 168,
+        "h": 286,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
+    },
+    "portrait": {
+      "viewport": [
+        390,
+        844
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 12,
+        "y": 754,
+        "w": 366,
+        "h": 76,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "Select",
+          "x": 19,
+          "y": 763,
+          "w": 68,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "Pan",
+          "x": 89,
+          "y": 763,
+          "w": 68,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Attack",
+          "x": 159,
+          "y": 763,
+          "w": 68,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Stop",
+          "x": 229,
+          "y": 763,
+          "w": 68,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "Build",
+          "x": 307,
+          "y": 761,
+          "w": 64,
+          "h": 64,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "false"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 844,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 390,
+        "y": 0,
+        "w": 168,
+        "h": 740,
+        "display": "flex",
+        "visibility": "hidden"
+      },
+      "overflow": false
+    }
+  },
+  "shortDrawer": {
+    "drawer": {
+      "top": 0,
+      "bottom": 271
+    },
+    "barTop": 285,
+    "controls": [
+      {
+        "class": "build-tab active",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab ",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab ",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab category-unavailable",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "queue-panel",
+        "y": 228,
+        "bottom": 271,
+        "inside": true
+      }
+    ],
+    "pass": true
+  },
+  "screenshots": {
+    "portrait": {
+      "path": "tests/artifacts/mobile-toolbar/steel-keys-portrait.png",
+      "sha256": "7433877bdc2e6adc70dd4f26f746ce0813cbc7cab80c3da0934feeeafd11e38a"
+    },
+    "landscape": {
+      "path": "tests/artifacts/mobile-toolbar/steel-keys-landscape.png",
+      "sha256": "2916e647b0cb69ad1cecbb28e06945834134ed0acc2512cdcda7cf0be041e235"
+    }
+  },
+  "visualReview": "Independent astra-high reviewer inspected all ten new actual-game captures and refreshed affected pairs; five substantially different compositions, modern glass confirmed, no blocking findings.",
+  "evidenceScope": "Final captures checked against final built asset filenames. Initial six-layout/action suite retained where final edits only added initial aria-pressed attributes or removed an unmatched CSS selector (no layout/action change). Glass production-well minimum-height correction rechecked on final build at600x375.",
+  "limits": "Chromium touch emulation with original assets; physical hardware not tested. Human selection required before merge."
+}

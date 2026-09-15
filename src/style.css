@@ -564,3 +564,58 @@ html:not(.mobile-controls) .selection-panel.inspection-selection:not([hidden]) {
   .options-assets-page .settings-content,.options-briefing-page .settings-content { padding:20px 16px; }
 }
 .native-cursors .build-sidebar,.native-cursors .build-sidebar button,.native-cursors .statusbar,.native-cursors .statusbar button { cursor:var(--native-pointer); }
+
+/* Floating glass controls reserve space for the drawer while the map runs beneath. */
+.mobile-controls { --footer-height:calc(104px + env(safe-area-inset-bottom)); }
+.mobile-controls #battlefield { bottom:0; }
+.mobile-controls .build-sidebar { bottom:var(--footer-height); }
+.mobile-controls .production-well { min-height:0; }
+.mobile-controls #command-ui .mobile-commandbar {
+  position:absolute; display:grid; grid-template-columns:repeat(4,minmax(44px,1fr)) 72px;
+  align-items:center; gap:2px; width:min(440px,calc(100% - 24px)); height:76px;
+  left:50%; right:auto; bottom:calc(14px + env(safe-area-inset-bottom)); transform:translateX(-50%);
+  padding:7px; border:0; background:none; box-shadow:none; z-index:30; isolation:isolate;
+  pointer-events:none;
+}
+.mobile-controls #command-ui .mobile-commandbar::before {
+  content:''; position:absolute; inset:0 80px 0 0; z-index:-1; border-radius:40px;
+  background:linear-gradient(145deg,#ecfaff38,#b5daf010 45%,#a5d6ec24),#17263380;
+  border:1px solid #e5f7ff66;
+  box-shadow:inset 0 1px 0 #fff8,inset 0 -1px 0 #b9e7ff3d,0 12px 32px #00101e50,0 2px 5px #00101e30;
+  -webkit-backdrop-filter:blur(22px) saturate(1.6); backdrop-filter:blur(22px) saturate(1.6);
+}
+.mobile-controls #command-ui .mobile-commandbar > button {
+  position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:5px; min-width:44px; min-height:60px; height:60px; padding:5px 2px;
+  border:1px solid transparent; border-radius:29px; background:none; color:#e2edf4;
+  text-shadow:0 1px 3px #001c3290; pointer-events:auto;
+  transition:background .16s ease,box-shadow .16s ease,transform .16s ease;
+}
+.mobile-controls #command-ui .mobile-commandbar > button svg { width:23px; height:23px; stroke-width:1.7; }
+.mobile-controls #command-ui .mobile-commandbar > button span {
+  font:550 10px/1.2 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; letter-spacing:.1px;
+}
+.mobile-controls #command-ui .mobile-commandbar > button.active {
+  color:#fff; background:linear-gradient(150deg,#ffffff4d,#e7f5ff1c);
+  border-color:#ffffff50; box-shadow:inset 0 1px 0 #fff6,0 2px 8px #001d3433;
+}
+.mobile-controls #command-ui .mobile-commandbar > [data-action=stop] { color:#ffc3bb; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button {
+  justify-self:end; width:64px; height:64px; min-height:64px; border-radius:50%; color:#fff;
+  border:1px solid #effbffb3; background:linear-gradient(145deg,#b7eaff73,#3c91c436 60%,#8bcfee59),#24536d80;
+  box-shadow:inset 0 2px 1px #ffffff80,inset 0 -2px 4px #c4efff33,0 8px 24px #001b3a66;
+  -webkit-backdrop-filter:blur(22px) saturate(1.6); backdrop-filter:blur(22px) saturate(1.6);
+}
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button[aria-expanded=true] {
+  background:linear-gradient(145deg,#d4f5ffa6,#398bbf73),#1d648899;
+  box-shadow:inset 0 2px 1px #fff9,0 0 0 3px #a7e5ff40,0 8px 24px #001b3a66;
+}
+.mobile-controls #command-ui .mobile-commandbar > button:focus-visible { outline:3px solid #fff; outline-offset:2px; }
+.mobile-controls #command-ui .mobile-commandbar > button:active { transform:scale(.94); background-color:#ffffff30; }
+.mobile-controls #command-ui .mobile-build-button i.visible {
+  display:block; position:absolute; top:2px; right:3px; width:8px; height:8px;
+  border-radius:50%; background:#b5ffce; box-shadow:0 0 0 2px #31556c,0 0 9px #8affb7;
+}
+@media (prefers-reduced-motion:reduce) {
+  .mobile-controls #command-ui .mobile-commandbar > button { transition:none; }
+}
