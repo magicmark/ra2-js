@@ -18,7 +18,7 @@ export const IFV_SOUNDS: Readonly<Record<string, string>> = {
 };
 export const EVA_SOUNDS = ['EVA_ConstructionComplete', 'EVA_UnitReady', 'EVA_UnitLost',
   'EVA_UnitPromoted', 'EVA_MissionAccomplished', 'EVA_MissionFailed'] as const;
-export const EFFECT_SOUNDS = [...new Set(['MenuClick', 'MenuScold', 'CommandBar', 'Explosion01',
+export const EFFECT_SOUNDS = [...new Set(['MenuClick', 'MenuTab', 'MenuScold', 'CommandBar', 'Explosion01',
   'GIAttackDeployed', 'FlakTrackAttackAir', ...Object.values(WEAPON_SOUNDS), ...Object.values(IFV_SOUNDS)])];
 export interface SoundDefinition { samples: string[]; volume: number; speech: boolean }
 export interface OriginalSound { samples: DecodedAudioSample[]; volume: number; speech: boolean }

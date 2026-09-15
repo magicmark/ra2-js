@@ -1,4 +1,5 @@
 import { selectAudioFiles } from './AudioBank';
+import { selectMusicFiles } from './MusicBank';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { IDBFactory } from 'fake-indexeddb';
@@ -10,8 +11,8 @@ import { assetCache, archiveStageKey, type SavedArchive } from './AssetDownload'
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
-// Existing 902 artwork files (including DRAGON), two INIs and 70 consumed original audio samples.
-const CURRENT_SELECTED_FILE_COUNT = 974;
+// Existing 974 artwork/effect files, theme.ini and 13 original gameplay tracks.
+const CURRENT_SELECTED_FILE_COUNT = 988;
 // Fixed historical membership: deriving the old cache by subtracting only the
 // previous update's additions accidentally left hundreds of future map files in it.
 const PRE_NATIVE_NAMES = new Set(readFileSync(new URL('./fixtures/selected-art-pre-native.txt', import.meta.url), 'utf8')
@@ -35,13 +36,13 @@ describe.skipIf(!process.env.RA2_ASSET_DIR && !process.env.RA2_SELECTED_ART)('st
       const archive = new MixArchive(bytes, name); archives.push(archive);
       for (const nested of NESTED_MIXES) { const content = archive.get(nested); if (content) visit(`${name}/${nested}`, content); }
     };
-    for (const name of ['ra2.mix', 'language.mix']) visit(name, readFileSync(join(process.env.RA2_ASSET_DIR!, name)));
+    for (const name of ['ra2.mix', 'language.mix', 'theme.mix']) visit(name, readFileSync(join(process.env.RA2_ASSET_DIR!, name)));
     originals = [];
     for (const name of wantedFiles()) {
       const bytes = [...archives].reverse().map(archive => archive.get(name)).find(Boolean);
       if (bytes) originals.push({ name, bytes: bytes.slice() });
     }
-    originals.push(...selectAudioFiles(archives));
+    originals.push(...selectAudioFiles(archives), ...selectMusicFiles(archives));
     for (const side of [0, 1]) {
       const archive = archives.find(archive => archive.name.endsWith(`sidec0${side + 1}.mix`))!;
       for (const name of UI_FILES) { const bytes = archive.get(name); if (bytes) originals.push({ name: `side${side}/${name}`, bytes: bytes.slice() }); }

@@ -34,6 +34,9 @@ it.skipIf(!process.env.RA2_ASSET_DIR)('selects and decodes the consumed sounds f
   const selected = selectAudioFiles(archives);
   const bank = prepareSounds(new Map([...selected.map(file => [file.name, file.bytes] as const), ['sound.ini', get('sound.ini')], ['eva.ini', get('eva.ini')]]));
   expect(bank.get('MenuClick')?.volume).toBe(.6); expect(bank.get('MenuScold')?.volume).toBe(.4);
+  expect(soundDefinitions(get('sound.ini'), get('eva.ini')).get('MenuTab')).toEqual({ samples: ['utab'], volume: .6, speech: false });
+  expect(selected.some(file => file.name === 'audio/utab.wav')).toBe(true);
+  expect(bank.get('MenuTab')?.samples[0].channels[0].some(value => value !== 0)).toBe(true);
   expect(bank.get('GIAttack')?.samples).toHaveLength(3);
   expect(bank.get('EVA_ConstructionComplete')?.samples[0].channels[0].length).toBeGreaterThan(1000);
   expect(selected.reduce((bytes, file) => bytes + file.bytes.length, 0)).toBeLessThan(2_000_000);
