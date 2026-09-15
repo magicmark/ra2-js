@@ -97,7 +97,9 @@ describe('War Factory vehicle exit', () => {
     game.state.tiles[34 * game.state.width + 29].ore = 500;
     queue('miner'); advance(game, 1 / 30); const unit = produced()[0];
     expect(unit.order).toBe('move'); expect(unit.cargo).toBe(0);
-    advance(game, 15); expect(unit.factoryExit).toBeUndefined(); expect(unit.cargo).toBeGreaterThan(0);
+    let harvested = false;
+    for (let i = 0; i < 450; i++) { advance(game, 1 / 30); if (unit.cargo > 0) harvested = true; }
+    expect(unit.factoryExit).toBeUndefined(); expect(harvested).toBe(true);
     expect(unit.x).toBeLessThan(40);
   });
 

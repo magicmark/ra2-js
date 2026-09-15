@@ -81,9 +81,13 @@ describe('native maps in the actual simulation', () => {
   it('loads a selected map after construction and mines its native ore', () => {
     const game = new Game({ ai: false }); game.loadNativeMap(load('saffron-wash'));
     const state = game.state, initialOre = state.tiles.reduce((sum, tile) => sum + tile.ore, 0);
-    for (let i = 0; i < 160; i++) game.tick(.25);
+    let harvested = false;
+    for (let i = 0; i < 160; i++) {
+      game.tick(.25);
+      if (state.entities.some(e => game.defs[e.type].harvester && e.cargo > 0)) harvested = true;
+    }
     expect(state.tiles.reduce((sum, tile) => sum + tile.ore, 0)).toBeLessThan(initialOre);
-    expect(state.entities.some(e => game.defs[e.type].harvester && e.cargo > 0)).toBe(true);
+    expect(harvested).toBe(true);
     expect(state.winner).toBeNull();
   });
 });

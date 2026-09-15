@@ -8,6 +8,8 @@ export const NATIVE_EFFECT_TIMINGS: Record<string, AnimationDefinition> = {
   WCLBOLT3: { frames: 3, ticksPerFrame: 1 },
   CHRONOFD: { frames: 17, ticksPerFrame: 3 },
   CHRONOTG: { frames: 17, ticksPerFrame: 3 },
+  WARPIN: { frames: 10, ticksPerFrame: 7 },
+  WARPOUT: { frames: 21, ticksPerFrame: 7 },
   PIFFPIFF: { frames: 12, ticksPerFrame: 1 },
   S_CLSN22: { frames: 13, ticksPerFrame: 1, normalized: true },
   XGRYSML2: { frames: 13, ticksPerFrame: 1 },

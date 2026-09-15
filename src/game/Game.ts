@@ -814,6 +814,19 @@ export class Game implements GameAPI {
     if (entity.cargo >= capacity) entity.order = 'return';
     if (entity.order === 'return') {
       const nearest = refineries.sort((a, b) => this.distanceToEntity(entity, a) - this.distanceToEntity(entity, b))[0];
+      if (entity.type === 'miner' && entity.cargo >= capacity && this.distanceToEntity(entity, nearest) >= 1.1) {
+        // CMIN drives to ore, but its full-load return uses the original
+        // rules.ini WarpOut/WarpIn animations and needs no land route home.
+        entity.path = [];
+        const dock = this.nearestReachableAround(entity, nearest, false);
+        if (!dock) return;
+        this.addAnimation('WARPOUT', { x: entity.x, y: entity.y }, entity.side, 'impact');
+        entity.x = dock.x; entity.y = dock.y; entity.previous = { ...dock };
+        entity.harvestTimer = 0;
+        memory.heading = undefined; memory.oreTarget = undefined; memory.repath = 0;
+        this.addAnimation('WARPIN', dock, entity.side, 'impact');
+        return;
+      }
       if (this.distanceToEntity(entity, nearest) < 1.1) {
         entity.harvestTimer += dt;
         entity.path = [];
@@ -1610,13 +1623,13 @@ export class Game implements GameAPI {
     return undefined;
   }
 
-  private nearestReachableAround(entity: Entity, building: Entity): Vec2 | undefined {
+  private nearestReachableAround(entity: Entity, building: Entity, requirePath = true): Vec2 | undefined {
     const def = this.defs[building.type], points: Vec2[] = [], bx = Math.floor(building.x), by = Math.floor(building.y);
     for (let y = by - 1; y <= by + def.footprint[1]; y++)
       for (let x = bx - 1; x <= bx + def.footprint[0]; x++)
         if (this.isPassable(x, y, entity) && !this.mobileOccupies(x, y, entity.id, entity)) points.push({ x: x + 0.5, y: y + 0.5 });
     points.sort((a, b) => distance(entity, a) - distance(entity, b));
-    return points.find(p => distance(entity, p) < 0.2 || this.path(entity, p, true).length > 0);
+    return points.find(p => !requirePath || distance(entity, p) < 0.2 || this.path(entity, p, true).length > 0);
   }
 
   private updateVision(): void {

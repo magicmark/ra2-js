@@ -12,8 +12,8 @@ import { assetCache, archiveStageKey, type SavedArchive } from './AssetDownload'
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
-// Existing artwork/audio, passenger IFV turrets, and four Sniper selection voices.
-const CURRENT_SELECTED_FILE_COUNT = 999;
+// Existing artwork/audio, passenger IFV turrets, Sniper voices, and miner warp effects.
+const CURRENT_SELECTED_FILE_COUNT = 1001;
 // Fixed historical membership: deriving the old cache by subtracting only the
 // previous update's additions accidentally left hundreds of future map files in it.
 const PRE_NATIVE_NAMES = new Set(readFileSync(new URL('./fixtures/selected-art-pre-native.txt', import.meta.url), 'utf8')
@@ -176,6 +176,23 @@ describe.skipIf(!process.env.RA2_ASSET_DIR && !process.env.RA2_SELECTED_ART)('st
     expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
     expect(new Set([0, 1, 2, 3].map(variant => manager.getVehicleSprite('ifv', 0, 0, 0, variant))).size).toBe(4);
     expect((await assetCache<{ files: AssetFile[] }>(source))!.files).toHaveLength(CURRENT_SELECTED_FILE_COUNT);
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
+  }, 60_000);
+
+  it('restores original miner warp effects from saved MIX files without downloading again', async () => {
+    await new AssetManager().importFiles([new File(['fixture'], 'ra2.mix')]);
+    const source = '/asset-source', previous = await assetCache<any>(source);
+    await assetCache(source, { ...previous, files: previous.files.filter((file: AssetFile) => !['warpin.shp', 'warpout.shp'].includes(file.name)) });
+    await assetCache(archiveStageKey(source, 'mix'), { version: 1, id: 'saved-mixes', saved: 123, files: [{ name: 'ra2.mix', blob: new Blob(['local fixture']) }] } satisfies SavedArchive);
+    worker.mockClear(); network.mockClear();
+    const manager = new AssetManager(); expect(await manager.initialize()).toBe('ready');
+    expect(manager.getAnimationDefinitions()).toMatchObject({
+      warpin: { frames: 10, ticksPerFrame: 7 }, warpout: { frames: 21, ticksPerFrame: 7 },
+    });
+    expect(manager.getAnimationSprite('WARPIN', 0)).not.toBeNull();
+    expect(manager.getAnimationSprite('WARPOUT', 0)).not.toBeNull();
+    expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
     expect(await new AssetManager().initialize()).toBe('ready');
     expect(worker).toHaveBeenCalledOnce(); expect(network).not.toHaveBeenCalled();
   }, 60_000);
