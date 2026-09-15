@@ -1,0 +1,357 @@
+{
+  "ticket": "ra2-js-6lv",
+  "baseline": "1ae1cd3",
+  "maps": [
+    {
+      "id": "training",
+      "incompleteRoadPlacements": 0,
+      "roadCells": 252,
+      "roadRuns": {
+        "x": [
+          {
+            "from": [
+              6,
+              30
+            ],
+            "to": [
+              57,
+              30
+            ],
+            "before": 447,
+            "after": 445
+          }
+        ],
+        "y": [
+          {
+            "from": [
+              23,
+              19
+            ],
+            "to": [
+              23,
+              53
+            ],
+            "before": 446,
+            "after": 448
+          }
+        ]
+      }
+    },
+    {
+      "id": "ironwood-crossing",
+      "incompleteRoadPlacements": 0,
+      "roadCells": 300,
+      "roadRuns": {
+        "x": [
+          {
+            "from": [
+              61,
+              95
+            ],
+            "to": [
+              61,
+              95
+            ],
+            "before": 447,
+            "after": 534
+          },
+          {
+            "from": [
+              71,
+              95
+            ],
+            "to": [
+              111,
+              95
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              121,
+              95
+            ],
+            "to": [
+              122,
+              95
+            ],
+            "before": 534,
+            "after": 464
+          },
+          {
+            "from": [
+              132,
+              95
+            ],
+            "to": [
+              138,
+              95
+            ],
+            "before": 464,
+            "after": 445
+          }
+        ],
+        "y": [
+          {
+            "from": [
+              95,
+              53
+            ],
+            "to": [
+              95,
+              62
+            ],
+            "before": 446,
+            "after": 534
+          },
+          {
+            "from": [
+              95,
+              72
+            ],
+            "to": [
+              95,
+              111
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              95,
+              121
+            ],
+            "to": [
+              95,
+              122
+            ],
+            "before": 534,
+            "after": 471
+          }
+        ]
+      },
+      "sha256": "3904099aaa1032c394a7850f4d75f9b3f62f9a46f340806b85ccbae88ebc9ae1",
+      "changedNativeCells": 34,
+      "startsUnchanged": true,
+      "structuresUnchanged": true,
+      "oreUnchanged": true,
+      "terrainObjectsUnchanged": true
+    },
+    {
+      "id": "slatewater-reach",
+      "incompleteRoadPlacements": 0,
+      "roadCells": 300,
+      "roadRuns": {
+        "x": [
+          {
+            "from": [
+              60,
+              95
+            ],
+            "to": [
+              61,
+              95
+            ],
+            "before": 447,
+            "after": 534
+          },
+          {
+            "from": [
+              71,
+              95
+            ],
+            "to": [
+              111,
+              95
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              121,
+              95
+            ],
+            "to": [
+              122,
+              95
+            ],
+            "before": 534,
+            "after": 464
+          },
+          {
+            "from": [
+              132,
+              95
+            ],
+            "to": [
+              138,
+              95
+            ],
+            "before": 464,
+            "after": 445
+          }
+        ],
+        "y": [
+          {
+            "from": [
+              95,
+              54
+            ],
+            "to": [
+              95,
+              68
+            ],
+            "before": 446,
+            "after": 465
+          },
+          {
+            "from": [
+              95,
+              78
+            ],
+            "to": [
+              95,
+              111
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              95,
+              121
+            ],
+            "to": [
+              95,
+              122
+            ],
+            "before": 534,
+            "after": 534
+          }
+        ]
+      },
+      "sha256": "6e5d307ff6b605ffea07092fbac812fd8f02a27836cad122538b22cadad535fb",
+      "changedNativeCells": 632,
+      "startsUnchanged": true,
+      "structuresUnchanged": false,
+      "oreUnchanged": true,
+      "terrainObjectsUnchanged": false
+    },
+    {
+      "id": "tidal-crown",
+      "incompleteRoadPlacements": 0,
+      "roadCells": 288,
+      "roadRuns": {
+        "x": [
+          {
+            "from": [
+              61,
+              95
+            ],
+            "to": [
+              61,
+              95
+            ],
+            "before": 447,
+            "after": 534
+          },
+          {
+            "from": [
+              71,
+              95
+            ],
+            "to": [
+              109,
+              95
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              119,
+              95
+            ],
+            "to": [
+              121,
+              95
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              131,
+              95
+            ],
+            "to": [
+              136,
+              95
+            ],
+            "before": 534,
+            "after": 445
+          }
+        ],
+        "y": [
+          {
+            "from": [
+              95,
+              55
+            ],
+            "to": [
+              95,
+              63
+            ],
+            "before": 446,
+            "after": 534
+          },
+          {
+            "from": [
+              95,
+              73
+            ],
+            "to": [
+              95,
+              111
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              95,
+              121
+            ],
+            "to": [
+              95,
+              122
+            ],
+            "before": 534,
+            "after": 534
+          }
+        ]
+      },
+      "sha256": "1bc193cb4cc50afc0cb321e7fb119946260949ad52a343dc78b838cde8ae56fa",
+      "changedNativeCells": 8,
+      "startsUnchanged": true,
+      "structuresUnchanged": true,
+      "oreUnchanged": true,
+      "terrainObjectsUnchanged": true
+    }
+  ],
+  "validation": {
+    "defaultTests": {
+      "passed": 615,
+      "skipped": 37
+    },
+    "independentOriginalAssetAcceptance": {
+      "passed": 9,
+      "skipped": 1,
+      "coverage": "all eight catalog maps; independent liblzo2/LCW decode, original TMP land, start plots, resource counts/balance, foundations and neutral access"
+    },
+    "productionBuild": "passed",
+    "browser": "1440x1100 Chromium, imported original ra2.mix/language.mix/theme.mix, repository renderer, four overviews and sixteen 100% details"
+  }
+}

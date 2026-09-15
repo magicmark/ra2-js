@@ -3,6 +3,7 @@ import type { NativeCell } from './maps/nativeMap';
 import type { NativeTheater } from './maps/theater';
 import { applyLandTransitions, applyShorelines, SHORE_CORNERS } from './maps/terrainTopology';
 import { applyRoadEnds } from './maps/roadEnds';
+import { reserveRoadLand, type RoadBounds } from './maps/roadTopology';
 
 export const MAP_SIZE = 64;
 // Field Command is generated in code, with the same theater as a native
@@ -16,6 +17,7 @@ function noise(x: number, y: number): number {
 
 /** Hand-shaped skirmish map with repeatable terrain, ore and two clear bases. */
 export function createMap(width = MAP_SIZE, height = MAP_SIZE): Tile[] {
+  const roads: readonly RoadBounds[] = [[5, 29, 58, 31], [22, 18, 24, 54]];
   const tiles: Tile[] = [];
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -31,7 +33,7 @@ export function createMap(width = MAP_SIZE, height = MAP_SIZE): Tile[] {
       // isometric axes so their painted lanes and sidewalks join cleanly.
       const eastWestRoad=y>=29&&y<=31&&x>=5&&x<=58;
       const northSouthRoad=x>=22&&x<=24&&y>=18&&y<=54;
-      if((eastWestRoad||northSouthRoad)&&tile.terrain!=='water'){
+      if(eastWestRoad||northSouthRoad){
         tile.terrain='road';
         tile.variant=eastWestRoad&&northSouthRoad?32+(y-29)*3+x-22:northSouthRoad?16+x-22:y-29;
       }
@@ -59,9 +61,16 @@ export function createMap(width = MAP_SIZE, height = MAP_SIZE): Tile[] {
   // catalog. Preserve semantic terrain for pathfinding and diagnostic edits.
   const cells: NativeCell[] = tiles.map((tile, i) => ({ x: i % width, y: Math.floor(i / width), tileIndex: tile.terrain === 'sand' ? 493 : tile.terrain === 'rock' ? 131 : tile.terrain === 'road' ? 293 + Math.floor(tile.variant / 16) : 0, subTile: tile.terrain === 'road' ? tile.variant % 16 : 0, height: 0, iceGrowth: 0, overlay: 255, overlayData: 0 }));
   const water = new Set(cells.filter(c => tiles[c.y * width + c.x].terrain === 'water').map(c => c.x + 512 * c.y));
+  reserveRoadLand(water, roads);
   applyShorelines(cells, water, 493);
+  // Restore whole streets after the shore's sand buffer. The reserved crossing
+  // is a dry causeway through the lake, with a continuous north/south junction.
+  for (const cell of cells) {
+    const tile = tiles[cell.y * width + cell.x];
+    if (tile.terrain === 'road') { cell.tileIndex = 293 + Math.floor(tile.variant / 16); cell.subTile = tile.variant % 16; }
+  }
   applyLandTransitions(cells, TRAINING_THEATER);
-  // The four outer ends are deliberate; lake-side road breaks need topology repair.
+  // Preserve the four deliberate outer ends.
   applyRoadEnds(cells, TRAINING_THEATER, [[5, 30, '-x'], [58, 30, '+x'], [23, 18, '-y'], [23, 54, '+y']]);
   for (const cell of cells) {
     const tile = tiles[cell.y * width + cell.x], shore = SHORE_CORNERS[cell.tileIndex];

@@ -7,7 +7,7 @@ import { MAP_CATALOG } from '/src/game/maps/catalog.ts';
 import { parseNativeMap } from '/src/game/maps/nativeMap.ts';
 import { MixArchive, decodeTmp, decodePalette } from '/src/assets/formats.ts';
 
-export async function install() {
+export async function install(options = {}) {
   const assets = window.__mapViewer.assets;
   if (!assets.ready) throw Error('Import complete originals in Map Viewer first');
   document.querySelector('#audit')?.remove();
@@ -30,13 +30,13 @@ export async function install() {
   // Fit the entire diagnostic overview, below gameplay's minimum zoom; no ticking.
   training.camera.constrain = () => {};
   const select = id => id === 'training' ? { name: 'Field Command', renderer: training } : { ...maps.find(m => m.id === id), renderer: native };
-  const clear = label => { title.textContent = label + ' | baseline 522691f'; ctx.fillStyle = '#17201c'; ctx.fillRect(0, 0, 1400, 1000); };
+  const clear = label => { title.textContent = label + ' | ' + (options.revision ?? 'baseline 522691f'); ctx.fillStyle = '#17201c'; ctx.fillRect(0, 0, 1400, 1000); };
   const render = (e, width, height) => {
     e.renderer.canvas.style.width = width + 'px'; e.renderer.canvas.style.height = height + 'px';
     if (e.map) e.renderer.renderNativeMap(e.map); else e.renderer.render();
   };
   const copy = (r, x, y, w, h) => ctx.drawImage(r.canvas, 0, 0, r.canvas.width, r.canvas.height, x, y, w, h);
-  const views = {
+  const views = options.views ?? {
     training: [[22,51,'drill on road'],[23,30,'erased crossing / shore'],[23,54,'uncapped south end'],[5,30,'uncapped west end']],
     'ironwood-crossing': [[127,95,'one-cell road strip'],[95,132,'isolated end / clearing'],[95,52,'uncapped north end'],[139,95,'uncapped east end']],
     'slatewater-reach': [[95,135,'one-cell road strip'],[119,95,'road into shore'],[95,57,'partial shore contact'],[139,95,'uncapped east end']],

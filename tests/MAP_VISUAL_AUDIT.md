@@ -70,6 +70,10 @@ before and after initialization; semantic terrain alone misses this defect.
 
 ### ra2-js-6lv — partial streets and unintended interruptions
 
+**Repair verification:** [ra2-js-6lv](ROAD_TOPOLOGY_VERIFICATION.md) records the
+completed topology repair, full-template checks and new original-asset views.
+The observations below describe the audit baseline.
+
 There are **54 incomplete original road-template placements**, not 54 separate
 roads. A placement is counted only when surviving road subtiles identify a
 three-cell template whose other cells were replaced. Complete missing templates

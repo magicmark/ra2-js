@@ -6,6 +6,7 @@ import { nativeTileSpec } from '../src/game/maps/theater.ts';
 import { writeNativeMap } from './nativeMapWriter.ts';
 import { applyLandTransitions, applyShorelines, SHORE_CORNERS } from '../src/game/maps/terrainTopology.ts';
 import { applyRoadEnds } from '../src/game/maps/roadEnds.ts';
+import { reserveRoadLand } from '../src/game/maps/roadTopology.ts';
 
 const SIZE = 96;
 const hash = (x: number, y: number, seed = 0) => {
@@ -83,19 +84,33 @@ export function authorMap(entry: MapCatalogEntry, seed: number): NativeMap {
     const ore2 = Math.abs(c.x - start.x) <= 6 && Math.abs(c.y - start.y + 14) <= 6;
     if (base || ore1 || ore2) { water.delete(c.x + 512 * c.y); if (base) c.tileIndex = seed === 2 || seed === 5 ? sand : 0; }
   }
+  const hasRoads = seed === 3 || seed === 4 || seed === 7;
+  // The southern street enters the oil-site apron; it does not restart on the
+  // far side as a one-template stub or continue into the adjacent base reserve.
+  if (hasRoads) reserveRoadLand(water, [[48, 94, 145, 96], [94, 48, 96, 131]]);
   applyShorelines(cells, water, sand);
   // Retail road01 is 1x3, road02 is 3x1, road03 is the full 3x3 crossing.
-  if (seed === 3 || seed === 4 || seed === 7) for (const c of cells) {
+  if (hasRoads) for (const c of cells) {
     const horizontal = c.y >= 94 && c.y <= 96 && c.x >= 48 && c.x <= 145;
-    const vertical = c.x >= 94 && c.x <= 96 && c.y >= 48 && c.y <= 145;
+    const vertical = c.x >= 94 && c.x <= 96 && c.y >= 48 && c.y <= 131;
     if (!(horizontal || vertical) || ['water', 'shore'].includes(nativeTileSpec(map.theater, c.tileIndex)!.kind)) continue;
-    if (starts.some(s => Math.abs(c.x - s.x) <= 10 && Math.abs(c.y - s.y) <= 10)) continue;
+    // A base reserve excludes the entire three-cell road slice, never one lane.
+    if (starts.some(s => horizontal && Math.abs(c.x - s.x) <= 10 && s.y + 10 >= 94 && s.y - 10 <= 96 || vertical && Math.abs(c.y - s.y) <= 10 && s.x + 10 >= 94 && s.x - 10 <= 96)) continue;
     c.tileIndex = horizontal && vertical ? 295 : horizontal ? 293 : 294;
     c.subTile = horizontal && vertical ? (c.y - 94) * 3 + c.x - 94 : horizontal ? c.y - 94 : c.x - 94;
   }
   const clear = (x: number, y: number, radius: number, tile = 0) => {
     for (let dy = -radius; dy <= radius; dy++) for (let dx = -radius; dx <= radius; dx++) {
-      const c = get(x + dx, y + dy); if (c) { c.tileIndex = tile; c.subTile = 0; c.overlay = 255; c.overlayData = 0; }
+      const c = get(x + dx, y + dy); if (!c) continue;
+      // Pads and ore clearings meet the whole road width. Extend the clearing
+      // over a touched template so no asphalt sliver survives beside an apron.
+      const road = c.tileIndex >= 293 && c.tileIndex <= 295;
+      const columns = road && c.tileIndex !== 293 ? 3 : 1, rows = road && c.tileIndex !== 294 ? 3 : 1;
+      const left = c.x - (road ? c.subTile % columns : 0), top = c.y - (road ? Math.floor(c.subTile / columns) : 0);
+      for (let sy = 0; sy < rows; sy++) for (let sx = 0; sx < columns; sx++) {
+        const part = get(left + sx, top + sy);
+        if (part) { part.tileIndex = tile; part.subTile = 0; part.overlay = 255; part.overlayData = 0; }
+      }
     }
   };
   // Two identical local fields per player: 49 + 29 cells, every cell full density.
@@ -142,8 +157,7 @@ export function authorMap(entry: MapCatalogEntry, seed: number): NativeMap {
     if (hash(c.x, c.y, seed + 20) < density && (seed !== 3 || c.tileIndex === 131)) map.terrain.push({ x: c.x, y: c.y, type: `TREE${String(trees[Math.floor(hash(c.y, c.x, seed) * trees.length)]).padStart(2, '0')}` });
   }
   applyLandTransitions(cells, map.theater);
-  // Outer streets end at the base reserves. Keep tech-pad entrances open;
-  // coastal fragments and the southern clearing are separate topology repairs.
+  // Outer streets end at the base reserves. Keep the full-width tech-pad entrances open.
   if (seed === 3) applyRoadEnds(cells, map.theater, [[60, 95, '-x'], [139, 95, '+x'], [95, 52, '-y']]);
   if (seed === 4) applyRoadEnds(cells, map.theater, [[59, 95, '-x'], [139, 95, '+x'], [95, 53, '-y']]);
   if (seed === 7) applyRoadEnds(cells, map.theater, [[60, 95, '-x'], [137, 95, '+x'], [95, 54, '-y']]);
