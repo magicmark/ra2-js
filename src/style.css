@@ -565,42 +565,34 @@ html:not(.mobile-controls) .selection-panel.inspection-selection:not([hidden]) {
 }
 .native-cursors .build-sidebar,.native-cursors .build-sidebar button,.native-cursors .statusbar,.native-cursors .statusbar button { cursor:var(--native-pointer); }
 
-/* Mobile toolbar: Signal Rail. Visual treatment only; layout and actions stay shared. */
-#command-ui .mobile-commandbar {
-  background: linear-gradient(#162738, #0a1522);
-  border-top-color: #527b9b;
-  box-shadow: inset 0 1px #8eccea22, 0 -2px 8px #0008;
+/* Command Tower: vertical machined sidebar with numbered black command slots. */
+.command-tower-name { display:none; }
+.mobile-controls { --footer-height:0px; --tower-width:84px; }
+.mobile-controls #battlefield,.mobile-controls .field-overlay { left:var(--tower-width); }
+.mobile-controls .build-sidebar { bottom:0; }
+.mobile-controls #command-ui .mobile-commandbar {
+  display:grid; grid-template-columns:1fr; grid-template-rows:30px repeat(4,50px) 62px; gap:3px;
+  position:absolute; left:max(3px,env(safe-area-inset-left)); right:auto; top:auto; bottom:max(6px,env(safe-area-inset-bottom)); width:78px; height:322px; padding:4px 7px 7px;
+  border:2px solid; border-color:#d1c891 #514c35 #282a25 #9a9777; border-radius:13px 3px 14px 3px;
+  background:linear-gradient(90deg,#1a2021,#696c61 5px,#252d31 9px,#050b10 12px,#050b10 64px,#7c8278 70px,#202a2d);
+  box-shadow:inset 0 0 0 1px #080d13,2px 0 0 #0d1217;
 }
-#command-ui .mobile-commandbar > button {
-  color: #a9c4d9;
-  background: #142638;
-  border-color: transparent #38516a transparent transparent;
-  border-radius: 0;
-  box-shadow: inset 0 -2px #314b61;
-  text-shadow: 0 1px #000;
+.mobile-controls .command-tower-name { display:block; color:#d4d1a1; text-align:center; font:bold 8px/12px Tahoma,Arial,sans-serif; letter-spacing:.3px; border-bottom:1px solid #636758; }
+.command-tower-name b { color:#e7f6ff; font:12px/12px 'Courier New',monospace; }
+.mobile-controls #command-ui .mobile-commandbar > button {
+  position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; min-width:44px; min-height:44px; height:50px; width:60px; padding:4px 1px;
+  border:1px solid; border-color:#59666b #0c1219 #05070a #667476; border-radius:0; background:linear-gradient(115deg,#26333e,#050b14 60%); color:#c4d3d4; box-shadow:0 2px 0 #000; text-shadow:0 1px #000;
 }
-#command-ui .mobile-commandbar > button.active {
-  color: #e0f7ff;
-  background: linear-gradient(#17344b, #1d4660);
-  border-color: #416d89;
-  box-shadow: inset 0 -3px #71d0f3;
-}
-#command-ui .mobile-commandbar > .mobile-build-button {
-  color: #d5ecff;
-  background: #1b354d;
-  border-color: #537993;
-  box-shadow: inset 0 -2px #7ba7c5;
-}
-#command-ui .mobile-commandbar > .mobile-build-button[aria-expanded="true"] {
-  color: #effaff;
-  background: #244d69;
-  border-color: #7bcced;
-  box-shadow: inset 0 -3px #71d0f3;
-}
-#command-ui .mobile-commandbar > button:active {
-  filter: brightness(1.18);
-}
-#command-ui .mobile-commandbar > button:focus-visible {
-  outline: 2px solid #ffe2a1;
-  outline-offset: -3px;
-}
+.mobile-controls #command-ui .mobile-commandbar > button svg { width:22px; height:22px; color:#81b5d9; }
+.mobile-controls #command-ui .mobile-commandbar > button span { font:bold 9px Tahoma,Arial,sans-serif; letter-spacing:0; }
+.mobile-controls #command-ui .mobile-commandbar > button.active { border:2px solid #e3d987; background:linear-gradient(100deg,#615f34,#202b2b); color:#fffbae; }
+.mobile-controls #command-ui .mobile-commandbar > button.active svg { color:#fffbae; }
+.mobile-controls #command-ui .mobile-commandbar > button.active::before { content:''; position:absolute; left:-7px; top:18px; border-top:5px solid transparent; border-bottom:5px solid transparent; border-left:5px solid #ffff96; }
+.mobile-controls #command-ui .mobile-commandbar > [data-action=stop] { color:#f8ad91; border-bottom:3px solid #84352f; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button { height:62px; background:linear-gradient(#9b9f8a,#5b6665 49%,#2b383e 50%,#4a5c64); border:2px solid; border-color:#e8e3b7 #363b33 #080e15 #b0b496; color:#fff4b7; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button svg { width:28px; height:28px; color:#d9e5e5; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button[aria-expanded=true] { background:#514829; border-color:#fff391; }
+.mobile-controls #command-ui .mobile-commandbar > button:focus-visible { outline:3px solid #fff490; outline-offset:-5px; }
+.mobile-controls #command-ui .mobile-commandbar > button:active { filter:brightness(1.4); }
+.mobile-controls #command-ui .mobile-build-button i.visible { display:block; top:4px; right:4px; width:6px; height:6px; border-radius:0; background:#eeff63; }
+@media (max-height:360px) { .mobile-controls #command-ui .mobile-commandbar { grid-template-rows:22px repeat(4,46px) 50px; height:286px; } .mobile-controls #command-ui .mobile-commandbar > button { height:46px; } .mobile-controls #command-ui .mobile-commandbar > .mobile-build-button { height:50px; } .command-tower-name b { display:none; } }
