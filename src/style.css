@@ -564,3 +564,43 @@ html:not(.mobile-controls) .selection-panel.inspection-selection:not([hidden]) {
   .options-assets-page .settings-content,.options-briefing-page .settings-content { padding:20px 16px; }
 }
 .native-cursors .build-sidebar,.native-cursors .build-sidebar button,.native-cursors .statusbar,.native-cursors .statusbar button { cursor:var(--native-pointer); }
+
+/* Mobile toolbar: Signal Rail. Visual treatment only; layout and actions stay shared. */
+#command-ui .mobile-commandbar {
+  background: linear-gradient(#162738, #0a1522);
+  border-top-color: #527b9b;
+  box-shadow: inset 0 1px #8eccea22, 0 -2px 8px #0008;
+}
+#command-ui .mobile-commandbar > button {
+  color: #a9c4d9;
+  background: #142638;
+  border-color: transparent #38516a transparent transparent;
+  border-radius: 0;
+  box-shadow: inset 0 -2px #314b61;
+  text-shadow: 0 1px #000;
+}
+#command-ui .mobile-commandbar > button.active {
+  color: #e0f7ff;
+  background: linear-gradient(#17344b, #1d4660);
+  border-color: #416d89;
+  box-shadow: inset 0 -3px #71d0f3;
+}
+#command-ui .mobile-commandbar > .mobile-build-button {
+  color: #d5ecff;
+  background: #1b354d;
+  border-color: #537993;
+  box-shadow: inset 0 -2px #7ba7c5;
+}
+#command-ui .mobile-commandbar > .mobile-build-button[aria-expanded="true"] {
+  color: #effaff;
+  background: #244d69;
+  border-color: #7bcced;
+  box-shadow: inset 0 -3px #71d0f3;
+}
+#command-ui .mobile-commandbar > button:active {
+  filter: brightness(1.18);
+}
+#command-ui .mobile-commandbar > button:focus-visible {
+  outline: 2px solid #ffe2a1;
+  outline-offset: -3px;
+}
