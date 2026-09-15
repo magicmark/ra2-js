@@ -1,461 +1,61 @@
 {
   "ticket": "ra2-js-sb9",
-  "design": "Allied Command Tray",
-  "mainBase": "8c739d888a5709751caa5c2cdeb1595341877a01",
-  "capturedAt": "2026-09-15T05:21:20.857770+00:00",
+  "revision": 3,
+  "design": "Frosted Orbit",
+  "mainBase": "f7caa375e54853b993a2abcca7f129fcce7cd7ea",
+  "capturedAt": "2026-09-15T07:15:34.030313+00:00",
   "sourceFiles": {
-    "src/style.css": "5dbc74654a13ab7c1a107ddb9ec6c8e174632687f4a5a04972ee1068a693e0ef",
-    "src/ui/UI.ts": "b02b4859fdee448cd23cb6ef40927aa2e824b2d71e19e682b306a58377ddfcaa"
+    "src/style.css": "94415fa6109e494d11f7a2f24fabf1127887117ed1d355fb7035e9b401e2cb5f",
+    "src/ui/UI.ts": "67c0fde14c9dcde2bac18e6916ee5e28be0e37e2b164479acc24aa22f2633438"
   },
   "build": {
     "command": "npm run build",
     "passed": true,
     "assets": {
       "MapViewer-CrtlUGtL.css": "b16a06413995ee7fbcea307cb06f410a8db88ccfcb884e8de500691729d2eb81",
-      "MapViewer-DSmFl9F4.js": "0695920d3d8352b3f8e97cdb615449b525d429c2d3450e92105d1ad4901945a9",
-      "Renderer-DUh3B_eb.js": "21b95d6d6198f308a0f106a2e3a11608ca3b591daf79a65ad27f3a87b12eb26b",
-      "extract.worker-03ghh7fo.js": "1385801f5d38a8e5034608529d9925bc3defdf3d43a813753fc1759427e9fcb3",
-      "index-CPoiq4G9.js": "ccba0efba9d938aed20abddb17b10dab0f43f3d9fb2aae5f8be7eaab7037de46",
-      "main-Cm3YMHDC.js": "f429cde74a3dd51a6bd4dff6780cc50b299e470d081339ae265f54a7da7f1876",
-      "main-DR9h61mo.css": "ffee1a4d345fabc0da54aadedcdee70c4e0674965831cbc187b48e71e32fa606"
+      "MapViewer-DXBlWHbO.js": "7ffeb389b50707e8ff6275aa01d6d2e1d1626ccf3f012242424a7c5e865137dd",
+      "Renderer-CrEPnDrt.js": "5f50ea2b3c771e3d4cc623f7b0504d84ceafcfcf6a0535ba3f3f0e6a73022314",
+      "extract.worker-DiZzjMZ2.js": "6cec822cbc513d9ff2184054541e1ffcbe8c9dde7ec15d648dc0eb5b23d586b2",
+      "index-CNr8D-lt.js": "7a901751650214c625b25280f38c0fd4703e82a21a9f8a19b3056c6014d920a8",
+      "main-Dhj-07wF.css": "86f443b3ce2e73df78733a00c36fd54b9b33bec1a1dfe836435170a3f2d3fc1f",
+      "main-airiDQ_n.js": "04d26d1ef0b2f56e8bc87016a343cd6ecab5b0af540e09f08836d98b22ee81e6"
     }
   },
   "sharedControls": {
     "command": "npm test -- --maxWorkers=2 tests/mobile-controls.test.ts tests/desktop-controls.test.ts",
-    "passed": 35
+    "passed": 36
   },
-  "browser": "Chromium production builds; 974 original assets, mobile/touch emulation; explicit force_mobile=1 at wide desktop; startup confirmed before visibility measurements. Native mobile hardware not tested.",
   "smoke": {
     "modes": [
-      "pan",
-      "attack",
-      "select"
+      {
+        "mode": "pan",
+        "pass": true
+      },
+      {
+        "mode": "attack",
+        "pass": true
+      },
+      {
+        "mode": "select",
+        "pass": true
+      }
     ],
     "stop": {
       "before": "move",
       "after": "guard"
     },
     "buildDrawer": true,
-    "placementCancelKeepsReady": true,
     "readyIndicator": true,
+    "placementCancelKeepsReady": true,
     "assets": {
       "phase": "ready",
-      "message": "Original game assets ready \u00b7 974 files saved in this browser",
+      "message": "Original game assets loaded from this browser.",
       "loaded": 1,
       "total": 1
     }
   },
   "layouts": {
-    "portrait": {
-      "url": "http://localhost:5183/steel-keys.html?force_mobile=1",
-      "viewport": [
-        390,
-        844
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 0,
-        "y": 740,
-        "w": 390,
-        "h": 104,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 15,
-          "y": 770,
-          "w": 71.140625,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 86.140625,
-          "y": 770,
-          "w": 71.140625,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 157.28125,
-          "y": 770,
-          "w": 71.15625,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 233.4375,
-          "y": 770,
-          "w": 57.609375,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 296.046875,
-          "y": 770,
-          "w": 78.953125,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "false"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 390,
-        "h": 740,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 390,
-        "y": 0,
-        "w": 168,
-        "h": 740,
-        "display": "flex",
-        "visibility": "hidden"
-      },
-      "overflow": false
-    },
-    "narrow": {
-      "url": "http://localhost:5183/steel-keys.html?force_mobile=1",
-      "viewport": [
-        320,
-        740
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 0,
-        "y": 636,
-        "w": 320,
-        "h": 104,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 15,
-          "y": 666,
-          "w": 57.296875,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 72.296875,
-          "y": 666,
-          "w": 57.3125,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 129.609375,
-          "y": 666,
-          "w": 57.3125,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 191.921875,
-          "y": 666,
-          "w": 45.4375,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 242.359375,
-          "y": 666,
-          "w": 62.625,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "false"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 320,
-        "h": 636,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 320,
-        "y": 0,
-        "w": 168,
-        "h": 636,
-        "display": "flex",
-        "visibility": "hidden"
-      },
-      "overflow": false
-    },
-    "landscape": {
-      "url": "http://localhost:5183/steel-keys.html?force_mobile=1",
-      "viewport": [
-        844,
-        390
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 0,
-        "y": 286,
-        "w": 844,
-        "h": 104,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 92,
-          "y": 316,
-          "w": 130.421875,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 222.421875,
-          "y": 316,
-          "w": 130.4375,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 352.859375,
-          "y": 316,
-          "w": 130.4375,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 488.296875,
-          "y": 316,
-          "w": 109.78125,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 603.078125,
-          "y": 316,
-          "w": 148.921875,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "true"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 844,
-        "h": 286,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 676,
-        "y": 0,
-        "w": 168,
-        "h": 286,
-        "display": "flex",
-        "visibility": "visible"
-      },
-      "overflow": false
-    },
-    "forced": {
-      "url": "http://localhost:5183/steel-keys.html?force_mobile=1",
-      "viewport": [
-        1280,
-        800
-      ],
-      "mobile": true,
-      "assetsReady": true,
-      "toolbar": {
-        "x": 0,
-        "y": 696,
-        "w": 1280,
-        "h": 104,
-        "display": "grid",
-        "visibility": "visible"
-      },
-      "buttons": [
-        {
-          "label": "Select units mode; cancel building placement",
-          "x": 310,
-          "y": 726,
-          "w": 130.421875,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "true",
-          "expanded": null
-        },
-        {
-          "label": "Pan camera mode",
-          "x": 440.421875,
-          "y": 726,
-          "w": 130.4375,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Attack move mode",
-          "x": 570.859375,
-          "y": 726,
-          "w": 130.4375,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": "false",
-          "expanded": null
-        },
-        {
-          "label": "Stop selected units",
-          "x": 706.296875,
-          "y": 726,
-          "w": 109.78125,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": null
-        },
-        {
-          "label": "BUILD",
-          "x": 821.078125,
-          "y": 726,
-          "w": 148.921875,
-          "h": 60,
-          "display": "flex",
-          "visibility": "visible",
-          "hit": true,
-          "focus": false,
-          "pressed": null,
-          "expanded": "false"
-        }
-      ],
-      "targetsPass": true,
-      "battlefield": {
-        "x": 0,
-        "y": 0,
-        "w": 1280,
-        "h": 696,
-        "display": "block",
-        "visibility": "visible"
-      },
-      "drawer": {
-        "x": 1280,
-        "y": 0,
-        "w": 168,
-        "h": 696,
-        "display": "flex",
-        "visibility": "hidden"
-      },
-      "overflow": false
-    },
     "desktop": {
-      "url": "http://localhost:5183/steel-keys.html",
       "viewport": [
         1280,
         800
@@ -472,7 +72,7 @@
       },
       "buttons": [
         {
-          "label": "Select units mode; cancel building placement",
+          "label": "Select",
           "x": 0,
           "y": 0,
           "w": 0,
@@ -480,12 +80,11 @@
           "display": "inline-block",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": "true",
           "expanded": null
         },
         {
-          "label": "Pan camera mode",
+          "label": "Pan",
           "x": 0,
           "y": 0,
           "w": 0,
@@ -493,12 +92,11 @@
           "display": "inline-block",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": "false",
           "expanded": null
         },
         {
-          "label": "Attack move mode",
+          "label": "Attack",
           "x": 0,
           "y": 0,
           "w": 0,
@@ -506,12 +104,11 @@
           "display": "inline-block",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": "false",
           "expanded": null
         },
         {
-          "label": "Stop selected units",
+          "label": "Stop",
           "x": 0,
           "y": 0,
           "w": 0,
@@ -519,12 +116,11 @@
           "display": "inline-block",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": null,
           "expanded": null
         },
         {
-          "label": "BUILD",
+          "label": "Build",
           "x": 0,
           "y": 0,
           "w": 0,
@@ -532,7 +128,6 @@
           "display": "inline-block",
           "visibility": "visible",
           "hit": false,
-          "focus": false,
           "pressed": null,
           "expanded": "false"
         }
@@ -555,26 +150,539 @@
         "visibility": "visible"
       },
       "overflow": false
-    }
-  },
-  "drawerChecks": {},
-  "screenshots": {
-    "portrait": {
-      "file": "tests/artifacts/mobile-toolbar/steel-keys-portrait.png",
-      "sha256": "ac590298a6b70ce246ced5c5c65cbcaa00c2671323788e188efcfcd4d9d9b149"
+    },
+    "forced": {
+      "viewport": [
+        1280,
+        800
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 420,
+        "y": 710,
+        "w": 440,
+        "h": 76,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "Select",
+          "x": 427,
+          "y": 719,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "Pan",
+          "x": 515.5,
+          "y": 719,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Attack",
+          "x": 604,
+          "y": 719,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Stop",
+          "x": 692.5,
+          "y": 719,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "Build",
+          "x": 789,
+          "y": 717,
+          "w": 64,
+          "h": 64,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "false"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 1280,
+        "h": 800,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 1280,
+        "y": 0,
+        "w": 168,
+        "h": 696,
+        "display": "flex",
+        "visibility": "hidden"
+      },
+      "overflow": false
+    },
+    "medium": {
+      "viewport": [
+        600,
+        375
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 80,
+        "y": 285,
+        "w": 440,
+        "h": 76,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "Select",
+          "x": 87,
+          "y": 294,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "Pan",
+          "x": 175.5,
+          "y": 294,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Attack",
+          "x": 264,
+          "y": 294,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Stop",
+          "x": 352.5,
+          "y": 294,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "Build",
+          "x": 449,
+          "y": 292,
+          "w": 64,
+          "h": 64,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 600,
+        "h": 375,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 432,
+        "y": 0,
+        "w": 168,
+        "h": 271,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
+    },
+    "narrow": {
+      "viewport": [
+        320,
+        740
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 12,
+        "y": 650,
+        "w": 296,
+        "h": 76,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "Select",
+          "x": 19,
+          "y": 659,
+          "w": 50.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "Pan",
+          "x": 71.5,
+          "y": 659,
+          "w": 50.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Attack",
+          "x": 124,
+          "y": 659,
+          "w": 50.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Stop",
+          "x": 176.5,
+          "y": 659,
+          "w": 50.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "Build",
+          "x": 237,
+          "y": 657,
+          "w": 64,
+          "h": 64,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 740,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 152,
+        "y": 0,
+        "w": 168,
+        "h": 636,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
     },
     "landscape": {
-      "file": "tests/artifacts/mobile-toolbar/steel-keys-landscape.png",
-      "sha256": "c387dfd4e45d511196d036a900fbc735be65fd3c67761dda3778fc9e7b58d918"
+      "viewport": [
+        844,
+        390
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 202,
+        "y": 300,
+        "w": 440,
+        "h": 76,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "Select",
+          "x": 209,
+          "y": 309,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "Pan",
+          "x": 297.5,
+          "y": 309,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Attack",
+          "x": 386,
+          "y": 309,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Stop",
+          "x": 474.5,
+          "y": 309,
+          "w": 86.5,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "Build",
+          "x": 571,
+          "y": 307,
+          "w": 64,
+          "h": 64,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "true"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 844,
+        "h": 390,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 676,
+        "y": 0,
+        "w": 168,
+        "h": 286,
+        "display": "flex",
+        "visibility": "visible"
+      },
+      "overflow": false
+    },
+    "portrait": {
+      "viewport": [
+        390,
+        844
+      ],
+      "mobile": true,
+      "assetsReady": true,
+      "toolbar": {
+        "x": 12,
+        "y": 754,
+        "w": 366,
+        "h": 76,
+        "display": "grid",
+        "visibility": "visible"
+      },
+      "buttons": [
+        {
+          "label": "Select",
+          "x": 19,
+          "y": 763,
+          "w": 68,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "true",
+          "expanded": null
+        },
+        {
+          "label": "Pan",
+          "x": 89,
+          "y": 763,
+          "w": 68,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Attack",
+          "x": 159,
+          "y": 763,
+          "w": 68,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": "false",
+          "expanded": null
+        },
+        {
+          "label": "Stop",
+          "x": 229,
+          "y": 763,
+          "w": 68,
+          "h": 60,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": null
+        },
+        {
+          "label": "Build",
+          "x": 307,
+          "y": 761,
+          "w": 64,
+          "h": 64,
+          "display": "flex",
+          "visibility": "visible",
+          "hit": true,
+          "pressed": null,
+          "expanded": "false"
+        }
+      ],
+      "targetsPass": true,
+      "battlefield": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 844,
+        "display": "block",
+        "visibility": "visible"
+      },
+      "drawer": {
+        "x": 390,
+        "y": 0,
+        "w": 168,
+        "h": 740,
+        "display": "flex",
+        "visibility": "hidden"
+      },
+      "overflow": false
     }
   },
-  "visualReview": {
-    "root": "All ten actual game captures inspected against retail command/sidebar references. Five substantially different framing/arrangement/surface/illustration directions. Labels, selected modes, open Build and touch targets clear.",
-    "independent": "All ten captures plus final drawer corrections reviewed by separate same-ticket helper; PASS, no blocking findings.",
-    "references": [
-      "tests/artifacts/video-reference/command-strip-native-comparison.png",
-      "tests/artifacts/video-reference/retail-production-0203-0219.jpg"
-    ]
+  "shortDrawer": {
+    "drawer": {
+      "top": 0,
+      "bottom": 271
+    },
+    "barTop": 285,
+    "controls": [
+      {
+        "class": "build-tab active",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab ",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab ",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "build-tab category-unavailable",
+        "y": 86,
+        "bottom": 113,
+        "inside": true
+      },
+      {
+        "class": "queue-panel",
+        "y": 228,
+        "bottom": 271,
+        "inside": true
+      }
+    ],
+    "pass": true
   },
-  "scope": "Toolbar markup, artwork and CSS plus review artifacts. Actions/gameplay unchanged. Human selection required before merge."
+  "screenshots": {
+    "portrait": {
+      "path": "tests/artifacts/mobile-toolbar/steel-keys-portrait.png",
+      "sha256": "7433877bdc2e6adc70dd4f26f746ce0813cbc7cab80c3da0934feeeafd11e38a"
+    },
+    "landscape": {
+      "path": "tests/artifacts/mobile-toolbar/steel-keys-landscape.png",
+      "sha256": "2916e647b0cb69ad1cecbb28e06945834134ed0acc2512cdcda7cf0be041e235"
+    }
+  },
+  "visualReview": "Independent astra-high reviewer inspected all ten new actual-game captures and refreshed affected pairs; five substantially different compositions, modern glass confirmed, no blocking findings.",
+  "evidenceScope": "Final captures checked against final built asset filenames. Initial six-layout/action suite retained where final edits only added initial aria-pressed attributes or removed an unmatched CSS selector (no layout/action change). Glass production-well minimum-height correction rechecked on final build at600x375.",
+  "limits": "Chromium touch emulation with original assets; physical hardware not tested. Human selection required before merge."
 }

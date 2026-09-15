@@ -565,35 +565,57 @@ html:not(.mobile-controls) .selection-panel.inspection-selection:not([hidden]) {
 }
 .native-cursors .build-sidebar,.native-cursors .build-sidebar button,.native-cursors .statusbar,.native-cursors .statusbar button { cursor:var(--native-pointer); }
 
-/* Allied Command Tray: silver keys set into the retail command strip's black well. */
+/* Floating glass controls reserve space for the drawer while the map runs beneath. */
 .mobile-controls { --footer-height:calc(104px + env(safe-area-inset-bottom)); }
+.mobile-controls #battlefield { bottom:0; }
 .mobile-controls .build-sidebar { bottom:var(--footer-height); }
-.command-tray-name { display:none; }
+.mobile-controls .production-well { min-height:0; }
 .mobile-controls #command-ui .mobile-commandbar {
-  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,.88fr) minmax(0,1.18fr);
-  grid-template-rows:22px 60px; gap:0; padding:6px 15px calc(12px + env(safe-area-inset-bottom));
-  height:var(--footer-height); left:0; right:0; bottom:0;
-  border:0; border-top:2px solid #bdc8d2; border-radius:19px 19px 0 0;
-  background:linear-gradient(90deg,#0d1420,#84919d 7px,#242d39 13px,transparent 14px,transparent calc(100% - 14px),#242d39 calc(100% - 13px),#84919d calc(100% - 7px),#0d1420),linear-gradient(#667788,#1c2837 25px,#05090f 26px,#05090f 85%,#485666);
-  box-shadow:0 -3px 0 #101721,inset 0 -4px #090f19;
+  position:absolute; display:grid; grid-template-columns:repeat(4,minmax(44px,1fr)) 72px;
+  align-items:center; gap:2px; width:min(440px,calc(100% - 24px)); height:76px;
+  left:50%; right:auto; bottom:calc(14px + env(safe-area-inset-bottom)); transform:translateX(-50%);
+  padding:7px; border:0; background:none; box-shadow:none; z-index:30; isolation:isolate;
+  pointer-events:none;
 }
-.mobile-controls .command-tray-name { display:flex; grid-column:1/-1; align-items:center; justify-content:space-between; margin:0 5px 4px; font:bold 9px Tahoma,Arial,sans-serif; letter-spacing:1px; color:#bacada; text-shadow:0 1px #000; }
-.command-tray-name b { color:#97d9ff; }.command-tray-name i { font-style:normal; color:#779eba; }
+.mobile-controls #command-ui .mobile-commandbar::before {
+  content:''; position:absolute; inset:0 80px 0 0; z-index:-1; border-radius:40px;
+  background:linear-gradient(145deg,#ecfaff38,#b5daf010 45%,#a5d6ec24),#17263380;
+  border:1px solid #e5f7ff66;
+  box-shadow:inset 0 1px 0 #fff8,inset 0 -1px 0 #b9e7ff3d,0 12px 32px #00101e50,0 2px 5px #00101e30;
+  -webkit-backdrop-filter:blur(22px) saturate(1.6); backdrop-filter:blur(22px) saturate(1.6);
+}
 .mobile-controls #command-ui .mobile-commandbar > button {
-  position:relative; min-width:0; min-height:44px; height:60px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:4px; padding:5px 2px;
-  border:2px solid; border-color:#e4e8ee #454d59 #111923 #b2bdc7; border-radius:9px 9px 13px 13px;
-  background:linear-gradient(#b6c3cf,#65788c 49%,#425166 50%,#8595a6); color:#e1f5ff;
-  box-shadow:inset 0 0 0 1px #758595,0 3px 0 #000; text-shadow:0 1px #07111e;
+  position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:5px; min-width:44px; min-height:60px; height:60px; padding:5px 2px;
+  border:1px solid transparent; border-radius:29px; background:none; color:#e2edf4;
+  text-shadow:0 1px 3px #001c3290; pointer-events:auto;
+  transition:background .16s ease,box-shadow .16s ease,transform .16s ease;
 }
-.mobile-controls #command-ui .mobile-commandbar > button svg { width:25px; height:25px; padding:2px; background:linear-gradient(#030910,#152e46); border:1px solid #111; border-bottom-color:#b3c9dd; border-radius:2px; color:#8cd6ff; }
-.mobile-controls #command-ui .mobile-commandbar > button span { font:bold 10px Tahoma,Arial,sans-serif; letter-spacing:0; }
-.mobile-controls #command-ui .mobile-commandbar > button.active { background:linear-gradient(#354c61,#141d2a); border-color:#111e2d #7196b3 #c3d7e6 #15273c; color:#f8f584; box-shadow:inset 0 3px 7px #000; }
-.mobile-controls #command-ui .mobile-commandbar > button.active svg { color:#edff93; box-shadow:0 0 5px #baff5340; }
-.mobile-controls #command-ui .mobile-commandbar > [data-action=stop] { margin-left:5px; color:#521719; text-shadow:0 1px #a9a9ae; }
-.mobile-controls #command-ui .mobile-commandbar > [data-action=stop] svg { color:#ff5b46; }
-.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button { margin-left:5px; border-radius:15px 7px 16px 5px; }
-.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button[aria-expanded=true] { background:#10283c; color:#fcf6a3; border-color:#e8e988; }
-.mobile-controls #command-ui .mobile-commandbar > button:focus-visible { outline:3px solid #fff279; outline-offset:-5px; }
-.mobile-controls #command-ui .mobile-commandbar > button:active { filter:brightness(.8); }
-.mobile-controls #command-ui .mobile-build-button i.visible { display:block; top:5px; right:5px; width:6px; height:6px; border-radius:0; background:#fbff6c; box-shadow:0 0 0 1px #101310; }
-@media (min-width:600px) { .mobile-controls #command-ui .mobile-commandbar { padding-inline:max(25px,calc((100% - 660px)/2)); } }
+.mobile-controls #command-ui .mobile-commandbar > button svg { width:23px; height:23px; stroke-width:1.7; }
+.mobile-controls #command-ui .mobile-commandbar > button span {
+  font:550 10px/1.2 system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; letter-spacing:.1px;
+}
+.mobile-controls #command-ui .mobile-commandbar > button.active {
+  color:#fff; background:linear-gradient(150deg,#ffffff4d,#e7f5ff1c);
+  border-color:#ffffff50; box-shadow:inset 0 1px 0 #fff6,0 2px 8px #001d3433;
+}
+.mobile-controls #command-ui .mobile-commandbar > [data-action=stop] { color:#ffc3bb; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button {
+  justify-self:end; width:64px; height:64px; min-height:64px; border-radius:50%; color:#fff;
+  border:1px solid #effbffb3; background:linear-gradient(145deg,#b7eaff73,#3c91c436 60%,#8bcfee59),#24536d80;
+  box-shadow:inset 0 2px 1px #ffffff80,inset 0 -2px 4px #c4efff33,0 8px 24px #001b3a66;
+  -webkit-backdrop-filter:blur(22px) saturate(1.6); backdrop-filter:blur(22px) saturate(1.6);
+}
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button[aria-expanded=true] {
+  background:linear-gradient(145deg,#d4f5ffa6,#398bbf73),#1d648899;
+  box-shadow:inset 0 2px 1px #fff9,0 0 0 3px #a7e5ff40,0 8px 24px #001b3a66;
+}
+.mobile-controls #command-ui .mobile-commandbar > button:focus-visible { outline:3px solid #fff; outline-offset:2px; }
+.mobile-controls #command-ui .mobile-commandbar > button:active { transform:scale(.94); background-color:#ffffff30; }
+.mobile-controls #command-ui .mobile-build-button i.visible {
+  display:block; position:absolute; top:2px; right:3px; width:8px; height:8px;
+  border-radius:50%; background:#b5ffce; box-shadow:0 0 0 2px #31556c,0 0 9px #8affb7;
+}
+@media (prefers-reduced-motion:reduce) {
+  .mobile-controls #command-ui .mobile-commandbar > button { transition:none; }
+}
