@@ -364,6 +364,30 @@ describe('retail keyboard commands', () => {
 
 
 describe('native contextual cursors', () => {
+  it.each(['miner', 'warminer'])('shows attack over ore for a selected %s while clicks still harvest', type => {
+    const { game, controls, camera, pointer, callbacks } = fixture();
+    const miner = game.state.entities.find(e => e.type === 'miner')!, tank = game.state.entities.find(e => e.type === 'grizzly')!;
+    miner.type = type;
+    camera.center(30.5, 30.5);
+    const index = 30 * game.state.width + 30;
+    Object.assign(game.state.tiles[index], { terrain: 'grass', ore: 500 }); game.state.explored[index] = 1;
+    game.stop([miner.id, tank.id]); game.select([miner.id, tank.id]);
+    const harvest = vi.spyOn(game, 'orderHarvest'), attack = vi.spyOn(game, 'orderAttack'), move = vi.spyOn(game, 'orderMove');
+    pointer('pointermove', 500, 350);
+    expect(callbacks.cursor).toHaveBeenLastCalledWith('attack'); expect(harvest).not.toHaveBeenCalled();
+    pointer('pointerdown', 500, 350); expect(controls.cursor).toBe('attack'); pointer('pointerup', 500, 350);
+    expect(controls.cursor).toBe('attack'); expect(harvest).toHaveBeenCalledExactlyOnceWith([miner.id, tank.id], 30, 30);
+    expect(miner.order).toBe('harvest'); expect(tank.order).toBe('guard');
+    expect(attack).not.toHaveBeenCalled(); expect(move).not.toHaveBeenCalled();
+    game.select([miner.id]); expect(controls.cursor).toBe('attack');
+    pointer('pointermove', 500, 350, { altKey: true }); expect(controls.cursor).toBe('move');
+    pointer('pointermove', 500, 350, { ctrlKey: true, shiftKey: true }); expect(controls.cursor).toBe('attackmove');
+    pointer('pointermove', 500, 350, { ctrlKey: true, altKey: true }); expect(controls.cursor).toBe('guard');
+    pointer('pointermove', 500, 350); game.state.tiles[index].ore = 0; expect(controls.cursor).toBe('move');
+    game.state.tiles[index].ore = 500; game.select([tank.id]); expect(controls.cursor).toBe('move');
+    game.select([]); expect(controls.cursor).toBe('default');
+  });
+
   it('offers IFV entry only to eligible infantry and clicks board only infantry in a mixed selection', () => {
     const { game, controls, pointer, pick, click } = fixture();
     const tank = game.state.entities.find(e => e.type === 'grizzly')!, gi = game.state.entities.find(e => e.type === 'gi')!;

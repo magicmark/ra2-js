@@ -190,6 +190,7 @@ export class Controls {
     if (target && own && target.type === 'george') return 'default';
     if (target && own) return target.selected && this.game.defs[target.type].deployedRange !== undefined ? 'deploy' : 'select';
     if (target && selected.length && !own && armed) return 'attack';
+    if (!target && tile && tile.ore > 0 && selected.some(entity => this.game.defs[entity.type].harvester)) return 'attack';
     return mobile ? clear ? 'move' : 'move-blocked' : 'default';
   }
   private updateCursor(): void {
