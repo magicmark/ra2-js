@@ -565,40 +565,35 @@ html:not(.mobile-controls) .selection-panel.inspection-selection:not([hidden]) {
 }
 .native-cursors .build-sidebar,.native-cursors .build-sidebar button,.native-cursors .statusbar,.native-cursors .statusbar button { cursor:var(--native-pointer); }
 
-/* Mobile toolbar: Steel Keys. Visual treatment only; layout and actions stay shared. */
-#command-ui .mobile-commandbar {
-  background: linear-gradient(#435363, #202d3b 48%, #111b27);
-  border-top-color: #a0b2c3;
-  box-shadow: inset 0 1px #d9e6ed33, 0 -2px 8px #0008;
+/* Allied Command Tray: silver keys set into the retail command strip's black well. */
+.mobile-controls { --footer-height:calc(104px + env(safe-area-inset-bottom)); }
+.mobile-controls .build-sidebar { bottom:var(--footer-height); }
+.command-tray-name { display:none; }
+.mobile-controls #command-ui .mobile-commandbar {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,.88fr) minmax(0,1.18fr);
+  grid-template-rows:22px 60px; gap:0; padding:6px 15px calc(12px + env(safe-area-inset-bottom));
+  height:var(--footer-height); left:0; right:0; bottom:0;
+  border:0; border-top:2px solid #bdc8d2; border-radius:19px 19px 0 0;
+  background:linear-gradient(90deg,#0d1420,#84919d 7px,#242d39 13px,transparent 14px,transparent calc(100% - 14px),#242d39 calc(100% - 13px),#84919d calc(100% - 7px),#0d1420),linear-gradient(#667788,#1c2837 25px,#05090f 26px,#05090f 85%,#485666);
+  box-shadow:0 -3px 0 #101721,inset 0 -4px #090f19;
 }
-#command-ui .mobile-commandbar > button {
-  color: #c4d5e4;
-  background: linear-gradient(#364b60, #1b2b3c);
-  border-color: #627b91 #172432 #111d29 #536b80;
-  border-radius: 2px;
-  box-shadow: inset 0 1px #c2d9ec22, 0 1px 2px #0009;
-  text-shadow: 0 1px #000;
+.mobile-controls .command-tray-name { display:flex; grid-column:1/-1; align-items:center; justify-content:space-between; margin:0 5px 4px; font:bold 9px Tahoma,Arial,sans-serif; letter-spacing:1px; color:#bacada; text-shadow:0 1px #000; }
+.command-tray-name b { color:#97d9ff; }.command-tray-name i { font-style:normal; color:#779eba; }
+.mobile-controls #command-ui .mobile-commandbar > button {
+  position:relative; min-width:0; min-height:44px; height:60px; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:4px; padding:5px 2px;
+  border:2px solid; border-color:#e4e8ee #454d59 #111923 #b2bdc7; border-radius:9px 9px 13px 13px;
+  background:linear-gradient(#b6c3cf,#65788c 49%,#425166 50%,#8595a6); color:#e1f5ff;
+  box-shadow:inset 0 0 0 1px #758595,0 3px 0 #000; text-shadow:0 1px #07111e;
 }
-#command-ui .mobile-commandbar > button.active {
-  color: #effaff;
-  background: linear-gradient(#183c5a, #225881);
-  border-color: #8dd3fb;
-  box-shadow: inset 0 2px 4px #0008, inset 0 -2px #56b9ee;
-}
-#command-ui .mobile-commandbar > .mobile-build-button {
-  color: #e0f2ff;
-  background: linear-gradient(#426e91, #254360);
-  border-color: #97bfd9 #304f69 #1c344b #7fa6c2;
-}
-#command-ui .mobile-commandbar > .mobile-build-button[aria-expanded="true"] {
-  background: #173d5c;
-  border-color: #a4e0ff;
-  box-shadow: inset 0 2px 4px #0009, inset 0 -2px #56b9ee;
-}
-#command-ui .mobile-commandbar > button:active {
-  filter: brightness(1.18);
-}
-#command-ui .mobile-commandbar > button:focus-visible {
-  outline: 2px solid #ffe2a1;
-  outline-offset: -3px;
-}
+.mobile-controls #command-ui .mobile-commandbar > button svg { width:25px; height:25px; padding:2px; background:linear-gradient(#030910,#152e46); border:1px solid #111; border-bottom-color:#b3c9dd; border-radius:2px; color:#8cd6ff; }
+.mobile-controls #command-ui .mobile-commandbar > button span { font:bold 10px Tahoma,Arial,sans-serif; letter-spacing:0; }
+.mobile-controls #command-ui .mobile-commandbar > button.active { background:linear-gradient(#354c61,#141d2a); border-color:#111e2d #7196b3 #c3d7e6 #15273c; color:#f8f584; box-shadow:inset 0 3px 7px #000; }
+.mobile-controls #command-ui .mobile-commandbar > button.active svg { color:#edff93; box-shadow:0 0 5px #baff5340; }
+.mobile-controls #command-ui .mobile-commandbar > [data-action=stop] { margin-left:5px; color:#521719; text-shadow:0 1px #a9a9ae; }
+.mobile-controls #command-ui .mobile-commandbar > [data-action=stop] svg { color:#ff5b46; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button { margin-left:5px; border-radius:15px 7px 16px 5px; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button[aria-expanded=true] { background:#10283c; color:#fcf6a3; border-color:#e8e988; }
+.mobile-controls #command-ui .mobile-commandbar > button:focus-visible { outline:3px solid #fff279; outline-offset:-5px; }
+.mobile-controls #command-ui .mobile-commandbar > button:active { filter:brightness(.8); }
+.mobile-controls #command-ui .mobile-build-button i.visible { display:block; top:5px; right:5px; width:6px; height:6px; border-radius:0; background:#fbff6c; box-shadow:0 0 0 1px #101310; }
+@media (min-width:600px) { .mobile-controls #command-ui .mobile-commandbar { padding-inline:max(25px,calc((100% - 660px)/2)); } }
