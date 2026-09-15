@@ -8,11 +8,14 @@ buildTime = 21.0
 hp = 1500
 armor = "concrete"
 footprint = [4, 4]
+# Original [GAYARD]: longer placement reach, but no base expansion from shipyards.
+adjacent = 12
+baseNormal = false
 power = -25
 requires = ["refinery", "power", "conyard"]
 sight = 10
 sprite = "gayard"
 cameo = "ayaricon"
-description = "Build on water near your base. Produces and repairs Allied ships."
+description = "Build on explored water within 12 cells of your base. Does not extend the build area. Produces and repairs Allied ships."
 movement = "water"
 producer = ["vehicles"]

@@ -244,6 +244,8 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('data verified against original West
       const def = definitions[id], source = rules[name];
       expect(def.hp, id).toBe(Number(source.strength)); expect(def.armor, id).toBe(source.armor);
       expect(def.power, id).toBe(Number(source.power ?? 0));
+      if (def.adjacent !== undefined) expect(def.adjacent, id).toBe(Number(source.adjacent));
+      if (def.baseNormal !== undefined) expect(def.baseNormal, id).toBe((source.basenormal ?? 'yes') === 'yes');
       if (def.mapOnly && isBuilding(def)) {
         // Neutral tech has no native production cost/timing: verify its capture
         // rules instead, while retaining native strength, armor and foundation checks.

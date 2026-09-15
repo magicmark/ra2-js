@@ -1,4 +1,5 @@
 import { isBuilding } from './definitions';
+import { isWithinLocalMap } from './maps/nativeMap';
 import type { GameState, UnitDef } from './types';
 
 /** Shared placement verdicts drive both the command and the original cell mask. */
@@ -8,14 +9,17 @@ export function placementCells(state: GameState, defs: Record<string, UnitDef>, 
   const [width, height] = def.footprint, entities = state.entities.filter(entity => entity.hp > 0);
   const nearBase = entities.some(entity => {
     const other = defs[entity.type];
-    if (entity.side !== side || entity.selling || entity.constructing || !isBuilding(other)) return false;
+    if (entity.side !== side || entity.selling || entity.constructing || !isBuilding(other) || other.baseNormal === false) return false;
     const dx = Math.max(entity.x - (x + width), x - (entity.x + other.footprint[0]), 0);
     const dy = Math.max(entity.y - (y + height), y - (entity.y + other.footprint[1]), 0);
-    return Math.hypot(dx, dy) <= 4.5;
+    // Explicit native Adjacent values override this simulation's land-building reach.
+    return Math.hypot(dx, dy) <= (def.adjacent ?? 4.5);
   });
   return Array.from({ length: width * height }, (_, index) => {
     const tx = x + index % width, ty = y + Math.floor(index / width);
     let valid = nearBase && tx >= 0 && ty >= 0 && tx < state.width && ty < state.height;
+    // Native array padding is water for terrain storage, not a buildable sea.
+    if (valid && state.nativeMap) valid = isWithinLocalMap({ x: tx, y: ty }, state.nativeMap);
     if (valid) {
       const tile = state.tiles[ty * state.width + tx];
       valid = (def.movement === 'water' ? tile.terrain === 'water' : tile.terrain !== 'water' && tile.terrain !== 'rock') && tile.ore <= 0 && (side !== 0 || !!state.explored[ty * state.width + tx]);

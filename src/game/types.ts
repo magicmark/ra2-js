@@ -18,6 +18,7 @@ export interface UnitDef {
   movement?: 'land' | 'air' | 'water' | 'amphibious' | 'teleport';
   targets?: ('land' | 'air' | 'water' | 'infantry')[];
   powered?: boolean; buildLimit?: number;
+  adjacent?: number; baseNormal?: boolean;
   passengers?: number; infantryOnly?: boolean; size?: number;
   ability?: 'spy' | 'tanya' | 'chrono' | 'mirage' | 'prism' | 'carrier';
   superweapon?: 'chronosphere' | 'weather';

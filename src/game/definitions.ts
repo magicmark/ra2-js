@@ -19,6 +19,8 @@ function validateDefinitions(units: Record<string, Partial<UnitDef>>): Record<st
     for (const field of ['speed', 'damage', 'range', 'fireRate', 'sight'] as const)
       if (!Number.isFinite(def[field]) || def[field] < 0) throw new Error(`Invalid ${field}: ${id}`);
     if (def.burst !== undefined && (!Number.isInteger(def.burst) || def.burst < 1)) throw new Error(`Invalid burst: ${id}`);
+    if (def.adjacent !== undefined && (!Number.isInteger(def.adjacent) || def.adjacent < 0)) throw new Error(`Invalid placement adjacency: ${id}`);
+    if (def.baseNormal !== undefined && typeof def.baseNormal !== 'boolean') throw new Error(`Invalid base adjacency flag: ${id}`);
     const animationName = (name: unknown) => typeof name === 'string' && /^[a-z0-9_]+$/i.test(name);
     if (def.impact !== undefined && !animationName(def.impact)) throw new Error(`Invalid impact animation: ${id}`);
     if (def.deathAnimations !== undefined && (!Array.isArray(def.deathAnimations) || !def.deathAnimations.length || def.deathAnimations.some(name => !animationName(name))))
