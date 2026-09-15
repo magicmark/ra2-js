@@ -1,0 +1,3824 @@
+{
+  "baseline": "522691f",
+  "sourceHashes": {
+    "src/game/map.ts": "af9a4b98fcb12ba44a067a4be98945cbe029004e7d5e41f5efd59419bcc5616f",
+    "src/game/oreMines.ts": "e5b35a103fd7ecea714d9fe3d4415abeb5f17c6d7152a16e18f867ed670e1a0a",
+    "src/game/maps/theater.ts": "47d05c03e9342e61e90abfac3b9ad7797396538561be55ff25f8ca38493b2cc2",
+    "src/game/maps/terrainTopology.ts": "f8010982765ef97a6d034e0990d258041bbebca3eff2aa87e029a429de66b5ae",
+    "scripts/generateMaps.ts": "4b2b506a7456b007c434c330002710753d03b7093b6e79da9cdd7515db0fe6a1"
+  },
+  "results": [
+    {
+      "name": "Field Command (training)",
+      "inspectedCells": 4096,
+      "localCells": 4096,
+      "roadCells": 169,
+      "roadTileTypes": [
+        294,
+        293
+      ],
+      "roadRuns": {
+        "x": [
+          {
+            "from": [
+              5,
+              30
+            ],
+            "to": [
+              21,
+              30
+            ],
+            "before": 0,
+            "after": 493
+          },
+          {
+            "from": [
+              44,
+              30
+            ],
+            "to": [
+              58,
+              30
+            ],
+            "before": 493,
+            "after": 0
+          }
+        ],
+        "y": [
+          {
+            "from": [
+              23,
+              18
+            ],
+            "to": [
+              23,
+              25
+            ],
+            "before": 0,
+            "after": 493
+          },
+          {
+            "from": [
+              23,
+              34
+            ],
+            "to": [
+              23,
+              54
+            ],
+            "before": 493,
+            "after": 0
+          }
+        ]
+      },
+      "incompleteRoadPieces": [
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            20
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 20,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            21
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 21,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            22
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 22,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            23
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 23,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            24
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 24,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            25
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 25,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            34
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 34,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            35
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 35,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            36
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 36,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            37
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 37,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            38
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 38,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            39
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 39,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            40
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 40,
+              "tileIndex": 493
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            22,
+            41
+          ],
+          "missing": [
+            {
+              "x": 24,
+              "y": 41,
+              "tileIndex": 493
+            }
+          ]
+        }
+      ],
+      "drills": [
+        {
+          "x": 8,
+          "y": 51,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 22,
+            "y": 51,
+            "distance": 14
+          }
+        },
+        {
+          "x": 22,
+          "y": 51,
+          "tileIndex": 294,
+          "onRoad": true,
+          "nearestRoadCell": {
+            "x": 22,
+            "y": 51,
+            "distance": 0
+          }
+        },
+        {
+          "x": 54,
+          "y": 11,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 54,
+            "y": 29,
+            "distance": 18
+          }
+        },
+        {
+          "x": 40,
+          "y": 8,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 24,
+            "y": 18,
+            "distance": 18.867962264113206
+          }
+        },
+        {
+          "x": 20,
+          "y": 27,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 20,
+            "y": 29,
+            "distance": 2
+          }
+        },
+        {
+          "x": 44,
+          "y": 39,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 44,
+            "y": 31,
+            "distance": 8
+          }
+        }
+      ],
+      "structures": [],
+      "drillsAfterInitialization": [
+        {
+          "x": 8,
+          "y": 51,
+          "terrain": "rock",
+          "ore": 0,
+          "variant": 3,
+          "nativeArt": {
+            "tileIndex": 0,
+            "subTile": 0,
+            "terrain": "rock"
+          }
+        },
+        {
+          "x": 22,
+          "y": 51,
+          "terrain": "rock",
+          "ore": 0,
+          "variant": 16,
+          "nativeArt": {
+            "tileIndex": 294,
+            "subTile": 0,
+            "terrain": "rock"
+          }
+        },
+        {
+          "x": 54,
+          "y": 11,
+          "terrain": "rock",
+          "ore": 0,
+          "variant": 5,
+          "nativeArt": {
+            "tileIndex": 0,
+            "subTile": 0,
+            "terrain": "rock"
+          }
+        },
+        {
+          "x": 40,
+          "y": 8,
+          "terrain": "rock",
+          "ore": 0,
+          "variant": 0,
+          "nativeArt": {
+            "tileIndex": 0,
+            "subTile": 0,
+            "terrain": "rock"
+          }
+        },
+        {
+          "x": 20,
+          "y": 27,
+          "terrain": "rock",
+          "ore": 0,
+          "variant": 2,
+          "nativeArt": {
+            "tileIndex": 0,
+            "subTile": 0,
+            "terrain": "rock"
+          }
+        },
+        {
+          "x": 44,
+          "y": 39,
+          "terrain": "rock",
+          "ore": 0,
+          "variant": 3,
+          "nativeArt": {
+            "tileIndex": 0,
+            "subTile": 0,
+            "terrain": "rock"
+          }
+        }
+      ]
+    },
+    {
+      "id": "emerald-divide",
+      "theater": "TEMPERATE",
+      "source": "public/maps/emerald-divide.map",
+      "name": "Emerald Divide",
+      "inspectedCells": 18336,
+      "localCells": 15480,
+      "roadCells": 0,
+      "roadTileTypes": [],
+      "roadRuns": {
+        "x": [],
+        "y": []
+      },
+      "incompleteRoadPieces": [],
+      "drills": [
+        {
+          "x": 53,
+          "y": 94,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 39,
+          "y": 80,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 106,
+          "y": 41,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 92,
+          "y": 27,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 142,
+          "y": 63,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 128,
+          "y": 49,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 164,
+          "y": 99,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 150,
+          "y": 85,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 111,
+          "y": 152,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 97,
+          "y": 138,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 76,
+          "y": 129,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 62,
+          "y": 115,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        }
+      ],
+      "structures": [
+        {
+          "id": "0",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 65,
+          "y": 95,
+          "facing": 64
+        },
+        {
+          "id": "1",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 94,
+          "y": 66,
+          "facing": 64
+        },
+        {
+          "id": "2",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 114,
+          "y": 78,
+          "facing": 64
+        },
+        {
+          "id": "3",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 126,
+          "y": 98,
+          "facing": 64
+        },
+        {
+          "id": "4",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 97,
+          "y": 127,
+          "facing": 64
+        },
+        {
+          "id": "5",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 77,
+          "y": 114,
+          "facing": 64
+        },
+        {
+          "id": "6",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 94,
+          "y": 88,
+          "facing": 64
+        },
+        {
+          "id": "7",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 93,
+          "y": 116,
+          "facing": 64
+        },
+        {
+          "id": "8",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 115,
+          "y": 95,
+          "facing": 64
+        }
+      ],
+      "sha256": "cba35bc4d82179f178e8e771e4f22c7de5ca182cb78db8f653f95d82bcc82af0"
+    },
+    {
+      "id": "frostline-basin",
+      "theater": "SNOW",
+      "source": "public/maps/frostline-basin.map",
+      "name": "Frostline Basin",
+      "inspectedCells": 18336,
+      "localCells": 15480,
+      "roadCells": 0,
+      "roadTileTypes": [],
+      "roadRuns": {
+        "x": [],
+        "y": []
+      },
+      "incompleteRoadPieces": [],
+      "drills": [
+        {
+          "x": 55,
+          "y": 96,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 41,
+          "y": 82,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 107,
+          "y": 44,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 93,
+          "y": 30,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 142,
+          "y": 65,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 128,
+          "y": 51,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 162,
+          "y": 99,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 148,
+          "y": 85,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 110,
+          "y": 151,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 96,
+          "y": 137,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 77,
+          "y": 130,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 63,
+          "y": 116,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        }
+      ],
+      "structures": [
+        {
+          "id": "0",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 63,
+          "y": 101,
+          "facing": 64
+        },
+        {
+          "id": "1",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 94,
+          "y": 67,
+          "facing": 64
+        },
+        {
+          "id": "2",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 110,
+          "y": 69,
+          "facing": 64
+        },
+        {
+          "id": "3",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 132,
+          "y": 108,
+          "facing": 64
+        },
+        {
+          "id": "4",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 87,
+          "y": 126,
+          "facing": 64
+        },
+        {
+          "id": "5",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 78,
+          "y": 115,
+          "facing": 64
+        },
+        {
+          "id": "6",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 92,
+          "y": 88,
+          "facing": 64
+        },
+        {
+          "id": "7",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 93,
+          "y": 115,
+          "facing": 64
+        },
+        {
+          "id": "8",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 117,
+          "y": 112,
+          "facing": 64
+        }
+      ],
+      "sha256": "39132c6fdfc321c0393cebd29978e35f3c4f501179eb8a404cc6278dbe107f36"
+    },
+    {
+      "id": "saffron-wash",
+      "theater": "TEMPERATE",
+      "source": "public/maps/saffron-wash.map",
+      "name": "Saffron Wash",
+      "inspectedCells": 18336,
+      "localCells": 15480,
+      "roadCells": 0,
+      "roadTileTypes": [],
+      "roadRuns": {
+        "x": [],
+        "y": []
+      },
+      "incompleteRoadPieces": [],
+      "drills": [
+        {
+          "x": 53,
+          "y": 98,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 39,
+          "y": 84,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 103,
+          "y": 44,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 89,
+          "y": 30,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 141,
+          "y": 64,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 127,
+          "y": 50,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 164,
+          "y": 97,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 150,
+          "y": 83,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 114,
+          "y": 151,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 100,
+          "y": 137,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 77,
+          "y": 132,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 63,
+          "y": 118,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        }
+      ],
+      "structures": [
+        {
+          "id": "0",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 65,
+          "y": 97,
+          "facing": 64
+        },
+        {
+          "id": "1",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 92,
+          "y": 67,
+          "facing": 64
+        },
+        {
+          "id": "2",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 113,
+          "y": 78,
+          "facing": 64
+        },
+        {
+          "id": "3",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 126,
+          "y": 97,
+          "facing": 64
+        },
+        {
+          "id": "4",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 98,
+          "y": 126,
+          "facing": 64
+        },
+        {
+          "id": "5",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 78,
+          "y": 116,
+          "facing": 64
+        },
+        {
+          "id": "6",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 83,
+          "y": 87,
+          "facing": 64
+        },
+        {
+          "id": "7",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 96,
+          "y": 115,
+          "facing": 64
+        },
+        {
+          "id": "8",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 115,
+          "y": 96,
+          "facing": 64
+        }
+      ],
+      "sha256": "713a9a6f73ea745deef799ae5bb418d58d5163f3597c16aa31ea12f9dae262dc"
+    },
+    {
+      "id": "ironwood-crossing",
+      "theater": "TEMPERATE",
+      "source": "public/maps/ironwood-crossing.map",
+      "name": "Ironwood Crossing",
+      "inspectedCells": 18336,
+      "localCells": 15480,
+      "roadCells": 321,
+      "roadTileTypes": [
+        294,
+        293,
+        295
+      ],
+      "roadRuns": {
+        "x": [
+          {
+            "from": [
+              60,
+              95
+            ],
+            "to": [
+              61,
+              95
+            ],
+            "before": 0,
+            "after": 534
+          },
+          {
+            "from": [
+              71,
+              95
+            ],
+            "to": [
+              111,
+              95
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              121,
+              95
+            ],
+            "to": [
+              122,
+              95
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              132,
+              95
+            ],
+            "to": [
+              139,
+              95
+            ],
+            "before": 534,
+            "after": 0
+          }
+        ],
+        "y": [
+          {
+            "from": [
+              95,
+              52
+            ],
+            "to": [
+              95,
+              62
+            ],
+            "before": 0,
+            "after": 534
+          },
+          {
+            "from": [
+              95,
+              72
+            ],
+            "to": [
+              95,
+              111
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              95,
+              121
+            ],
+            "to": [
+              95,
+              122
+            ],
+            "before": 534,
+            "after": 471
+          },
+          {
+            "from": [
+              95,
+              132
+            ],
+            "to": [
+              95,
+              132
+            ],
+            "before": 471,
+            "after": 0
+          }
+        ]
+      },
+      "incompleteRoadPieces": [
+        {
+          "tileIndex": 293,
+          "anchor": [
+            123,
+            94
+          ],
+          "missing": [
+            {
+              "x": 123,
+              "y": 95,
+              "tileIndex": 534
+            },
+            {
+              "x": 123,
+              "y": 96,
+              "tileIndex": 467
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            124,
+            94
+          ],
+          "missing": [
+            {
+              "x": 124,
+              "y": 95,
+              "tileIndex": 534
+            },
+            {
+              "x": 124,
+              "y": 96,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            125,
+            94
+          ],
+          "missing": [
+            {
+              "x": 125,
+              "y": 95,
+              "tileIndex": 534
+            },
+            {
+              "x": 125,
+              "y": 96,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            126,
+            94
+          ],
+          "missing": [
+            {
+              "x": 126,
+              "y": 95,
+              "tileIndex": 534
+            },
+            {
+              "x": 126,
+              "y": 96,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            127,
+            94
+          ],
+          "missing": [
+            {
+              "x": 127,
+              "y": 95,
+              "tileIndex": 534
+            },
+            {
+              "x": 127,
+              "y": 96,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            128,
+            94
+          ],
+          "missing": [
+            {
+              "x": 128,
+              "y": 95,
+              "tileIndex": 534
+            },
+            {
+              "x": 128,
+              "y": 96,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            129,
+            94
+          ],
+          "missing": [
+            {
+              "x": 129,
+              "y": 95,
+              "tileIndex": 534
+            },
+            {
+              "x": 129,
+              "y": 96,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            130,
+            94
+          ],
+          "missing": [
+            {
+              "x": 130,
+              "y": 95,
+              "tileIndex": 534
+            },
+            {
+              "x": 130,
+              "y": 96,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            131,
+            94
+          ],
+          "missing": [
+            {
+              "x": 131,
+              "y": 95,
+              "tileIndex": 534
+            },
+            {
+              "x": 131,
+              "y": 96,
+              "tileIndex": 467
+            }
+          ]
+        }
+      ],
+      "drills": [
+        {
+          "x": 54,
+          "y": 93,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 60,
+            "y": 94,
+            "distance": 6.0827625302982185
+          }
+        },
+        {
+          "x": 40,
+          "y": 79,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 60,
+            "y": 94,
+            "distance": 25
+          }
+        },
+        {
+          "x": 106,
+          "y": 41,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 96,
+            "y": 52,
+            "distance": 14.866068747318504
+          }
+        },
+        {
+          "x": 92,
+          "y": 27,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 94,
+            "y": 52,
+            "distance": 25.079872407968907
+          }
+        },
+        {
+          "x": 143,
+          "y": 64,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 139,
+            "y": 94,
+            "distance": 30.26549190084311
+          }
+        },
+        {
+          "x": 129,
+          "y": 50,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 96,
+            "y": 52,
+            "distance": 33.060550509633075
+          }
+        },
+        {
+          "x": 164,
+          "y": 99,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 139,
+            "y": 96,
+            "distance": 25.179356624028344
+          }
+        },
+        {
+          "x": 150,
+          "y": 85,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 139,
+            "y": 94,
+            "distance": 14.212670403551897
+          }
+        },
+        {
+          "x": 112,
+          "y": 151,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 96,
+            "y": 132,
+            "distance": 24.839484696748443
+          }
+        },
+        {
+          "x": 98,
+          "y": 137,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 96,
+            "y": 132,
+            "distance": 5.385164807134505
+          }
+        },
+        {
+          "x": 77,
+          "y": 130,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 94,
+            "y": 132,
+            "distance": 17.11724276862369
+          }
+        },
+        {
+          "x": 63,
+          "y": 116,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 61,
+            "y": 96,
+            "distance": 20.09975124224178
+          }
+        }
+      ],
+      "structures": [
+        {
+          "id": "0",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 65,
+          "y": 94,
+          "facing": 64
+        },
+        {
+          "id": "1",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 94,
+          "y": 66,
+          "facing": 64
+        },
+        {
+          "id": "2",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 114,
+          "y": 78,
+          "facing": 64
+        },
+        {
+          "id": "3",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 126,
+          "y": 98,
+          "facing": 64
+        },
+        {
+          "id": "4",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 97,
+          "y": 126,
+          "facing": 64
+        },
+        {
+          "id": "5",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 78,
+          "y": 115,
+          "facing": 64
+        },
+        {
+          "id": "6",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 87,
+          "y": 88,
+          "facing": 64
+        },
+        {
+          "id": "7",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 96,
+          "y": 115,
+          "facing": 64
+        },
+        {
+          "id": "8",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 115,
+          "y": 96,
+          "facing": 64
+        }
+      ],
+      "sha256": "7c21c9798bcff3a9f5e94f0c04fa4775053e8b97f4bea78e154e3b9f236ea20c"
+    },
+    {
+      "id": "slatewater-reach",
+      "theater": "URBAN",
+      "source": "public/maps/slatewater-reach.map",
+      "name": "Slatewater Reach",
+      "inspectedCells": 18336,
+      "localCells": 15480,
+      "roadCells": 319,
+      "roadTileTypes": [
+        294,
+        293,
+        295
+      ],
+      "roadRuns": {
+        "x": [
+          {
+            "from": [
+              59,
+              95
+            ],
+            "to": [
+              61,
+              95
+            ],
+            "before": 0,
+            "after": 534
+          },
+          {
+            "from": [
+              71,
+              95
+            ],
+            "to": [
+              117,
+              95
+            ],
+            "before": 534,
+            "after": 123
+          },
+          {
+            "from": [
+              132,
+              95
+            ],
+            "to": [
+              139,
+              95
+            ],
+            "before": 125,
+            "after": 0
+          }
+        ],
+        "y": [
+          {
+            "from": [
+              95,
+              53
+            ],
+            "to": [
+              95,
+              57
+            ],
+            "before": 0,
+            "after": 121
+          },
+          {
+            "from": [
+              95,
+              74
+            ],
+            "to": [
+              95,
+              111
+            ],
+            "before": 123,
+            "after": 534
+          },
+          {
+            "from": [
+              95,
+              121
+            ],
+            "to": [
+              95,
+              122
+            ],
+            "before": 534,
+            "after": 534
+          }
+        ]
+      },
+      "incompleteRoadPieces": [
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            56
+          ],
+          "missing": [
+            {
+              "x": 96,
+              "y": 56,
+              "tileIndex": 121
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            57
+          ],
+          "missing": [
+            {
+              "x": 96,
+              "y": 57,
+              "tileIndex": 121
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            118,
+            94
+          ],
+          "missing": [
+            {
+              "x": 118,
+              "y": 94,
+              "tileIndex": 123
+            },
+            {
+              "x": 118,
+              "y": 95,
+              "tileIndex": 123
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            119,
+            94
+          ],
+          "missing": [
+            {
+              "x": 119,
+              "y": 94,
+              "tileIndex": 123
+            },
+            {
+              "x": 119,
+              "y": 95,
+              "tileIndex": 123
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            123
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 123,
+              "tileIndex": 534
+            },
+            {
+              "x": 96,
+              "y": 123,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            124
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 124,
+              "tileIndex": 534
+            },
+            {
+              "x": 96,
+              "y": 124,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            125
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 125,
+              "tileIndex": 534
+            },
+            {
+              "x": 96,
+              "y": 125,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            126
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 126,
+              "tileIndex": 534
+            },
+            {
+              "x": 96,
+              "y": 126,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            127
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 127,
+              "tileIndex": 534
+            },
+            {
+              "x": 96,
+              "y": 127,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            128
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 128,
+              "tileIndex": 534
+            },
+            {
+              "x": 96,
+              "y": 128,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            129
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 129,
+              "tileIndex": 534
+            },
+            {
+              "x": 96,
+              "y": 129,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            130
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 130,
+              "tileIndex": 534
+            },
+            {
+              "x": 96,
+              "y": 130,
+              "tileIndex": 534
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            131
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 131,
+              "tileIndex": 467
+            },
+            {
+              "x": 96,
+              "y": 131,
+              "tileIndex": 467
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            132
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 132,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 132,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            130,
+            94
+          ],
+          "missing": [
+            {
+              "x": 130,
+              "y": 94,
+              "tileIndex": 125
+            },
+            {
+              "x": 130,
+              "y": 95,
+              "tileIndex": 125
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            133
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 133,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 133,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 293,
+          "anchor": [
+            131,
+            94
+          ],
+          "missing": [
+            {
+              "x": 131,
+              "y": 94,
+              "tileIndex": 125
+            },
+            {
+              "x": 131,
+              "y": 95,
+              "tileIndex": 125
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            134
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 134,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 134,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            135
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 135,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 135,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            136
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 136,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 136,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            137
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 137,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 137,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            138
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 138,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 138,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            139
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 139,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 139,
+              "tileIndex": 0
+            }
+          ]
+        }
+      ],
+      "drills": [
+        {
+          "x": 53,
+          "y": 94,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 59,
+            "y": 94,
+            "distance": 6
+          }
+        },
+        {
+          "x": 39,
+          "y": 80,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 59,
+            "y": 94,
+            "distance": 24.413111231467404
+          }
+        },
+        {
+          "x": 105,
+          "y": 42,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 96,
+            "y": 53,
+            "distance": 14.212670403551897
+          }
+        },
+        {
+          "x": 91,
+          "y": 28,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 94,
+            "y": 53,
+            "distance": 25.179356624028344
+          }
+        },
+        {
+          "x": 140,
+          "y": 63,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 139,
+            "y": 94,
+            "distance": 31.016124838541643
+          }
+        },
+        {
+          "x": 126,
+          "y": 49,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 96,
+            "y": 53,
+            "distance": 30.26549190084311
+          }
+        },
+        {
+          "x": 164,
+          "y": 97,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 139,
+            "y": 96,
+            "distance": 25.01999200639361
+          }
+        },
+        {
+          "x": 150,
+          "y": 83,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 139,
+            "y": 94,
+            "distance": 15.556349186104047
+          }
+        },
+        {
+          "x": 113,
+          "y": 150,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 94,
+            "y": 139,
+            "distance": 21.95449840010015
+          }
+        },
+        {
+          "x": 99,
+          "y": 136,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 94,
+            "y": 136,
+            "distance": 5
+          }
+        },
+        {
+          "x": 76,
+          "y": 129,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 94,
+            "y": 129,
+            "distance": 18
+          }
+        },
+        {
+          "x": 62,
+          "y": 115,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 61,
+            "y": 96,
+            "distance": 19.026297590440446
+          }
+        }
+      ],
+      "structures": [
+        {
+          "id": "0",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 65,
+          "y": 95,
+          "facing": 64
+        },
+        {
+          "id": "1",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 85,
+          "y": 74,
+          "facing": 64
+        },
+        {
+          "id": "2",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 113,
+          "y": 78,
+          "facing": 64
+        },
+        {
+          "id": "3",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 126,
+          "y": 104,
+          "facing": 64
+        },
+        {
+          "id": "4",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 98,
+          "y": 126,
+          "facing": 64
+        },
+        {
+          "id": "5",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 77,
+          "y": 114,
+          "facing": 64
+        },
+        {
+          "id": "6",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 87,
+          "y": 88,
+          "facing": 64
+        },
+        {
+          "id": "7",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 96,
+          "y": 115,
+          "facing": 64
+        },
+        {
+          "id": "8",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 113,
+          "y": 100,
+          "facing": 64
+        }
+      ],
+      "sha256": "8293fffc94de3720a9a60bb55f9e5ed8a5352cc9254c6627736272d1e86ead62"
+    },
+    {
+      "id": "copperhead-mesa",
+      "theater": "TEMPERATE",
+      "source": "public/maps/copperhead-mesa.map",
+      "name": "Copperhead Mesa",
+      "inspectedCells": 18336,
+      "localCells": 15480,
+      "roadCells": 0,
+      "roadTileTypes": [],
+      "roadRuns": {
+        "x": [],
+        "y": []
+      },
+      "incompleteRoadPieces": [],
+      "drills": [
+        {
+          "x": 53,
+          "y": 94,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 39,
+          "y": 80,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 105,
+          "y": 42,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 91,
+          "y": 28,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 142,
+          "y": 63,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 128,
+          "y": 49,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 164,
+          "y": 99,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 150,
+          "y": 85,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 112,
+          "y": 151,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 98,
+          "y": 137,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 75,
+          "y": 130,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 61,
+          "y": 116,
+          "tileIndex": 493,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        }
+      ],
+      "structures": [
+        {
+          "id": "0",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 65,
+          "y": 95,
+          "facing": 64
+        },
+        {
+          "id": "1",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 93,
+          "y": 66,
+          "facing": 64
+        },
+        {
+          "id": "2",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 114,
+          "y": 78,
+          "facing": 64
+        },
+        {
+          "id": "3",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 126,
+          "y": 98,
+          "facing": 64
+        },
+        {
+          "id": "4",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 97,
+          "y": 126,
+          "facing": 64
+        },
+        {
+          "id": "5",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 77,
+          "y": 115,
+          "facing": 64
+        },
+        {
+          "id": "6",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 87,
+          "y": 88,
+          "facing": 64
+        },
+        {
+          "id": "7",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 96,
+          "y": 115,
+          "facing": 64
+        },
+        {
+          "id": "8",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 115,
+          "y": 96,
+          "facing": 64
+        }
+      ],
+      "sha256": "4885e9a2cc5c92dfac8ff8fe856c481b53bb44f8f83bf7927cc69640974d153e"
+    },
+    {
+      "id": "whiteout-causeway",
+      "theater": "SNOW",
+      "source": "public/maps/whiteout-causeway.map",
+      "name": "Whiteout Causeway",
+      "inspectedCells": 18336,
+      "localCells": 15480,
+      "roadCells": 0,
+      "roadTileTypes": [],
+      "roadRuns": {
+        "x": [],
+        "y": []
+      },
+      "incompleteRoadPieces": [],
+      "drills": [
+        {
+          "x": 53,
+          "y": 94,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 39,
+          "y": 80,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 106,
+          "y": 41,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 92,
+          "y": 27,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 142,
+          "y": 63,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 128,
+          "y": 49,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 164,
+          "y": 99,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 150,
+          "y": 85,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 111,
+          "y": 152,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 97,
+          "y": 138,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 76,
+          "y": 129,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        },
+        {
+          "x": 62,
+          "y": 115,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "distance": null
+          }
+        }
+      ],
+      "structures": [
+        {
+          "id": "0",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 65,
+          "y": 87,
+          "facing": 64
+        },
+        {
+          "id": "1",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 87,
+          "y": 66,
+          "facing": 64
+        },
+        {
+          "id": "2",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 105,
+          "y": 96,
+          "facing": 64
+        },
+        {
+          "id": "3",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 126,
+          "y": 102,
+          "facing": 64
+        },
+        {
+          "id": "4",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 102,
+          "y": 127,
+          "facing": 64
+        },
+        {
+          "id": "5",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 96,
+          "y": 105,
+          "facing": 64
+        },
+        {
+          "id": "6",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 87,
+          "y": 88,
+          "facing": 64
+        },
+        {
+          "id": "7",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 101,
+          "y": 115,
+          "facing": 64
+        },
+        {
+          "id": "8",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 115,
+          "y": 101,
+          "facing": 64
+        }
+      ],
+      "sha256": "ce8159179aedef80d397e02cf10057fc8e394edff72704b4dcbd319789408282"
+    },
+    {
+      "id": "tidal-crown",
+      "theater": "URBAN",
+      "source": "public/maps/tidal-crown.map",
+      "name": "Tidal Crown",
+      "inspectedCells": 18336,
+      "localCells": 15480,
+      "roadCells": 305,
+      "roadTileTypes": [
+        294,
+        293,
+        295
+      ],
+      "roadRuns": {
+        "x": [
+          {
+            "from": [
+              60,
+              95
+            ],
+            "to": [
+              61,
+              95
+            ],
+            "before": 0,
+            "after": 534
+          },
+          {
+            "from": [
+              71,
+              95
+            ],
+            "to": [
+              109,
+              95
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              119,
+              95
+            ],
+            "to": [
+              121,
+              95
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              131,
+              95
+            ],
+            "to": [
+              137,
+              95
+            ],
+            "before": 534,
+            "after": 0
+          }
+        ],
+        "y": [
+          {
+            "from": [
+              95,
+              54
+            ],
+            "to": [
+              95,
+              63
+            ],
+            "before": 0,
+            "after": 534
+          },
+          {
+            "from": [
+              95,
+              73
+            ],
+            "to": [
+              95,
+              111
+            ],
+            "before": 534,
+            "after": 534
+          },
+          {
+            "from": [
+              95,
+              121
+            ],
+            "to": [
+              95,
+              122
+            ],
+            "before": 534,
+            "after": 534
+          }
+        ]
+      },
+      "incompleteRoadPieces": [
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            132
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 132,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 132,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            133
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 133,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 133,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            134
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 134,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 134,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            135
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 135,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 135,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            136
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 136,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 136,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            137
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 137,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 137,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            138
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 138,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 138,
+              "tileIndex": 0
+            }
+          ]
+        },
+        {
+          "tileIndex": 294,
+          "anchor": [
+            94,
+            139
+          ],
+          "missing": [
+            {
+              "x": 95,
+              "y": 139,
+              "tileIndex": 0
+            },
+            {
+              "x": 96,
+              "y": 139,
+              "tileIndex": 0
+            }
+          ]
+        }
+      ],
+      "drills": [
+        {
+          "x": 54,
+          "y": 93,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 60,
+            "y": 94,
+            "distance": 6.0827625302982185
+          }
+        },
+        {
+          "x": 40,
+          "y": 79,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 60,
+            "y": 94,
+            "distance": 25
+          }
+        },
+        {
+          "x": 106,
+          "y": 43,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 96,
+            "y": 54,
+            "distance": 14.866068747318504
+          }
+        },
+        {
+          "x": 92,
+          "y": 29,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 94,
+            "y": 54,
+            "distance": 25.079872407968907
+          }
+        },
+        {
+          "x": 140,
+          "y": 61,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 137,
+            "y": 94,
+            "distance": 33.13608305156178
+          }
+        },
+        {
+          "x": 126,
+          "y": 47,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 96,
+            "y": 54,
+            "distance": 30.80584360149873
+          }
+        },
+        {
+          "x": 162,
+          "y": 97,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 137,
+            "y": 96,
+            "distance": 25.01999200639361
+          }
+        },
+        {
+          "x": 148,
+          "y": 83,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 137,
+            "y": 94,
+            "distance": 15.556349186104047
+          }
+        },
+        {
+          "x": 113,
+          "y": 150,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 94,
+            "y": 139,
+            "distance": 21.95449840010015
+          }
+        },
+        {
+          "x": 99,
+          "y": 136,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 94,
+            "y": 136,
+            "distance": 5
+          }
+        },
+        {
+          "x": 75,
+          "y": 128,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 94,
+            "y": 132,
+            "distance": 19.4164878389476
+          }
+        },
+        {
+          "x": 61,
+          "y": 114,
+          "tileIndex": 0,
+          "onRoad": false,
+          "nearestRoadCell": {
+            "x": 61,
+            "y": 96,
+            "distance": 18
+          }
+        }
+      ],
+      "structures": [
+        {
+          "id": "0",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 65,
+          "y": 94,
+          "facing": 64
+        },
+        {
+          "id": "1",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 94,
+          "y": 67,
+          "facing": 64
+        },
+        {
+          "id": "2",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 113,
+          "y": 77,
+          "facing": 64
+        },
+        {
+          "id": "3",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 125,
+          "y": 93,
+          "facing": 64
+        },
+        {
+          "id": "4",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 95,
+          "y": 126,
+          "facing": 64
+        },
+        {
+          "id": "5",
+          "owner": "Neutral",
+          "type": "CAOILD",
+          "health": 256,
+          "x": 77,
+          "y": 114,
+          "facing": 64
+        },
+        {
+          "id": "6",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 87,
+          "y": 88,
+          "facing": 64
+        },
+        {
+          "id": "7",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 93,
+          "y": 115,
+          "facing": 64
+        },
+        {
+          "id": "8",
+          "owner": "Neutral",
+          "type": "CAAIRP",
+          "health": 256,
+          "x": 113,
+          "y": 96,
+          "facing": 64
+        }
+      ],
+      "sha256": "5769f461c70ef36391a833341d6538862f592aadc22cce65dbd1b66f94810f1e"
+    }
+  ],
+  "originalRoadSets": [
+    {
+      "file": "temperat.ini",
+      "section": "tileset0016",
+      "first": 176,
+      "count": 24,
+      "setname": "DirtRoads Bendy",
+      "filename": "Droadc",
+      "tilesinset": "24",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "marblemadness": "58",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "temperat.ini",
+      "section": "tileset0017",
+      "first": 200,
+      "count": 11,
+      "setname": "DirtRoads Junctions",
+      "filename": "Droadj",
+      "tilesinset": "11",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "marblemadness": "59",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "temperat.ini",
+      "section": "tileset0018",
+      "first": 211,
+      "count": 66,
+      "setname": "DirtRoads Straight",
+      "filename": "Droads",
+      "tilesinset": "66",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "marblemadness": "60",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "temperat.ini",
+      "section": "tileset0020",
+      "first": 293,
+      "count": 21,
+      "setname": "Paved Roads",
+      "filename": "Proad",
+      "tilesinset": "21",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false",
+      "requiredforrmg": "true"
+    },
+    {
+      "file": "temperat.ini",
+      "section": "tileset0023",
+      "first": 368,
+      "count": 8,
+      "setname": "DirtRoads Slopes",
+      "filename": "DRSLPE",
+      "tilesinset": "8",
+      "marblemadness": "24",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "temperat.ini",
+      "section": "tileset0024",
+      "first": 376,
+      "count": 8,
+      "setname": "ZMM Dirt Road Slopes",
+      "filename": "MDRSLP",
+      "tilesinset": "8",
+      "nonmarblemadness": "23",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "temperat.ini",
+      "section": "tileset0036",
+      "first": 445,
+      "count": 4,
+      "setname": "Paved Road Ends",
+      "filename": "p_end",
+      "tilesinset": "4",
+      "tosnowtheater": "38",
+      "morphable": "false",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false",
+      "requiredforrmg": "true"
+    },
+    {
+      "file": "temperat.ini",
+      "section": "tileset0040",
+      "first": 479,
+      "count": 14,
+      "setname": "Paved road bits",
+      "filename": "proadc",
+      "tilesinset": "14",
+      "morphable": "false",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false",
+      "requiredforrmg": "true",
+      "tosnowtheater": "71"
+    },
+    {
+      "file": "temperat.ini",
+      "section": "tileset0047",
+      "first": 535,
+      "count": 4,
+      "setname": "Paved Road Slopes",
+      "filename": "Prslpe",
+      "tilesinset": "4",
+      "morphable": "no",
+      "tosnowtheater": "44",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false"
+    },
+    {
+      "file": "temperat.ini",
+      "section": "tileset0058",
+      "first": 578,
+      "count": 24,
+      "setname": "ZMM Bendy Dirt Roads",
+      "filename": "MDrodc",
+      "tilesinset": "24",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "nonmarblemadness": "16",
+      "tosnowtheater": "50",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "temperat.ini",
+      "section": "tileset0059",
+      "first": 602,
+      "count": 11,
+      "setname": "ZMM Dirt Road Junctions",
+      "filename": "MDrodj",
+      "tilesinset": "11",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "nonmarblemadness": "17",
+      "tosnowtheater": "51",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "temperat.ini",
+      "section": "tileset0060",
+      "first": 613,
+      "count": 66,
+      "setname": "ZMM Straight Dirt Roads",
+      "filename": "MDrods",
+      "tilesinset": "66",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "nonmarblemadness": "18",
+      "tosnowtheater": "52",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0016",
+      "first": 176,
+      "count": 24,
+      "setname": "DirtRoadsBendy",
+      "filename": "Droadc",
+      "tilesinset": "24",
+      "lowradarcolor": "110,80,0",
+      "highradarcolor": "130,90,0",
+      "marblemadness": "50",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0017",
+      "first": 200,
+      "count": 11,
+      "setname": "DirtRoadsJunctions",
+      "filename": "Droadj",
+      "tilesinset": "11",
+      "lowradarcolor": "110,80,0",
+      "highradarcolor": "130,90,0",
+      "marblemadness": "51",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0018",
+      "first": 211,
+      "count": 66,
+      "setname": "DirtRoadsStraight",
+      "filename": "Droads",
+      "tilesinset": "66",
+      "lowradarcolor": "110,80,0",
+      "highradarcolor": "130,90,0",
+      "marblemadness": "52",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0020",
+      "first": 293,
+      "count": 21,
+      "setname": "Paved Roads",
+      "filename": "Proad",
+      "tilesinset": "21",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false",
+      "requiredforrmg": "true"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0023",
+      "first": 368,
+      "count": 8,
+      "setname": "DirtRoadSlopes",
+      "filename": "DRSLPE",
+      "tilesinset": "8",
+      "marblemadness": "24",
+      "lowradarcolor": "110,80,0",
+      "highradarcolor": "130,90,0",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0024",
+      "first": 376,
+      "count": 8,
+      "setname": "ZMM DirtRoadSlopes",
+      "filename": "MDRSLP",
+      "tilesinset": "8",
+      "nonmarblemadness": "23",
+      "lowradarcolor": "110,80,0",
+      "highradarcolor": "130,90,0",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0038",
+      "first": 430,
+      "count": 4,
+      "setname": "Paved Road Ends",
+      "filename": "p_end",
+      "tilesinset": "4",
+      "totemperatetheater": "36",
+      "morphable": "false",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false",
+      "requiredforrmg": "true"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0044",
+      "first": 468,
+      "count": 4,
+      "setname": "Paved Road Slopes",
+      "filename": "Prslpe",
+      "tilesinset": "4",
+      "morphable": "no",
+      "totemperatetheater": "47",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0050",
+      "first": 493,
+      "count": 24,
+      "setname": "ZMM DirtRoadsBendy",
+      "filename": "MDrodc",
+      "tilesinset": "24",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "nonmarblemadness": "16",
+      "totemperatetheater": "58",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0051",
+      "first": 517,
+      "count": 11,
+      "setname": "ZMM DirtRoadJunctions",
+      "filename": "MDrodj",
+      "tilesinset": "11",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "nonmarblemadness": "17",
+      "totemperatetheater": "59",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0052",
+      "first": 528,
+      "count": 66,
+      "setname": "ZMM DirtRoadsStraight",
+      "filename": "MDrods",
+      "tilesinset": "66",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "nonmarblemadness": "18",
+      "totemperatetheater": "60",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "snow.ini",
+      "section": "tileset0071",
+      "first": 765,
+      "count": 14,
+      "setname": "Paved road bits",
+      "filename": "proadc",
+      "tilesinset": "14",
+      "morphable": "false",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false",
+      "requiredforrmg": "true",
+      "totemperatetheater": "40"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0016",
+      "first": 176,
+      "count": 24,
+      "setname": "DirtRoads Bendy",
+      "filename": "Droadc",
+      "tilesinset": "24",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "marblemadness": "58",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0017",
+      "first": 200,
+      "count": 11,
+      "setname": "DirtRoads Junctions",
+      "filename": "Droadj",
+      "tilesinset": "11",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "marblemadness": "59",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0018",
+      "first": 211,
+      "count": 66,
+      "setname": "DirtRoads Straight",
+      "filename": "Droads",
+      "tilesinset": "66",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "marblemadness": "60",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0020",
+      "first": 293,
+      "count": 21,
+      "setname": "Paved Roads",
+      "filename": "Proad",
+      "tilesinset": "21",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false",
+      "requiredforrmg": "true"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0023",
+      "first": 368,
+      "count": 8,
+      "setname": "DirtRoads Slopes",
+      "filename": "DRSLPE",
+      "tilesinset": "8",
+      "marblemadness": "24",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "requiredforrmg": "true",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0024",
+      "first": 376,
+      "count": 8,
+      "setname": "ZMM Dirt Road Slopes",
+      "filename": "MDRSLP",
+      "tilesinset": "8",
+      "nonmarblemadness": "23",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0036",
+      "first": 445,
+      "count": 4,
+      "setname": "Paved Road Ends",
+      "filename": "p_end",
+      "tilesinset": "4",
+      "tosnowtheater": "38",
+      "morphable": "false",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false",
+      "requiredforrmg": "true"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0040",
+      "first": 479,
+      "count": 14,
+      "setname": "Paved road bits",
+      "filename": "proadc",
+      "tilesinset": "14",
+      "morphable": "false",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false",
+      "requiredforrmg": "true",
+      "tosnowtheater": "71"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0047",
+      "first": 535,
+      "count": 4,
+      "setname": "Paved Road Slopes",
+      "filename": "Prslpe",
+      "tilesinset": "4",
+      "morphable": "no",
+      "tosnowtheater": "44",
+      "lowradarcolor": "92,92,92",
+      "highradarcolor": "92,92,92",
+      "allowburrowing": "false"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0058",
+      "first": 574,
+      "count": 24,
+      "setname": "ZMM Bendy Dirt Roads",
+      "filename": "MDrodc",
+      "tilesinset": "24",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "nonmarblemadness": "16",
+      "tosnowtheater": "50",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0059",
+      "first": 598,
+      "count": 11,
+      "setname": "ZMM Dirt Road Junctions",
+      "filename": "MDrodj",
+      "tilesinset": "11",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "nonmarblemadness": "17",
+      "tosnowtheater": "51",
+      "allowtiberium": "true"
+    },
+    {
+      "file": "urban.ini",
+      "section": "tileset0060",
+      "first": 609,
+      "count": 66,
+      "setname": "ZMM Straight Dirt Roads",
+      "filename": "MDrods",
+      "tilesinset": "66",
+      "lowradarcolor": "60,40,0",
+      "highradarcolor": "80,50,0",
+      "nonmarblemadness": "18",
+      "tosnowtheater": "52",
+      "allowtiberium": "true"
+    }
+  ],
+  "originalEndPieces": [
+    {
+      "fileName": "p_end01.tem",
+      "tileIndex": 445,
+      "columns": 1,
+      "rows": 3,
+      "sha256": "2b11e48547ef32bff8ff0b4bca4efe895e90fc718dcdce04db1697897fe382e7",
+      "endDirection": [
+        1,
+        0
+      ]
+    },
+    {
+      "fileName": "p_end02.tem",
+      "tileIndex": 446,
+      "columns": 3,
+      "rows": 1,
+      "sha256": "917e2aafcb1e568f862cd26d01511085bbe9a892a7049dcc4522f48d2dd4cb5f",
+      "endDirection": [
+        0,
+        -1
+      ]
+    },
+    {
+      "fileName": "p_end03.tem",
+      "tileIndex": 447,
+      "columns": 1,
+      "rows": 3,
+      "sha256": "6d748bcdf48832daba1c3890673b031a7f30600eb091c53aede57dfa810a86f2",
+      "endDirection": [
+        -1,
+        0
+      ]
+    },
+    {
+      "fileName": "p_end04.tem",
+      "tileIndex": 448,
+      "columns": 3,
+      "rows": 1,
+      "sha256": "16ec65f7285dedb7fcd23f93e0d419b9869fbb97a681d33bb765a2a72e08068d",
+      "endDirection": [
+        0,
+        1
+      ]
+    },
+    {
+      "fileName": "p_end01.sno",
+      "tileIndex": 430,
+      "columns": 1,
+      "rows": 3,
+      "sha256": "c8aca5b746d5241bb05272f8037935c813aec616f6ea7ba43769b9bc344bbe05",
+      "endDirection": [
+        1,
+        0
+      ]
+    },
+    {
+      "fileName": "p_end02.sno",
+      "tileIndex": 431,
+      "columns": 3,
+      "rows": 1,
+      "sha256": "c2524f4dbf86f53060078ab239dddc4ba661642b1e70d903fcd4ca72dd2d01ff",
+      "endDirection": [
+        0,
+        -1
+      ]
+    },
+    {
+      "fileName": "p_end03.sno",
+      "tileIndex": 432,
+      "columns": 1,
+      "rows": 3,
+      "sha256": "8f09f0547c9b004185f2607bf389783cac83aec7d5ac8b9b86dc6354fcbfaba5",
+      "endDirection": [
+        -1,
+        0
+      ]
+    },
+    {
+      "fileName": "p_end04.sno",
+      "tileIndex": 433,
+      "columns": 3,
+      "rows": 1,
+      "sha256": "f9a86b56c2a33bd33fda3489c7d1a5dc815bb7ee3c78445fbcf8d8bf1d81d140",
+      "endDirection": [
+        0,
+        1
+      ]
+    },
+    {
+      "fileName": "p_end01.urb",
+      "tileIndex": 445,
+      "columns": 1,
+      "rows": 3,
+      "sha256": "eb9fe035bcddf874c3ae86a5a047d2f16dbcf3f849b8dc1982f7da3e2c58c4cb",
+      "endDirection": [
+        1,
+        0
+      ]
+    },
+    {
+      "fileName": "p_end02.urb",
+      "tileIndex": 446,
+      "columns": 3,
+      "rows": 1,
+      "sha256": "2620eb52227330f41223668339f27439e7d92b91aef63bdea4de931cba84c303",
+      "endDirection": [
+        0,
+        -1
+      ]
+    },
+    {
+      "fileName": "p_end03.urb",
+      "tileIndex": 447,
+      "columns": 1,
+      "rows": 3,
+      "sha256": "149182c800f765280491b257bdb7bf5676962b089b5528c40e3806f69676c4ab",
+      "endDirection": [
+        -1,
+        0
+      ]
+    },
+    {
+      "fileName": "p_end04.urb",
+      "tileIndex": 448,
+      "columns": 3,
+      "rows": 1,
+      "sha256": "2f3a043a8276e7801785066bc01c2d74e275f10520fae7d35f33dc796deebd34",
+      "endDirection": [
+        0,
+        1
+      ]
+    }
+  ]
+}

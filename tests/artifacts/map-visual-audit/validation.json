@@ -1,0 +1,25 @@
+{
+  "baseline": "522691fea1975d79ae9ccaccbd23d22fa63aa588",
+  "build": {
+    "initial": "failed",
+    "error": "TS2345 audit-data.ts:40: readonly Vec2[] passed to mutable any[]",
+    "ownership": "new audit-owned helper, untracked at failure",
+    "resolution": "inspect parameter changed to readonly any[]",
+    "rerun": "passed",
+    "output": "\n> red-alert-command@0.1.0 build\n> tsc --noEmit && vite build\n\nvite v7.3.6 building client environment for production...\ntransforming...\n[plugin vite:resolve] Module \"module\" has been externalized for browser compatibility, imported by \"/home/mark/apps/ra2-js/node_modules/7z-wasm/7zz.es6.js\". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.\n\u2713 121 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                             1.18 kB \u2502 gzip:   0.67 kB\ndist/assets/extract.worker-ChLiZZfl.js     87.54 kB\ndist/assets/7zz-CgkXYLdN.wasm           1,651.93 kB \u2502 gzip: 669.87 kB\ndist/assets/MapViewer-CrtlUGtL.css         12.40 kB \u2502 gzip:   3.36 kB\ndist/assets/main-BIx_QYZl.css              62.77 kB \u2502 gzip:  13.86 kB\ndist/assets/index-C3wPvhFl.js               3.01 kB \u2502 gzip:   1.46 kB\ndist/assets/MapViewer-Dd8cUlyt.js          13.44 kB \u2502 gzip:   5.20 kB\ndist/assets/main-D84yQ8xm.js              157.07 kB \u2502 gzip:  47.90 kB\ndist/assets/Renderer-CB-8a60b.js          161.72 kB \u2502 gzip:  54.05 kB\n\u2713 built in 4.32s\n"
+  },
+  "tests": {
+    "sandboxedAttempt": "stalled in Python decoder subprocess; interrupted; not a passing run",
+    "rerun": "passed with local subprocess access and timeout120",
+    "command": "RA2_ASSET_DIR=/tmp/ra2-n3q-mixes npm test -- tests/native-maps.test.ts tests/native-map-acceptance.test.ts tests/terrain-topology.test.ts tests/ore-mines.test.ts tests/renderer-originals.test.ts",
+    "passed": 61,
+    "skipped": 1,
+    "skipReason": "RA2_REFERENCE_MAP not supplied (third-party fixture)",
+    "output": "\n> red-alert-command@0.1.0 test\n> vitest run tests/native-maps.test.ts tests/native-map-acceptance.test.ts tests/terrain-topology.test.ts tests/ore-mines.test.ts tests/renderer-originals.test.ts\n\n\n RUN  v4.1.11 /home/mark/apps/ra2-js\n\n\n Test Files  5 passed (5)\n      Tests  61 passed | 1 skipped (62)\n   Start at  03:13:43\n   Duration  24.67s (transform 5.54s, setup 0ms, import 7.59s, tests 49.53s, environment 3ms)\n\n"
+  },
+  "findings": [
+    "ra2-js-cwf",
+    "ra2-js-6lv",
+    "ra2-js-aaa"
+  ]
+}
