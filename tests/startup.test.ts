@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const harness = vi.hoisted(() => ({ assets: {} as any, game: {} as any, renderer: {} as any, actions: {} as any, status: {} as any, customArt: vi.fn(), loading: true, modal: false, runtimeError: '', frame: (_now: number) => {}, visibility: () => {} }));
+const harness = vi.hoisted(() => ({ assets: {} as any, game: {} as any, renderer: {} as any, actions: {} as any, status: {} as any, customArt: vi.fn(), music: vi.fn(), resetAudio: vi.fn(), loading: true, modal: false, runtimeError: '', frame: (_now: number) => {}, visibility: () => {} }));
 vi.mock('../src/assets/CustomArt', () => ({ CustomArt: { load: harness.customArt } }));
 vi.mock('../src/game/Game', () => ({ Game: class { constructor() { return harness.game; } } }));
-vi.mock('../src/game/Audio', () => ({ GameAudio: class { unlock() {} reset() {} notifications() {} effects() {} } }));
+vi.mock('../src/game/Audio', () => ({ GameAudio: class { unlock() {} reset() { harness.resetAudio(); } setMusicPlaying(active: boolean) { harness.music(active); } notifications() {} effects() {} } }));
 vi.mock('../src/render/Renderer', () => ({ Renderer: class { constructor() { return harness.renderer; } } }));
 vi.mock('../src/input/Controls', () => ({ detectMobile: () => false, Controls: class { tick() {} cancelPlacement() {} setMode() {} } }));
 vi.mock('../src/dev/LocalTools', () => ({ installLocalTools: vi.fn() }));
@@ -25,7 +25,7 @@ vi.mock('../src/ui/UI', () => ({ UI: class {
 const settle = () => new Promise(resolve => setTimeout(resolve, 0));
 beforeEach(() => {
   vi.resetModules(); harness.loading = true; harness.status = {}; harness.modal = false; harness.runtimeError = '';
-  harness.customArt.mockReset().mockResolvedValue({});
+  harness.customArt.mockReset().mockResolvedValue({}); harness.music.mockClear(); harness.resetAudio.mockClear();
   harness.game = { defs: {}, state: { time: 0, speed: 1, events: [], effects: [] } };
   harness.game.tick = vi.fn((dt: number) => { harness.game.state.time += dt; });
   harness.game.setAnimationDefinitions = vi.fn();
@@ -64,6 +64,7 @@ describe('startup authorization', () => {
     expect(harness.loading).toBe(true);
     expect(harness.game.state.time).toBe(0);
     expect(harness.game.tick).not.toHaveBeenCalled();
+    expect(harness.music).toHaveBeenLastCalledWith(false);
   });
 
   it('starts battle only after explicit Continue and shares duplicate submissions', async () => {
@@ -74,6 +75,7 @@ describe('startup authorization', () => {
     expect(harness.assets.download).toHaveBeenCalledOnce();
     expect(navigator.storage.persist).toHaveBeenCalledOnce();
     expect(harness.loading).toBe(false);
+    expect(harness.music).toHaveBeenLastCalledWith(true);
     harness.frame(performance.now() + 100);
     expect(harness.game.state.time).toBeGreaterThan(0);
   });
@@ -105,6 +107,7 @@ describe('startup authorization', () => {
     harness.frame(performance.now() + 100);
     expect(harness.game.state.time).toBeGreaterThan(0);
     harness.actions.onAbort();
+    expect(harness.resetAudio).toHaveBeenCalled();
     expect(harness.game.restart).toHaveBeenCalledOnce();
     expect(harness.loading).toBe(true);
     expect(harness.status.ready).toBe(true);
@@ -124,10 +127,12 @@ describe('startup authorization', () => {
     harness.frame(200);
     expect(harness.game.state.time).toBeCloseTo(.2);
     Object.assign(document, { hidden: true });
+    harness.visibility(); expect(harness.music).toHaveBeenLastCalledWith(false);
     harness.frame(10000);
     expect(harness.game.state.time).toBeCloseTo(.2);
     clock.mockReturnValue(10000);
     Object.assign(document, { hidden: false }); harness.visibility();
+    expect(harness.music).toHaveBeenLastCalledWith(true);
     harness.frame(10050);
     expect(harness.game.state.time).toBeCloseTo(.25);
     clock.mockRestore();
@@ -185,10 +190,13 @@ describe('startup authorization', () => {
     harness.modal = true;
     harness.frame(performance.now() + 100);
     expect(harness.game.tick).not.toHaveBeenCalled();
+    expect(harness.music).toHaveBeenLastCalledWith(true); // Keep live volume adjustment audible in Options.
     harness.modal = false;
     harness.game.tick.mockImplementation(() => { throw new Error('Path state invalid'); });
     harness.frame(performance.now() + 200);
     expect(harness.runtimeError).toBe('Path state invalid');
+    expect(harness.resetAudio).toHaveBeenCalled();
+    expect(harness.music).toHaveBeenLastCalledWith(false);
     expect(harness.assets.ready).toBe(true);
     expect(harness.status.error).toBeUndefined();
     const calls = harness.game.tick.mock.calls.length;

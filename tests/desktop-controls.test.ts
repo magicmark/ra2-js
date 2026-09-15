@@ -38,15 +38,30 @@ function fixture() {
 // rendering is stubbed here. Browser checks exercise the actual DOM/cameos.
 function productionFixture() {
   const f = fixture(), onPlace = vi.fn((type: string) => f.controls.setPlacement(type));
+  const onCategoryChange = vi.fn();
   const ui = Object.assign(Object.create(UI.prototype), {
-    game: f.game, actions: { onPlace }, isModalOpen: () => false,
+    game: f.game, category: 'structures', actions: { onPlace, onCategoryChange }, isModalOpen: () => false,
     renderCards: vi.fn(), update: vi.fn(), showToast: vi.fn(), closeBuildPanel: vi.fn(),
   });
   f.callbacks.category.mockImplementation(category => ui.selectCategory(category, true));
-  return { ...f, ui, onPlace };
+  return { ...f, ui, onPlace, onCategoryChange };
 }
 
 describe('production hotkeys pick up ready buildings', () => {
+  it('sounds only changed tabs while same-tab hotkeys still pick up the ready building', () => {
+    const { game, key, renderer, ui, onCategoryChange } = productionFixture();
+    game.configureLocalTools({ instantBuild: true }); game.build('power'); game.tick(.1);
+    key('q'); expect(renderer.placement).toBe('power'); expect(onCategoryChange).not.toHaveBeenCalled();
+    key('w'); expect(onCategoryChange).toHaveBeenCalledTimes(1);
+    key('w'); key('e', { repeat: true }); expect(onCategoryChange).toHaveBeenCalledTimes(1);
+    key('e'); key('r'); key('q'); expect(onCategoryChange).toHaveBeenCalledTimes(4);
+    key('Escape'); key('q'); expect(renderer.placement).toBe('power'); expect(onCategoryChange).toHaveBeenCalledTimes(4);
+    ui.selectCategory('defenses'); expect(onCategoryChange).toHaveBeenCalledTimes(5);
+    ui.selectCategory('defenses'); expect(onCategoryChange).toHaveBeenCalledTimes(5);
+    ui.isModalOpen = () => true; ui.selectCategory('vehicles');
+    expect(ui.category).toBe('defenses'); expect(onCategoryChange).toHaveBeenCalledTimes(5);
+  });
+
   it('selects ready structures/defenses, replaces the preview, and preserves paid queues on cancellation', () => {
     const { game, key, renderer, ui, onPlace } = productionFixture();
     game.configureLocalTools({ instantBuild: true });
