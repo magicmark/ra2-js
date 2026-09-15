@@ -76,11 +76,12 @@ export class CustomArt {
       // imagegen preserves the grid proportions; the PNG size need not be divisible by8.
       const { grid, crop } = georgeFrameRegion(width, height, row, column);
       const bounds = alphaBounds(sheet.data, width, height, crop, 128);
-      const frame = canvas(50, 50), factor = 48 / (grid.right - grid.left);
+      // Native GI standing silhouettes are 26–31px high; this atlas is 28–29px.
+      const frame = canvas(36, 36), factor = 34 / (grid.right - grid.left);
       frame.getContext('2d')!.drawImage(sheet.source, crop.left, crop.top, crop.right - crop.left, crop.bottom - crop.top,
         1 + (crop.left - grid.left) * factor, 1, (crop.right - crop.left) * factor, (crop.bottom - crop.top) * factor);
       // Anchor every pose at its actual boot line, including the taller firing silhouettes.
-      this.infantry.push(sprite(frame, 25, (bounds.bottom - grid.top) * factor));
+      this.infantry.push(sprite(frame, 18, (bounds.bottom - grid.top) * factor));
     }
     const cameo = (image: HTMLImageElement, label: "Butcher's" | 'George') => {
       const source = canvas(60, 48), context = source.getContext('2d')!;

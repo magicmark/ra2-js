@@ -47,6 +47,8 @@ describe('The Butcher’s and George', () => {
     expect(shop.hp).toBe(650); expect(side.powerUsed).toBeGreaterThanOrEqual(30);
     expect(game.canBuild('george').ok).toBe(true);
     const barracks = game.state.entities.find(e => e.side === 0 && e.type === 'barracks')!;
+    game.setGameSpeed(1);
+    barracks.rally = { x: 1.5, y: 1.5 };
     const before = side.money;
     expect(game.build('george')).toBe(true);
     advance(game, game.defs.george.buildTime + 1 / 30);
@@ -55,8 +57,8 @@ describe('The Butcher’s and George', () => {
     expect(Math.hypot(george.x - barracks.x, george.y - barracks.y)).toBeLessThan(6);
     expect(side.queues.infantry).toEqual([]); expect(before - side.money).toBeCloseTo(650);
     const start = { x: george.x, y: george.y };
-    game.orderMove([george.id], barracks.x + 4.5, barracks.y + 4.5);
-    advance(game, 2);
+    game.select([george.id]); expect(george.selected).toBe(false);
+    advance(game, 6);
     expect(Math.hypot(george.x - start.x, george.y - start.y)).toBeGreaterThan(.5);
   });
 
@@ -108,8 +110,8 @@ describe('The Butcher’s and George', () => {
     Object.assign(george, { type: 'george', hp: 225, maxHp: 225, x: 20.5, y: 30.5, previous: { x: 20.5, y: 30.5 } });
     Object.assign(target, { x: 50.5, y: 10.5, hp: 1000, maxHp: 1000 });
     game.setAnimationDefinitions(NATIVE_EFFECT_TIMINGS, NATIVE_INFANTRY_TIMINGS);
-    game.orderMove([george.id], 22.5, 30.5, true); advance(game, 2);
-    expect(george.x).toBeGreaterThan(21);
+    advance(game, 2);
+    expect(Math.hypot(george.x - 20.5, george.y - 30.5)).toBeGreaterThan(.5);
     game.stop([george.id]); target.x = george.x + 2; target.y = george.y;
     game.tick(1 / 30); game.orderAttack([george.id], target.id);
     advance(game, 1);

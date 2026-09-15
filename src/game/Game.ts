@@ -14,7 +14,7 @@ import { placementCells } from './placement';
 import { turnFacing, type FacingTurn } from './facing';
 import { DEFAULT_GAME_SPEED, nativeGameSpeedIndex } from './timing';
 import { NATIVE_EFFECT_TIMINGS, NATIVE_INFANTRY_TIMINGS } from './combat';
-import { INSPECTION_RULES, rankMultiplier, rankName } from './customUnits';
+import { INSPECTION_RULES, rankMultiplier } from './customUnits';
 import { TESTING_FLAGS } from './testing';
 import { nativeNormalizedInterval } from '../assets/NativeAnimation';
 import type { AnimationDefinition, Category, Entity, GameAPI, GameState, InfantryAnimationDefinition, Side, UnitDef, Vec2 } from './types';
@@ -50,6 +50,9 @@ interface UnitMemory {
   idleActionRandom?: number;
   idleActionPending?: string;
   idleActionTurning?: boolean;
+  inspectionReadyAt?: number;
+  wanderUntil?: number;
+  wanderRandom?: number;
 }
 export interface GameOptions { ai?: boolean; map?: NativeMap; automaticSovietWaves?: boolean }
 
@@ -273,7 +276,7 @@ export class Game implements GameAPI {
   select(ids: number[], additive = false): void {
     const wanted = new Set(ids);
     for (const entity of this.state.entities) {
-      if (entity.side !== 0 || entity.hp <= 0 || entity.selling || entity.constructing || entity.transportId !== undefined) { entity.selected = false; continue; }
+      if (entity.type === 'george' || entity.side !== 0 || entity.hp <= 0 || entity.selling || entity.constructing || entity.transportId !== undefined) { entity.selected = false; continue; }
       entity.selected = wanted.has(entity.id) || (additive && entity.selected);
       if (entity.selected) this.cancelInfantryIdle(entity);
     }
@@ -562,7 +565,7 @@ export class Game implements GameAPI {
           }
           if (!unit) continue; // Exit is blocked. Keep the paid unit until a cell opens.
           queue.shift();
-          if (source.rally && !def.harvester && !unit.factoryExit) this.issueMove([unit], source.rally, false);
+          if (source.rally && unit.type !== 'george' && !def.harvester && !unit.factoryExit) this.issueMove([unit], source.rally, false);
           if (side.id === 0) this.notify(`${def.name} ready`, 'success', 'EVA_UnitReady');
         }
       }
@@ -573,28 +576,48 @@ export class Game implements GameAPI {
     const entities = this.state.entities, claimed = new Set<number>();
     for (const entity of entities) { entity.inspectedBy = undefined; entity.inspectionProgress = undefined; }
     for (const george of entities.filter(e => e.type === 'george').sort((a, b) => a.id - b.id)) {
-      if (george.hp <= 0 || george.side < 0 || george.path.length || george.order === 'move' ||
-        (george.previous && distance(george, george.previous) > 1e-6)) { george.inspection = undefined; continue; }
-      const eligible = (target: Entity) => target.id !== george.id && target.type !== 'george' && target.side === george.side && target.side >= 0 && target.hp > 0
-        && !isBuilding(this.defs[target.type]) && (target.rank ?? 0) < INSPECTION_RULES.maxRank && !claimed.has(target.id)
-        && distance(george, target) <= INSPECTION_RULES.radius;
+      george.selected = false;
+      if (george.hp <= 0 || george.side < 0 || george.transportId !== undefined || george.factoryExit ||
+        (george.disabledUntil ?? 0) > this.state.time) { george.inspection = undefined; continue; }
+      const memory = this.memory(george);
+      const eligible = (target: Entity) => target.id !== george.id && target.type !== 'george' && target.side === george.side && target.hp > 0
+        && ['infantry', 'vehicles'].includes(this.defs[target.type].category) && target.transportId === undefined && !target.factoryExit
+        && !claimed.has(target.id) && distance(george, target) <= INSPECTION_RULES.radius;
       const previous = george.inspection;
       const target = entities.find(e => e.id === previous?.targetId && eligible(e))
-        ?? entities.filter(eligible).sort((a, b) => distance(george, a) - distance(george, b) || a.id - b.id)[0];
-      if (!target) { george.inspection = undefined; continue; }
-      claimed.add(target.id);
-      const elapsed = (previous?.targetId === target.id ? previous.elapsed : 0) + dt;
-      george.inspection = { targetId: target.id, elapsed };
-      target.inspectedBy = george.id;
-      target.inspectionProgress = Math.min(1, elapsed / INSPECTION_RULES.seconds);
-      if (elapsed + 1e-9 < INSPECTION_RULES.seconds) continue;
-      target.rank = Math.min(INSPECTION_RULES.maxRank, (target.rank ?? 0) + 1) as 1 | 2;
-      target.promotedAt = this.state.time;
-      george.inspection.elapsed = 0;
-      target.inspectionProgress = 0;
-      if (target.side === 0) this.notify(`${this.defs[target.type].name} promoted to ${rankName(target)}`, 'success', 'EVA_UnitPromoted');
-      if (target.rank === INSPECTION_RULES.maxRank) {
-        george.inspection = undefined; target.inspectedBy = undefined; target.inspectionProgress = undefined;
+        ?? (!previous && this.state.time >= (memory.inspectionReadyAt ?? 0)
+          ? entities.filter(eligible).sort((a, b) => distance(george, a) - distance(george, b) || a.id - b.id)[0] : undefined);
+      if (target) {
+        george.path = []; george.order = 'guard'; memory.destination = undefined;
+        memory.heading = Math.atan2(target.y - george.y, target.x - george.x);
+        const elapsed = (previous?.targetId === target.id ? previous.elapsed : 0) + dt;
+        if (elapsed + 1e-9 < INSPECTION_RULES.seconds) {
+          claimed.add(target.id);
+          george.inspection = { targetId: target.id, elapsed };
+          target.inspectedBy = george.id;
+          target.inspectionProgress = elapsed / INSPECTION_RULES.seconds;
+          continue;
+        }
+      }
+      // Every finished or interrupted inspection is followed by a walk, even
+      // when the same friendly unit remains nearby. Inspection changes no stats.
+      if (previous || target) { memory.inspectionReadyAt = this.state.time + 5; memory.wanderUntil = 0; }
+      george.inspection = undefined;
+      if (george.path.length && this.state.time < (memory.wanderUntil ?? 0)) continue;
+      george.path = []; george.order = 'guard'; memory.destination = undefined;
+      if (this.state.time < (memory.wanderUntil ?? 0)) continue;
+      memory.wanderUntil = this.state.time + 1; // Retry safely when surrounded.
+      for (let attempt = 0; attempt < 8; attempt++) {
+        memory.wanderRandom = (Math.imul(memory.wanderRandom ?? george.id, 1664525) + 1013904223) >>> 0;
+        const angle = memory.wanderRandom / 0x100000000 * Math.PI * 2;
+        const destination = this.nearestOpen(this.constrain({ x: george.x + Math.cos(angle) * 4, y: george.y + Math.sin(angle) * 4 }), george.id, undefined, 2, this.defs.george);
+        if (!destination || distance(george, destination) < 1) continue;
+        const path = this.path(george, destination);
+        if (!path.length) continue;
+        george.path = path; george.order = 'move';
+        memory.destination = destination; memory.repath = 1; memory.stuck = 0;
+        memory.wanderUntil = this.state.time + 6;
+        break;
       }
     }
   }
@@ -1642,7 +1665,7 @@ export class Game implements GameAPI {
 
   private commandable(ids: number[], side: number): Entity[] {
     const set = new Set(ids);
-    return this.state.entities.filter(e => e.side === side && e.hp > 0 && !e.selling && !e.constructing && !e.factoryExit && e.transportId === undefined && set.has(e.id));
+    return this.state.entities.filter(e => e.type !== 'george' && e.side === side && e.hp > 0 && !e.selling && !e.constructing && !e.factoryExit && e.transportId === undefined && set.has(e.id));
   }
   private center(entity: Entity): Vec2 {
     const def = this.defs[entity.type];

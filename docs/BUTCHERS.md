@@ -9,17 +9,13 @@ The Allied structure **The Butcher's** unlocks **George** at an Allied Barracks.
 
 Losing a prerequisite blocks new production and holds paid queue progress. The queue shows **On Hold** and the missing prerequisite. Rebuilding resumes production; canceling refunds actual spending. Existing Georges remain available after the shop is lost.
 
-## Inspection and promotions
+## Autonomous inspection
 
-Move George near an own-side infantry unit or vehicle, then let him stop. He automatically chooses one eligible unit within **3 cells** and inspects it for **10 continuous simulation seconds**. Each completed inspection raises the target one rank: **Recruit → Veteran → Elite**. Elite is the maximum; each rank requires a fresh 10 seconds.
+George remains buildable but behaves as a civilian: he cannot be selected or commanded, and ignores the Barracks rally point. He wanders to nearby reachable locations, stops within **3 cells** of friendly infantry or vehicles to inspect for **3 simulation seconds**, then resumes walking. A short interval between inspections ensures he moves on even if the same unit stays nearby.
 
-Moving George, leaving the radius, losing the target, or changing ownership resets incomplete progress. The target may move while remaining within range. Buildings, enemies, neutral units, Georges and Elite units are ineligible. Each target accepts one inspector at a time, so multiple Georges cannot accelerate a promotion. Rank persists through movement and combat, but a new match starts fresh. Promotions do not heal.
+Losing the target, leaving range, boarding a transport or changing ownership ends an inspection. Buildings, enemies, neutral units, embarked units and other Georges are ineligible. Each target accepts one inspector at a time. Inspections never change rank, health, damage or durability.
 
-Each rank grants **10% more outgoing damage and durability**. Outgoing damage uses `1 + 0.1 × rank`; incoming damage is divided by that factor after armor. These bonuses apply consistently to existing combat; unranked units keep their original values.
-
-Selected George shows a cyan inspection radius. An active inspection displays a cyan link and progress bars on George and his target. The selection panel shows the target, progress and reset rule on desktop and mobile. Promoted units show one gold chevron for Veteran or two for Elite; hovering a unit and its selection panel report its rank. Promotion completion also produces a notification.
-
-George never acquires targets, retaliates, fires at units, or force-fires at the ground. Attack commands cannot produce damage, projectiles or firing animations from him. Attack-move still moves him normally. The approved world sprite retains its equipment as visual artwork only.
+An active inspection displays a cyan link and progress bars on George and his target. Hovering George reports his autonomous status. He never acquires combat targets, retaliates, fires, or accepts player commands. His existing world sprite retains its equipment as artwork only and is scaled to the apparent height of a GI.
 
 ## Testing mode
 

@@ -1,5 +1,9 @@
 # The Butcher's and George acceptance
 
+George's size, control and inspection behavior below is historical. See
+[the current civilian verification](GEORGE_CIVILIAN_VERIFICATION.md) for ra2-js-pd7.
+
+
 QA used actual Chromium at `http://omarky:5173/` and
 `http://omarky:5173/?map=frostline-basin`, with cached original MIX artwork and the
 four bundled generated PNGs. No original archives were added to the repository.

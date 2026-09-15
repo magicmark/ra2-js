@@ -72,7 +72,7 @@ export class Controls {
     return this.callbacks.enabled?.() !== false && !document.documentElement.classList.contains('settings-open') && !document.body.classList.contains('settings-open');
   }
   private local(e: PointerEvent | WheelEvent): Vec2 { const r = this.renderer.canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
-  private ownUnits(): Entity[] { return this.game.state.entities.filter(e => e.side === 0 && e.hp > 0 && e.transportId === undefined && !isBuilding(this.game.defs[e.type])); }
+  private ownUnits(): Entity[] { return this.game.state.entities.filter(e => e.type !== 'george' && e.side === 0 && e.hp > 0 && e.transportId === undefined && !isBuilding(this.game.defs[e.type])); }
   private ids(): number[] { return this.game.state.entities.filter(e => e.selected && e.side === 0).map(e => e.id); }
   private engineerRepair(target: Entity | null | undefined): boolean {
     return !!target && !target.selling && target.side === 0 && target.hp < target.maxHp && isBuilding(this.game.defs[target.type])
@@ -187,6 +187,7 @@ export class Controls {
     if (this.engineerRepair(target)) return 'repair';
     if (target && !own && isBuilding(this.game.defs[target.type]) && selected.some(entity => entity.type === 'engineer' || this.game.defs[entity.type].ability === 'spy')) return 'enter';
     if (target && own && selected.some(e => this.game.canEnterTransport?.(e, target))) return 'enter';
+    if (target && own && target.type === 'george') return 'default';
     if (target && own) return target.selected && this.game.defs[target.type].deployedRange !== undefined ? 'deploy' : 'select';
     if (target && selected.length && !own && armed) return 'attack';
     return mobile ? clear ? 'move' : 'move-blocked' : 'default';

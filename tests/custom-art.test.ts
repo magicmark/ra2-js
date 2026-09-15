@@ -31,7 +31,7 @@ function rgbaPng(path: string) {
 
 /** Canvas metadata fixture: production CustomArt computes anchors from real PNG
  * pixels, while raster drawing itself remains covered by browser acceptance. */
-function buildingSprite(building: ReturnType<typeof rgbaPng>) {
+function buildingSprite(building: ReturnType<typeof rgbaPng>, name = 'butchers') {
   const imagePixels = new Map<object, Uint8ClampedArray>();
   const image = (decoded: ReturnType<typeof rgbaPng>) => {
     const value = { naturalWidth: decoded.width, naturalHeight: decoded.height } as HTMLImageElement;
@@ -47,7 +47,7 @@ function buildingSprite(building: ReturnType<typeof rgbaPng>) {
     return { width: 0, height: 0, getContext: () => context };
   } });
   try {
-    return new CustomArt({ building: buildingImage, infantry: infantryImage, buildingCameo: buildingImage, infantryCameo: buildingImage }).getSprite('butchers')!;
+    return new CustomArt({ building: buildingImage, infantry: infantryImage, buildingCameo: buildingImage, infantryCameo: buildingImage }).getSprite(name)!;
   } finally { vi.unstubAllGlobals(); }
 }
 
@@ -96,9 +96,16 @@ describe('bundled imagegen artwork', () => {
       const { grid, crop } = georgeFrameRegion(width, height, row, column), b = alphaBounds(pixels, width, height, crop, 128);
       expect(b.bottom - b.top).toBeGreaterThan(150);
       expect(b.right - b.left).toBeGreaterThan(75);
-      const factor = 48 / (grid.right - grid.left), anchorY = (b.bottom - grid.top) * factor;
-      expect(anchorY).toBeGreaterThan(40); expect(anchorY).toBeLessThan(49);
+      const factor = 34 / (grid.right - grid.left), anchorY = (b.bottom - grid.top) * factor;
+      expect(anchorY).toBeGreaterThan(28); expect(anchorY).toBeLessThan(35);
+      if (row === 0) {
+        const paintedHeight = (b.bottom - b.top) * factor;
+        expect(paintedHeight).toBeGreaterThanOrEqual(26); expect(paintedHeight).toBeLessThanOrEqual(31);
+      }
     }
+    const rendered = buildingSprite(rgbaPng(`public${CUSTOM_ART_URLS.building}`), 'george');
+    expect(rendered.width).toBe(36); expect(rendered.height).toBe(36);
+    expect(rendered.anchorX).toBe(18); expect(rendered.anchorY).toBeGreaterThan(28); expect(rendered.anchorY).toBeLessThan(35);
     const east = georgeFrameRegion(width, height, 3, 6), northeast = georgeFrameRegion(width, height, 3, 7);
     expect(east.crop.right).toBe(1556); expect(northeast.crop.left).toBe(1556);
     expect(alphaBounds(pixels, width, height, east.crop).right).toBeGreaterThan(east.grid.right);

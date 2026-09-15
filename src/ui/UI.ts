@@ -1,7 +1,7 @@
 import { revealedEntity } from '../game/visibility';
 import { MAP_CATALOG } from '../game/maps/catalog';
 import type { Category, GameAPI } from '../game/types';
-import { inspectionStatus, INSPECTION_HELP } from '../game/customUnits';
+import { inspectionStatus, INSPECTION_HELP, INSPECTION_RULES } from '../game/customUnits';
 
 import type { ControlMode, ControlCommand } from '../input/Controls';
 import type { NativeFont } from '../assets/NativeFont';
@@ -569,7 +569,7 @@ export class UI {
     this.el('selection-panel').innerHTML = `<img class="selection-cameo" src="${escapeHTML(cameo)}" alt=""/><div class="selection-copy"><span class="eyebrow">${selected.length > 1 ? `${selected.length} UNITS SELECTED` : `${CATEGORY_NAMES[def.category]} / FRIENDLY`}</span><h3>${escapeHTML(selected.length > 1 ? 'Strike group' : def.name)}</h3><div class="selection-health"><i id="selection-health-fill"></i></div><span class="selection-status" id="selection-status"></span></div><div class="selection-actions">${building ? `<button data-action="repair" data-tooltip="Repair selected building" aria-label="Repair selected building">${icon('wrench')}</button><button data-action="sell" data-tooltip="Sell selected building" aria-label="Sell selected building">${icon('sell')}</button>` : `<button data-action="stop" data-tooltip="Stop selected units" aria-label="Stop selected units">${icon('stop')}</button><button data-mode="attack" data-tooltip="Attack-move mode" aria-label="Attack move mode">${icon('target')}</button>`}</div>`;
     if (selected.length === 1 && selected[0].type === 'george') panel.querySelector('[data-mode="attack"]')?.remove();
     if (inspection) {
-      panel.querySelector('.selection-copy')!.insertAdjacentHTML('beforeend', '<progress class="inspection-progress" id="inspection-progress" max="1" value="0" aria-label="Continuous inspection progress"></progress><small class="inspection-help">3 cells · 10 continuous seconds · moving or leaving resets</small>');
+      panel.querySelector('.selection-copy')!.insertAdjacentHTML('beforeend', '<progress class="inspection-progress" id="inspection-progress" max="1" value="0" aria-label="Continuous inspection progress"></progress><small class="inspection-help">Autonomous inspection · 3 seconds · no upgrades</small>');
       panel.dataset.tooltip = INSPECTION_HELP;
     } else delete panel.dataset.tooltip;
   }
@@ -698,7 +698,7 @@ export class UI {
       const status = this.el('selection-status');
       if (status) status.textContent = selected.length === 1 ? `${Math.ceil(selected[0].hp)} / ${selected[0].maxHp} HP · ${selected[0].type === 'george' || selected[0].inspectedBy !== undefined || (selected[0].rank ?? 0) > 0 ? inspectionStatus(selected[0], state, this.game.defs) : selected[0].cargo > 0 ? `${Math.floor(selected[0].cargo)} ORE` : selected[0].order.toUpperCase()}` : `${Math.ceil(totalHealth)} HP · ${selected.length} UNITS`;
       const progress = this.root.querySelector<HTMLProgressElement>('#inspection-progress');
-      if (progress) progress.value = selected[0].type === 'george' ? (selected[0].inspection?.elapsed ?? 0) / 10 : selected[0].inspectionProgress ?? 0;
+      if (progress) progress.value = selected[0].type === 'george' ? (selected[0].inspection?.elapsed ?? 0) / INSPECTION_RULES.seconds : selected[0].inspectionProgress ?? 0;
     }
     const event = state.events.at(-1); if (event && event.id !== this.lastEvent) { this.lastEvent = event.id; this.showToast(event.text); }
     if (this.radarOnline && performance.now() - this.lastMinimap > 350) { this.drawMinimap(); this.lastMinimap = performance.now(); }

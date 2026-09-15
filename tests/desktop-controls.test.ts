@@ -35,6 +35,16 @@ function fixture() {
 }
 
 describe('unit selection feedback', () => {
+  it.each(['mouse', 'touch'])('keeps George out of %s selection and select-all, while retaining friendly hover', pointerType => {
+    const { game, click, controls, callbacks, key } = fixture();
+    const george = (game as any).spawn('george', 0, 20, 20) as Entity;
+    click(george, { pointerType });
+    expect(george.selected).toBe(false); expect(callbacks.ack).not.toHaveBeenCalled();
+    key('p');
+    expect(game.state.entities.some(e => e.type === 'gi' && e.selected)).toBe(true);
+    expect(george.selected).toBe(false); expect(controls.cursor).toBe('default');
+  });
+
   it.each(['mouse', 'touch'])('acknowledges a %s Sniper selection once and keeps orders and deselection separate', pointerType => {
     const { game, click, callbacks } = fixture();
     const sniper = (game as any).spawn('sniper', 0, 20, 20) as Entity;

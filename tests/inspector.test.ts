@@ -20,74 +20,88 @@ function setup() {
 }
 
 describe('George noncombat inspector', () => {
-  it('requires a full dwell for each rank, caps at Elite and never heals on promotion', () => {
+  it('pauses for three seconds, leaves without upgrading, and resumes wandering', () => {
     const { game, george, target } = setup(); target.hp = 60;
-    advance(game, 9.9);
-    expect(target.rank ?? 0).toBe(0);
+    advance(game, .1);
+    const stopped = { x: george.x, y: george.y };
     expect(target.inspectedBy).toBe(george.id);
-    expect(target.inspectionProgress).toBeCloseTo(.99);
     expect(inspectionStatus(george, game.state, game.defs)).toContain(`Inspecting ${game.defs[target.type].name}`);
-    advance(game, .1); expect(target.rank).toBe(1); expect(target.hp).toBe(60);
-    advance(game, 9.9); expect(target.rank).toBe(1);
-    advance(game, .1); expect(target.rank).toBe(2);
-    const promotedAt = target.promotedAt;
-    advance(game, 25);
-    expect(target.rank).toBe(2); expect(target.promotedAt).toBe(promotedAt);
-    expect(target.hp).toBe(60); expect(george.inspection).toBeUndefined();
-    expect(game.state.events.filter(e => e.text.includes('promoted'))).toHaveLength(2);
-    expect(rankMultiplier(target)).toBe(1.2);
+    advance(game, 2.8);
+    expect(george.x).toBe(stopped.x); expect(george.y).toBe(stopped.y);
+    expect(target.inspectionProgress).toBeCloseTo(2.9 / 3);
+    advance(game, .1);
+    expect(george.inspection).toBeUndefined(); expect(target.inspectedBy).toBeUndefined();
+    expect(george.order).toBe('move'); expect(george.path.length).toBeGreaterThan(0);
+    advance(game, 2);
+    expect(Math.hypot(george.x - stopped.x, george.y - stopped.y)).toBeGreaterThan(.5);
+    expect(george.inspection).toBeUndefined();
+    advance(game, 30);
+    expect(target.rank ?? 0).toBe(0); expect(target.promotedAt).toBeUndefined();
+    expect(target.hp).toBe(60); expect(target.maxHp).toBe(game.defs.gi.hp);
+    expect(rankMultiplier(target)).toBe(1);
+    expect(game.state.events.filter(e => e.text.includes('promoted'))).toEqual([]);
   });
 
-  it('resets on range loss and on movement, without banking partial inspections', () => {
-    const { game, george, target } = setup();
-    advance(game, 6); target.x = george.x + INSPECTION_RULES.radius + .1;
-    advance(game, 1 / 30); expect(george.inspection).toBeUndefined();
-    target.x = george.x + 2; advance(game, 5);
+  for (const reason of ['range', 'ownership', 'death', 'transport'] as const) it(`ends an inspection on ${reason} loss and walks away`, () => {
+    const { game, george, target } = setup(); advance(game, 1);
+    if (reason === 'range') target.x = george.x + INSPECTION_RULES.radius + .1;
+    if (reason === 'ownership') target.side = -1;
+    if (reason === 'death') target.hp = 0;
+    if (reason === 'transport') target.transportId = 999;
+    advance(game, 1 / 30);
+    expect(george.inspection).toBeUndefined(); expect(george.path.length).toBeGreaterThan(0);
     expect(target.rank ?? 0).toBe(0);
-    game.orderMove([george.id], george.x, george.y + 1);
-    advance(game, .2); expect(george.inspection).toBeUndefined();
-    game.stop([george.id]); advance(game, 9.9); expect(target.rank ?? 0).toBe(0);
-    advance(game, .1); expect(target.rank).toBe(1);
+    if (reason !== 'death') expect(target.inspectedBy).toBeUndefined();
   });
 
-  it('excludes enemies, neutral units, buildings, self, other Georges and max-rank units', () => {
+  it('excludes enemies, neutral units, buildings, embarked units and other Georges; Elite units remain inspectable', () => {
     const { game, george, target, enemy, extra } = setup();
-    target.rank = 2;
-    enemy.x = george.x + 1; enemy.y = george.y;
-    enemy.type = 'engineer'; // A noncombat enemy keeps this eligibility check isolated.
+    target.rank = 2; advance(game, .1); expect(george.inspection?.targetId).toBe(target.id);
+    target.transportId = 999;
+    Object.assign(enemy, { type: 'engineer', x: george.x + 1, y: george.y });
     Object.assign(extra, { type: 'george', x: george.x - 1, y: george.y });
-    const neutral: Entity = { ...target, id: 998, side: -1, rank: 0, x: george.x, y: george.y - 1, path: [] };
+    const neutral: Entity = { ...target, id: 998, side: -1, rank: 0, transportId: undefined, x: george.x, y: george.y - 1, path: [] };
     const building = game.state.entities.find(e => e.type === 'conyard' && e.side === 0)!;
     building.x = george.x; building.y = george.y + 1;
     game.state.entities.push(extra, neutral);
-    advance(game, 22);
-    expect(george.inspection).toBeUndefined();
-    expect(extra.inspection).toBeUndefined();
+    advance(game, 10);
+    expect(george.inspection).toBeUndefined(); expect(extra.inspection).toBeUndefined();
     for (const e of [george, extra, enemy, neutral, building]) expect(e.rank ?? 0).toBe(0);
     expect(target.rank).toBe(2);
   });
 
-  it('does not stack inspectors or transfer accumulated progress after target ownership changes', () => {
+  it('allows one inspector per target without accelerating or upgrading', () => {
     const { game, george, target, extra } = setup();
-    Object.assign(extra, { type: 'george', x: george.x - 1, y: george.y });
-    game.state.entities.push(extra);
-    advance(game, 5.1); expect(target.rank ?? 0).toBe(0);
+    Object.assign(extra, { type: 'george', x: george.x - 1, y: george.y }); game.state.entities.push(extra);
+    advance(game, 1);
     expect(target.inspectedBy).toBe(george.id); expect(extra.inspection).toBeUndefined();
-    target.side = -1; advance(game, 1 / 30);
-    expect(george.inspection).toBeUndefined(); expect(target.inspectionProgress).toBeUndefined();
-    target.side = 0; advance(game, 9.9); expect(target.rank ?? 0).toBe(0);
-    advance(game, .1); expect(target.rank).toBe(1);
-    advance(game, 5.1); expect(target.rank).toBe(1);
+    expect(target.inspectionProgress).toBeCloseTo(1 / 3);
+    advance(game, 20); expect(target.rank ?? 0).toBe(0);
   });
 
-  it('clears a dead target and starts a new target from zero', () => {
-    const { game, george, target, extra } = setup();
-    advance(game, 8); target.hp = 0;
-    Object.assign(extra, { x: george.x + 2, y: george.y + 1 }); game.state.entities.push(extra);
-    advance(game, 1 / 30);
-    expect(george.inspection?.targetId).toBe(extra.id);
-    expect(george.inspection?.elapsed).toBeCloseTo(1 / 30);
-    advance(game, 9); expect(extra.rank ?? 0).toBe(0);
+  it('rejects selection and all player orders while preserving autonomous movement', () => {
+    const { game, george, target, enemy } = setup();
+    game.state.entities = game.state.entities.filter(e => e !== target);
+    advance(game, .1);
+    game.select([george.id]); expect(george.selected).toBe(false);
+    game.select([target.id], true); expect(george.selected).toBe(false);
+    const before = structuredClone(george);
+    game.orderMove([george.id], 1, 1); game.orderMove([george.id], 1, 1, true);
+    game.orderForceMove([george.id], 1, 1); game.orderAttack([george.id], enemy.id, true);
+    game.orderForceFire([george.id], 1, 1); game.orderWaypoints([george.id], [{ x: 1, y: 1 }]);
+    game.orderGuard([george.id], 1, 1, enemy.id); game.stop([george.id]); game.guard([george.id]);
+    game.scatter([george.id]); game.deploy([george.id]);
+    expect(george).toEqual(before);
+    advance(game, 2);
+    expect(Math.hypot(george.x - before.x, george.y - before.y)).toBeGreaterThan(.5);
+  });
+
+  it('retries wandering after an impassable enclosure opens', () => {
+    const { game, george, target } = setup(); game.state.entities = game.state.entities.filter(e => e !== target);
+    for (const tile of game.state.tiles) tile.terrain = 'water';
+    advance(game, 2); expect(george.path).toEqual([]);
+    for (const tile of game.state.tiles) tile.terrain = 'grass';
+    advance(game, 2); expect(Math.hypot(george.x - 20.5, george.y - 30.5)).toBeGreaterThan(.5);
   });
 
   it('never attacks or produces firing effects under attack, force-fire, retaliation or attack-move commands', () => {
@@ -113,9 +127,9 @@ describe('George noncombat inspector', () => {
     expect(george.targetId).toBeNull(); expect(george.firedAt).toBeUndefined();
   });
 
-  it('applies earned damage and durability bonuses without changing ranks through combat', () => {
+  it('preserves independent veteran damage and durability bonuses', () => {
     const { game, george, target, enemy } = setup();
-    advance(game, 10); expect(target.rank).toBe(1);
+    target.rank = 1; // Veteran training from a Spy is independent of George.
     game.state.entities = game.state.entities.filter(e => e !== george);
     Object.assign(enemy, { x: target.x + 2, y: target.y, hp: 1000, maxHp: 1000, type: 'engineer', rank: 2 });
     game.tick(1 / 30); game.orderAttack([target.id], enemy.id);

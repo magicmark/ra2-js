@@ -14,6 +14,6 @@ sight = 6
 requires = ["barracks", "butchers"]
 sprite = "george"
 cameo = "george"
-description = "Noncombat inspector. Stop within 3 cells of an own infantry unit or vehicle for 10 continuous seconds to promote it. Moving George or leaving range resets progress. One inspector per target; maximum Elite. Each rank adds 10% damage and durability. Requires Barracks and The Butcher's."
+description = "Noncombat inspector. Autonomous civilian: cannot be selected or commanded. Wanders and pauses near friendly infantry or vehicles for 3 seconds, then moves on. Never upgrades units. Requires Barracks and The Butcher's."
 armor = "flak"
 nativeSpeed = 4
