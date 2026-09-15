@@ -5,6 +5,7 @@ import { GAME_SPEED_STEPS } from '../src/game/timing';
 
 function arena(type = 'grizzly') {
   const game = new Game({ ai: false });
+  game.setGameSpeed(1); // These mechanics checks count the 30-frame reference clock.
   const attacker = game.state.entities.find(e => e.type === (game.defs[type].category === 'infantry' ? 'gi' : 'grizzly'))!;
   const target = game.state.entities.find(e => e.type === 'power_soviet')!;
   game.state.entities = game.state.entities.filter(e => e.type === 'conyard' || e === attacker || e === target);

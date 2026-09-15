@@ -5,6 +5,7 @@ import type { Entity } from '../src/game/types';
 
 function arena() {
   const game = new Game({ ai: false }), original = game.state.entities.find(e => e.type === 'gi')!;
+  game.setGameSpeed(1); // Each sampled tick is one authored logic frame.
   const units = ['gi', 'conscript', 'engineer'].map((type, i) => ({ ...structuredClone(original), id: 200 + i, type, x: 20.5 + i, y: 35.5, selected: false, path: [], targetId: null, order: 'guard' as const, previous: { x: 20.5 + i, y: 35.5 } }));
   game.state.entities = [...game.state.entities.filter(e => e.type === 'conyard'), ...units];
   for (const tile of game.state.tiles) { tile.terrain = 'grass'; tile.ore = 0; }

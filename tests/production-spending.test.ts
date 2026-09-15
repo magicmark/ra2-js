@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { Game } from '../src/game/Game';
 function gameWithCash(money = 6000) {
   const game = new Game({ ai: false });
+  game.setGameSpeed(1); // These mechanics checks count the 30-frame reference clock.
   for (const entity of game.state.entities) if (game.defs[entity.type].harvester) entity.order = 'guard';
   game.state.sides[0].money = money;
   return game;

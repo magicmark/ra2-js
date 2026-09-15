@@ -15,6 +15,7 @@ describe('authored integer ROT facing', () => {
   it('holds a fresh 90 or 180 degree order in place until the authored turn completes, then moves at full speed', () => {
     for (const [heading, target, frames] of [[0, Math.PI / 2, 12], [-Math.PI / 2, Math.PI / 2, 25]] as const) {
       const game = new Game({ ai: false }), tank = game.state.entities.find(e => e.type === 'grizzly')!;
+      game.setGameSpeed(1); // Inspect one authored logic frame per tick.
       tank.x = 20.5; tank.y = 35.5; tank.previous = { x: tank.x, y: tank.y }; tank.facing = heading;
       game.orderMove([tank.id], 20.5, 38.5);
       for (let frame = 0; frame < frames; frame++) { game.tick(1 / 30); expect(tank.x).toBe(20.5); expect(tank.y).toBe(35.5); }
@@ -24,6 +25,7 @@ describe('authored integer ROT facing', () => {
   });
   it('continues translating through a bend on an already moving route', () => {
     const game = new Game({ ai: false }), tank = game.state.entities.find(e => e.type === 'grizzly')!;
+    game.setGameSpeed(1); // Inspect one authored logic frame per tick.
     tank.x = 20.5; tank.y = 34.5; tank.previous = { x: tank.x, y: tank.y }; tank.facing = 0;
     game.orderMove([tank.id], 23.5, 35.5);
     let inMotion = false;
@@ -43,6 +45,7 @@ describe('authored integer ROT facing', () => {
   });
   it('turns the moving hull at its native rate and lets a stationary turret aim independently', () => {
     const game = new Game({ ai: false }); const tank = game.state.entities.find(e => e.type === 'grizzly')!;
+    game.setGameSpeed(1); // Inspect one authored logic frame per tick.
     tank.x = 20.5; tank.y = 35.5; tank.facing = 0; tank.turretFacing = 0;
     game.orderMove([tank.id], 20.5, 38.5); game.tick(1 / 30);
     expect(tank.facing).toBeGreaterThan(0); expect(tank.facing).toBeLessThan(Math.PI / 2);

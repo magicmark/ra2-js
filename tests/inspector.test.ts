@@ -8,6 +8,7 @@ function advance(game: Game, seconds: number) {
 }
 function setup() {
   const game = new Game({ ai: false });
+  game.setGameSpeed(1); // These mechanics checks count the 30-frame reference clock.
   const [george, target, extra] = game.state.entities.filter(e => e.type === 'gi');
   const enemy = game.state.entities.find(e => e.type === 'conscript')!;
   game.state.entities = game.state.entities.filter(e => e.type === 'conyard' || e === george || e === target || e === enemy);

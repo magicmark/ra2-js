@@ -10,7 +10,7 @@ import { NATIVE_STRUCTURE_SPECS } from './maps/theater';
 import { findPath } from './pathfinding';
 import { placementCells } from './placement';
 import { turnFacing, type FacingTurn } from './facing';
-import { nativeGameSpeedIndex } from './timing';
+import { DEFAULT_GAME_SPEED, nativeGameSpeedIndex } from './timing';
 import { NATIVE_EFFECT_TIMINGS, NATIVE_INFANTRY_TIMINGS } from './combat';
 import { INSPECTION_RULES, rankMultiplier, rankName } from './customUnits';
 import { TESTING_FLAGS } from './testing';
@@ -117,7 +117,7 @@ export class Game implements GameAPI {
   }
 
   restart(): void {
-    const speed = Number.isFinite(this.state?.speed) ? clamp(this.state.speed, .25, 4) : 1;
+    const speed = Number.isFinite(this.state?.speed) ? clamp(this.state.speed, .25, 4) : DEFAULT_GAME_SPEED;
     this.nextId = 1;
     this.nextEventId = 1;
     this.accumulator = 0;

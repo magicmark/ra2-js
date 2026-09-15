@@ -7,6 +7,7 @@ import { revealedEntity } from '../src/game/visibility';
 const advance = (g: Game, seconds: number) => { for (let i = 0; i < Math.ceil(seconds * 30); i++) g.tick(1 / 30); };
 function arena() {
   const g = new Game({ ai: false });
+  g.setGameSpeed(1); // Timed unit behavior uses simulation seconds.
   g.state.entities = g.state.entities.filter(e => e.type === 'conyard');
   for (const tile of g.state.tiles) { tile.terrain = 'grass'; tile.ore = 0; }
   for (let y = 32; y < 40; y++) for (let x = 3; x < 11; x++) g.state.tiles[y * 64 + x].terrain = 'water';

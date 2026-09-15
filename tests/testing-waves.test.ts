@@ -9,6 +9,7 @@ const nativeMap = () => parseNativeMap(readFileSync('public/maps/emerald-divide.
 describe('temporary automatic Soviet wave setting', () => {
   for (const native of [false, true]) it(`keeps the ${native ? 'native' : 'training'} map economy active without scheduled attacks`, () => {
     const game = new Game(native ? { map: nativeMap() } : {});
+    game.setGameSpeed(1); // Keep the four-minute simulation window independent of the default pace.
     expect(game.automaticSovietWaves).toBe(false);
     const playerBuildings = game.state.entities.filter(e => e.side === 0 && isBuilding(game.defs[e.type]));
     let warned = false, attacking = false;
@@ -31,6 +32,7 @@ describe('temporary automatic Soviet wave setting', () => {
   it('preserves the setting through restart and native-map selection, with an explicit reenable option', () => {
     for (const automaticSovietWaves of [false, true]) {
       const game = new Game({ automaticSovietWaves });
+      game.setGameSpeed(1);
       game.restart();
       expect(game.automaticSovietWaves).toBe(automaticSovietWaves);
       game.loadNativeMap(nativeMap());

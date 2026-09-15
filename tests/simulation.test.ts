@@ -10,6 +10,7 @@ function advance(game: Game, seconds: number): void {
 }
 function peaceful(): Game {
   const game = new Game({ ai: false });
+  game.setGameSpeed(1); // Durations below use the simulation reference clock.
   for (const e of game.state.entities.filter(e => game.defs[e.type].harvester)) e.order = 'guard';
   return game;
 }
@@ -34,6 +35,7 @@ describe('TOML game rules and starting state', () => {
 
   it('starts both sides with independent economies, ore access and only player vision', () => {
     const game = new Game({ ai: false });
+    game.setGameSpeed(1); // Durations below use the simulation reference clock.
     expect(game.state.tiles).toHaveLength(64 * 64);
     expect(new Set(game.state.tiles.map(t => t.terrain))).toEqual(new Set(['grass', 'rock', 'road', 'water', 'sand']));
     expect(game.state.tiles.filter(t => t.ore > 0).length).toBeGreaterThan(200);
@@ -235,6 +237,7 @@ describe('pathfinding and commands', () => {
 describe('ore miners', () => {
   it('automatically finds ore, depletes it, returns to a refinery and credits only its side', () => {
     const game = new Game({ ai: false });
+    game.setGameSpeed(1); // Durations below use the simulation reference clock.
     const miner = entity(game, 'miner');
     entity(game, 'warminer', 1).order = 'guard';
     const oreBefore = game.state.tiles.reduce((sum, t) => sum + t.ore, 0);
@@ -248,6 +251,7 @@ describe('ore miners', () => {
 
   it('uses a reachable ore patch when a nearer deposit is enclosed', () => {
     const game = new Game({ ai: false });
+    game.setGameSpeed(1); // Durations below use the simulation reference clock.
     const miner = entity(game, 'miner');
     entity(game, 'warminer', 1).order = 'guard';
     for (const tile of game.state.tiles) tile.ore = 0;
@@ -264,6 +268,7 @@ describe('ore miners', () => {
 
   it('holds cargo without a refinery and resumes after a new refinery is built', () => {
     const game = new Game({ ai: false });
+    game.setGameSpeed(1); // Durations below use the simulation reference clock.
     const miner = entity(game, 'miner');
     miner.cargo = 700;
     miner.order = 'return';
@@ -284,6 +289,7 @@ describe('ore miners', () => {
 
   it('keeps multiple miners depositing through shared routes for several cycles', () => {
     const game = new Game({ ai: false });
+    game.setGameSpeed(1); // Durations below use the simulation reference clock.
     entity(game, 'warminer', 1).order = 'guard';
     game.build('refinery');
     advance(game, game.defs.refinery.buildTime + .1);
@@ -349,6 +355,7 @@ describe('combat, AI and match lifecycle', () => {
 
   it('builds an enemy economy, produces armor and launches an attacking force', () => {
     const game = new Game({ automaticSovietWaves: true });
+    game.setGameSpeed(1); // Preserve the original 180-simulation-second AI check.
     // Hull turns now consume stationary logic frames on every route bend.
     const producedRhinos = new Set<number>();
     for (let i = 0; i < 180 * 30; i++) {

@@ -5,6 +5,7 @@ import type { Entity } from '../src/game/types';
 const difference = (a: number, b: number) => Math.atan2(Math.sin(a - b), Math.cos(a - b));
 function arena(type: 'miner' | 'warminer' | 'grizzly' = 'miner') {
   const game = new Game({ ai: false });
+  game.setGameSpeed(1); // These mechanics checks count the 30-frame reference clock.
   const unit = game.state.entities.find(e => e.type === 'miner')!;
   unit.type = type; unit.x = 20.5; unit.y = 35.5; unit.previous = { x: unit.x, y: unit.y }; unit.facing = Math.PI;
   game.state.entities = game.state.entities.filter(e => e === unit || e.type === 'conyard' || e.type === 'refinery');

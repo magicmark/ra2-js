@@ -2,6 +2,23 @@
 
 Status: the verified base-speed conversion is now applied to all nine ground-unit TOMLs. Immutable snapshots captured before this patch retain their earlier values.
 
+## Browser default pace
+
+Fresh games use the existing **Faster** setting (2×, native speed index 1):
+60 logic frames per wall-clock second. The previous default was **Fast**
+(1×, 30 logic frames per wall-clock second). At the new default an aligned
+Grizzly on clear ground travels 3.984375 cells per wall-clock second, up from
+1.9921875. Its authored 17 leptons per logic frame stays the same, as do the
+relative movement, turning, combat and production rates.
+
+Options still offers every existing speed. Saved speed choices take precedence,
+and restarting or switching maps retains the selected speed. This is a browser
+pace choice, not a claim of measured retail wall-clock parity. The fixed
+simulation step remains 1/30 second; the input and camera clock is unchanged.
+The default and reference pace are covered in `tests/game-speed.test.ts`.
+
+## Authored ground movement
+
 The supplied installer was read locally with the existing `7z-wasm` dependency, extracting only `game.exe`; neither executable was run. Its SHA-256 is `06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb`. The PE resource identifies Red Alert 2, Westwood Studios, FileVersion/ProductVersion `1.08`, and the archive entry is dated 2011-09-07. These identify the supplied binary, **not an unmodified retail executable**.
 
 The [small disassembly excerpt](../tests/artifacts/gameplay/native-speed-disassembly.txt) follows the exact `Speed` string reference at `0x7d381c` into its INI parser at `0x6dcbee`. It reads an integer, clamps it to 0–100, shifts left eight bits, divides by 100 using the compiler’s signed constant-division sequence, clamps to 255, and stores the resulting type speed. For the nonnegative authored roster:

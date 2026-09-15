@@ -7,6 +7,7 @@ import { CUSTOM_UNIT_IDS } from '../src/game/customUnits';
 
 function arena() {
   const game = new Game({ ai: false });
+  game.setGameSpeed(1); // These mechanics checks count the 30-frame reference clock.
   for (const tile of game.state.tiles) { tile.terrain = 'grass'; tile.ore = 0; }
   game.state.entities = game.state.entities.filter(e => e.type === 'conyard' || e.type === 'gi' || e.type === 'grizzly' || e.type === 'power_soviet');
   const gi = game.state.entities.find(e => e.type === 'gi')!, tank = game.state.entities.find(e => e.type === 'grizzly')!, target = game.state.entities.find(e => e.type === 'power_soviet')!;
@@ -192,6 +193,7 @@ describe('simulation frame and speed independence', () => {
   it('produces equal time, movement and construction for 5/10/30/60/144Hz visible frames', () => {
     const results = [5, 10, 30, 60, 144].map(hz => {
       const game = new Game({ ai: false });
+      game.setGameSpeed(1); // These mechanics checks count the 30-frame reference clock.
       for (const e of game.state.entities) if (game.defs[e.type].harvester) game.stop([e.id]);
       game.build('power'); const tank = game.state.entities.find(e => e.type === 'grizzly')!;
       game.orderMove([tank.id], 22.5, 36.5); advance(game, 3, hz);

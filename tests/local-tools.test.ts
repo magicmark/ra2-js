@@ -11,7 +11,7 @@ function game() {
 describe('local development controls', () => {
   it('keeps normal production defaults and applies instant/free to already queued work without refunding unspent credits', () => {
     const value = game(), side = value.state.sides[0];
-    expect(value.state.speed).toBe(1);
+    expect(value.state.speed).toBe(2);
     value.build('power'); value.tick(.1);
     const item = side.queues.structures[0], spent = item.spent;
     expect(item.progress).toBeGreaterThan(0); expect(item.ready).toBe(false); expect(spent).toBeGreaterThan(0);

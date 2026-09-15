@@ -6,6 +6,7 @@ const advance = (game: Game, seconds: number) => { for (let i = 0; i < Math.roun
 describe('original building sale lifecycle', () => {
   it('refunds once, disables power/actions, and holds the footprint through reverse buildup', () => {
     const game = new Game({ ai: false }), power = game.state.entities.find(e => e.side === 0 && e.type === 'power')!;
+    game.setGameSpeed(1); // Sale duration below is measured in simulation seconds.
     for (const e of game.state.entities) if (game.defs[e.type].harvester) e.order = 'guard';
     const before = game.state.sides[0].money;
     game.select([power.id]);

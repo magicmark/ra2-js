@@ -5,8 +5,27 @@ import { NativeOptions, OPTIONS_STORAGE_KEY, optionsSidebarLayout, readOptionsPr
 import type { UIActions } from '../src/ui/UI';
 import type { GameAPI } from '../src/game/types';
 import { BINDING_DEFAULTS } from '../src/input/bindings';
+import { Game } from '../src/game/Game';
 
 afterEach(() => vi.useRealTimers());
+
+it.each([
+  [null, 2],
+  [JSON.stringify({ speed: 900 }), 2],
+  [JSON.stringify({ effects: 0 }), 2],
+  [JSON.stringify({ speed: 1 }), 1],
+  [JSON.stringify({ speed: .5 }), .5],
+])('applies saved speed %s over the fresh Faster default', (saved, expected) => {
+  const game = new Game({ ai: false });
+  const options = Object.assign(Object.create(NativeOptions.prototype), {
+    preferences: readOptionsPreferences({ getItem: () => saved }),
+    preferencesApplied: false,
+    actions: { onSpeed: (speed: number) => game.setGameSpeed(speed), onEffectsVolume: vi.fn() },
+  });
+  options.applyPreferences();
+  expect(game.state.speed).toBe(expected);
+  game.restart(); expect(game.state.speed).toBe(expected);
+});
 
 describe('native tooltip dwell', () => {
   it('waits more than two seconds, restarts after movement, and cancels stale targets', () => {
