@@ -1,0 +1,261 @@
+{
+  "ticket": "ra2-js-sb9",
+  "variant": "segmented-alloy",
+  "base": "4a0a1145c5900c556b10e0d84486659dd2a0c5e2",
+  "sourceStyleSha256": "eb9610d27de00c7916e3cb4b18a561372b971ac855bb5b233f9c6c95de62325a",
+  "build": {
+    "command": "npm run build",
+    "result": "PASS",
+    "stylesheet": "main-GS2Q4Ad3.css",
+    "stylesheetSha256": "6a0d92d0c13474fcc75787fc1362556cb48d5be64a97627efe6696e551d49e11",
+    "note": "Existing 7z-wasm module externalization warning only."
+  },
+  "sharedControlsTests": {
+    "command": "npm test -- --maxWorkers=2 tests/mobile-controls.test.ts tests/desktop-controls.test.ts",
+    "passed": 35,
+    "runs": 1,
+    "note": "Shared unchanged control implementation tested once on steel-keys."
+  },
+  "browser": "Chromium, actual production build; iPhone UA and touch viewport emulation; original local MIX files (974 assets) restored from browser cache. No physical-device testing.",
+  "smoke": {
+    "modes": [
+      "pan",
+      "attack",
+      "select"
+    ],
+    "stop": {
+      "before": "move",
+      "after": "guard",
+      "path": 0
+    },
+    "buildDrawer": true,
+    "placementCancelKeepsReady": true,
+    "assets": {
+      "phase": "ready",
+      "message": "Original game assets loaded from this browser.",
+      "loaded": 1,
+      "total": 1
+    }
+  },
+  "layoutCheckMethod": "Compare geometry/display/visibility/pointer-events with the seven variant CSS rules temporarily disabled, then restore. Assert no horizontal overflow and unobscured targets. Mobile buttons remain 46px tall; explicit forced-mobile at 1280x800 retains the existing 40px height.",
+  "wideViewportMethod": "Explicit ?force_mobile=1 load of this exact production build at 1280x800 with desktop UA; assets ready and Controls.mobile true. Default desktop CSS measured separately; Steel Keys additionally reloaded without the query and verified Controls.mobile false, mobile toolbar none and desktop toolbar block.",
+  "layouts": [
+    {
+      "layout": "portrait",
+      "viewport": [
+        390,
+        844
+      ],
+      "mobileClass": true,
+      "matchesBaseline": true,
+      "toolbar": {
+        "tag": "mobile-commandbar",
+        "x": 0,
+        "y": 786,
+        "w": 390,
+        "h": 58,
+        "display": "grid",
+        "visibility": "visible",
+        "pointerEvents": "auto"
+      },
+      "buttonSizes": [
+        [
+          70.796875,
+          46
+        ],
+        [
+          70.796875,
+          46
+        ],
+        [
+          70.796875,
+          46
+        ],
+        [
+          70.796875,
+          46
+        ],
+        [
+          70.8125,
+          46
+        ]
+      ]
+    },
+    {
+      "layout": "landscape",
+      "viewport": [
+        844,
+        390
+      ],
+      "mobileClass": true,
+      "matchesBaseline": true,
+      "toolbar": {
+        "tag": "mobile-commandbar",
+        "x": 0,
+        "y": 332,
+        "w": 844,
+        "h": 58,
+        "display": "grid",
+        "visibility": "visible",
+        "pointerEvents": "auto"
+      },
+      "buttonSizes": [
+        [
+          160,
+          46
+        ],
+        [
+          160,
+          46
+        ],
+        [
+          160,
+          46
+        ],
+        [
+          160,
+          46
+        ],
+        [
+          160,
+          46
+        ]
+      ]
+    },
+    {
+      "layout": "narrow",
+      "viewport": [
+        320,
+        740
+      ],
+      "mobileClass": true,
+      "matchesBaseline": true,
+      "toolbar": {
+        "tag": "mobile-commandbar",
+        "x": 0,
+        "y": 682,
+        "w": 320,
+        "h": 58,
+        "display": "grid",
+        "visibility": "visible",
+        "pointerEvents": "auto"
+      },
+      "buttonSizes": [
+        [
+          56.796875,
+          46
+        ],
+        [
+          56.796875,
+          46
+        ],
+        [
+          56.796875,
+          46
+        ],
+        [
+          56.796875,
+          46
+        ],
+        [
+          56.796875,
+          46
+        ]
+      ]
+    },
+    {
+      "layout": "forced",
+      "viewport": [
+        1280,
+        800
+      ],
+      "mobileClass": true,
+      "matchesBaseline": true,
+      "toolbar": {
+        "tag": "mobile-commandbar",
+        "x": 0,
+        "y": 742,
+        "w": 1280,
+        "h": 58,
+        "display": "grid",
+        "visibility": "visible",
+        "pointerEvents": "auto"
+      },
+      "buttonSizes": [
+        [
+          244,
+          40
+        ],
+        [
+          244,
+          40
+        ],
+        [
+          244,
+          40
+        ],
+        [
+          244,
+          40
+        ],
+        [
+          244,
+          40
+        ]
+      ]
+    },
+    {
+      "layout": "desktop",
+      "viewport": [
+        1280,
+        800
+      ],
+      "mobileClass": false,
+      "matchesBaseline": true,
+      "toolbar": {
+        "tag": "mobile-commandbar",
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "display": "none",
+        "visibility": "hidden",
+        "pointerEvents": "auto"
+      },
+      "buttonSizes": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "segmented-alloy-portrait.png",
+      "sha256": "bcd898219707e1f88974ae22c2a96eca2c6629da9bcedd731cb549e170811ac0",
+      "bytes": 302910
+    },
+    {
+      "file": "segmented-alloy-landscape.png",
+      "sha256": "9c904dabdd74f34da301a9ab4b13f4aff0925c7d2f38ec594ed79689093034d7",
+      "bytes": 679704
+    }
+  ]
+}
