@@ -1,4 +1,5 @@
 import { IFV_WEAPONS } from './ifvWeapons';
+import { AIRFIELD_DOCKING_OFFSETS, AIRFIELD_PARKING_FACING, airfieldPad } from './airfield';
 import { revealedEntity } from './visibility';
 import { definitions, isBuilding } from './definitions';
 import { createMap, MAP_SIZE } from './map';
@@ -529,7 +530,8 @@ export class Game implements GameAPI {
         const missing = !item.ready ? this.defs[item.type].requires.find(required => !this.state.entities.some(e => e.side === side.id && e.hp > 0 && !e.selling && !e.constructing && e.type === required)) : undefined;
         item.blockedPrerequisite = missing ? `Requires ${this.defs[missing].name}` : undefined;
         if (item.paused || item.ready || item.blockedPrerequisite) continue;
-        const producer = this.state.entities.find(e => e.side === side.id && e.hp > 0 && !e.selling && !e.constructing && e.transportId === undefined && this.produces(e, this.defs[item.type]));
+        const producer = this.state.entities.find(e => e.side === side.id && e.hp > 0 && !e.selling && !e.constructing && e.transportId === undefined && this.produces(e, this.defs[item.type])
+          && (this.defs[item.type].factory !== 'radar' || this.freeAirfieldPad(e) !== undefined));
         if (!producer) continue;
         const def = this.defs[item.type];
         const productionRate = lowPower ? clamp(side.power / Math.max(1, side.powerUsed), .5, .8) : 1;
@@ -1214,25 +1216,44 @@ export class Game implements GameAPI {
         memory.repath = 1;
       }
     }
+    if (entity.landed) {
+      const home = this.state.entities.find(e => e.id === entity.homeId && e.side === entity.side && e.hp > 0 && !e.selling);
+      if (!home) { entity.landed = false; entity.rearm = undefined; }
+      else if (entity.ammo !== 0) {
+        if (!entity.path.length && entity.targetId === null && entity.order !== 'attack') return true;
+        entity.landed = false;
+      }
+    }
     if (def.ammo && entity.ammo === 0) {
       let home = this.state.entities.find(e => e.id === entity.homeId && e.side === entity.side && this.operational(e));
-      home ??= this.state.entities.find(e => e.type === 'radar' && e.side === entity.side && this.operational(e));
+      if (def.factory === 'radar') {
+        if (home && entity.airfieldPad === undefined) entity.airfieldPad = this.freeAirfieldPad(home, entity.id);
+        if (!home || entity.airfieldPad === undefined) {
+          home = this.state.entities.find(e => e.type === 'radar' && e.side === entity.side && this.operational(e) && this.freeAirfieldPad(e, entity.id) !== undefined);
+          if (home) {
+            entity.airfieldPad = this.freeAirfieldPad(home, entity.id);
+            entity.landed = false; entity.rearm = undefined; entity.path = [];
+          }
+        }
+      } else home ??= this.state.entities.find(e => e.type === 'radar' && e.side === entity.side && this.operational(e));
       if (!home) {
         const unpowered = this.state.entities.find(e => e.type === 'radar' && e.side === entity.side && e.hp > 0 && !e.selling && !e.constructing);
-        if (unpowered) return false;
+        if (unpowered) return !!entity.landed;
         entity.hp = 0; return true;
       }
       entity.homeId = home.id;
-      const point = this.center(home);
-      if (distance(entity, point) > .6) {
-        if (!entity.path.length) { entity.path = [point]; entity.order = 'return'; }
+      const point = def.factory === 'radar' ? airfieldPad(this.center(home), entity.airfieldPad!) : this.center(home);
+      if (distance(entity, point) > (def.factory === 'radar' ? .15 : .6)) {
+        entity.landed = false; entity.rearm = undefined;
+        if (entity.order !== 'return' || !entity.path.length) { entity.path = [point]; entity.order = 'return'; }
       } else {
+        if (def.factory === 'radar') this.landAtAirfield(entity, point);
         entity.path = []; entity.rearm = (entity.rearm ?? 0) + dt;
         if (entity.type === 'hornet') { this.removeEntity(entity, false); return true; }
         if (entity.rearm >= 5) {
           entity.ammo = def.ammo; entity.rearm = undefined; entity.order = 'guard';
           const target = this.state.entities.find(e => e.id === memory.returnTarget && e.hp > 0);
-          if (target) { entity.targetId = target.id; entity.order = 'attack'; }
+          if (target) { entity.targetId = target.id; entity.order = 'attack'; entity.landed = false; }
           memory.returnTarget = undefined;
         }
         return true;
@@ -1367,6 +1388,15 @@ export class Game implements GameAPI {
   }
 
   private spawnFrom(producer: Entity, type: string): Entity | undefined {
+    if (this.defs[type].factory === 'radar') {
+      const pad = this.freeAirfieldPad(producer);
+      if (pad === undefined) return undefined;
+      const point = airfieldPad(this.center(producer), pad);
+      const unit = this.spawn(type, producer.side, point.x, point.y);
+      unit.homeId = producer.id; unit.airfieldPad = pad;
+      this.landAtAirfield(unit, point);
+      return unit;
+    }
     const def = this.defs[producer.type];
     const target = { x: producer.x + def.footprint[0] * 0.5, y: producer.y + def.footprint[1] + 0.5 };
     const location = this.nearestOpen(target, -1, undefined, 7, this.defs[type]);
@@ -1374,6 +1404,22 @@ export class Game implements GameAPI {
     const unit = this.spawn(type, producer.side, location.x, location.y);
     if (this.defs[type].ammo) unit.homeId = producer.id;
     return unit;
+  }
+
+  private freeAirfieldPad(home: Entity, excludeId?: number): number | undefined {
+    // Reserve a returning aircraft's pad throughout its sortie, not just while
+    // it is parked. Destroyed aircraft release their slot immediately.
+    const occupied = new Set(this.state.entities.filter(e => e.id !== excludeId && e.hp > 0 && e.side === home.side && e.homeId === home.id && this.defs[e.type].factory === 'radar').map(e => e.airfieldPad));
+    const pad = AIRFIELD_DOCKING_OFFSETS.findIndex((_, index) => !occupied.has(index));
+    return pad < 0 ? undefined : pad;
+  }
+
+  private landAtAirfield(entity: Entity, point: Vec2): void {
+    entity.x = point.x; entity.y = point.y; entity.previous = { ...point };
+    entity.facing = entity.previousFacing = AIRFIELD_PARKING_FACING;
+    entity.landed = true;
+    const memory = this.memory(entity);
+    memory.heading = entity.facing; memory.bodyTurn = undefined;
   }
 
   private removeEntity(entity: Entity, explosion: boolean): void {

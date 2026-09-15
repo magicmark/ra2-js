@@ -37,6 +37,7 @@ export interface Entity extends Vec2 {
   constructing?: { startedAt: number; duration: number };
   passengers?: Entity[]; transportId?: number;
   recharge?: number; ammo?: number; rearm?: number; homeId?: number;
+  airfieldPad?: number; landed?: boolean;
   disabledUntil?: number; infiltrated?: boolean;
   revealed?: boolean;
   previous?: Vec2; previousFacing?: number; turretFacing?: number; previousTurretFacing?: number;

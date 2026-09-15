@@ -15,6 +15,18 @@ function renderer() {
 }
 
 describe('original artwork renderer', () => {
+  it('draws parked and rearmed Harriers at pad height, and raises them on takeoff', () => {
+    const view = renderer(), art = { source: {}, width: 60, height: 30 } as any;
+    view.assets = { ready: true, setTheater: vi.fn(), getSprite: () => art } as any;
+    const draw = vi.spyOn(view as any, 'drawArt').mockImplementation(() => {});
+    const unit = { type: 'harrier', facing: -Math.PI / 4, side: 0, hp: 150, maxHp: 150, path: [], landed: true, ammo: 1 } as any;
+    const def = { category: 'vehicles', movement: 'air', sprite: 'falc', footprint: [1, 1] } as any;
+    (view as any).drawEntity(unit, def, { x: 100, y: 100 });
+    expect(draw).toHaveBeenLastCalledWith(art, 100, 100);
+    unit.landed = false;
+    (view as any).drawEntity(unit, def, { x: 100, y: 100 });
+    expect(draw).toHaveBeenLastCalledWith(art, 100, 68);
+  });
   it('draws known enemy contacts above the shroud when they move into unexplored terrain', () => {
     const view = renderer(), order: string[] = [];
     view.assets = { ready: true, setTheater: vi.fn() } as any;

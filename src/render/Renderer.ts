@@ -462,7 +462,7 @@ export class Renderer {
       original=this.required(assets.getVehicleSprite(name,frame,turret,e.side),`${name} hull/turret`);
     }else original=this.required(building&&e.type!=='sentry'?assets.getBuildingSprite(name,this.game.state.time,e.side,this.game.nativeGameSpeedIndex):assets.getSprite(name,frame,e.side),name);
     if(d.ability==='mirage'&&!moving&&this.game.state.time-(e.firedAt??-Infinity)>3&&!selected&&!hover)original=assets.getOverlay('tree',e.id%8)??original;
-    this.drawArt(original,p.x,p.y-(d.movement==='air'&&d.category==='vehicles'&&e.rearm===undefined?32*c.zoom:0));
+    this.drawArt(original,p.x,p.y-(d.movement==='air'&&d.category==='vehicles'&&!e.landed&&e.rearm===undefined?32*c.zoom:0));
     if(e.selling||e.constructing)return;
     if(d.harvester&&e.harvesting&&e.order==='harvest'&&!moving){
       const direction=(5-Math.round(heading/(Math.PI*2)*8)+8)%8;

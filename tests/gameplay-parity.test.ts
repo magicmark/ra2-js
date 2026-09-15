@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { Game } from '../src/game/Game';
 import { definitions, isBuilding, parseDefinitionFiles } from '../src/game/definitions';
 import { CUSTOM_UNIT_IDS } from '../src/game/customUnits';
+import { AIRFIELD_DOCKING_OFFSETS, AIRFIELD_PARKING_FACING } from '../src/game/airfield';
 
 function arena() {
   const game = new Game({ ai: false });
@@ -238,6 +239,16 @@ function ini(source: string): Record<string, Record<string, string>> {
   return result;
 }
 describe.skipIf(!process.env.RA2_ASSET_DIR)('data verified against original Westwood rules/art', () => {
+  it('matches the four original airfield docks and aircraft parking direction', () => {
+    const rules = ini(readFileSync(join(process.env.RA2_ASSET_DIR!, 'rules.ini'), 'utf8'));
+    const art = ini(readFileSync(join(process.env.RA2_ASSET_DIR!, 'art.ini'), 'utf8'));
+    expect(AIRFIELD_DOCKING_OFFSETS).toHaveLength(Number(rules.GAAIRC.numberofdocks));
+    for (const [index, offset] of AIRFIELD_DOCKING_OFFSETS.entries()) {
+      expect([offset.x * 256, offset.y * 256, 0]).toEqual(art.GAAIRC[`dockingoffset${index}`].split(',').map(Number));
+    }
+    // Native compass headings begin at screen north; world +X is southeast.
+    expect(AIRFIELD_PARKING_FACING).toBe((Number(rules.AUDIOVISUAL.posedir) - 3) * Math.PI / 4);
+  });
   it('matches all authored roster stats, foundations, costs, weapons and frame-based build/attack timings', () => {
     const rules = ini(readFileSync(join(process.env.RA2_ASSET_DIR!, 'rules.ini'), 'utf8'));
     const art = ini(readFileSync(join(process.env.RA2_ASSET_DIR!, 'art.ini'), 'utf8'));
