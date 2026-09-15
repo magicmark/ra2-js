@@ -1105,6 +1105,8 @@ export class Game implements GameAPI {
     damage *= rankMultiplier(entity);
     fireRate *= rankFireRateMultiplier(entity);
     const def = this.weaponFor(entity), memory = this.memory(entity);
+    // Force-fire's ground hit radius can select an entity beyond the clicked point.
+    if (def.ability === 'carrier' && (!target || this.distanceToEntity(this.center(entity), target) > def.range)) return;
     if (def.category === 'infantry') {
       const swimming = entity.type === 'tanya' && this.state.tiles[Math.floor(entity.y) * this.state.width + Math.floor(entity.x)]?.terrain === 'water';
       const sequence = swimming ? 'WetAttack' : entity.deployed ? 'DeployedFire' : entity.type === 'rocketeer' ? 'FireFly' : 'FireUp';
