@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Controls } from '../src/input/Controls';
 import { Camera } from '../src/render/Camera';
 import { Game } from '../src/game/Game';
+import { UI } from '../src/ui/UI';
 import type { Renderer } from '../src/render/Renderer';
 import type { Entity } from '../src/game/types';
 
@@ -16,7 +17,7 @@ function fixture() {
   const renderer = { canvas, camera, placement: null, selectionBox: null, pick: () => picked, visible: (e: Entity) => e.x < 30, entityPoint: (e: Entity) => camera.screen(e.x, e.y) } as unknown as Renderer;
   const callbacks = { toast: vi.fn(), zoom: vi.fn(), mode: vi.fn(), ack: vi.fn(), category: vi.fn(), options: vi.fn(), briefing: vi.fn(), cursor: vi.fn(), enabled: () => enabled };
   const controls = new Controls(renderer, game, false, callbacks);
-  const key = (key: string, options: { kind?: string; ctrlKey?: boolean; shiftKey?: boolean; repeat?: boolean; type?: string } = {}) => {
+  const key = (key: string, options: { kind?: string; ctrlKey?: boolean; metaKey?: boolean; altKey?: boolean; shiftKey?: boolean; repeat?: boolean; type?: string } = {}) => {
     const event = new Event(options.type ?? 'keydown', { cancelable: true });
     const { type: _type, ...eventOptions } = options;
     Object.assign(event, { key, repeat: false, ctrlKey: false, metaKey: false, altKey: false, shiftKey: false, ...eventOptions });
@@ -32,6 +33,77 @@ function fixture() {
   const click = (entity?: Entity, options = {}) => { picked = entity; pointer('pointerdown', 300, 300, options); pointer('pointerup', 300, 300, options); };
   return { game, controls, camera, renderer, callbacks, events, key, click, pointer, pick: (entity?: Entity) => { picked = entity; }, settings: (value: boolean) => { settingsOpen = value; }, enable: (value: boolean) => { enabled = value; } };
 }
+
+// Keep the real keyboard -> UI -> Controls placement path; only presentation
+// rendering is stubbed here. Browser checks exercise the actual DOM/cameos.
+function productionFixture() {
+  const f = fixture(), onPlace = vi.fn((type: string) => f.controls.setPlacement(type));
+  const ui = Object.assign(Object.create(UI.prototype), {
+    game: f.game, actions: { onPlace }, isModalOpen: () => false,
+    renderCards: vi.fn(), update: vi.fn(), showToast: vi.fn(), closeBuildPanel: vi.fn(),
+  });
+  f.callbacks.category.mockImplementation(category => ui.selectCategory(category, true));
+  return { ...f, ui, onPlace };
+}
+
+describe('production hotkeys pick up ready buildings', () => {
+  it('selects ready structures/defenses, replaces the preview, and preserves paid queues on cancellation', () => {
+    const { game, key, renderer, ui, onPlace } = productionFixture();
+    game.configureLocalTools({ instantBuild: true });
+    expect(game.build('power')).toBe(true); expect(game.build('pillbox')).toBe(true); game.tick(.1);
+    const before = JSON.stringify(game.state.sides[0]);
+    key('q'); expect(renderer.placement).toBe('power'); expect(ui.category).toBe('structures');
+    key('w'); expect(renderer.placement).toBe('pillbox'); expect(ui.category).toBe('defenses');
+    key('q', { repeat: true }); expect(renderer.placement).toBe('pillbox'); expect(onPlace).toHaveBeenCalledTimes(2);
+    key('Escape'); expect(renderer.placement).toBeNull();
+    key('Q'); expect(renderer.placement).toBe('power');
+    expect(JSON.stringify(game.state.sides[0])).toBe(before);
+    expect(ui.closeBuildPanel).toHaveBeenCalledTimes(3);
+  });
+
+  it('only switches tabs for empty or unfinished queues without starting or resuming production', () => {
+    const { game, key, renderer, ui, onPlace } = productionFixture();
+    key('q'); key('w'); key('e'); key('r'); expect(ui.category).toBe('vehicles');
+    expect(game.state.sides[0].queues.structures).toHaveLength(0);
+    expect(game.build('power')).toBe(true); game.tick(.1); game.toggleBuildPause('structures');
+    const before = JSON.stringify(game.state.sides[0]);
+    key('q'); expect(ui.category).toBe('structures'); expect(onPlace).not.toHaveBeenCalled();
+    expect(renderer.placement).toBeNull(); expect(JSON.stringify(game.state.sides[0])).toBe(before);
+  });
+
+  it('keeps ready buildings usable after losing prerequisites and at unique build limits', () => {
+    const { game, key, renderer } = productionFixture();
+    (game as any).spawn('battlelab', 0, 30, 30);
+    game.configureLocalTools({ instantBuild: true });
+    expect(game.build('chronosphere')).toBe(true); expect(game.build('power')).toBe(true); game.tick(.1);
+    expect(game.canBuild('chronosphere').reason).toBe('Build limit reached');
+    key('w'); expect(renderer.placement).toBe('chronosphere');
+    game.state.entities.find(e => e.side === 0 && e.type === 'conyard')!.hp = 0;
+    expect(game.canBuild('power').ok).toBe(false);
+    key('q'); expect(renderer.placement).toBe('power');
+  });
+
+  it('respects remapped production keys and preserves default D deployment', () => {
+    const { game, controls, key, renderer, ui } = productionFixture();
+    game.configureLocalTools({ instantBuild: true }); game.build('power'); game.tick(.1);
+    controls.assignBinding('structures', 'B');
+    key('q'); expect(renderer.placement).toBeNull(); key('b'); expect(renderer.placement).toBe('power');
+    key('Escape'); const gi = game.state.entities.find(e => e.side === 0 && e.type === 'gi')!;
+    game.select([gi.id]); key('d'); expect(gi.deployed).toBe(true); expect(renderer.placement).toBeNull();
+    ui.selectCategory('structures'); expect(renderer.placement).toBeNull(); // Mouse tab remains just a tab.
+  });
+
+  it('keeps an existing preview when opening unit tabs and ignores guarded keyboard events', () => {
+    const { game, controls, key, renderer, ui, onPlace, settings, enable } = productionFixture();
+    game.configureLocalTools({ instantBuild: true }); game.build('power'); game.tick(.1);
+    for (const options of [{ ctrlKey: true }, { metaKey: true }, { altKey: true }, { kind: 'input' }, { kind: 'dialog' }]) key('q', options);
+    settings(true); key('q'); settings(false); enable(false); key('q'); enable(true);
+    expect(onPlace).not.toHaveBeenCalled();
+    key('q'); key('e'); expect(ui.category).toBe('infantry'); expect(renderer.placement).toBe('power');
+    key('r'); expect(ui.category).toBe('vehicles'); expect(renderer.placement).toBe('power');
+    controls.resetBindings(); expect(controls.getBindings().find(b => b.id === 'deploy')!.key).toBe('D');
+  });
+});
 
 describe('retail mouse commands', () => {
   it('targets a Chronosphere source and destination and cancels superweapon targeting', () => {

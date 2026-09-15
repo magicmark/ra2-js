@@ -17,8 +17,8 @@ export const BINDING_DEFAULTS = [
   { id: 'follow', label: 'Follow selected unit', category: 'View', description: 'Toggle camera following for the first selected unit.', defaultKey: 'F' },
   { id: 'home', label: 'Home base', category: 'View', description: 'Center the camera on your Construction Yard.', defaultKey: 'H' },
   { id: 'briefing', label: 'Briefing', category: 'View', description: 'Open the mission briefing and controls.', defaultKey: '?' },
-  { id: 'structures', label: 'Structures tab', category: 'Production', description: 'Open structure production.', defaultKey: 'Q' },
-  { id: 'defenses', label: 'Defenses tab', category: 'Production', description: 'Open defense production.', defaultKey: 'W' },
+  { id: 'structures', label: 'Structures tab', category: 'Production', description: 'Open structure production and pick up its ready building for placement.', defaultKey: 'Q' },
+  { id: 'defenses', label: 'Defenses tab', category: 'Production', description: 'Open defense production and pick up its ready building for placement.', defaultKey: 'W' },
   { id: 'infantry', label: 'Infantry tab', category: 'Production', description: 'Open infantry production.', defaultKey: 'E' },
   { id: 'vehicles', label: 'Vehicles tab', category: 'Production', description: 'Open vehicle production.', defaultKey: 'R' },
 ] as const;

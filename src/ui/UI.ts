@@ -266,7 +266,7 @@ export class UI {
       const queue = this.game.state.sides[0].queues[def.category];
       const ready = queue.find(item => item.type === type && item.ready);
       if (queue[0]?.type === type && queue[0].paused) { this.game.toggleBuildPause(def.category); this.update(); return; }
-      if (ready) { this.actions.onPlace(type); this.showToast(`Place ${def.name} near your base. ${this.mobile ? 'Select cancels.' : 'Escape cancels.'}`); this.closeBuildPanel(); }
+      if (ready) this.beginPlacement(type);
       else {
         const available = this.game.canBuild(type);
         if (!available.ok) this.showToast(available.reason);
@@ -328,9 +328,18 @@ export class UI {
     }
   }
 
-  selectCategory(category: Category) {
+  selectCategory(category: Category, placeReady = false) {
     if (this.isModalOpen()) return;
     this.category = category; this.renderCards(); this.update();
+    if (placeReady && (category === 'structures' || category === 'defenses')) {
+      const ready = this.game.state.sides[0].queues[category][0];
+      if (ready?.ready) this.beginPlacement(ready.type);
+    }
+  }
+  private beginPlacement(type: string) {
+    this.actions.onPlace(type);
+    this.showToast(`Place ${this.game.defs[type].name} near your base. ${this.mobile ? 'Select cancels.' : 'Escape cancels.'}`);
+    this.closeBuildPanel();
   }
   openOptions() { if (!this.loading) this.openSettings('options'); }
   openBriefing() { if (!this.loading) this.openSettings('briefing'); }
