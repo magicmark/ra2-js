@@ -15,6 +15,7 @@ import { turnFacing, type FacingTurn } from './facing';
 import { DEFAULT_GAME_SPEED, nativeGameSpeedIndex } from './timing';
 import { NATIVE_EFFECT_TIMINGS, NATIVE_INFANTRY_TIMINGS } from './combat';
 import { INSPECTION_RULES, rankMultiplier } from './customUnits';
+import { ELITE_HEAL, rankFireRateMultiplier } from './veterancy';
 import { TESTING_FLAGS } from './testing';
 import { nativeNormalizedInterval } from '../assets/NativeAnimation';
 import type { AnimationDefinition, Category, Entity, GameAPI, GameState, InfantryAnimationDefinition, Side, UnitDef, Vec2 } from './types';
@@ -475,6 +476,7 @@ export class Game implements GameAPI {
           entity.constructing = undefined; this.finishConstruction(entity); this.updatePower(); this.updateVision();
         } else continue;
       }
+      this.tickEliteHealing(entity, dt);
       if (this.tickAllied(entity, dt)) continue;
       if ((entity.disabledUntil ?? 0) > this.state.time) continue;
       entity.previous = { x: entity.x, y: entity.y };
@@ -1120,6 +1122,7 @@ export class Game implements GameAPI {
   private fireProjectile(entity: Entity, to: Vec2, target: Entity | undefined, damage: number, verses: number[] | undefined, fireRate: number): void {
     if (entity.type === 'george') return;
     damage *= rankMultiplier(entity);
+    fireRate *= rankFireRateMultiplier(entity);
     const def = this.weaponFor(entity), memory = this.memory(entity);
     if (def.category === 'infantry') {
       const swimming = entity.type === 'tanya' && this.state.tiles[Math.floor(entity.y) * this.state.width + Math.floor(entity.x)]?.terrain === 'water';
@@ -1137,6 +1140,7 @@ export class Game implements GameAPI {
     if (def.ability === 'carrier') {
       if (target && this.state.entities.filter(e => e.type === 'hornet' && e.homeId === entity.id && e.hp > 0).length < 3) {
         const plane = this.spawn('hornet', entity.side, entity.x, entity.y);
+        plane.rank = entity.rank;
         plane.homeId = entity.id; plane.targetId = target.id; plane.order = 'attack';
       }
       entity.cooldown = fireRate; return;
@@ -1302,6 +1306,16 @@ export class Game implements GameAPI {
     target.infiltrated = true; this.removeEntity(spy, false); this.updatePower();
     this.notify(`${this.defs[target.type].name} infiltrated`, 'success');
   }
+  private tickEliteHealing(entity: Entity, dt: number): void {
+    if (entity.rank !== 2 || isBuilding(this.defs[entity.type]) || entity.type === 'george' || entity.hp >= entity.maxHp) {
+      entity.selfHealTimer = 0; return;
+    }
+    entity.selfHealTimer = (entity.selfHealTimer ?? 0) + dt;
+    if (entity.selfHealTimer + 1e-9 < ELITE_HEAL.seconds) return;
+    entity.hp = Math.min(entity.maxHp, entity.hp + ELITE_HEAL.hp);
+    entity.selfHealTimer = entity.hp === entity.maxHp ? 0 : entity.selfHealTimer - ELITE_HEAL.seconds;
+  }
+
   /** Returns true while a unit is boarding, landed, or otherwise occupied. */
   private tickAllied(entity: Entity, dt: number): boolean {
     const def = this.defs[entity.type], memory = this.memory(entity);

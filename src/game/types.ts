@@ -44,6 +44,7 @@ export interface Entity extends Vec2 {
   previous?: Vec2; previousFacing?: number; turretFacing?: number; previousTurretFacing?: number;
   nativeType?: string;
   rank?: 0 | 1 | 2;
+  selfHealTimer?: number;
   promotedAt?: number;
   inspection?: { targetId: number; elapsed: number };
   inspectedBy?: number;

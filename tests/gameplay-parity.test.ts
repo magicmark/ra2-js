@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { Game } from '../src/game/Game';
 import { definitions, isBuilding, parseDefinitionFiles } from '../src/game/definitions';
 import { CUSTOM_UNIT_IDS } from '../src/game/customUnits';
+import { rankFireRateMultiplier } from '../src/game/veterancy';
 import { AIRFIELD_DOCKING_OFFSETS, AIRFIELD_PARKING_FACING } from '../src/game/airfield';
 
 function arena() {
@@ -239,6 +240,18 @@ function ini(source: string): Record<string, Record<string, string>> {
   return result;
 }
 describe.skipIf(!process.env.RA2_ASSET_DIR)('data verified against original Westwood rules/art', () => {
+  it('applies the original ROF multiplier at each roster unit\'s authored rank', () => {
+    const rules = ini(readFileSync(join(process.env.RA2_ASSET_DIR!, 'rules.ini'), 'utf8'));
+    for (const [type, name] of Object.entries(nativeIds)) {
+      const veteran = (rules[name].veteranabilities ?? '').split(',').includes('ROF');
+      const elite = (rules[name].eliteabilities ?? '').split(',').includes('ROF');
+      for (const rank of [0, 1, 2] as const) {
+        const enabled = rank >= 1 && veteran || rank === 2 && elite;
+        const entity = { type, rank } as Parameters<typeof rankFireRateMultiplier>[0];
+        expect(rankFireRateMultiplier(entity), `${type} rank ${rank}`).toBe(enabled ? Number(rules.GENERAL.veteranrof) : 1);
+      }
+    }
+  });
   it('matches the four original airfield docks and aircraft parking direction', () => {
     const rules = ini(readFileSync(join(process.env.RA2_ASSET_DIR!, 'rules.ini'), 'utf8'));
     const art = ini(readFileSync(join(process.env.RA2_ASSET_DIR!, 'art.ini'), 'utf8'));
