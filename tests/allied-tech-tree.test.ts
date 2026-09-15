@@ -3,6 +3,7 @@ import { Game } from '../src/game/Game';
 import { isBuilding } from '../src/game/definitions';
 import { BUILDING_CONSTRUCTION_SECONDS } from '../src/game/buildingSale';
 import { revealedEntity } from '../src/game/visibility';
+import { isWarFactory } from '../src/game/factoryExit';
 
 const advance = (g: Game, seconds: number) => { for (let i = 0; i < Math.ceil(seconds * 30); i++) g.tick(1 / 30); };
 function arena() {
@@ -20,6 +21,10 @@ function place(g: Game, type: string) {
   expect(g.build(type), `${type}: ${g.canBuild(type).reason}`).toBe(true); advance(g, .1);
   expect(g.state.sides[0].queues[g.defs[type].category][0]?.ready, type).toBe(true);
   for (let y = 28; y < 60; y++) for (let x = 2; x < 35; x++) if (g.canPlace(type, x, y)) {
+    // This packed production-tree fixture needs a clear factory exit and apron.
+    // Blocking the doorway is covered separately by the factory-exit tests.
+    if (g.state.entities.some(e => isWarFactory(e.type) && x < e.x + 9 && x + g.defs[type].footprint[0] > e.x + 5
+      && y < e.y + 3 && y + g.defs[type].footprint[1] > e.y)) continue;
     expect(g.place(type, x, y)).toBe(true); advance(g, BUILDING_CONSTRUCTION_SECONDS); return;
   }
   throw new Error(`No valid ${type} foundation`);
@@ -33,7 +38,9 @@ describe('complete British Allied production tree', () => {
     const types = Object.values(g.defs).filter(d => d.faction === 'allied' && !isBuilding(d) && !d.mapOnly).map(d => d.id);
     expect(types).toEqual(expect.arrayContaining(['prism_tank', 'mirage_tank', 'chrono_legionnaire', 'tanya', 'harrier', 'carrier', 'dolphin', 'mcv']));
     for (const type of types) {
-      expect(g.build(type), `${type}: ${g.canBuild(type).reason}`).toBe(true); advance(g, .15);
+      expect(g.build(type), `${type}: ${g.canBuild(type).reason}`).toBe(true);
+      // Instant construction still delivers queued vehicles through one doorway.
+      for (let frame = 0; frame < 300 && g.state.sides[0].queues[g.defs[type].category].some(item => item.type === type); frame++) advance(g, 1 / 30);
       const unit = g.state.entities.find(e => e.side === 0 && e.type === type);
       expect(unit, type).toBeDefined();
       if (g.defs[type].movement === 'water') expect(g.state.tiles[Math.floor(unit!.y) * 64 + Math.floor(unit!.x)].terrain, type).toBe('water');

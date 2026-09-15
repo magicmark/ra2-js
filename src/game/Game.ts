@@ -1,6 +1,7 @@
 import { IFV_WEAPONS, IFV_MISSILE_SPEED, IFV_MISSILE_FLH } from './ifvWeapons';
 import { AIRFIELD_DOCKING_OFFSETS, AIRFIELD_PARKING_FACING, airfieldPad } from './airfield';
 import { revealedEntity } from './visibility';
+import { factoryExitLane, isWarFactory } from './factoryExit';
 import { definitions, isBuilding } from './definitions';
 import { createMap, MAP_SIZE } from './map';
 import { initializeOreMines, updateOreMines } from './oreMines';
@@ -476,6 +477,7 @@ export class Game implements GameAPI {
       entity.previous = { x: entity.x, y: entity.y };
       entity.previousFacing = entity.facing;
       entity.previousTurretFacing = entity.turretFacing ?? entity.facing;
+      if (entity.factoryExit) { this.tickFactoryExit(entity, dt); continue; }
       const def = this.defs[entity.type];
       if (entity.type === 'tech_oil' && entity.side >= 0) {
         entity.harvestTimer += dt;
@@ -551,10 +553,16 @@ export class Game implements GameAPI {
           item.ready = true;
           if (side.id === 0) this.notify(`${def.name} ready. Choose a location in your base.`, 'success', 'EVA_ConstructionComplete');
         } else {
-          const unit = this.spawnFrom(producer, item.type);
+          // A blocked doorway must not prevent another owned factory delivering.
+          let unit: Entity | undefined;
+          let source = producer;
+          for (const candidate of this.state.entities.filter(e => e.side === side.id && e.hp > 0 && !e.selling && !e.constructing && this.produces(e, def))) {
+            unit = this.spawnFrom(candidate, item.type);
+            if (unit) { source = candidate; break; }
+          }
           if (!unit) continue; // Exit is blocked. Keep the paid unit until a cell opens.
           queue.shift();
-          if (producer.rally && !def.harvester) this.issueMove([unit], producer.rally, false);
+          if (source.rally && !def.harvester && !unit.factoryExit) this.issueMove([unit], source.rally, false);
           if (side.id === 0) this.notify(`${def.name} ready`, 'success', 'EVA_UnitReady');
         }
       }
@@ -1197,7 +1205,7 @@ export class Game implements GameAPI {
     const def = this.weaponFor(attacker), other = this.defs[target.type];
     if (target.transportId !== undefined || target.hp <= 0 || !def.damage && def.ability !== 'spy' && attacker.type !== 'engineer') return false;
     if (def.ability === 'spy' || attacker.type === 'engineer') return isBuilding(other);
-    if (other.ability === 'mirage' && target.side !== attacker.side && !target.path.length && this.state.time - (target.firedAt ?? -Infinity) > 3 && distance(attacker, target) > 2 && attacker.targetId !== target.id) return false;
+    if (other.ability === 'mirage' && !target.factoryExit && target.side !== attacker.side && !target.path.length && this.state.time - (target.firedAt ?? -Infinity) > 3 && distance(attacker, target) > 2 && attacker.targetId !== target.id) return false;
     if (other.ability === 'spy' && attacker.type !== 'attack_dog' && attacker.targetId !== target.id) return false;
     const layer = other.movement === 'air' ? 'air' : other.movement === 'water' ? 'water' : 'land';
     return (def.targets ?? (attacker.type === 'flak' ? ['land', 'water', 'air'] : ['land', 'water'])).some(kind => kind === layer || kind === 'infantry' && other.category === 'infantry' && layer !== 'air');
@@ -1353,6 +1361,7 @@ export class Game implements GameAPI {
       this.addAnimation('CHRONOTG', destination, side, 'impact');
       for (const { unit, spot } of moves) {
         unit.x = spot.x; unit.y = spot.y; unit.previous = { ...spot }; unit.path = []; unit.targetId = null; unit.order = 'guard';
+        unit.factoryExit = undefined;
         unit.disabledUntil = this.state.time + 2; this.memories.delete(unit.id);
       }
     } else this.storms.push({ point: { ...destination }, side, starts: this.state.time + 250 / 30, ends: this.state.time + 430 / 30, next: this.state.time + 250 / 30 });
@@ -1447,6 +1456,18 @@ export class Game implements GameAPI {
   }
 
   private spawnFrom(producer: Entity, type: string): Entity | undefined {
+    if (isWarFactory(producer.type) && this.defs[type].movement !== 'air') {
+      const { start, end } = factoryExitLane(producer);
+      if (this.state.entities.some(e => e.hp > 0 && e.factoryExit?.factoryId === producer.id)
+        || !this.isPassable(Math.floor(end.x), Math.floor(end.y), this.defs[type])
+        || this.mobileOccupies(Math.floor(end.x), Math.floor(end.y), -1, this.defs[type])) return undefined;
+      const unit = this.spawn(type, producer.side, start.x, start.y);
+      unit.facing = unit.previousFacing = 0;
+      if (this.defs[type].turret) unit.turretFacing = unit.previousTurretFacing = 0;
+      unit.factoryExit = { factoryId: producer.id, end, rally: producer.rally && { ...producer.rally } };
+      unit.order = 'move';
+      return unit;
+    }
     if (this.defs[type].factory === 'radar') {
       const pad = this.freeAirfieldPad(producer);
       if (pad === undefined) return undefined;
@@ -1463,6 +1484,25 @@ export class Game implements GameAPI {
     const unit = this.spawn(type, producer.side, location.x, location.y);
     if (this.defs[type].ammo) unit.homeId = producer.id;
     return unit;
+  }
+
+  private tickFactoryExit(unit: Entity, dt: number): void {
+    const exit = unit.factoryExit!, def = this.defs[unit.type];
+    const factory = this.state.entities.find(e => e.id === exit.factoryId && e.hp > 0);
+    // Only the producing unit may cross its own foundation. Ordinary A* still
+    // treats the entire building as solid, and traffic can stop the exit lane.
+    const nx = Math.min(exit.end.x, unit.x + def.speed * dt), ny = exit.end.y;
+    const inside = factory && nx < factory.x + this.defs[factory.type].footprint[0];
+    if (!inside && !this.isPassable(Math.floor(nx), Math.floor(ny), unit)) return;
+    if (this.state.entities.some(other => other.id !== unit.id && other.hp > 0 && other.transportId === undefined
+      && !isBuilding(this.defs[other.type]) && this.sameLayer(unit, other) && Math.hypot(other.x - nx, other.y - ny) < .48)) return;
+    unit.x = nx; unit.anim += dt;
+    if (unit.x + 1e-9 < exit.end.x) return;
+    unit.factoryExit = undefined;
+    unit.order = def.harvester ? 'harvest' : 'guard';
+    if (def.harvester) return;
+    // Clear the mouth even without a rally so the following vehicle can leave.
+    this.issueMove([unit], exit.rally ?? { x: exit.end.x + 2, y: exit.end.y }, false);
   }
 
   private freeAirfieldPad(home: Entity, excludeId?: number): number | undefined {
@@ -1602,7 +1642,7 @@ export class Game implements GameAPI {
 
   private commandable(ids: number[], side: number): Entity[] {
     const set = new Set(ids);
-    return this.state.entities.filter(e => e.side === side && e.hp > 0 && !e.selling && !e.constructing && e.transportId === undefined && set.has(e.id));
+    return this.state.entities.filter(e => e.side === side && e.hp > 0 && !e.selling && !e.constructing && !e.factoryExit && e.transportId === undefined && set.has(e.id));
   }
   private center(entity: Entity): Vec2 {
     const def = this.defs[entity.type];
