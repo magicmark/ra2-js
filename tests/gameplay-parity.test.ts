@@ -277,7 +277,9 @@ describe.skipIf(!process.env.RA2_ASSET_DIR)('data verified against original West
       if (def.damage > 0) {
         const weapon = rules[(source.primary ?? source.weapon1).toUpperCase()];
         expect(def.damage, id).toBe(Number(weapon.damage)); expect(def.range, id).toBe(Number(weapon.range)); expect(def.fireRate, id).toBeCloseTo(Number(weapon.rof) / 30, 8);
-        expect(def.verses, id).toEqual(rules[weapon.warhead.toUpperCase()].verses?.split(',').map(n => Number(n.trim().replace('%', '')) / 100));
+        // Requested Mirage balance: 50% more damage to infantry armor, with all other native verses retained.
+        expect(def.verses, id).toEqual(rules[weapon.warhead.toUpperCase()].verses?.split(',').map((n, index) =>
+          Number(n.trim().replace('%', '')) * (id === 'mirage_tank' && index < 3 ? 1.5 : 1) / 100));
       }
     }
   });
