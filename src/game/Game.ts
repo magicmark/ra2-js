@@ -287,7 +287,7 @@ export class Game implements GameAPI {
     const memory = this.memories.get(id), def = this.defs[entity.type];
     if (memory?.groundTarget) return { points: [{ ...memory.groundTarget }], attack: true };
     const target = this.state.entities.find(e => e.id === entity.targetId && e.hp > 0);
-    if (target) return { points: [this.center(target)], attack: true };
+    if (target && revealedEntity(this.state, this.defs, target)) return { points: [this.center(target)], attack: true };
     if (isBuilding(def)) return entity.rally ? { points: [{ ...entity.rally }], attack: false } : undefined;
     const escort = this.state.entities.find(e => e.id === memory?.escortId && e.hp > 0 && e.side === entity.side);
     const destination = escort ? this.center(escort) : entity.order === 'move' ? memory?.destination
@@ -1549,7 +1549,8 @@ export class Game implements GameAPI {
           if (Math.hypot(x + 0.5 - center.x, y + 0.5 - center.y) <= radius) fog[y * this.state.width + x] = 1;
     }
     for (let i = 0; i < this.state.fog.length; i++) if (this.state.fog[i]) this.state.explored[i] = 1;
-    for (const entity of this.state.entities) if (revealedEntity(this.state, this.defs, entity)) entity.revealed = true;
+    for (const entity of this.state.entities)
+      if (isBuilding(this.defs[entity.type]) && revealedEntity(this.state, this.defs, entity)) entity.revealed = true;
   }
 
   private visibleTo(entity: Entity, side: number): boolean {

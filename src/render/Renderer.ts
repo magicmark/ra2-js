@@ -373,7 +373,7 @@ export class Renderer {
     for(const e of s.entities){if(!this.visible(e))continue;const p=this.entityPoint(e);if(p.x<-220||p.x>c.width+220||p.y<-80||p.y>c.height+250)continue;
       const d=this.game.defs[e.type],world=this.visualPosition(e);renderables.push({depth:world.x+world.y+(d.footprint[0]+d.footprint[1])/2,draw:()=>this.drawEntity(e,d,p)});
     }
-    // Shroud covers unexplored terrain, while previously revealed contacts stay visible.
+    // Shroud covers unexplored terrain; contact visibility is filtered separately.
     this.drawShroud(minX,maxX,minY,maxY);
     renderables.sort((a,b)=>a.depth-b.depth);for(const item of renderables)item.draw();
     for(const entity of s.entities)if(this.visible(entity))this.drawInspectionFeedback(entity);

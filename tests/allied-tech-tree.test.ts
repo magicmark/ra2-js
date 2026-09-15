@@ -62,16 +62,18 @@ describe('complete British Allied production tree', () => {
     g.state.paused = false; advance(g, BUILDING_CONSTRUCTION_SECONDS);
     expect(power.constructing).toBeUndefined(); expect(g.state.sides[0].power).toBe(200); expect(g.canBuild('refinery').ok).toBe(true);
   });
-  it('keeps newly discovered Soviet units and buildings visible after sight leaves, while hiding unknown contacts', () => {
+  it('hides discovered Soviet units after sight leaves, remembers buildings and reveals units on return', () => {
     const g = arena(); g.state.explored.fill(0); g.state.fog.fill(0);
     const tank = spawn(g, 'rhino', 1, 30.5, 30.5), building = spawn(g, 'power_soviet', 1, 32, 30), unknown = spawn(g, 'conscript', 1, 55.5, 55.5);
     expect(revealedEntity(g.state, g.defs, tank)).toBe(false);
-    const scout = spawn(g, 'gi', 0, 31.5, 35.5); (g as any).updateVision();
-    expect(tank.revealed).toBe(true); expect(building.revealed).toBe(true);
+    const scout = spawn(g, 'gi', 0, 31.5, 34.5); (g as any).updateVision();
+    expect(revealedEntity(g.state, g.defs, tank)).toBe(true); expect(building.revealed).toBe(true);
     scout.x = 10; scout.y = 50; (g as any).updateVision();
-    expect(g.state.fog[30 * 64 + 30]).toBe(0); expect(revealedEntity(g.state, g.defs, tank)).toBe(true);
+    expect(g.state.fog[30 * 64 + 30]).toBe(0); expect(revealedEntity(g.state, g.defs, tank)).toBe(false);
     expect(revealedEntity(g.state, g.defs, building)).toBe(true); expect(revealedEntity(g.state, g.defs, unknown)).toBe(false);
-    tank.x = 60; tank.y = 60; expect(revealedEntity(g.state, g.defs, tank)).toBe(true);
+    tank.x = 60; tank.y = 60; expect(revealedEntity(g.state, g.defs, tank)).toBe(false);
+    scout.x = 59; scout.y = 59; (g as any).updateVision();
+    expect(revealedEntity(g.state, g.defs, tank)).toBe(true);
   });
   it('moves ships on water, aircraft over obstacles, and prevents tanks crossing water', () => {
     const g = arena(), ship = spawn(g, 'destroyer', 0, 5.5, 34.5), plane = spawn(g, 'nighthawk', 0, 12.5, 35.5), tank = spawn(g, 'grizzly', 0, 12.5, 36.5);
@@ -117,6 +119,7 @@ describe('complete British Allied production tree', () => {
     expect(g.canBuild('sniper').reason).toBe('Requires Airforce Command'); spawn(g, 'radar', 0, 24, 30);
     expect(g.canBuild('sniper').ok).toBe(true);
     const sniper = spawn(g, 'sniper', 0, 18.5, 35.5), target = spawn(g, 'conscript', 1, 29.5, 35.5), tank = spawn(g, 'rhino', 1, 28.5, 34.5);
+    spawn(g, 'engineer', 0, 29.5, 38.5); (g as any).updateVision(); // Allied spotter for shots beyond the sniper's own sight.
     g.orderAttack([sniper.id], tank.id); expect(sniper.targetId).toBeNull();
     g.orderAttack([sniper.id], target.id); advance(g, 1); expect(target.hp).toBe(0);
   });

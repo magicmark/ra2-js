@@ -45,17 +45,23 @@ describe('original artwork renderer', () => {
     (view as any).drawEntity(unit, def, { x: 100, y: 100 });
     expect(draw).toHaveBeenLastCalledWith(art, 100, 68);
   });
-  it('draws known enemy contacts above the shroud when they move into unexplored terrain', () => {
+  it('draws and picks enemy contacts only while in current sight, even with a stale revealed flag', () => {
     const view = renderer(), order: string[] = [];
     view.assets = { ready: true, setTheater: vi.fn() } as any;
     view.camera.center(.5, .5);
     view.game.defs.gi = { category: 'infantry', footprint: [1, 1] } as any;
-    view.game.state.entities = [{ id: 1, type: 'gi', side: 1, hp: 100, x: .5, y: .5, revealed: true }] as any;
+    const enemy = { id: 1, type: 'gi', side: 1, hp: 100, x: .5, y: .5, revealed: true } as any;
+    view.game.state.entities = [enemy];
     vi.spyOn(view as any, 'drawTerrain').mockImplementation(() => {});
     vi.spyOn(view as any, 'drawShroud').mockImplementation(() => { order.push('shroud'); });
     vi.spyOn(view as any, 'drawEntity').mockImplementation(() => { order.push('enemy'); });
-    view.render();
-    expect(order).toEqual(['shroud', 'enemy']);
+    for (const [explored, fog, visible] of [[0, 0, false], [1, 1, true], [1, 0, false], [1, 1, true]] as const) {
+      view.game.state.explored[0] = explored; view.game.state.fog[0] = fog; order.length = 0;
+      view.render();
+      expect(order).toEqual(visible ? ['shroud', 'enemy'] : ['shroud']);
+      const point = view.entityPoint(enemy);
+      expect(view.pick(point.x, point.y)).toBe(visible ? enemy : null);
+    }
   });
   it('selects each map file’s FinalAlert theater before requesting gameplay artwork, and resets for training', () => {
     const view = renderer(), setTheater = vi.fn();
@@ -118,7 +124,7 @@ describe('original artwork renderer', () => {
     expect(() => view.render()).toThrow('Missing original artwork: grass terrain');
   });
 
-  it('keeps explored ore and scenery bright after sight leaves and retains revealed enemy units', () => {
+  it('keeps explored ore and scenery bright after sight leaves while hiding enemy units', () => {
     const view = renderer(), art = { source: {}, width: 60, height: 30 } as any;
     view.camera.center(.5, .5);
     view.game.state.tiles[0] = { terrain: 'rock', variant: 0, ore: 50 };
@@ -133,7 +139,7 @@ describe('original artwork renderer', () => {
     expect(view.gl.polygon).not.toHaveBeenCalled();
     view.game.defs.gi = { footprint: [1, 1] } as any;
     const enemy = { type: 'gi', side: 1, x: 0, y: 0 } as any;
-    expect(view.visible(enemy)).toBe(true);
+    expect(view.visible(enemy)).toBe(false);
     view.game.state.explored[0] = 0;
     expect(view.visible(enemy)).toBe(false);
     view.game.state.explored[0] = 1;

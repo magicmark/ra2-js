@@ -8,12 +8,16 @@ it('retains explored radar terrain at full brightness without exposing unseen en
   const state = {
     width: 2, height: 1, tiles: [{ terrain: 'grass', ore: 0 }, { terrain: 'sand', ore: 0 }],
     fog: new Uint8Array([0, 1]), explored: new Uint8Array([1, 1]),
-    entities: [{ type: 'gi', side: 1, x: 0, y: 0 }, { type: 'gi', side: 1, x: 1, y: 0 }],
+    entities: [{ type: 'gi', side: 1, hp: 100, x: 0, y: 0, revealed: true }, { type: 'gi', side: 1, hp: 100, x: 1, y: 0 }],
     sides: [{ color: 'blue' }, { color: 'red' }],
   };
   const ui = Object.create(UI.prototype) as any;
   Object.assign(ui, { game: { state, defs: { gi: { footprint: [1, 1] } } }, actions: {}, el: vi.fn(() => canvas) });
   ui.drawMinimap();
   expect(paints.filter(paint => paint.color === '#747b37')).toEqual([{ alpha: 1, color: '#747b37' }]);
+  expect(paints.filter(paint => paint.color === 'red')).toHaveLength(1);
+  paints.length = 0; state.fog.fill(0); ui.drawMinimap();
+  expect(paints.filter(paint => paint.color === 'red')).toHaveLength(0);
+  paints.length = 0; state.fog.fill(1); ui.drawMinimap();
   expect(paints.filter(paint => paint.color === 'red')).toHaveLength(2);
 });
