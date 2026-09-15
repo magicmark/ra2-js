@@ -48,6 +48,7 @@ function files(): AssetFile[] {
     ...DIALOG_SHAPE_FILES.map(name => ({ name: `side0/${name}.shp`, bytes: testShape(name === 'sidebttn' ? 3 : 1) })),
     ...Object.values(DIALOG_PCX_FILES).map(name => ({ name, bytes: testPcx() })),
     ...EFFECT_ANIMATIONS.map(name => ({ name: `${name}.shp`, bytes: testShape(12) })),
+    { name: 'dragon.shp', bytes: testShape(32) },
   ];
 }
 async function database(): Promise<IDBDatabase> {
@@ -159,6 +160,18 @@ describe('durable extracted asset cache', () => {
     expect(manager.getSprite('gi')).not.toBeNull(); expect(manager.getTerrain('grass')).not.toBeNull();
     expectEntry(await entry(), legacy);
     expect(download).not.toHaveBeenCalled(); expect(makeWorker).not.toHaveBeenCalled();
+  });
+
+  it('upgrades the pre-rocket cache from saved MIXes once without a download', async () => {
+    await new AssetManager().download();
+    const saved = (await entry())!;
+    await entry('/asset-source', { ...saved, files: saved.files.filter(file => file.name !== 'dragon.shp') });
+    download.mockClear(); makeWorker.mockClear();
+    const recovered = new AssetManager(); expect(await recovered.initialize()).toBe('ready');
+    expect(recovered.getProjectileSprite('DRAGON', 0)).not.toBeNull();
+    expect(makeWorker).toHaveBeenCalledOnce(); expect(download).not.toHaveBeenCalled();
+    expect(await new AssetManager().initialize()).toBe('ready');
+    expect(makeWorker).toHaveBeenCalledOnce();
   });
 
   it('keeps usable legacy artwork when a cached-archive enhancement fails', async () => {

@@ -15,6 +15,24 @@ function renderer() {
 }
 
 describe('original artwork renderer', () => {
+  it('draws interpolated original rocket facings and the authored trail above the ground', () => {
+    const view = renderer(), art = { source: {}, width: 10, height: 6 } as any;
+    const getProjectileSprite = vi.fn(() => art);
+    view.assets = { ready: true, setTheater: vi.fn(), getProjectileSprite } as any;
+    vi.spyOn(view as any, 'drawTerrain').mockImplementation(() => {});
+    vi.spyOn(view as any, 'drawShroud').mockImplementation(() => {});
+    const draw = vi.spyOn(view as any, 'drawArt').mockImplementation(() => {});
+    Object.assign(view.game, { interpolation: .5 });
+    view.game.state.explored.fill(1);
+    view.game.state.effects = [{ kind: 'missile', x: .75, y: .5, height: 10, life: 1, maxLife: 2,
+      missile: { image: 'DRAGON', facing: 0, previous: { x: .25, y: .5, height: 20 }, targetHeight: 0, trail: [{ x: .25, y: .5, height: 20 }] } }];
+    view.render();
+    const p = view.camera.screen(.5, .5), start = view.camera.screen(.25, .5);
+    expect(getProjectileSprite).toHaveBeenCalledWith('DRAGON', 0);
+    expect(draw).toHaveBeenCalledExactlyOnceWith(art, p.x, p.y - 15);
+    expect(view.gl.line).toHaveBeenCalledExactlyOnceWith(start.x, start.y - 20, p.x, p.y - 15, 1, [216 / 255, 216 / 255, 1, 1]);
+    view.game.state.explored.fill(0); draw.mockClear(); view.render(); expect(draw).not.toHaveBeenCalled();
+  });
   it('draws parked and rearmed Harriers at pad height, and raises them on takeoff', () => {
     const view = renderer(), art = { source: {}, width: 60, height: 30 } as any;
     view.assets = { ready: true, setTheater: vi.fn(), getSprite: () => art } as any;

@@ -9,6 +9,7 @@ hp = 200
 speed = 2.9296875
 damage = 25
 impact = "XGRYSML2"
+projectile = "DRAGON"
 deathAnimations = ["TWLT070", "S_BANG48", "S_BRNL58", "S_CLSN58", "S_TUMU60"]
 range = 6
 fireRate = 1.6666666666666667

@@ -12,7 +12,7 @@ import { INSPECTION_RULES } from '../game/customUnits';
 const terrainCodes:Record<Tile['terrain'],number>={grass:1,water:2,rock:3,road:4,sand:5};
 
 export interface OriginalSprite { source: CanvasImageSource; width: number; height: number; offsetX?:number; offsetY?:number; anchorX?:number; anchorY?:number }
-export interface SpriteProvider { ready:boolean; setTheater(theater:NativeTheater):void; getBuildingHeight(name:string):number; getHarvestSprite(facing:number,time:number):OriginalSprite|null; getPipSprite(kind:'veteran'|'elite'|'cargo-empty'|'cargo-ore'|'building-empty'|'building-green'|'building-yellow'|'building-red'):OriginalSprite|null; getSprite(name:string,frame?:number,side?:number):OriginalSprite|null; getInfantryFrame(name:string,frame:number,side?:number):OriginalSprite|null; getInfantrySequence(name:string,action:string,facing:number,age:number,side?:number,speedIndex?:number):OriginalSprite|null; getAnimationSprite(name:string,age:number,ticksPerFrame?:number):OriginalSprite|null; getAnimationOpacity(name:string):number; getVehicleSprite(name:string,hull:number,turret:number,side?:number):OriginalSprite|null; getBuildingSprite(name:string,time:number,side?:number,speedIndex?:number):OriginalSprite|null; getBuildingSellSprite?(name:string,progress:number,side?:number):OriginalSprite|null; getBuildingBuildSprite?(name:string,progress:number,side?:number):OriginalSprite|null; getSpriteVehicle?(name:string,facing:number,time:number,side?:number,firing?:boolean):OriginalSprite|null; getTerrain(terrain:string,variant?:number):OriginalSprite|null; getOverlay(kind:'ore'|'tree',variant?:number):OriginalSprite|null }
+export interface SpriteProvider { ready:boolean; setTheater(theater:NativeTheater):void; getBuildingHeight(name:string):number; getHarvestSprite(facing:number,time:number):OriginalSprite|null; getPipSprite(kind:'veteran'|'elite'|'cargo-empty'|'cargo-ore'|'building-empty'|'building-green'|'building-yellow'|'building-red'):OriginalSprite|null; getSprite(name:string,frame?:number,side?:number):OriginalSprite|null; getInfantryFrame(name:string,frame:number,side?:number):OriginalSprite|null; getInfantrySequence(name:string,action:string,facing:number,age:number,side?:number,speedIndex?:number):OriginalSprite|null; getAnimationSprite(name:string,age:number,ticksPerFrame?:number):OriginalSprite|null; getAnimationOpacity(name:string):number; getProjectileSprite?(name:string,heading:number):OriginalSprite|null; getVehicleSprite(name:string,hull:number,turret:number,side?:number):OriginalSprite|null; getBuildingSprite(name:string,time:number,side?:number,speedIndex?:number):OriginalSprite|null; getBuildingSellSprite?(name:string,progress:number,side?:number):OriginalSprite|null; getBuildingBuildSprite?(name:string,progress:number,side?:number):OriginalSprite|null; getSpriteVehicle?(name:string,facing:number,time:number,side?:number,firing?:boolean):OriginalSprite|null; getTerrain(terrain:string,variant?:number):OriginalSprite|null; getOverlay(kind:'ore'|'tree',variant?:number):OriginalSprite|null }
 export interface NativeSpriteProvider extends SpriteProvider {
   getNativeTerrain(theater:NativeTheater,tileIndex:number,subTile:number):OriginalSprite|null;
   getNativeOverlay(theater:NativeTheater,index:number,data?:number):OriginalSprite|null;
@@ -377,7 +377,28 @@ export class Renderer {
     this.drawShroud(minX,maxX,minY,maxY);
     renderables.sort((a,b)=>a.depth-b.depth);for(const item of renderables)item.draw();
     for(const entity of s.entities)if(this.visible(entity))this.drawInspectionFeedback(entity);
-    for(const e of s.effects){if(!s.explored[Math.floor(e.y)*s.width+Math.floor(e.x)])continue;const p=c.screen(e.x,e.y),progress=1-e.life/e.maxLife;
+    for(const e of s.effects){
+      if(!s.explored[Math.floor(e.y)*s.width+Math.floor(e.x)])continue;
+      const p=c.screen(e.x,e.y),progress=1-e.life/e.maxLife;
+      p.y-=(e.height??0)*c.zoom;
+      if(e.missile){
+        const flight=e.missile,alpha=Math.max(0,Math.min(1,this.game.interpolation??1));
+        const x=flight.previous.x+(e.x-flight.previous.x)*alpha,y=flight.previous.y+(e.y-flight.previous.y)*alpha;
+        const height=flight.previous.height+((e.height??0)-flight.previous.height)*alpha;
+        const point=c.screen(x,y);point.y-=height*c.zoom;
+        // art.ini [DRAGON] enables this pale line trail; SMOKEY2 is disabled.
+        let end=point;
+        for(let i=flight.trail.length-1;i>=0;i--){
+          const sample=flight.trail[i];
+          if(!s.explored[Math.floor(sample.y)*s.width+Math.floor(sample.x)])break;
+          const start=c.screen(sample.x,sample.y);start.y-=sample.height*c.zoom;
+          const age=flight.trail.length-1-i,opacity=Math.max(0,1-age*16/256);
+          this.gl.line(start.x,start.y,end.x,end.y,c.zoom,[216/255,216/255,1,opacity]);end=start;
+        }
+        const art=assets.getProjectileSprite?.(flight.image,flight.facing);
+        if(art)this.drawArt(art,point.x,point.y);
+        continue;
+      }
       if(e.animation){
         const age=e.startedAt===undefined?e.maxLife-e.life:s.time-e.startedAt;
         const animation=assets.getAnimationSprite(e.animation,age,e.animationTicksPerFrame);
@@ -385,8 +406,7 @@ export class Renderer {
         continue;
       }
       // Shot/death events without authored animation metadata remain audio
-      // events. Projectile art and infantry/building death sequences are
-      // separate native paths; a generic tracer or ring is not their artwork.
+      // events. Infantry/building death sequences are separate native paths; a generic tracer or ring is not their artwork.
       if(e.kind==='order'){const rx=(15-progress*4)*c.zoom,ry=rx*.5,color:Color=[0,1,0,1-progress];
         for(const [dx,dy] of [[-1,0],[1,0],[0,-1],[0,1]]){const x=p.x+dx*rx,y=p.y+dy*ry;this.gl.line(x,y,x-dx*5*c.zoom-dy*5*c.zoom,y-dy*3*c.zoom-dx*3*c.zoom,1,color);this.gl.line(x,y,x-dx*5*c.zoom+dy*5*c.zoom,y-dy*3*c.zoom+dx*3*c.zoom,1,color);}}
     }

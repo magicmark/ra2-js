@@ -1,4 +1,4 @@
-import { IFV_WEAPONS } from './ifvWeapons';
+import { IFV_WEAPONS, IFV_MISSILE_SPEED, IFV_MISSILE_FLH } from './ifvWeapons';
 import { AIRFIELD_DOCKING_OFFSETS, AIRFIELD_PARKING_FACING, airfieldPad } from './airfield';
 import { revealedEntity } from './visibility';
 import { definitions, isBuilding } from './definitions';
@@ -461,6 +461,7 @@ export class Game implements GameAPI {
     if (this.aiEnabled && this.aiTimer <= 0) { this.aiTimer = 2.5; this.updateAI(); }
     for (const effect of this.state.effects) effect.life -= dt;
     this.state.effects = this.state.effects.filter(effect => effect.life > 1e-9);
+    this.tickMissiles(dt);
     // Entity removals are deferred so combat during a frame has stable iteration.
     for (const entity of [...this.state.entities]) {
       if (entity.hp <= 0) continue;
@@ -1028,11 +1029,42 @@ export class Game implements GameAPI {
     return this.combatRandomState;
   }
   private randomCombatFrames(min: number, max: number): number { return min + this.randomCombatValue() % (max - min + 1); }
-  private addAnimation(animation: string, point: Vec2, side: number, kind: 'impact' | 'explosion', damage?: number): void {
+  private addAnimation(animation: string, point: Vec2, side: number, kind: 'impact' | 'explosion', damage?: number, height?: number): void {
     const name = animation.toUpperCase(), definition = this.effectAnimations[name];
     if (!definition) throw new Error(`Missing original animation timing: ${name}`);
     const animationTicksPerFrame = this.animationInterval(definition), life = definition.frames * animationTicksPerFrame * STEP;
-    this.state.effects.push({ kind, ...point, side, animation: name, animationTicksPerFrame, startedAt: this.state.time, life, maxLife: life, damage });
+    this.state.effects.push({ kind, ...point, side, animation: name, animationTicksPerFrame, startedAt: this.state.time, life, maxLife: life, damage, height });
+  }
+  private missileTargetHeight(target: Entity | undefined): number {
+    // Match the current entity renderer, including the lift baked into ROCK's SHP anchor.
+    if (target?.type === 'rocketeer') return 26;
+    const airborne = target && this.defs[target.type].movement === 'air' && !target.landed && target.rearm === undefined;
+    return airborne && this.defs[target!.type].category === 'vehicles' ? 32 : 0;
+  }
+  private tickMissiles(dt: number): void {
+    // Iterate a snapshot: arrival appends an impact effect to the same list.
+    for (const effect of [...this.state.effects]) {
+      const flight = effect.missile; if (!flight || !effect.to) continue;
+      const target = this.state.entities.find(e => e.id === flight.targetId && e.hp > 0 && !e.selling && e.transportId === undefined);
+      if (target) {
+        effect.to = this.center(target);
+        flight.targetHeight = this.missileTargetHeight(target);
+      }
+      const dx = effect.to.x - effect.x, dy = effect.to.y - effect.y, remaining = Math.hypot(dx, dy);
+      const fraction = remaining > 0 ? Math.min(1, IFV_MISSILE_SPEED * dt / remaining) : 1;
+      flight.previous = { x: effect.x, y: effect.y, height: effect.height ?? 0 };
+      flight.trail.push(flight.previous);
+      if (flight.trail.length > 16) flight.trail.shift();
+      if (remaining > 0) flight.facing = Math.atan2(dy, dx);
+      effect.x += dx * fraction; effect.y += dy * fraction;
+      effect.height = (effect.height ?? 0) + (flight.targetHeight - (effect.height ?? 0)) * fraction;
+      if (fraction < 1) continue;
+      const hit = flight.groundTarget ? this.state.entities.find(e => e.hp > 0 && !e.selling && e.transportId === undefined && this.distanceToEntity(effect.to!, e) < .5) : target;
+      if (hit) this.damageTarget({ side: effect.side! }, hit, effect.damage!, flight.verses);
+      if (flight.impact) this.addAnimation(flight.impact, effect.to, effect.side!, 'impact', effect.damage, effect.height);
+      effect.life = 0;
+    }
+    this.state.effects = this.state.effects.filter(effect => effect.life > 1e-9);
   }
   private fireProjectile(entity: Entity, to: Vec2, target: Entity | undefined, damage: number, verses: number[] | undefined, fireRate: number): void {
     if (entity.type === 'george') return;
@@ -1062,7 +1094,16 @@ export class Game implements GameAPI {
     entity.cooldown = nextBurstIndex < burst ? this.randomCombatFrames(3, 5) * STEP : fireRate + this.randomCombatFrames(0, 2) * STEP;
     memory.burstIndex = nextBurstIndex % burst;
     this.state.effects.push({ kind: 'shot', ...this.center(entity), to: { ...to }, life: .16, maxLife: .16, side: entity.side, sourceType: entity.type, passengerType: entity.type === 'ifv' ? entity.passengers?.[0]?.type : undefined, deployed: entity.deployed, airTarget: !!target && this.defs[target.type].movement === 'air', startedAt: this.state.time, damage });
-    if (target) {
+    if (def.projectile === 'DRAGON') {
+      const facing = entity.turretFacing ?? entity.facing, origin = this.center(entity), flh = IFV_MISSILE_FLH;
+      // Alternate the launcher side for the two independently fired rockets.
+      const lateral = flh.lateral * (nextBurstIndex % 2 ? 1 : -1);
+      const x = origin.x + Math.cos(facing) * flh.forward - Math.sin(facing) * lateral;
+      const y = origin.y + Math.sin(facing) * flh.forward + Math.cos(facing) * lateral;
+      const height = flh.height, groundTarget = !!memory.groundTarget;
+      this.state.effects.push({ kind: 'missile', x, y, height, to: { ...to }, life: 10, maxLife: 10, side: entity.side, damage, startedAt: this.state.time,
+        missile: { image: def.projectile, targetId: groundTarget ? undefined : target?.id, groundTarget, impact: def.impact, verses: verses?.slice(), previous: { x, y, height }, targetHeight: this.missileTargetHeight(groundTarget ? undefined : target), facing, trail: [] } });
+    } else if (target) {
       this.damageTarget(entity, target, entity.type === 'attack_dog' ? target.maxHp : damage, verses);
       if (def.ability === 'prism') for (const other of this.state.entities.filter(e => e.id !== target.id && e.side !== entity.side && e.side >= 0 && e.hp > 0 && this.canTarget(entity, e) && distance(this.center(e), to) < 2).slice(0, 3)) this.damageTarget(entity, other, damage * .5, verses);
       if (def.ability === 'chrono' && target.hp > 0) target.disabledUntil = this.state.time + fireRate + .2;
@@ -1071,7 +1112,7 @@ export class Game implements GameAPI {
       entity.ammo = Math.max(0, (entity.ammo ?? def.ammo) - 1);
       if (!entity.ammo) { memory.returnTarget = entity.targetId ?? undefined; entity.targetId = null; entity.path = []; }
     }
-    if (def.impact) this.addAnimation(def.impact, to, entity.side, 'impact', damage);
+    if (def.impact && !def.projectile) this.addAnimation(def.impact, to, entity.side, 'impact', damage);
   }
 
   private isAimed(entity: Entity, target: number): boolean {
@@ -1091,7 +1132,7 @@ export class Game implements GameAPI {
     }
   }
 
-  private damageTarget(attacker: Entity, target: Entity, damage: number, verses?: number[]): void {
+  private damageTarget(attacker: Pick<Entity, 'side'>, target: Entity, damage: number, verses?: number[]): void {
     const armorOrder = ['none', 'flak', 'plate', 'light', 'medium', 'heavy', 'wood', 'steel', 'concrete', 'special_1', 'special_2'];
     const multiplier = verses?.[armorOrder.indexOf(this.defs[target.type].armor ?? 'none')] ?? 1;
     target.hp = Math.max(0, target.hp - damage * multiplier / rankMultiplier(target));
@@ -1132,7 +1173,7 @@ export class Game implements GameAPI {
   }
   private weaponFor(entity: Entity): UnitDef {
     const def = this.defs[entity.type], passenger = entity.type === 'ifv' ? entity.passengers?.[0] : undefined;
-    return passenger && IFV_WEAPONS[passenger.type] ? { ...def, ...IFV_WEAPONS[passenger.type] } : def;
+    return passenger && IFV_WEAPONS[passenger.type] ? { ...def, ...IFV_WEAPONS[passenger.type], projectile: undefined } : def;
   }
   private canTarget(attacker: Entity, target: Entity): boolean {
     const def = this.weaponFor(attacker), other = this.defs[target.type];

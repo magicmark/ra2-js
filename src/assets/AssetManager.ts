@@ -1,4 +1,4 @@
-import { CATALOG, DIALOG_PCX_FILES, DIALOG_SHAPE_FILES, EFFECT_ANIMATIONS, theaterNames, type AssetSpec } from './catalog';
+import { CATALOG, DIALOG_PCX_FILES, DIALOG_SHAPE_FILES, EFFECT_ANIMATIONS, PROJECTILE_SHAPES, theaterNames, type AssetSpec } from './catalog';
 import { decodeHva, decodePalette, decodeTmp, decodeVpl, decodeVxl, ShpFile, type IndexedFrame, type VoxelLimb } from './formats';
 import { RA2_NORMALS } from './voxelNormals';
 import { buildingLoopFrame, buildingLoops, type BuildingLoop } from './buildingAnimations';
@@ -386,7 +386,7 @@ export class AssetManager {
       this.files = new Map(files.map(f => [f.name.toLowerCase(), f.bytes])); this.shapes.clear(); this.sprites.clear(); this.voxelModels.clear(); this.buildingAnchors.clear(); this.nativePalettes.clear(); this.theater = 'TEMPERATE';
       this.missingEnhancements = ['game.fnt', 'mouse.shp', 'mousepal.pal', 'palette.pal', 'pips.shp', 'pips2.shp', 'oregath.shp', 'anim.pal', 'tibtre01.tem', 'tree20.tem', 'plat02.tem', 'gapowrmk.shp',
         'side0/sidebar.pal', 'side0/uibkgd.pal', ...DIALOG_SHAPE_FILES.map(name => `side0/${name}.shp`), ...Object.values(DIALOG_PCX_FILES),
-        ...EFFECT_ANIMATIONS.map(name => `${name}.shp`)].filter(name => !this.files.has(name));
+        ...EFFECT_ANIMATIONS.map(name => `${name}.shp`), ...PROJECTILE_SHAPES.map(name => `${name}.shp`)].filter(name => !this.files.has(name));
       // Earlier selections omitted urban buildup/sale SHPs. Reselect them
       // from saved MIX archives through the existing optional-art upgrade.
       for (const spec of Object.values(CATALOG)) if (spec.kind === 'building' && !spec.noBuildup) {
@@ -442,6 +442,7 @@ export class AssetManager {
         }
       });
       for (const name of Object.values(DIALOG_PCX_FILES)) if (this.files.has(name)) this.decodeFile(name, decodePcx);
+      for (const name of PROJECTILE_SHAPES) if (this.shape(name)) this.validateShape(name, Array.from({ length: 32 }, (_, i) => i));
       for (const name of EFFECT_ANIMATIONS) {
         if (!this.shape(name) || !this.animationPalette.length) continue;
         const shape = this.validateShape(name), art = this.art.get(name), ticksPerFrame = nativeAnimationInterval(Number(art?.rate ?? 900));
@@ -612,6 +613,21 @@ export class AssetManager {
     if (this.sprites.has(key)) return this.sprites.get(key)!;
     const shape = this.shape(name); if (!shape) return null;
     const frame = shape.frame(index), result = sprite(paint(frame, this.animationPalette), shape.width / 2 - frame.x, (/^wclbolt/.test(name) ? shape.height : shape.height / 2) - frame.y);
+    this.sprites.set(key, result); return result;
+  }
+  /** Rotates=yes projectiles use 32 facing frames, not a timed animation. */
+  getProjectileSprite(name: string, heading: number): Sprite | null {
+    if (!this.ready && this.preparingRun !== this.run) return null;
+    name = name.toLowerCase();
+    if (!PROJECTILE_SHAPES.includes(name)) return null;
+    const shape = this.shape(name); if (!shape) return null;
+    // SHP order is N, NW, W, SW, S, SE, E, NE; world +X projects SE.
+    const index = ((20 - Math.round(heading / (Math.PI * 2) * 32)) % 32 + 32) % 32;
+    const key = `projectile:${this.theater}:${name}:${index}`;
+    if (this.sprites.has(key)) return this.sprites.get(key)!;
+    const frame = shape.frame(index);
+    // art.ini [DRAGON] leaves AnimPalette at its default=no, with no remap.
+    const result = sprite(paint(frame, this.nativePalette(this.theater, 'unit')), shape.width / 2 - frame.x, shape.height / 2 - frame.y);
     this.sprites.set(key, result); return result;
   }
   getAnimationOpacity(name: string): number {

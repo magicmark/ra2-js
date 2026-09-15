@@ -74,14 +74,17 @@ describe('authored combat events', () => {
   });
   it('fires IFV burst projectiles separately with per-projectile impact size and native delay bounds', () => {
     const { game, attacker, target } = arena('ifv'), shots: { frame: number; damage: number | undefined; animation: string | undefined }[] = [];
-    for (let frame = 1; frame <= 65; frame++) {
+    const impacts: number[] = [];
+    for (let frame = 1; frame <= 95; frame++) {
       const previous = attacker.firedAt; game.tick(1 / 30);
       if (attacker.firedAt !== previous) {
-        const impact = game.state.effects.find(e => e.kind === 'impact' && e.startedAt === game.state.time)!;
-        shots.push({ frame, damage: impact.damage, animation: impact.animation });
+        const missile = game.state.effects.find(e => e.kind === 'missile' && e.startedAt === game.state.time)!;
+        shots.push({ frame, damage: missile.damage, animation: missile.missile!.impact });
       }
+      for (const effect of game.state.effects) if (effect.kind === 'impact' && effect.startedAt === game.state.time) impacts.push(frame);
     }
     expect(shots).toHaveLength(4); expect(shots[0].frame).toBe(1);
+    expect(impacts).toHaveLength(4); expect(impacts[0]).toBeGreaterThan(shots[1].frame);
     for (const pair of [[0, 1], [2, 3]]) { const gap = shots[pair[1]].frame - shots[pair[0]].frame; expect(gap).toBeGreaterThanOrEqual(3); expect(gap).toBeLessThanOrEqual(5); }
     const reload = shots[2].frame - shots[1].frame; expect(reload).toBeGreaterThanOrEqual(50); expect(reload).toBeLessThanOrEqual(52);
     expect(shots.every(shot => shot.damage === 25 && shot.animation === 'XGRYSML2')).toBe(true);

@@ -1,5 +1,9 @@
 import type { UnitDef } from './types';
 
+// rules.ini [HoverMissile] Speed=40 leptons/tick; art.ini [FV] Weapon1FLH.
+export const IFV_MISSILE_SPEED = 40 * 30 / 256;
+export const IFV_MISSILE_FLH = { forward: 64 / 256, lateral: 48 / 256, height: 180 / 256 * 30 };
+
 /** Passenger weapon modes for the British roster; the empty IFV keeps its missiles. */
 export const IFV_WEAPONS: Record<string, Partial<UnitDef>> = {
   // rules.ini [FV] Weapon3=CRM60

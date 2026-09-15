@@ -10,7 +10,7 @@ export interface UnitDef {
   description: string; sprite: string; cameo: string; faction: 'allied' | 'soviet' | 'both';
   harvester?: boolean; capacity?: number; producer?: Category[];
   armor?: string; verses?: number[]; burst?: number;
-  impact?: string; deathAnimations?: string[];
+  impact?: string; deathAnimations?: string[]; projectile?: 'DRAGON';
   deployedDamage?: number; deployedRange?: number; deployedFireRate?: number; deployedVerses?: number[];
   crusher?: boolean; nativeSpeed?: number; rot?: number; turret?: boolean;
   mapOnly?: boolean;
@@ -58,9 +58,15 @@ export interface Side {
 export interface AnimationDefinition { frames: number; ticksPerFrame: number; normalized?: boolean; facing?: number }
 export interface InfantryAnimationDefinition { sequences: Record<string, AnimationDefinition>; fireFrame: number; idleFrequency?: number }
 export interface Effect extends Vec2 {
-  kind: 'shot' | 'impact' | 'explosion' | 'order' | 'smoke'; life: number; maxLife: number; to?: Vec2; side?: number;
+  kind: 'shot' | 'missile' | 'impact' | 'explosion' | 'order' | 'smoke'; life: number; maxLife: number; to?: Vec2; side?: number;
   sourceType?: string; passengerType?: string; deployed?: boolean; airTarget?: boolean;
   animation?: string; animationTicksPerFrame?: number; startedAt?: number; damage?: number;
+  height?: number;
+  missile?: {
+    image: 'DRAGON'; targetId?: number; groundTarget?: boolean; impact?: string; verses?: number[];
+    previous: Vec2 & { height: number }; targetHeight: number; facing: number;
+    trail: (Vec2 & { height: number })[];
+  };
 }
 export interface GameEvent { id: number; text: string; kind: 'info' | 'warning' | 'success'; time: number; sound?: string }
 export interface GameState {

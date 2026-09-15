@@ -161,6 +161,10 @@ Animation cadence and selection are grounded in the supplied executable and
 original `art.ini`; see [native animation evidence](../../docs/NATIVE_ANIMATION_REFERENCE.md)
 and [burst/death evidence](../../docs/NATIVE_BURST_DEATH_REFERENCE.md). The renderer
 does not substitute procedural shot tracers, smoke rings or death explosions
-for unsourced artwork. Projectile flight, infantry/building death sequences,
+for unsourced artwork. IFVs use the supplied DRAGON directional SHP, theater unit
+palette and authored line-trail color; each rocket travels before its XGRYSML2
+impact and damage. Saved MIX archives upgrade older artwork selections locally.
+See [IFV rocket verification](../../tests/IFV_ROCKETS_VERIFICATION.md).
+Other projectile flight, infantry/building death sequences,
 special translucent blending, debris and water-specific impacts remain separate
 parity work.

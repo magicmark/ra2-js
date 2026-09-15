@@ -10,8 +10,8 @@ import { assetCache, archiveStageKey, type SavedArchive } from './AssetDownload'
 import { TestCanvas } from './asset-test-fixtures';
 
 interface AssetFile { name: string; bytes: Uint8Array }
-// Existing 901 artwork files, two INIs and 70 consumed original audio samples.
-const CURRENT_SELECTED_FILE_COUNT = 973;
+// Existing 902 artwork files (including DRAGON), two INIs and 70 consumed original audio samples.
+const CURRENT_SELECTED_FILE_COUNT = 974;
 // Fixed historical membership: deriving the old cache by subtracting only the
 // previous update's additions accidentally left hundreds of future map files in it.
 const PRE_NATIVE_NAMES = new Set(readFileSync(new URL('./fixtures/selected-art-pre-native.txt', import.meta.url), 'utf8')
