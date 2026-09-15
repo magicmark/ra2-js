@@ -37,6 +37,32 @@ function colors(sprite: ReturnType<AssetManager['getSprite']>): number[] {
 }
 
 describe('map theater artwork', () => {
+  it('splits both factories into original under-door and foreground art with one stable theater-specific anchor', () => {
+    for (const id of ['warfactory', 'warfactory_soviet']) {
+      const spec = CATALOG[id], files: [string, Uint8Array][] = [];
+      for (const [letter, color] of [['g', 10], ['a', 20]] as const)
+        for (const [column, name] of [spec.sprite, spec.bib!, ...spec.overlays!].entries())
+          {
+            const bytes = shape(color + column, column);
+            new DataView(bytes.buffer).setUint16(2, 6, true);
+            files.push([name[0] + letter + name.slice(2) + '.shp', bytes]);
+          }
+      const assets = manager(files);
+      for (const [theater, color] of [['TEMPERATE', 10], ['SNOW', 20]] as const) {
+        assets.setTheater(theater);
+        const back = assets.getFactoryExitSprite(id, 'back', 0, -1)!;
+        const front = assets.getFactoryExitSprite(id, 'front', 0, -1)!;
+        const complete = assets.getBuildingSprite(id, 0, -1)!;
+        expect(colors(back)).toEqual([(color + 1) * 4, (color + 2) * 4]);
+        expect(colors(front)).toEqual(Array.from({ length: spec.overlays!.length - 1 }, (_, n) => (color + 3 + n) * 4));
+        expect(back.anchorY).toBe(complete.anchorY); expect(front.anchorY).toBe(complete.anchorY);
+        // Trimming removes different columns but preserves their world placement.
+        expect(back.anchorX! + 1).toBe(complete.anchorX);
+        expect(front.anchorX! + 3).toBe(complete.anchorX);
+        expect(assets.getFactoryExitSprite(id, 'back', 20, -1)).toBe(back);
+      }
+    }
+  });
   it('extracts every supported theater for building bodies, bibs, animations and buildup', () => {
     const wanted = wantedFiles();
     for (const spec of Object.values(CATALOG).filter(spec => spec.kind === 'building')) {

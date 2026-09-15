@@ -15,6 +15,26 @@ function renderer() {
 }
 
 describe('original artwork renderer', () => {
+  it('draws a departing vehicle once between the original factory floor and foreground', () => {
+    const view = renderer(), calls: string[] = [];
+    const art = (name: string) => ({ source: {}, width: 20, height: 20, name });
+    view.assets = { ready: true, setTheater: vi.fn(), getBuildingSprite: () => art('whole'),
+      getFactoryExitSprite: (_: string, layer: string) => art(layer), getSprite: () => art('tank') } as any;
+    vi.spyOn(view as any, 'drawArt').mockImplementation((sprite: any) => calls.push(sprite.name));
+    vi.spyOn(view as any, 'drawTerrain').mockImplementation(() => {});
+    vi.spyOn(view as any, 'drawShroud').mockImplementation(() => {});
+    Object.assign(view.game.state, { width: 10, height: 10, tiles: Array.from({ length: 100 }, () => ({ terrain: 'grass', ore: 0 })), fog: new Uint8Array(100).fill(1), explored: new Uint8Array(100).fill(1) });
+    view.game.defs.warfactory = { category: 'structures', sprite: 'gaweap', footprint: [5, 3] } as any;
+    view.game.defs.grizzly = { category: 'vehicles', sprite: 'gtnk', footprint: [1, 1] } as any;
+    const factory = { id: 1, type: 'warfactory', x: 2, y: 2, side: 0, hp: 1000, path: [] } as any;
+    const tank = { id: 2, type: 'grizzly', x: 5, y: 3, side: 0, hp: 300, facing: 0, path: [], factoryExit: { factoryId: 1 } } as any;
+    view.game.state.entities = [factory, tank]; view.camera.center(5, 3); view.render();
+    expect(calls).toEqual(['back', 'tank', 'front']);
+    calls.length = 0; tank.factoryExit = undefined; view.render();
+    expect(calls).toEqual(['whole', 'tank']);
+    calls.length = 0; tank.factoryExit = { factoryId: 1 }; view.game.state.entities = [tank]; view.render();
+    expect(calls).toEqual(['tank']);
+  });
   it('renders house-colored Prism cores/glow and thinner fragments at projected muzzle height and zoom', () => {
     const view = renderer();
     view.assets = { ready: true, setTheater: vi.fn() } as any;
