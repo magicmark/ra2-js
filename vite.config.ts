@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 
-const allowedHosts = ['omarky', 'omarky.tail2c41a6.ts.net'];
+const allowedHosts = ['omarky'];
 
 export default defineConfig({
   // The extraction worker starts only after the download. Prebundle its
