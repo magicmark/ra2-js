@@ -564,3 +564,31 @@ html:not(.mobile-controls) .selection-panel.inspection-selection:not([hidden]) {
   .options-assets-page .settings-content,.options-briefing-page .settings-content { padding:20px 16px; }
 }
 .native-cursors .build-sidebar,.native-cursors .build-sidebar button,.native-cursors .statusbar,.native-cursors .statusbar button { cursor:var(--native-pointer); }
+
+/* Mobile toolbar alternative; desktop and action hooks remain unchanged. */
+.mobile-controls { --footer-height:calc(100px + env(safe-area-inset-bottom)); }
+.mobile-controls .build-sidebar { bottom:var(--footer-height); height:auto; }
+.mobile-controls .production-well { min-height:0; }
+.mobile-controls #command-ui .mobile-commandbar { position:absolute; z-index:30; display:grid; left:10px; right:10px; bottom:calc(10px + env(safe-area-inset-bottom)); height:80px; padding:8px; gap:6px; grid-template-columns:repeat(5,minmax(0,1fr)); border:0; }
+.mobile-controls #command-ui .mobile-commandbar > button { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; min-width:44px; min-height:44px; padding:4px 2px; margin:0; }
+.mobile-controls #command-ui .mobile-commandbar > button svg { width:23px; height:23px; }
+.mobile-controls #command-ui .mobile-commandbar > button span { font:700 10px Arial,sans-serif; letter-spacing:0; }
+.mobile-controls #command-ui .mobile-commandbar > button:focus-visible { outline:3px solid white; outline-offset:-5px; }
+.mobile-controls #command-ui .mobile-commandbar > button:active { filter:brightness(.8); }
+.mobile-controls #command-ui .mobile-commandbar .mobile-build-button i.visible { display:block; width:7px; height:7px; top:5px; right:5px; border-radius:50%; background:#e5ff58; box-shadow:0 0 0 2px #151515; }
+@media(min-width:600px) { .mobile-controls #command-ui .mobile-commandbar { left:calc(50% - 270px); right:calc(50% - 270px); } }
+/* Shell: a compact monochrome command prompt with text-led controls. */
+.mobile-controls { --footer-height:calc(122px + env(safe-area-inset-bottom)); }
+.mobile-controls #command-ui .mobile-commandbar { left:0; right:0; bottom:0; height:var(--footer-height); padding:23px 8px calc(8px + env(safe-area-inset-bottom)); grid-template-columns:repeat(4,minmax(0,1fr)); grid-template-rows:44px 36px; gap:2px; background:#06120d; border-top:1px solid #60ed9f; border-radius:0; box-shadow:0 -8px 32px #0007; }
+.mobile-controls #command-ui .mobile-commandbar::before { content:'FIELD / COMMAND LINE                      ● ONLINE'; position:absolute; top:6px; left:12px; color:#73ad87; font:9px monospace; white-space:pre; }
+.mobile-controls #command-ui .mobile-commandbar > button { flex-direction:row; background:transparent; border:1px solid #284c37; border-radius:0; color:#9bddb2; gap:5px; }
+.mobile-controls #command-ui .mobile-commandbar > button svg { width:15px; height:15px; }
+.mobile-controls #command-ui .mobile-commandbar > button span { font:11px monospace; text-transform:lowercase; }
+.mobile-controls #command-ui .mobile-commandbar > button.active { background:#b7f5cb; color:#062a16; border-color:#b7f5cb; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button { grid-column:1/-1; min-height:36px; justify-content:flex-start; padding-left:12px; border:0; color:#b7f5cb; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button::before { content:'>'; font:bold 18px monospace; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button span { font-size:12px; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button[aria-expanded=true] { background:#163d28; color:#fff; }
+.mobile-controls #command-ui .mobile-commandbar > .mobile-build-button { min-height:44px; }
+.mobile-controls #command-ui .mobile-commandbar { grid-template-rows:44px 44px; height:calc(132px + env(safe-area-inset-bottom)); }
+.mobile-controls { --footer-height:calc(132px + env(safe-area-inset-bottom)); }
