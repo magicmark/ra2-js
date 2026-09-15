@@ -564,3 +564,42 @@ html:not(.mobile-controls) .selection-panel.inspection-selection:not([hidden]) {
   .options-assets-page .settings-content,.options-briefing-page .settings-content { padding:20px 16px; }
 }
 .native-cursors .build-sidebar,.native-cursors .build-sidebar button,.native-cursors .statusbar,.native-cursors .statusbar button { cursor:var(--native-pointer); }
+
+/* Mobile toolbar: Radar Glass. Visual treatment only; layout and actions stay shared. */
+#command-ui .mobile-commandbar {
+  background: linear-gradient(#213936, #0a1d20);
+  border-top-color: #709f9c;
+  box-shadow: inset 0 1px #c4eee322, 0 -2px 8px #0008;
+}
+#command-ui .mobile-commandbar > button {
+  color: #b1d6c7;
+  background: repeating-linear-gradient(0deg, #8bcfaf05 0 1px, transparent 1px 3px), #102c2b;
+  border-color: #446e66;
+  border-radius: 3px;
+  box-shadow: inset 0 0 7px #0005;
+  text-shadow: 0 1px #000;
+}
+#command-ui .mobile-commandbar > button.active {
+  color: #dcffe4;
+  background: repeating-linear-gradient(0deg, #caffbd0a 0 1px, transparent 1px 3px), #224a37;
+  border-color: #9ed79a;
+  box-shadow: inset 0 0 10px #8dd38e22, 0 0 4px #92dca333;
+}
+#command-ui .mobile-commandbar > .mobile-build-button {
+  color: #d5f7ef;
+  background: linear-gradient(#2d5550, #193b3c);
+  border-color: #75a9a1;
+}
+#command-ui .mobile-commandbar > .mobile-build-button[aria-expanded="true"] {
+  color: #dcffe4;
+  background: #224a37;
+  border-color: #9ed79a;
+  box-shadow: inset 0 0 10px #8dd38e22, 0 0 4px #92dca333;
+}
+#command-ui .mobile-commandbar > button:active {
+  filter: brightness(1.18);
+}
+#command-ui .mobile-commandbar > button:focus-visible {
+  outline: 2px solid #ffe2a1;
+  outline-offset: -3px;
+}
