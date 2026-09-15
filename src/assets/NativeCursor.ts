@@ -55,6 +55,8 @@ export class NativeCursors {
     // Default arrow occupies the upper-left of the canvas. Action and scrolling
     // artwork share the original centered 28,21 hotspot; preserve all SHP offsets.
     const hotspot = name === 'default' ? '0 0' : '28 21';
-    return `url("${url}") ${hotspot}, none`;
+    // Browsers can reject custom images at viewport edges (e.g. the vehicle tab).
+    // Keep a visible arrow while the original cursor cannot be displayed.
+    return `url("${url}") ${hotspot}, default`;
   }
 }

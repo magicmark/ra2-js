@@ -20,13 +20,13 @@ describe('original mouse cursors', () => {
     expect(cursors.frame('scroll-ne-blocked')).toBe(11);
     expect(cursors.frame('attackmove')).toBe(404);
   });
-  it('caches actual cursor images and preserves arrow and action hotspots', () => {
+  it('caches cursor images with native hotspots and a visible viewport-edge fallback', () => {
     let rendered = 0;
     vi.stubGlobal('document', { createElement: () => Object.assign(new TestCanvas(), { toDataURL: () => `data:image/png;base64,frame${rendered++}` }) });
     const cursors = new NativeCursors(testCursorShape(), palette());
-    expect(cursors.css('default')).toContain('0 0, none');
+    expect(cursors.css('default')).toContain('0 0, default');
     expect(cursors.css('default')).toContain('frame0');
-    expect(cursors.css('move')).toContain('28 21, none');
+    expect(cursors.css('move')).toContain('28 21, default');
     cursors.css('move', 1000);
     expect(rendered).toBe(2);
   });
