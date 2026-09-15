@@ -1,0 +1,252 @@
+{
+  "source": "/tmp/ra2-8vl-mixes/ra2.mix -> local.mix",
+  "models": [
+    {
+      "name": "htnk",
+      "archive": "local.mix",
+      "bytes": 34550,
+      "limbs": [
+        {
+          "name": "DUMMY01",
+          "normalType": 2,
+          "size": [
+            46,
+            34,
+            12
+          ],
+          "bounds": [
+            -18.877635955810547,
+            -17.079124450683594,
+            0.21354012191295624,
+            26.134572982788086,
+            16.51570701599121,
+            11.427901268005371
+          ],
+          "count": 4816,
+          "transform": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "normalRange": [
+            0,
+            35
+          ]
+        }
+      ],
+      "sha256": "0ca8517c29f8bed26c3a3f0138bb36bae01fbb751fc9eaa30bfa1fba352923a2"
+    },
+    {
+      "name": "htnktur",
+      "archive": "local.mix",
+      "bytes": 11694,
+      "limbs": [
+        {
+          "name": "DUMMY01",
+          "normalType": 2,
+          "size": [
+            28,
+            18,
+            9
+          ],
+          "bounds": [
+            -15.585855484008789,
+            -8.906843185424805,
+            11.67503547668457,
+            11.46383285522461,
+            8.750513076782227,
+            19.973485946655273
+          ],
+          "count": 1501,
+          "transform": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "normalRange": [
+            0,
+            35
+          ]
+        }
+      ],
+      "sha256": "4fc6ca0efb803621ae4dc99357f81eb4bc524cc70a90e386831fa0e63a416451"
+    },
+    {
+      "name": "htnkbarl",
+      "archive": "local.mix",
+      "bytes": 1907,
+      "limbs": [
+        {
+          "name": "DUMMY01",
+          "normalType": 4,
+          "size": [
+            19,
+            3,
+            3
+          ],
+          "bounds": [
+            11.837340354919434,
+            -1.4874329566955566,
+            13.087939262390137,
+            30.66187286376953,
+            1.4761297702789307,
+            16.051502227783203
+          ],
+          "count": 155,
+          "transform": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "normalRange": [
+            7,
+            236
+          ]
+        }
+      ],
+      "sha256": "42a3a41fdc52a5491b172bddcd8aac5b9baedec1d7703f95a68a9b96f8531398"
+    },
+    {
+      "name": "carrier",
+      "archive": "local.mix",
+      "bytes": 130121,
+      "limbs": [
+        {
+          "name": "DUMMY01",
+          "normalType": 4,
+          "size": [
+            144,
+            43,
+            55
+          ],
+          "bounds": [
+            -73.65727233886719,
+            -22.066364288330078,
+            -0.0800648108124733,
+            69.89060974121094,
+            20.302284240722656,
+            54.67234802246094
+          ],
+          "count": 19247,
+          "transform": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "normalRange": [
+            0,
+            244
+          ]
+        }
+      ],
+      "sha256": "41e7ae6e9315747aa2f26df688e0648aba17b4d4e575546110076f2c62ec4c33"
+    },
+    {
+      "name": "hornet",
+      "archive": "local.mix",
+      "bytes": 9162,
+      "limbs": [
+        {
+          "name": "DUMMY01",
+          "normalType": 2,
+          "size": [
+            27,
+            25,
+            10
+          ],
+          "bounds": [
+            -12.411243438720703,
+            -11.981879234313965,
+            -0.23640672862529755,
+            13.877573013305664,
+            12.114496231079102,
+            8.928962707519531
+          ],
+          "count": 583,
+          "transform": [
+            1,
+            0,
+            0,
+            -12.641071319580078,
+            0,
+            1,
+            0,
+            -0.910735547542572,
+            0,
+            0,
+            1,
+            8.896995544433594
+          ],
+          "normalRange": [
+            0,
+            35
+          ]
+        }
+      ],
+      "sha256": "dedf4d35a0b7fcedefeced629ec91c4f4248b0d5f2f6644bb598db4eac342ea1"
+    }
+  ],
+  "nativeExecutable": {
+    "installer": "/tmp/ra2-n3q-original.exe",
+    "sha256": "06f994965ebde56116d5d53b2e8ffb0c999124166ad99032566cc33d7f83ccdb",
+    "method": "7z-wasm extraction and static float32 reads only; executable never run",
+    "provenance": "Same modified RA2 1.08 reference as docs/NATIVE_SPEED_REFERENCE.md",
+    "tables": [
+      {
+        "type": "TS",
+        "directions": 36,
+        "fileOffset": "0x3fa068",
+        "float32ExactMatch": true
+      },
+      {
+        "type": "RA2",
+        "directions": 245,
+        "fileOffset": "0x3fa518",
+        "float32ExactMatch": true
+      }
+    ]
+  },
+  "notes": [
+    "Carrier uses normal 244 on 74 of 19247 voxels.",
+    "Rhino hull/turret: normal type 2; barrel: type 4. Hornet: type 2.",
+    "Original [HTNK] and [CARRIER] art sections declare Voxel=yes and no active special lighting modifier. HTNK UseTurretShadow=yes is commented out.",
+    "No carriertur.vxl or carrierbarl.vxl in supplied nested MIX inventory; vehicle shadows are projected from voxel geometry, not paired SHP frames.",
+    "Original voxels.vpl has 32x256 entries; original unittem.pal supplies material colors."
+  ]
+}

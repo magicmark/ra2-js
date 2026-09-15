@@ -143,8 +143,9 @@ storage removes them. No archive bytes are bundled with the application.
 
 Building sprites include their original bib foundations and split SHP shadows;
 the Sentry Gun composites `laser.vxl` onto its building base. Vehicle rendering
-uses authored RA2 normal indices and the original `voxels.vpl` material lookup,
+uses the authored per-limb TS/RA2 normal format and the original `voxels.vpl` material lookup,
 including its diffuse/specular response, at one projected pixel per voxel.
+See [Rhino/Carrier lighting verification](../../tests/VOXEL_LIGHTING_VERIFICATION.md).
 Player remapping follows the original DarkBlue/DarkRed HSV ramps. Catalog changes
 retain selected-art schema 8 and can reselect added originals from saved MIX
 stages. No original game archives or runtime asset files are bundled.

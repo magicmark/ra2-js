@@ -131,7 +131,7 @@ export function decodeVpl(bytes: Uint8Array): Uint8Array {
 }
 
 export interface Voxel { x: number; y: number; z: number; color: number; normal: number }
-export interface VoxelLimb { name: string; voxels: Voxel[]; scale: number; bounds: number[]; size: number[] }
+export interface VoxelLimb { name: string; voxels: Voxel[]; scale: number; bounds: number[]; size: number[]; normalType: number }
 export function decodeVxl(bytes: Uint8Array): VoxelLimb[] {
   const d = view(bytes), text = new TextDecoder();
   check(bytes.length >= 802 && text.decode(bytes.subarray(0, 15)) === 'Voxel Animation', 'Invalid VXL signature');
@@ -140,7 +140,7 @@ export function decodeVxl(bytes: Uint8Array): VoxelLimb[] {
   return Array.from({ length: count }, (_, i) => {
     const footer = tail + i * 92, start = body + d.getUint32(footer, true), spanData = body + d.getUint32(footer + 8, true);
     const size = [...bytes.subarray(footer + 88, footer + 91)], bounds = Array.from({ length: 6 }, (_, j) => d.getFloat32(footer + 64 + j * 4, true));
-    const limb: VoxelLimb = { name: text.decode(bytes.subarray(802 + i * 28, 818 + i * 28)).replace(/\0.*$/, ''), size, bounds, scale: d.getFloat32(footer + 12, true), voxels: [] };
+    const limb: VoxelLimb = { name: text.decode(bytes.subarray(802 + i * 28, 818 + i * 28)).replace(/\0.*$/, ''), size, bounds, normalType: bytes[footer + 91], scale: d.getFloat32(footer + 12, true), voxels: [] };
     check(size.every(x => x > 0) && start + size[0] * size[1] * 4 <= tail && spanData < tail, 'Invalid VXL span table');
     for (let c = 0; c < size[0] * size[1]; c++) {
       const offset = d.getInt32(start + c * 4, true); if (offset < 0) continue;

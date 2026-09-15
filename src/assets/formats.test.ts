@@ -72,6 +72,8 @@ describe('Westwood asset formats', () => {
     [0, 0, 0, 2, 1, 2].forEach((v, i) => d.setFloat32(footer + 64 + i * 4, v, true));
     bytes.set([2, 1, 2, 4], footer + 88);
     const limbs = decodeVxl(bytes);
+    expect(limbs[0].normalType).toBe(4);
+    bytes[footer + 91] = 2; expect(decodeVxl(bytes)[0].normalType).toBe(2);
     expect(limbs[0].name).toBe('hull'); expect(limbs[0].voxels).toEqual([{ x: 0, y: 0, z: 0, color: 7, normal: 4 }]);
     const hva = new Uint8Array(88), h = new DataView(hva.buffer);
     h.setUint32(16, 1, true); h.setUint32(20, 1, true); hva.set(new TextEncoder().encode('hull'), 24);

@@ -1,7 +1,7 @@
 import { IFV_TURRET_FILES } from './IFVArtwork';
 import { CATALOG, DIALOG_PCX_FILES, DIALOG_SHAPE_FILES, EFFECT_ANIMATIONS, PROJECTILE_SHAPES, theaterNames, type AssetSpec } from './catalog';
 import { decodeHva, decodePalette, decodeTmp, decodeVpl, decodeVxl, ShpFile, type IndexedFrame, type VoxelLimb } from './formats';
-import { RA2_NORMALS } from './voxelNormals';
+import { RA2_NORMALS, TS_NORMALS } from './voxelNormals';
 import { buildingLoopFrame, buildingLoops, type BuildingLoop } from './buildingAnimations';
 import { NativeFont } from './NativeFont';
 import { prepareSounds, type OriginalSounds } from './AudioBank';
@@ -948,10 +948,12 @@ export class AssetManager {
   }
   private prepareLimb(limb: VoxelLimb, transform: number[] | undefined, result: PreparedVoxel[], turret = false): void {
     const [sx, sy, sz] = limb.size, b = limb.bounds, scale = [(b[3] - b[0]) / sx, (b[4] - b[1]) / sy, (b[5] - b[2]) / sz];
+    // Select per limb: the original Rhino mixes TS hull/turret and an RA2 barrel.
+    const normals = limb.normalType === 2 ? TS_NORMALS : RA2_NORMALS;
     for (const v of limb.voxels) {
       let x = b[0] + (v.x + .5) * scale[0], y = b[1] + (v.y + .5) * scale[1], z = b[2] + (v.z + .5) * scale[2];
       const n = v.normal * 3;
-      let nx = RA2_NORMALS[n] ?? 0, ny = RA2_NORMALS[n + 1] ?? 0, nz = RA2_NORMALS[n + 2] ?? 1;
+      let nx = normals[n] ?? 0, ny = normals[n + 1] ?? 0, nz = normals[n + 2] ?? 1;
       if (transform) {
         const t = transform;
         [x, y, z] = [t[0] * x + t[1] * y + t[2] * z + t[3] * scale[0] * limb.scale, t[4] * x + t[5] * y + t[6] * z + t[7] * scale[1] * limb.scale, t[8] * x + t[9] * y + t[10] * z + t[11] * scale[2] * limb.scale];
