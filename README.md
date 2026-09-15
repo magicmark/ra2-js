@@ -14,17 +14,36 @@ npm run dev
 Open `http://localhost:5173` or `http://omarky:5173` from another device on the network. The dev server binds to `0.0.0.0` and permits the `omarky` host.
 
 ```sh
-npm test
-npm run build
+npm run check
 npm run preview
 ```
 
 Preview serves the production build on `0.0.0.0:4173` and also allows `omarky`.
 
+## Code quality
+
+```sh
+npm run lint       # Oxlint and the vendored anti-slop rules
+npm run lint:fix   # Safe lint fixes, including readable spacing
+npm run fmt        # Oxfmt
+npm run fmt:check  # Check formatting without writing
+npm run check      # Lint, formatting, tests, TypeScript, and Vite build
+```
+
+After cleanup, run `npm run lint:fix`, then `npm run fmt`, then `npm run lint`.
+All generic [anti-slop](https://github.com/dmmulroy/anti-slop) rules are enabled;
+`typeof` checks are permitted inside explicit boundary type guards. Necessary
+assertions must explain their invariant in a nearby `SAFETY:` comment.
+Oxlint and `@oxlint/plugins` are pinned to the same version and should be upgraded together.
+The vendored source, licenses, and exact revision are in
+[`tools/oxlint/anti-slop/`](tools/oxlint/anti-slop/UPSTREAM.md).
+Agent tooling, generated evidence/assets, and vendored rules are excluded from formatting;
+application code, tests, scripts, and project documentation are checked.
+
 ## Cloudflare deployment
 
 The existing Workers Builds integration runs `npx wrangler deploy` on pushes to
-`main`. The checked-in `wrangler.jsonc` runs `npm run build` and publishes only
+`main`. The checked-in `wrangler.jsonc` runs `npm run check` (lint, formatting, tests, and production build) and publishes only
 `dist`; Wrangler is pinned in the lockfile. This avoids interactive framework
 setup during CI. The browser still downloads game archives directly with CORS.
 
@@ -69,28 +88,28 @@ Both sides start with a construction yard, power plant, refinery, barracks, mine
 
 Choose a production category in the sidebar and left-click a card to queue an item. Credits are spent progressively. Right-click an active card to put it On Hold; left-click to resume, or right-click again to cancel and refund the credits already spent on that item. Buildings stay Ready until you click their card and place them on clear ground near your base. Green previews mark valid locations; red previews mark blocked locations. Units emerge from their producer. Left-click terrain with a producer selected to set its rally point. Low power slows construction; a cash shortage holds progress until funds are available.
 
-| Action | Desktop control |
-| --- | --- |
-| Select friendly unit/building | Left click |
-| Select a group | Drag a selection box |
-| Add/remove a unit from selection | Shift + click; Shift + drag adds a group |
-| Select units of the same type | T onscreen; press T twice for the whole map |
-| Select all mobile units | P |
-| Move, attack enemy, assign ore | Select friendly units, then left-click the destination or target |
-| Attack move | Ctrl + Shift + click |
-| Force fire / force move | Ctrl + click / Alt + click |
-| Guard a destination or escort a friendly unit | Ctrl + Alt + click |
-| Stop / guard / scatter / deploy GI | S / G / X / D |
-| Repair / sell mode | K / L, then click an owned building |
-| Pan | Arrow keys, pointer at map edge, or middle/right drag |
-| Zoom | Mouse wheel or +/− |
-| Center on construction yard / follow selection | H / F |
-| Assign / recall control group | Ctrl + 1–9 / 1–9; Shift adds a recalled group |
-| Camera bookmarks | Ctrl + F1–F4 to save; F1–F4 to recall |
-| Queue movement destinations | Hold Z, click destinations, then release; the Planning button toggles this mode |
-| Cancel placement/mode or deselect | Right click |
-| Production categories | Q / W / E / R |
-| Options / pause | Options button; Escape cancels an active mode first, otherwise opens Options |
+| Action                                         | Desktop control                                                                 |
+| ---------------------------------------------- | ------------------------------------------------------------------------------- |
+| Select friendly unit/building                  | Left click                                                                      |
+| Select a group                                 | Drag a selection box                                                            |
+| Add/remove a unit from selection               | Shift + click; Shift + drag adds a group                                        |
+| Select units of the same type                  | T onscreen; press T twice for the whole map                                     |
+| Select all mobile units                        | P                                                                               |
+| Move, attack enemy, assign ore                 | Select friendly units, then left-click the destination or target                |
+| Attack move                                    | Ctrl + Shift + click                                                            |
+| Force fire / force move                        | Ctrl + click / Alt + click                                                      |
+| Guard a destination or escort a friendly unit  | Ctrl + Alt + click                                                              |
+| Stop / guard / scatter / deploy GI             | S / G / X / D                                                                   |
+| Repair / sell mode                             | K / L, then click an owned building                                             |
+| Pan                                            | Arrow keys, pointer at map edge, or middle/right drag                           |
+| Zoom                                           | Mouse wheel or +/−                                                              |
+| Center on construction yard / follow selection | H / F                                                                           |
+| Assign / recall control group                  | Ctrl + 1–9 / 1–9; Shift adds a recalled group                                   |
+| Camera bookmarks                               | Ctrl + F1–F4 to save; F1–F4 to recall                                           |
+| Queue movement destinations                    | Hold Z, click destinations, then release; the Planning button toggles this mode |
+| Cancel placement/mode or deselect              | Right click                                                                     |
+| Production categories                          | Q / W / E / R                                                                   |
+| Options / pause                                | Options button; Escape cancels an active mode first, otherwise opens Options    |
 
 The native 168-pixel Allied sidebar uses the original radar, repair/sell buttons, category controls, 60 × 48 cameos, and metallic frame. The radar activates with a powered Airforce Command. Clicking it issues an order for selected units, or centers the camera when nothing is selected. The command bar contains Team 1, Team 2, Type Select, Deploy, Guard and Planning. Options pause the battle. Game Controls contains speed, scroll rate, target lines, tooltips, effects volume, and remapping for 19 core commands; preferences survive reload. Game Files, Briefing, and Abort Mission remain available from the pause menu. [Gameplay controls and timing evidence](docs/GAMEPLAY_PARITY.md) records additional keys and current reconstruction limits.
 

@@ -7,11 +7,11 @@ The executable's animation constructor defaults to a one-game-frame interval. It
 For intervals 1–4, `GetAnimSpeed` uses the following literal table. Zero remains zero. For intervals at least 5 the supplied executable uses integer division `interval * 8 / (GameSpeed + 1)`.
 
 | Input interval | Speed 0 | Speed 1 | Speed 2 | Speed 3 | Speed 4 | Speed 5 | Speed 6 | Speed 7 |
-| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1 | 2 | 2 | 1 | 1 | 1 | 1 | 1 | 1 |
-| 2 | 3 | 3 | 3 | 2 | 2 | 2 | 1 | 1 |
-| 3 | 5 | 4 | 4 | 3 | 3 | 2 | 2 | 1 |
-| 4 | 7 | 6 | 5 | 4 | 4 | 4 | 3 | 2 |
+| -------------: | ------: | ------: | ------: | ------: | ------: | ------: | ------: | ------: |
+|              1 |       2 |       2 |       1 |       1 |       1 |       1 |       1 |       1 |
+|              2 |       3 |       3 |       3 |       2 |       2 |       2 |       1 |       1 |
+|              3 |       5 |       4 |       4 |       3 |       3 |       2 |       2 |       1 |
+|              4 |       7 |       6 |       5 |       4 |       4 |       4 |       3 |       2 |
 
 Under the project's documented 30-logic-frame reference (native speed index 2), ordinary Rate 300 animation advances every 3 ticks; Normalized Rate 300 advances every 4 ticks. The actual Allied barracks flag `[GAPILE_A]` uses `Rate=300`, `Normalized=yes`, `LoopStart=0`, and exclusive `LoopEnd=15`, giving a 2-second loop at that reference setting. This is a calculation from the source, not a wall-clock measurement of a running original game. A hardcoded `time * 60` applied to every animation does not represent this distinction.
 
@@ -19,16 +19,16 @@ The maintained [Phobos animation implementation](https://github.com/Phobos-devel
 
 The executable's normal warhead impact selector uses `min(damage, AnimList.length * 25 - 1) / 25`, with integer division. The water/Conventional branch uses the separate SplashList and 35 damage per entry; electromagnetic effects have a random-selection branch. For the currently implemented ground roster, authored weapon and warhead data selects:
 
-| Weapon user | Warhead | Damage per projectile | Original impact animation |
-| --- | --- | ---: | --- |
-| GI / deployed GI | SA / SSA | 15 / 15 | PIFFPIFF |
-| Conscript | SA | 15 | PIFFPIFF |
-| War Miner | HARVWH | 30 | PIFFPIFF |
-| Rocketeer | SSA | 25 | PIFFPIFF |
-| Pillbox / Sentry | SA | 50 | PIFFPIFF |
-| Grizzly / Rhino | AP | 65 / 90 | S_CLSN22 |
-| IFV | HE | 25 | XGRYSML2 |
-| Flak Track | FlakTWH | 25 | HTRKPUFF |
+| Weapon user      | Warhead  | Damage per projectile | Original impact animation |
+| ---------------- | -------- | --------------------: | ------------------------- |
+| GI / deployed GI | SA / SSA |               15 / 15 | PIFFPIFF                  |
+| Conscript        | SA       |                    15 | PIFFPIFF                  |
+| War Miner        | HARVWH   |                    30 | PIFFPIFF                  |
+| Rocketeer        | SSA      |                    25 | PIFFPIFF                  |
+| Pillbox / Sentry | SA       |                    50 | PIFFPIFF                  |
+| Grizzly / Rhino  | AP       |               65 / 90 | S_CLSN22                  |
+| IFV              | HE       |                    25 | XGRYSML2                  |
+| Flak Track       | FlakTWH  |                    25 | HTRKPUFF                  |
 
 All four selected impact art sections omit Rate and therefore inherit the one-tick interval. S_CLSN22 is Normalized; at speed index 2 that remains one tick. A local read of the existing MIX archives decoded every frame of all nine impact/death candidates successfully, without fetching anything. The [recorded frame ranges](../tests/artifacts/gameplay/native-combat-frames.json) give PIFFPIFF 12 frames (0.4 seconds at this reference), S_CLSN22 and XGRYSML2 13 each (13/30 seconds), and HTRKPUFF 15 (0.5 seconds). The strict runtime asset preparation validates these original files before play and installs their decoded frame counts and authored timing in the game.
 
@@ -40,13 +40,13 @@ Effect events record their original animation ID, per-projectile base damage, st
 
 Infantry sequence cadence is separate from AnimType Rate. The supplied executable's actual Infantry vtable at `0x7a3540`, slot `0x4dc`, identifies PlayAnim at `0x504740`. It reads each sequence's timer interval from byte 3 of the packed records beginning at `0x7a3474`, then starts the timer from the current logic frame. The [preserved static excerpt](../tests/artifacts/gameplay/native-infantry-timing-disassembly.txt) includes the complete 38-entry base-RA2 table and the relevant instructions. The maintained [Phobos sequence table](https://github.com/Phobos-developers/Phobos/blob/develop/src/Utilities/SequenceRates.h) corroborates these rates for the shared sequence IDs, while also containing later game variants.
 
-| Supported sequence | Logic ticks per animation frame | Normalized |
-| --- | ---: | --- |
-| Walk | 3 | No |
-| FireUp / FireFly / DeployedFire | 1 | No |
-| Deploy / Undeploy | 1 | No |
-| Fly | 1 | No |
-| Hover | 2 before normalization | Yes |
+| Supported sequence              | Logic ticks per animation frame | Normalized |
+| ------------------------------- | ------------------------------: | ---------- |
+| Walk                            |                               3 | No         |
+| FireUp / FireFly / DeployedFire |                               1 | No         |
+| Deploy / Undeploy               |                               1 | No         |
+| Fly                             |                               1 | No         |
+| Hover                           |          2 before normalization | Yes        |
 
 At native speed index 2, Hover's interval becomes 3. Ready is a static frame in the supported authored sequences. GI Deploy uses 15 frames, Undeploy uses 2, and each GI firing sequence uses 6. Deployment and undeployment block movement and firing until their installed original sequence ends. Repeated deployment commands and movement during deployment are covered as interruption cases; this is not a claim of all original mission-state transitions.
 

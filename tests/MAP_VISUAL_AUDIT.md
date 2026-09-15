@@ -23,17 +23,17 @@ visual overviews also include the outer border. All 54 incomplete placements are
 inside playable coverage. Native roads use only 293/294/295, never ending pieces.
 All native maps have 12 drills, six starts, six oil derricks and three airports.
 
-| Playable map/source | Theater | Road-art cells | Incomplete templates | Drill overlap | Inspected overview / every drill |
-|---|---|---:|---:|---:|---|
-| Field Command, `src/game/map.ts` (`/`) | Temperate |169|14|1/6|[overview](artifacts/map-visual-audit/training.png) / [6 drills](artifacts/map-visual-audit/training-drills.png)|
-| `public/maps/emerald-divide.map` | Temperate |0|0|0/12|[overview](artifacts/map-visual-audit/emerald-divide.png) / [12 drills](artifacts/map-visual-audit/emerald-divide-drills.webp)|
-| `public/maps/frostline-basin.map` | Snow |0|0|0/12|[overview](artifacts/map-visual-audit/frostline-basin.png) / [12 drills](artifacts/map-visual-audit/frostline-basin-drills.webp)|
-| `public/maps/saffron-wash.map` | Temperate |0|0|0/12|[overview](artifacts/map-visual-audit/saffron-wash.png) / [12 drills](artifacts/map-visual-audit/saffron-wash-drills.webp)|
-| `public/maps/ironwood-crossing.map` | Temperate |321|9|0/12|[overview](artifacts/map-visual-audit/ironwood-crossing.png) / [12 drills](artifacts/map-visual-audit/ironwood-crossing-drills.webp)|
-| `public/maps/slatewater-reach.map` | Urban |319|23|0/12|[overview](artifacts/map-visual-audit/slatewater-reach.png) / [12 drills](artifacts/map-visual-audit/slatewater-reach-drills.webp)|
-| `public/maps/copperhead-mesa.map` | Temperate |0|0|0/12|[overview](artifacts/map-visual-audit/copperhead-mesa.png) / [12 drills](artifacts/map-visual-audit/copperhead-mesa-drills.webp)|
-| `public/maps/whiteout-causeway.map` | Snow |0|0|0/12|[overview](artifacts/map-visual-audit/whiteout-causeway.png) / [12 drills](artifacts/map-visual-audit/whiteout-causeway-drills.webp)|
-| `public/maps/tidal-crown.map` | Urban |305|8|0/12|[overview](artifacts/map-visual-audit/tidal-crown.png) / [12 drills](artifacts/map-visual-audit/tidal-crown-drills.webp)|
+| Playable map/source                    | Theater   | Road-art cells | Incomplete templates | Drill overlap | Inspected overview / every drill                                                                                                     |
+| -------------------------------------- | --------- | -------------: | -------------------: | ------------: | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Field Command, `src/game/map.ts` (`/`) | Temperate |            169 |                   14 |           1/6 | [overview](artifacts/map-visual-audit/training.png) / [6 drills](artifacts/map-visual-audit/training-drills.png)                     |
+| `public/maps/emerald-divide.map`       | Temperate |              0 |                    0 |          0/12 | [overview](artifacts/map-visual-audit/emerald-divide.png) / [12 drills](artifacts/map-visual-audit/emerald-divide-drills.webp)       |
+| `public/maps/frostline-basin.map`      | Snow      |              0 |                    0 |          0/12 | [overview](artifacts/map-visual-audit/frostline-basin.png) / [12 drills](artifacts/map-visual-audit/frostline-basin-drills.webp)     |
+| `public/maps/saffron-wash.map`         | Temperate |              0 |                    0 |          0/12 | [overview](artifacts/map-visual-audit/saffron-wash.png) / [12 drills](artifacts/map-visual-audit/saffron-wash-drills.webp)           |
+| `public/maps/ironwood-crossing.map`    | Temperate |            321 |                    9 |          0/12 | [overview](artifacts/map-visual-audit/ironwood-crossing.png) / [12 drills](artifacts/map-visual-audit/ironwood-crossing-drills.webp) |
+| `public/maps/slatewater-reach.map`     | Urban     |            319 |                   23 |          0/12 | [overview](artifacts/map-visual-audit/slatewater-reach.png) / [12 drills](artifacts/map-visual-audit/slatewater-reach-drills.webp)   |
+| `public/maps/copperhead-mesa.map`      | Temperate |              0 |                    0 |          0/12 | [overview](artifacts/map-visual-audit/copperhead-mesa.png) / [12 drills](artifacts/map-visual-audit/copperhead-mesa-drills.webp)     |
+| `public/maps/whiteout-causeway.map`    | Snow      |              0 |                    0 |          0/12 | [overview](artifacts/map-visual-audit/whiteout-causeway.png) / [12 drills](artifacts/map-visual-audit/whiteout-causeway-drills.webp) |
+| `public/maps/tidal-crown.map`          | Urban     |            305 |                    8 |          0/12 | [overview](artifacts/map-visual-audit/tidal-crown.png) / [12 drills](artifacts/map-visual-audit/tidal-crown-drills.webp)             |
 
 The [catalog](../src/game/maps/catalog.ts) and tracked-file search agree: exactly
 these eight `.map` files, no additional tracked `.mpr`/`.yrm`/`.map` files. Each
@@ -42,16 +42,16 @@ The generated Field Command map is the training battlefield, not a tenth map.
 
 ### Excluded fixtures and other map-shaped data
 
-| Source | Exclusion from playable-map coverage |
-|---|---|
-| [reference-map.json](artifacts/maps/reference-map.json), opt-in `RA2_REFERENCE_MAP` in [native-map-acceptance.test.ts](native-map-acceptance.test.ts) | Historical hash/codec evidence for third-party CnCNet **Snow Valley**, 98×99, 19,305 cells. The actual external `.map` is not bundled or cataloged. No external-reference path was supplied in this run; its optional decoder check is skipped. Not a project-authored playable map. |
-| [terrain-topology.test.ts](terrain-topology.test.ts) | Synthetic 12×12 and 5×5 NativeCell grids testing shoreline/LAT masks, with no playable starts or authored scenario. |
-| [renderer-originals.test.ts](renderer-originals.test.ts) | Synthetic 1×1, 2×1, 10×10 rendering states and one-cell `Preview` NativeMap (declared 96×96) using mocked sprites; pipeline fixtures, not complete maps. Catalog-based cases in this file reuse the eight covered maps. |
-| [tile-seams.html](tile-seams.html) | Synthetic 128×128 uniform/two-color map testing fractional-zoom coverage with generated tile artwork. Not original terrain or a playable scenario. |
-| [terrain-contact.html](terrain-contact.html), [asset diagnostics](../src/assets/diagnostics.html), [asset-test-fixtures.ts](../src/assets/asset-test-fixtures.ts), `src/assets/fixtures/selected-art-pre-native.txt` | Asset contact sheets, fake canvas/binary fixtures and an asset-name list; no authored map layout. |
-| [native-maps.test.ts](native-maps.test.ts), [nativeMapWriter.ts](../scripts/nativeMapWriter.ts) | Compression byte arrays/malformed streams and deterministic regeneration of the same eight catalog maps; no extra playable fixture. |
-| Other tests constructing `new Game()` or mutating tiles/entities | Reuse Field Command or covered catalog maps, then change state to isolate gameplay behavior; not separately selectable project maps. |
-| `tests/artifacts/maps/*.json` and earlier screenshots | Prior coverage/cache/production reports, not additional maps. Temporary archives, historic `/tmp` audit files and other checkouts are outside this repository's playable inventory. This report does not certify them. |
+| Source                                                                                                                                                                                                               | Exclusion from playable-map coverage                                                                                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [reference-map.json](artifacts/maps/reference-map.json), opt-in `RA2_REFERENCE_MAP` in [native-map-acceptance.test.ts](native-map-acceptance.test.ts)                                                                | Historical hash/codec evidence for third-party CnCNet **Snow Valley**, 98×99, 19,305 cells. The actual external `.map` is not bundled or cataloged. No external-reference path was supplied in this run; its optional decoder check is skipped. Not a project-authored playable map. |
+| [terrain-topology.test.ts](terrain-topology.test.ts)                                                                                                                                                                 | Synthetic 12×12 and 5×5 NativeCell grids testing shoreline/LAT masks, with no playable starts or authored scenario.                                                                                                                                                                  |
+| [renderer-originals.test.ts](renderer-originals.test.ts)                                                                                                                                                             | Synthetic 1×1, 2×1, 10×10 rendering states and one-cell `Preview` NativeMap (declared 96×96) using mocked sprites; pipeline fixtures, not complete maps. Catalog-based cases in this file reuse the eight covered maps.                                                              |
+| [tile-seams.html](tile-seams.html)                                                                                                                                                                                   | Synthetic 128×128 uniform/two-color map testing fractional-zoom coverage with generated tile artwork. Not original terrain or a playable scenario.                                                                                                                                   |
+| [terrain-contact.html](terrain-contact.html), [asset diagnostics](../src/assets/diagnostics.html), [asset-test-fixtures.ts](../src/assets/asset-test-fixtures.ts), `src/assets/fixtures/selected-art-pre-native.txt` | Asset contact sheets, fake canvas/binary fixtures and an asset-name list; no authored map layout.                                                                                                                                                                                    |
+| [native-maps.test.ts](native-maps.test.ts), [nativeMapWriter.ts](../scripts/nativeMapWriter.ts)                                                                                                                      | Compression byte arrays/malformed streams and deterministic regeneration of the same eight catalog maps; no extra playable fixture.                                                                                                                                                  |
+| Other tests constructing `new Game()` or mutating tiles/entities                                                                                                                                                     | Reuse Field Command or covered catalog maps, then change state to isolate gameplay behavior; not separately selectable project maps.                                                                                                                                                 |
+| `tests/artifacts/maps/*.json` and earlier screenshots                                                                                                                                                                | Prior coverage/cache/production reports, not additional maps. Temporary archives, historic `/tmp` audit files and other checkouts are outside this repository's playable inventory. This report does not certify them.                                                               |
 
 ## Findings
 
@@ -114,12 +114,12 @@ three-cell template whose other cells were replaced. Complete missing templates
 and square ends are not counted by this metric. The JSON enumerates every anchor
 and missing cell, so the sample views below are actionable beyond the screenshots.
 
-| Map | Exact affected cells / source-grounded observation | Detail evidence |
-|---|---|---|
-| Training |14 `proad02` anchors `(22,y)`, y=20..25 and 34..41: x=24 replaced by 493 (sand). Intended crossing near(23,30) is erased. At centreline y=30, road remains only x=5..21 and 44..58; x=23 road remains y=18..25 and 34..54. |[training](artifacts/map-visual-audit/training-details.png)|
-| Ironwood |9 `proad01` anchors `(x,94)`, x=123..131: y=94 strip survives, y=95..96 replaced by paving. Isolated short road at(95,132) abuts a clearing. |[Ironwood](artifacts/map-visual-audit/ironwood-crossing-details.png)|
-| Slatewater |17 `proad02` anchors `(94,y)`, y=123..139: only x=94 survives. Six additional coastal fragments at anchors(94,56),(94,57),(118,94),(119,94),(130,94),(131,94). |[Slatewater](artifacts/map-visual-audit/slatewater-reach-details.png)|
-| Tidal |8 `proad02` anchors `(94,y)`, y=132..139: only x=94 survives beside cleared ground. Separate road gap around(123,95) is visible among paved neutral pads. |[Tidal](artifacts/map-visual-audit/tidal-crown-details.png)|
+| Map        | Exact affected cells / source-grounded observation                                                                                                                                                                         | Detail evidence                                                       |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Training   | 14 `proad02` anchors `(22,y)`, y=20..25 and 34..41: x=24 replaced by 493 (sand). Intended crossing near(23,30) is erased. At centreline y=30, road remains only x=5..21 and 44..58; x=23 road remains y=18..25 and 34..54. | [training](artifacts/map-visual-audit/training-details.png)           |
+| Ironwood   | 9 `proad01` anchors `(x,94)`, x=123..131: y=94 strip survives, y=95..96 replaced by paving. Isolated short road at(95,132) abuts a clearing.                                                                               | [Ironwood](artifacts/map-visual-audit/ironwood-crossing-details.png)  |
+| Slatewater | 17 `proad02` anchors `(94,y)`, y=123..139: only x=94 survives. Six additional coastal fragments at anchors(94,56),(94,57),(118,94),(119,94),(130,94),(131,94).                                                             | [Slatewater](artifacts/map-visual-audit/slatewater-reach-details.png) |
+| Tidal      | 8 `proad02` anchors `(94,y)`, y=132..139: only x=94 survives beside cleared ground. Separate road gap around(123,95) is visible among paved neutral pads.                                                                  | [Tidal](artifacts/map-visual-audit/tidal-crown-details.png)           |
 
 Training draws roads before [shoreline/buffer placement](../src/game/maps/terrainTopology.ts).
 The buffer replaces final artwork without rebuilding streets. The native
@@ -146,11 +146,11 @@ matching straight pieces, making orientation verifiable rather than inferred
 from filename order. Metadata includes all 12 original file SHA256 values.
 
 | Original file stem | Temperate / Urban ID | Snow ID | Template dimensions | Road terminates toward | Matching straight |
-|---|---:|---:|---|---|---|
-|p_end01|445|430|1×3|+x / screen southeast|proad01 (293)|
-|p_end02|446|431|3×1|-y / screen northeast|proad02 (294)|
-|p_end03|447|432|1×3|-x / screen northwest|proad01 (293)|
-|p_end04|448|433|3×1|+y / screen southwest|proad02 (294)|
+| ------------------ | -------------------: | ------: | ------------------- | ---------------------- | ----------------- |
+| p_end01            |                  445 |     430 | 1×3                 | +x / screen southeast  | proad01 (293)     |
+| p_end02            |                  446 |     431 | 3×1                 | -y / screen northeast  | proad02 (294)     |
+| p_end03            |                  447 |     432 | 1×3                 | -x / screen northwest  | proad01 (293)     |
+| p_end04            |                  448 |     433 | 3×1                 | +y / screen southwest  | proad02 (294)     |
 
 [Temperate joins](artifacts/map-visual-audit/original-endcaps-joins.png),
 [Snow joins](artifacts/map-visual-audit/original-endcaps-sno.webp),
@@ -171,12 +171,12 @@ merely capped in place. No ending exists to inspect on the five road-free maps.
 The endpoint findings above describe the audit baseline. The generators now place
 13 complete retail caps (39 subtiles), with outward termination directions:
 
-| Map | Centreline endpoints |
-|---|---|
-| Training | (5,30) -x; (58,30) +x; (23,18) -y; (23,54) +y |
-| Ironwood | (60,95) -x; (139,95) +x; (95,52) -y |
-| Slatewater | (59,95) -x; (139,95) +x; (95,53) -y |
-| Tidal | (60,95) -x; (137,95) +x; (95,54) -y |
+| Map        | Centreline endpoints                          |
+| ---------- | --------------------------------------------- |
+| Training   | (5,30) -x; (58,30) +x; (23,18) -y; (23,54) +y |
+| Ironwood   | (60,95) -x; (139,95) +x; (95,52) -y           |
+| Slatewater | (59,95) -x; (139,95) +x; (95,53) -y           |
+| Tidal      | (60,95) -x; (137,95) +x; (95,54) -y           |
 
 Each cap and its inward straight template retain all three row-major subtiles.
 Tech-pad entrances remain open. Lake/coast fragments and the isolated southern
@@ -231,7 +231,9 @@ npm run dev -- --host 0.0.0.0 --port 5174
 `http://omarky:5174/maps/ironwood-crossing/preview`, import originals, then run:
 
 ```js
-window.capture = await (await import('/tests/artifacts/map-visual-audit/browser-capture.js')).install();
+window.capture = await (
+  await import('/tests/artifacts/map-visual-audit/browser-capture.js')
+).install();
 capture.overview('training'); // or any catalog slug; take screenshot
 capture.details('training'); // also ironwood-crossing, slatewater-reach, tidal-crown
 capture.drills('training'); // or any catalog slug; all anchors are labeled

@@ -7,7 +7,7 @@ This is a big job, but you can do it!
 ## Assets
 
 - stored in *.mix files in this .exe that you can download and extract:
-https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe
+  https://archive.org/download/red-alert-2-multiplayer/Red-Alert-2-Multiplayer.exe
 - paramertize the application such that it downloads this file on the fly during init (and saves to local browser storage - much like how chrono divide does it.
 
 ## Units

@@ -18,12 +18,12 @@ entrances instead of asphalt slivers. Southern streets end at the oil-site apron
 the stub at Ironwood `(95,132)` and strips toward the southern base are removed.
 Pavement transitions may leave a clear shoulder beside unlike ground.
 
-| Map | Reviewed overview | Reviewed 100% details |
-|---|---|---|
-| Training | [Full map](artifacts/road-topology/training-overview.webp) | [Crossing, causeway, both repaired vertical sections](artifacts/road-topology/training-details.webp) |
-| Ironwood | [Full map](artifacts/road-topology/ironwood-crossing-overview.webp) | [Paved entrance, southern apron, crossing, preserved cap](artifacts/road-topology/ironwood-crossing-details.webp) |
-| Slatewater | [Full map](artifacts/road-topology/slatewater-reach-overview.webp) | [Southern base, both inlet approaches, northern coastal road](artifacts/road-topology/slatewater-reach-details.webp) |
-| Tidal | [Full map](artifacts/road-topology/tidal-crown-overview.webp) | [Southern base, paved tech entrance, crossing, preserved cap](artifacts/road-topology/tidal-crown-details.webp) |
+| Map        | Reviewed overview                                                   | Reviewed 100% details                                                                                                |
+| ---------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Training   | [Full map](artifacts/road-topology/training-overview.webp)          | [Crossing, causeway, both repaired vertical sections](artifacts/road-topology/training-details.webp)                 |
+| Ironwood   | [Full map](artifacts/road-topology/ironwood-crossing-overview.webp) | [Paved entrance, southern apron, crossing, preserved cap](artifacts/road-topology/ironwood-crossing-details.webp)    |
+| Slatewater | [Full map](artifacts/road-topology/slatewater-reach-overview.webp)  | [Southern base, both inlet approaches, northern coastal road](artifacts/road-topology/slatewater-reach-details.webp) |
+| Tidal      | [Full map](artifacts/road-topology/tidal-crown-overview.webp)       | [Southern base, paved tech entrance, crossing, preserved cap](artifacts/road-topology/tidal-crown-details.webp)      |
 
 Chromium used a 1440×1100 viewport, imported original `ra2.mix`, `language.mix`
 and `theme.mix`, and the repository renderer with its original palettes. Training

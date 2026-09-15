@@ -6,18 +6,18 @@ The browser was seeded with **265 actual selected original files only**, fetched
 
 ## Observed results
 
-| Check | Actual result |
-| --- | --- |
-| Source gate / Continue | Selected originals restored behind the initial URL form; native Enter entered the battlefield. Warm reload/Continue issued no fetch or worker request. |
-| Native menu | Trusted Options and Game Controls clicks worked. Medium original background was `(0,0,632,568)`; Back/Resume was `(653,502,125,25)`; action rows matched the documented reconstruction. |
-| Modal isolation | Battle time stayed `13.099999999999964` through menu navigation and every native slider key. Slider focus remained on the actual input. |
-| Seven speed positions | Native Home then six ArrowRight presses produced `1/3, 0.4, 0.5, 2/3, 1, 2, 4`. The final position is the explicitly described browser cap. |
-| Scroll preference | Trusted slider click and End selected multiplier 3; it restored as 3 after hard reload. Speed 4 also restored. |
-| Keyboard conflict | Selected Stop, typed K, saw “Currently assigned to Repair mode. Assign will replace it.” Native Assign bound Stop to K and explicitly unbound Repair. Its obsolete K hint disappeared. |
+| Check                          | Actual result                                                                                                                                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Source gate / Continue         | Selected originals restored behind the initial URL form; native Enter entered the battlefield. Warm reload/Continue issued no fetch or worker request.                                           |
+| Native menu                    | Trusted Options and Game Controls clicks worked. Medium original background was `(0,0,632,568)`; Back/Resume was `(653,502,125,25)`; action rows matched the documented reconstruction.          |
+| Modal isolation                | Battle time stayed `13.099999999999964` through menu navigation and every native slider key. Slider focus remained on the actual input.                                                          |
+| Seven speed positions          | Native Home then six ArrowRight presses produced `1/3, 0.4, 0.5, 2/3, 1, 2, 4`. The final position is the explicitly described browser cap.                                                      |
+| Scroll preference              | Trusted slider click and End selected multiplier 3; it restored as 3 after hard reload. Speed 4 also restored.                                                                                   |
+| Keyboard conflict              | Selected Stop, typed K, saw “Currently assigned to Repair mode. Assign will replace it.” Native Assign bound Stop to K and explicitly unbound Repair. Its obsolete K hint disappeared.           |
 | Binding persistence / behavior | Hard reload preserved those bindings. With a staged selected Grizzly and move order, trusted old S left the order as `move`; trusted new K changed it to `guard`/stopped and kept mode `select`. |
-| Reset All | Trusted Reset All restored Stop=S and Repair=K; the Repair K hint returned. |
-| Fixed checkboxes | On 4206, trusted Target Lines and Tooltips clicks set both runtime values and checkbox states to false. They persisted under `ra2-game-options:v1`. |
-| Checkbox reload | Hard reload plus native Enter restored both false values with `ready=true`, gate closed, zero fetches, zero workers and zero runtime errors. |
+| Reset All                      | Trusted Reset All restored Stop=S and Repair=K; the Repair K hint returned.                                                                                                                      |
+| Fixed checkboxes               | On 4206, trusted Target Lines and Tooltips clicks set both runtime values and checkbox states to false. They persisted under `ra2-game-options:v1`.                                              |
+| Checkbox reload                | Hard reload plus native Enter restored both false values with `ready=true`, gate closed, zero fetches, zero workers and zero runtime errors.                                                     |
 
 The keyboard order comparison deliberately froze the simulation clock, selected original Grizzly 6 and used `game.orderMove` to establish the same starting order. Those are scenario setup actions; S/K were trusted browser key input. Reset All's keyboard panel was opened through the UI API for the final bounded check; its button click was trusted. Initial menu navigation and binding assignment were trusted inputs throughout.
 

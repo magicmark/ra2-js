@@ -2,10 +2,10 @@
 
 The Allied structure **The Butcher's** unlocks **George** at an Allied Barracks. Build and place its 3×3 foundation, then train George from Infantry. The same gameplay runs on the training battlefield and native maps. Sidebar captions are **Butcher's** and **George**; the building's official name remains **The Butcher's**.
 
-| Entity | Cost / build time | Rules |
-|---|---|---|
-| The Butcher's | 1000 / 21 seconds | Allied; requires Barracks and Ore Refinery; 650 HP, steel armor, 30 power consumption, sight 5. |
-| George | 650 / 13.65 seconds | Allied; requires Barracks and The Butcher's; 225 HP, flak armor, GI movement speed, sight 6. Noncombat inspector: zero damage, no attacks or retaliation. |
+| Entity        | Cost / build time   | Rules                                                                                                                                                     |
+| ------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| The Butcher's | 1000 / 21 seconds   | Allied; requires Barracks and Ore Refinery; 650 HP, steel armor, 30 power consumption, sight 5.                                                           |
+| George        | 650 / 13.65 seconds | Allied; requires Barracks and The Butcher's; 225 HP, flak armor, GI movement speed, sight 6. Noncombat inspector: zero damage, no attacks or retaliation. |
 
 Losing a prerequisite blocks new production and holds paid queue progress. The queue shows **On Hold** and the missing prerequisite. Rebuilding resumes production; canceling refunds actual spending. Existing Georges remain available after the shop is lost.
 

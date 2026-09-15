@@ -1,26 +1,38 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildingLoopFrame, buildingLoops } from './buildingAnimations';
 import { AssetManager } from './AssetManager';
-import { TestCanvas, testShape } from './asset-test-fixtures';
+import { TestCanvas, testCanvas, testShp } from './asset-test-fixtures';
 
 afterEach(() => vi.unstubAllGlobals());
 
 describe('original building idle animation', () => {
   it('keeps the Soviet construction yard beacon visible above the full-building crane layer', () => {
     vi.stubGlobal('document', { createElement: () => new TestCanvas() });
-    const assets = new AssetManager(), light = testShape(4), palette = new Uint8Array(768);
+
+    const assets = new AssetManager(),
+      light = testShp(4),
+      palette = new Uint8Array(768);
+
     light[8 + 4 * 24 + 1] = 11;
-    palette[30] = 120; palette[33] = 240;
+    palette[30] = 120;
+    palette[33] = 240;
     assets.ready = true;
     Object.assign(assets, {
-      files: new Map([['ngcnst.shp', testShape()], ['ngcnst_a.shp', light], ['ngcnst_b.shp', testShape()], ['ngcnst_c.shp', testShape()]]),
+      files: new Map([
+        ['ngcnst.shp', testShp()],
+        ['ngcnst_a.shp', light],
+        ['ngcnst_b.shp', testShp()],
+        ['ngcnst_c.shp', testShp()],
+      ]),
       unitPalette: palette,
-      buildingLoops: buildingLoops(new TextEncoder().encode('[NACNST_A]\nLoopEnd=2\nLoopCount=-1\nRate=900')),
+      buildingLoops: buildingLoops(
+        new TextEncoder().encode('[NACNST_A]\nLoopEnd=2\nLoopCount=-1\nRate=900'),
+      ),
     });
     const first = assets.getBuildingSprite('conyard_soviet', 0, 1)!;
     const second = assets.getBuildingSprite('conyard_soviet', 1 / 30, 1)!;
-    expect(Array.from((first.source as unknown as TestCanvas).pixels)).toEqual([120, 0, 0, 255]);
-    expect(Array.from((second.source as unknown as TestCanvas).pixels)).toEqual([240, 0, 0, 255]);
+    expect(Array.from(testCanvas(first.source).pixels)).toEqual([120, 0, 0, 255]);
+    expect(Array.from(testCanvas(second.source).pixels)).toEqual([240, 0, 0, 255]);
     expect(assets.getBuildingSprite('conyard_soviet', 2 / 30, 1)).toBe(first);
   });
 
@@ -47,9 +59,15 @@ LoopEnd=8
 LoopCount=-1
 Rate=0
 `);
+
   it('reads the authored healthy loop without playing production or stopped animations', () => {
     const loops = buildingLoops(art);
-    expect(loops.get('gapile_a')).toEqual({ start: 0, end: 15, ticksPerFrame: 3, normalized: true });
+    expect(loops.get('gapile_a')).toEqual({
+      start: 0,
+      end: 15,
+      ticksPerFrame: 3,
+      normalized: true,
+    });
     expect(loops.get('gapile_ad')?.ticksPerFrame).toBe(3);
     expect(loops.has('gacnst_b')).toBe(false);
     expect(loops.has('stopped')).toBe(false);

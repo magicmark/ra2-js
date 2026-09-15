@@ -4,12 +4,12 @@
 
 All four images were newly generated for this feature with the built-in **image_gen** tool, following the imagegen skill; no CLI fallback or code-drawn replacement illustration was used. Final captions use a separate deterministic bitmap text renderer described below. They are openly served runtime assets, separate from the user's imported original game archives. Original archives are not bundled.
 
-| Runtime PNG | Generated output ID | SHA256 |
-|---|---|---|
-| `public/art/butchers/butchers.png` | `exec-128c27f2-a806-40ec-a825-95c3e9847e8a.png` | `461944047e7e181ce67f1585fec4a249f4a09ba0210a8bd8d13148bcd9f5ac3f` |
+| Runtime PNG                              | Generated output ID                             | SHA256                                                             |
+| ---------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------ |
+| `public/art/butchers/butchers.png`       | `exec-128c27f2-a806-40ec-a825-95c3e9847e8a.png` | `461944047e7e181ce67f1585fec4a249f4a09ba0210a8bd8d13148bcd9f5ac3f` |
 | `public/art/butchers/butchers-cameo.png` | `exec-f4af158d-0c0e-4e49-a2be-2358c4424b26.png` | `772688cb863636920ab4bd14562155394903914d2e7d53a3c6b2512e7c070a49` |
-| `public/art/butchers/george-sheet.png` | `exec-d82e3d13-351e-45b1-aa27-5c14ad85419c.png` | `4c0ef735eb2f47c35df6e2b63ebca82cc6bd6952e793edb2e341564bd76e9fc2` |
-| `public/art/butchers/george-cameo.png` | `exec-b431c7ef-1deb-44e0-98d7-f9e24421437e.png` | `75268c41f7d5f2c740243974a7441762a3b1139faebdb2d144cf63e52be4ee4e` |
+| `public/art/butchers/george-sheet.png`   | `exec-d82e3d13-351e-45b1-aa27-5c14ad85419c.png` | `4c0ef735eb2f47c35df6e2b63ebca82cc6bd6952e793edb2e341564bd76e9fc2` |
+| `public/art/butchers/george-cameo.png`   | `exec-b431c7ef-1deb-44e0-98d7-f9e24421437e.png` | `75268c41f7d5f2c740243974a7441762a3b1139faebdb2d144cf63e52be4ee4e` |
 
 The building and infantry sheet retain real PNG alpha. Cameos intentionally have opaque dark backdrops. `CustomArt.ts` consumes the PNGs and downsamples them at runtime into the existing Sprite interface: 180 pixel painted building width, 48 pixel infantry grid, 60×48 cameos. The building anchor follows its painted foundation, not its transparent footer. The 1774×887 sheet uses rounded grid boundaries, eight screen directions N/NW/W/SW/S/SE/E/NE and four rows: ready, left step, right step, fire. Boot lines register each pose without centering on the weapon. The E muzzle's four extra source pixels belong to E and are excluded from NE; padding keeps the muzzle inside the runtime canvas. Low alpha haze does not determine anchors.
 

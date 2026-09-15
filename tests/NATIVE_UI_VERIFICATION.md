@@ -58,18 +58,18 @@ The frozen live source matching the `4199` checkpoint (`index-BMccL90Q.js`) was 
 
 Scenario staging is explicit: the skirmish was restarted, income miners removed, starting money set to 5000/0, and automatic ticking frozen in this isolated page. The original Game prototype tick was then advanced in 1/60-second increments. Money was deliberately changed to 100 and then 4000 to exercise shortage recovery; the camera was centered over a valid placement cell. No game source or asset decoder was replaced. All 21 recorded production click/context-menu/key events were trusted; no installer or worker was requested.
 
-| Native action / real simulation step | Actual result |
-| --- | --- |
-| Click Power Plant | Item 21 queued with 0 spent; money remained 5000 |
-| Advance 4.2 seconds | 25% completion, 200 spent, 90-degree radial progress; focused Power card stayed mounted |
-| Shift+F10 context menu, then advance 3 seconds | On Hold; money and progress unchanged; same focused card |
-| Left-click Power, then advance 4.2 seconds | Same item resumed, 50% complete, 400 spent; no extra queue entry |
-| Stage 100 credits, advance 4.2 seconds | Money0, 62.5% complete, 500 total spent; automatic funds Hold |
-| Stage 4000 credits, advance 6.4 seconds | Ready, 800 total spent; category alternated between two actual original frames |
-| Click Ready, Escape | Placement cancelled while the paid ready item remained in its queue |
-| Click Ready, native canvas center click | Original Power Plant placed at 10,36; power-building count 1→2; queue emptied; no extra payment |
-| Click Power then Barracks; advance 4.2 seconds | Active Power 24 spent 200; queued Barracks 25 remained unspent |
-| Shift+Tab back to Power, context menu twice | First click held Power 24; second cancelled/refunded exactly Power 24, preserving Barracks 25 unpaused and unspent |
+| Native action / real simulation step           | Actual result                                                                                                      |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Click Power Plant                              | Item 21 queued with 0 spent; money remained 5000                                                                   |
+| Advance 4.2 seconds                            | 25% completion, 200 spent, 90-degree radial progress; focused Power card stayed mounted                            |
+| Shift+F10 context menu, then advance 3 seconds | On Hold; money and progress unchanged; same focused card                                                           |
+| Left-click Power, then advance 4.2 seconds     | Same item resumed, 50% complete, 400 spent; no extra queue entry                                                   |
+| Stage 100 credits, advance 4.2 seconds         | Money0, 62.5% complete, 500 total spent; automatic funds Hold                                                      |
+| Stage 4000 credits, advance 6.4 seconds        | Ready, 800 total spent; category alternated between two actual original frames                                     |
+| Click Ready, Escape                            | Placement cancelled while the paid ready item remained in its queue                                                |
+| Click Ready, native canvas center click        | Original Power Plant placed at 10,36; power-building count 1→2; queue emptied; no extra payment                    |
+| Click Power then Barracks; advance 4.2 seconds | Active Power 24 spent 200; queued Barracks 25 remained unspent                                                     |
+| Shift+Tab back to Power, context menu twice    | First click held Power 24; second cancelled/refunded exactly Power 24, preserving Barracks 25 unpaused and unspent |
 
 Context-menu input used native Shift+F10 on the focused portrait. Left-click resumes a held item; a second right-click cancels it. The card's DOM identity and focus stayed stable through progress, Hold, resume, Ready and exact-item cancellation.
 

@@ -6,14 +6,14 @@ Verified on 2026-09-13 against the running Vite application in Chromium. These c
 
 ## Activation and layouts
 
-| Check | Evidence |
-| --- | --- |
-| User-agent detection | iPhone user agent, no `force_mobile` parameter: `Controls.mobile === true`, touch toolbar displayed. |
+| Check                   | Evidence                                                                                                                                                  |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| User-agent detection    | iPhone user agent, no `force_mobile` parameter: `Controls.mobile === true`, touch toolbar displayed.                                                      |
 | Forced desktop controls | Linux desktop user agent, `navigator.maxTouchPoints === 0`, 1440 × 1000 viewport, `?force_mobile=1`: mobile controls active; battlefield uses full width. |
-| Portrait | 390 × 844: battlefield 390 × 712 below a 56px header and above 76px controls; drawer opens, scrolls, and closes. |
-| Narrow portrait | 320 × 740: body width 320px; header buttons end at x=313.5px; no horizontal overflow. |
-| Landscape | 844 × 390: three-column production drawer and scrollable settings fit without horizontal overflow; settings close button stays visible when scrolling. |
-| Hidden drawer | Closed drawer has `visibility: hidden`, excluding offscreen production controls from keyboard focus and accessibility navigation. |
+| Portrait                | 390 × 844: battlefield 390 × 712 below a 56px header and above 76px controls; drawer opens, scrolls, and closes.                                          |
+| Narrow portrait         | 320 × 740: body width 320px; header buttons end at x=313.5px; no horizontal overflow.                                                                     |
+| Landscape               | 844 × 390: three-column production drawer and scrollable settings fit without horizontal overflow; settings close button stays visible when scrolling.    |
+| Hidden drawer           | Closed drawer has `visibility: hidden`, excluding offscreen production controls from keyboard focus and accessibility navigation.                         |
 
 The [contact sheet](artifacts/mobile-contact-sheet.png) combines portrait battlefield, portrait production, landscape production, and landscape settings. Screenshots were combined before image inspection.
 

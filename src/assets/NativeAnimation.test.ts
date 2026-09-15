@@ -1,5 +1,10 @@
 import { expect, it } from 'vitest';
-import { artAnimationInterval, nativeAnimationFrame, nativeAnimationInterval, readArtSections } from './NativeAnimation';
+import {
+  artAnimationInterval,
+  nativeAnimationFrame,
+  nativeAnimationInterval,
+  readArtSections,
+} from './NativeAnimation';
 
 it('uses the native integer Rate conversion before the normalized lookup', () => {
   expect(nativeAnimationInterval()).toBe(1);
@@ -16,7 +21,10 @@ it('uses the native integer Rate conversion before the normalized lookup', () =>
 });
 
 it('keeps omitted impact Rate at one tick and bounds non-looping frames', () => {
-  const art = readArtSections(new TextEncoder().encode('[PIFFPIFF]\n[S_CLSN22]\nNormalized=yes\nRate=900 ; native default\n'));
+  const art = readArtSections(
+    new TextEncoder().encode('[PIFFPIFF]\n[S_CLSN22]\nNormalized=yes\nRate=900 ; native default\n'),
+  );
+
   expect(artAnimationInterval(art.get('piffpiff'))).toBe(1);
   expect(artAnimationInterval(art.get('s_clsn22'))).toBe(1);
   const impact = { frames: 12, ticksPerFrame: 1 };
@@ -27,7 +35,10 @@ it('keeps omitted impact Rate at one tick and bounds non-looping frames', () => 
 });
 
 it('accepts original INI section headers with trailing C-style comments', () => {
-  const art = readArtSections(new TextEncoder().encode('[CometWH]\nVerses=200%\n[MirageWH] // heat ray\nVerses=100%'));
+  const art = readArtSections(
+    new TextEncoder().encode('[CometWH]\nVerses=200%\n[MirageWH] // heat ray\nVerses=100%'),
+  );
+
   expect(art.get('cometwh')?.verses).toBe('200%');
   expect(art.get('miragewh')?.verses).toBe('100%');
 });

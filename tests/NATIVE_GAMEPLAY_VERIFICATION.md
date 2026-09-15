@@ -10,9 +10,9 @@ An isolated Chromium page at `http://omarky:5173/` reported original assets read
 
 Native keyboard `M` selected the miner, a second `M` selected the Grizzly. A normal left click at the center of the battlefield then issued the first movement order; `S` and a second normal battlefield click issued the reverse order. Camera centering was diagnostic setup, not an alternative command implementation. The existing simulation step was wrapped only to record its completed state; game coordinates, speed, facing and physics were not overridden.
 
-| Native order | Stationary start | First translating frame | First displacement |
-| --- | --- | --- | --- |
-| Fresh quarter-turn | Grizzly `(19.5,41.5)`, hull −45°, destination `(23.5,45.5)` | Frame 13, after 12 stationary logic frames (0.4 simulation seconds) | 0.085 cells, at +45° |
+| Native order              | Stationary start                                            | First translating frame                                                | First displacement    |
+| ------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------- | --------------------- |
+| Fresh quarter-turn        | Grizzly `(19.5,41.5)`, hull −45°, destination `(23.5,45.5)` | Frame 13, after 12 stationary logic frames (0.4 simulation seconds)    | 0.085 cells, at +45°  |
 | Fresh half-turn after `S` | Grizzly `(23.5,45.5)`, hull +45°, destination `(19.5,41.5)` | Frame 26, after 25 stationary logic frames (0.8333 simulation seconds) | 0.085 cells, at +225° |
 
 The full 60-frame state traces are [quarter-turn](artifacts/gameplay/native-quarter-turn.json) and [half-turn](artifacts/gameplay/native-half-turn.json). The original 30-frame reference clock and current 2.55-cell/second Grizzly speed apply to these captures. If later native speed conversion changes travel distance, these remain evidence for this recorded build, not an updated speed measurement.
@@ -24,6 +24,7 @@ Native `P`, `Ctrl+1`, and `Esc` also executed. While Options was open, pressing 
 At viewport 1440×1200, battlefield canvas 1272×1170, DPR 1, explicit CPU throttling 1×, warmed render instrumentation recorded 27 frames with mean 85.66ms (46.4–162.1ms) and only one voxel-cache call above 1ms. A subsequent 42-frame sample averaged 69.99ms; all 420 WebGL flush calls totaled 28.5ms, and no new textures were allocated. This identifies JavaScript rendering work as the large cost in that environment. Those sparse presentation frames cannot establish UI fluidity, even though the simulation's individual turn steps are correct. The renderer owner is profiling and fixing the cost; these measurements must not be presented as completed performance parity.
 
 The native movement capture did not calibrate retail wall-clock speed or validate the original locomotor's complete curve/avoidance behavior. The independent continuous retail footage review and final renderer captures are tracked by the coordinator.
+
 # Additional native toolbar capture
 
 The immutable 242-original-art snapshot `index-CzD4K9G2.js` was served unchanged at `http://omarky:4201/` for an isolated browser context. Its selected-originals cache was seeded from the snapshot's supplied original-file export, verified, and entered with the native Continue button while offline; archive requests remained zero. This snapshot predates the exact ground-speed TOML conversion and later Options/command-line work.

@@ -30,13 +30,13 @@ cellsPerSecond = leptonsPerFrame * 30 / 256
 
 The [YRpp locomotor interface](https://github.com/Ares-Developers/YRpp/blob/master/Interfaces.h) independently specifies current speed in leptons per game frame. [Phobos’s maintained integer/decimal parser](https://github.com/Phobos-developers/Phobos/blob/develop/src/Utilities/INIParser.h) uses the same scale, while extending input to decimals through `Game::F2I`; its [ReadINI hook](https://github.com/Phobos-developers/Phobos/blob/develop/src/Ext/TechnoType/Hooks.cpp) shows where the engine read is replaced. The supplied RA2 integer disassembly establishes the roster’s exact positive rounding directly, without guessing the decimal helper’s behavior.
 
-| Existing ground unit | Authored Speed | Integer leptons/frame | Cells/sec at 30 logic frames/sec |
-| --- | ---: | ---: | ---: |
-| GI, Conscript, Engineer, Chrono Miner, War Miner | 4 | 10 | 1.171875 |
-| Rhino | 6 | 15 | 1.7578125 |
-| Grizzly | 7 | 17 | 1.9921875 |
-| Flak Track | 8 | 20 | 2.34375 |
-| IFV | 10 | 25 | 2.9296875 |
+| Existing ground unit                             | Authored Speed | Integer leptons/frame | Cells/sec at 30 logic frames/sec |
+| ------------------------------------------------ | -------------: | --------------------: | -------------------------------: |
+| GI, Conscript, Engineer, Chrono Miner, War Miner |              4 |                    10 |                         1.171875 |
+| Rhino                                            |              6 |                    15 |                        1.7578125 |
+| Grizzly                                          |              7 |                    17 |                        1.9921875 |
+| Flak Track                                       |              8 |                    20 |                          2.34375 |
+| IFV                                              |             10 |                    25 |                        2.9296875 |
 
 The chosen 30-frame reference clock remains documented in [gameplay evidence](GAMEPLAY_PARITY.md); no native executable was launched to measure wall time. `GameSpeedBias=1.6` is not applied. Rocketeer remains a stated exception: its actual jumpjet locomotor has separately authored `JumpjetSpeed=30`, height and acceleration rules, while the current implementation does not reproduce that locomotor. Applying ordinary ground `Speed=9` would silently claim a conversion that does not establish its flight behavior.
 

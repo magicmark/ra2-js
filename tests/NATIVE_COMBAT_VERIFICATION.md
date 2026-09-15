@@ -14,15 +14,15 @@ At each observation bound, a diagnostic pause stopped later updates. An already-
 
 ## Results
 
-| Scenario | Recorded logic result | Original-art observation |
-| --- | --- | --- |
-| Native GI Deploy | Deploy starts at time 0; transition ends at frame 15; DeployedFire starts at 15 and fires at 17. No movement during the transition. | Early upright/crouching and later sandbag/deployed poses are distinct original frames. |
-| Native GI Undeploy | Undeploy remains active at frame 1 and ends at frame 2; fresh FireUp starts at 2 and fires at 4. | The renderer requested Undeploy during the transition, then FireUp and Ready. |
-| GI firing | Intent at frame 1, actual fire at frame 3; PIFFPIFF receives base damage 15. | Authored FireUp frames and original impact are visible. |
-| Conscript firing | Intent at frame 1, actual fire at frame 7, preserving all six elapsed firing ticks. | The captured last firing pose precedes the shot; logical Value 6 is not clamped to rendered frame 5. |
-| Rocketeer firing | FireFly intent at frame 1, actual fire at frame 3; PIFFPIFF receives base damage 25. | The renderer requested the authored FireFly sequence, then Hover. |
-| IFV burst | Four 25-damage shots at frames 1, 4, 56 and 61. Intra-burst gaps are 3 and 5; the intervening reload is 52. | Each projectile creates XGRYSML2. Distinct overlapping original impact events appear; no aggregate 50-damage impact is selected. |
-| Ordinary vehicle death | The Grizzly's first shot emits S_CLSN22 and kills the staged low-HP Rhino; its death selects S_BANG48. | The Rhino disappears and the original expanding explosion frames render at its position. |
+| Scenario               | Recorded logic result                                                                                                               | Original-art observation                                                                                                         |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Native GI Deploy       | Deploy starts at time 0; transition ends at frame 15; DeployedFire starts at 15 and fires at 17. No movement during the transition. | Early upright/crouching and later sandbag/deployed poses are distinct original frames.                                           |
+| Native GI Undeploy     | Undeploy remains active at frame 1 and ends at frame 2; fresh FireUp starts at 2 and fires at 4.                                    | The renderer requested Undeploy during the transition, then FireUp and Ready.                                                    |
+| GI firing              | Intent at frame 1, actual fire at frame 3; PIFFPIFF receives base damage 15.                                                        | Authored FireUp frames and original impact are visible.                                                                          |
+| Conscript firing       | Intent at frame 1, actual fire at frame 7, preserving all six elapsed firing ticks.                                                 | The captured last firing pose precedes the shot; logical Value 6 is not clamped to rendered frame 5.                             |
+| Rocketeer firing       | FireFly intent at frame 1, actual fire at frame 3; PIFFPIFF receives base damage 25.                                                | The renderer requested the authored FireFly sequence, then Hover.                                                                |
+| IFV burst              | Four 25-damage shots at frames 1, 4, 56 and 61. Intra-burst gaps are 3 and 5; the intervening reload is 52.                         | Each projectile creates XGRYSML2. Distinct overlapping original impact events appear; no aggregate 50-damage impact is selected. |
+| Ordinary vehicle death | The Grizzly's first shot emits S_CLSN22 and kills the staged low-HP Rhino; its death selects S_BANG48.                              | The Rhino disappears and the original expanding explosion frames render at its position.                                         |
 
 The [complete event and sprite-request trace](artifacts/gameplay/native-combat-4205.json) contains 162 recorded logic steps and 78 presentation observations. The [contact sheet](artifacts/gameplay/native-combat-4205-contact.png) contains crops of actual rendered frames, with labels outside the crops. The trace SHA-256 is `c7416f57934c6e6391487e3b5573497d9e7bcee6a724353aa699273430020dd7`.
 

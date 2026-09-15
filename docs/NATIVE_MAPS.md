@@ -5,16 +5,16 @@ Eight project-authored maps live in `public/maps/*.map`; the typed application c
 Their terrain is native chunked LZO1X `IsoMapPack5`; ore uses native Format80/LCW
 `OverlayPack` and `OverlayDataPack`. No custom section substitutes for terrain.
 
-| Map | Theater | Layout |
-| --- | --- | --- |
-| Emerald Divide | Temperate | Long parallel lakes, wide central saddle, green meadows |
-| Frostline Basin | Snow | Separate glacial basins and broad connecting snowfields |
-| Saffron Wash | Temperate | Sandy plain with braided dry washes and a small oasis |
+| Map               | Theater   | Layout                                                   |
+| ----------------- | --------- | -------------------------------------------------------- |
+| Emerald Divide    | Temperate | Long parallel lakes, wide central saddle, green meadows  |
+| Frostline Basin   | Snow      | Separate glacial basins and broad connecting snowfields  |
+| Saffron Wash      | Temperate | Sandy plain with braided dry washes and a small oasis    |
 | Ironwood Crossing | Temperate | Native paved crossroads, woodland belts, clear quadrants |
-| Slatewater Reach | Urban | Harbor fingers and large inland industrial districts |
-| Copperhead Mesa | Temperate | Flat mineral bands, sand shelves, radial open approaches |
-| Whiteout Causeway | Snow | Twin lakes, broad central crossing, open outer routes |
-| Tidal Crown | Urban | Crescent inlet with connected coastal parks and pavement |
+| Slatewater Reach  | Urban     | Harbor fingers and large inland industrial districts     |
+| Copperhead Mesa   | Temperate | Flat mineral bands, sand shelves, radial open approaches |
+| Whiteout Causeway | Snow      | Twin lakes, broad central crossing, open outer routes    |
+| Tidal Crown       | Urban     | Crescent inlet with connected coastal parks and pavement |
 
 ## Names and map selection
 

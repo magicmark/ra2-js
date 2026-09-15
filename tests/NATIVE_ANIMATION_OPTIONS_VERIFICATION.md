@@ -67,11 +67,11 @@ The saved installer was 206,530,229 bytes and the saved MIX pair was
 `1789331217418-dnhtvo1w8yb` and timestamp `1789331217418` throughout.
 Installer URLs were blocked during the check.
 
-| Operation | HTTP attempts | Worker work | Selected cache |
-| --- | ---: | --- | --- |
-| Open current app over existing 242 files | 0 | One worker: index language.mix and ra2.mix | 265 files, 11,380,612 bytes committed |
-| Hard reload upgraded cache | 0 | None | Same entry; no writes |
-| Trusted native Enter on cached Continue | 0 | None | Same entry; no writes; gate hidden and time advanced to 13.7667 seconds |
+| Operation                                | HTTP attempts | Worker work                                | Selected cache                                                          |
+| ---------------------------------------- | ------------: | ------------------------------------------ | ----------------------------------------------------------------------- |
+| Open current app over existing 242 files |             0 | One worker: index language.mix and ra2.mix | 265 files, 11,380,612 bytes committed                                   |
+| Hard reload upgraded cache               |             0 | None                                       | Same entry; no writes                                                   |
+| Trusted native Enter on cached Continue  |             0 | None                                       | Same entry; no writes; gate hidden and time advanced to 13.7667 seconds |
 
 The recovery worker emitted MIX-indexing progress and completion, without
 7-Zip installer-extraction work. Vite loaded the worker's JavaScript import/URL

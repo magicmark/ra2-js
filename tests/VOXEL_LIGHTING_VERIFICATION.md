@@ -4,13 +4,13 @@
 
 The supplied `/tmp/ra2-8vl-mixes/ra2.mix` contains these models in `local.mix`:
 
-| Model | VXL normal type | Voxels | Finding |
-| --- | ---: | ---: | --- |
-| `htnk.vxl` | 2 | 4,816 | Rhino hull uses the 36-direction TS table |
-| `htnktur.vxl` | 2 | 1,501 | Rhino turret also uses TS normals |
-| `htnkbarl.vxl` | 4 | 155 | Rhino barrel uses RA2 normals |
-| `carrier.vxl` | 4 | 19,247 | 74 voxels use normal index 244 |
-| `hornet.vxl` | 2 | 583 | Carrier aircraft use TS normals |
+| Model          | VXL normal type | Voxels | Finding                                   |
+| -------------- | --------------: | -----: | ----------------------------------------- |
+| `htnk.vxl`     |               2 |  4,816 | Rhino hull uses the 36-direction TS table |
+| `htnktur.vxl`  |               2 |  1,501 | Rhino turret also uses TS normals         |
+| `htnkbarl.vxl` |               4 |    155 | Rhino barrel uses RA2 normals             |
+| `carrier.vxl`  |               4 | 19,247 | 74 voxels use normal index 244            |
+| `hornet.vxl`   |               2 |    583 | Carrier aircraft use TS normals           |
 
 The decoder discarded the normal-type footer byte and the renderer always used
 RA2 directions. It now retains that byte and selects the table per limb. The RA2

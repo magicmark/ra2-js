@@ -8,14 +8,14 @@ Rounding individual sprite origins while retaining fractional widths split the c
 
 The final matrix tested 11 zoom levels (0.45, 0.5, 0.65, 0.75, 0.9, 1, 1.15, 1.3, 1.5, 2, 2.4) at three camera offsets for each configuration:
 
-| Fragment/atlas path | DPR | Cases | Incorrect pixels |
-| --- | --- | --- | --- |
-| High precision, 2048px atlas | 1 | 33 | 0 |
-| High precision, 2048px atlas | 1.25 | 33 | 0 |
-| High precision, 2048px atlas | 1.5 | 33 | 0 |
-| High precision, 2048px atlas | 2 | 33 | 0 |
-| Forced medium precision, 512px atlas | 1 | 33 | 0 |
-| Forced medium precision, 512px atlas | 2 | 33 | 0 |
+| Fragment/atlas path                  | DPR  | Cases | Incorrect pixels |
+| ------------------------------------ | ---- | ----- | ---------------- |
+| High precision, 2048px atlas         | 1    | 33    | 0                |
+| High precision, 2048px atlas         | 1.25 | 33    | 0                |
+| High precision, 2048px atlas         | 1.5  | 33    | 0                |
+| High precision, 2048px atlas         | 2    | 33    | 0                |
+| Forced medium precision, 512px atlas | 1    | 33    | 0                |
+| Forced medium precision, 512px atlas | 2    | 33    | 0                |
 
 All 198 cases passed. The medium-precision path is forced through the same capability detection used by GL; it still runs real WebGL shaders and reads actual framebuffer pixels. The terrain texture is placed deep inside an atlas populated with magenta sentinel images, so transparent gutters and unrelated neighboring texels cannot pass unnoticed.
 
@@ -36,14 +36,13 @@ The 198 cases above verify **terrain interior coverage**. A later screenshot rev
 Invoke `window.runBoundaryRegression()` in the same harness to run the boundary suite. It covers all four map corners and four edge midpoints, each at eight zooms (0.45, 0.75, 0.9, 1, 1.15, 1.3, 2, 2.4), with fractional camera offsets, both fully unexplored and partially explored terrain touching the map boundary.
 
 | DPR | Cases | Fully hidden pixels checked | Leaked pixels | Incorrect revealed core pixels |
-| --- | --- | --- | --- | --- |
-| 1 | 128 | 19,660,800 | 0 | 0 |
-| 2 | 128 | 78,643,200 | 0 | 0 |
+| --- | ----- | --------------------------- | ------------- | ------------------------------ |
+| 1   | 128   | 19,660,800                  | 0             | 0                              |
+| 2   | 128   | 78,643,200                  | 0             | 0                              |
 
 All 256 boundary cases pass against the corrected shared Renderer. Full results and source hashes are in [tile-boundary-regression.json](artifacts/fidelity/tile-boundary-regression.json). Fully unexplored frames require every framebuffer pixel to be exactly black, with no tolerance. Partially explored scenes also scan hidden regions and check that revealed cores retain their original uniform color. Their boundary classification permits only the hardware-advertised polygon subpixel quantization (Chrome reports four subpixel bits, or 1/16 framebuffer pixel), because the CPU's ideal line can assign a pixel center to a different side than the rasterizer. This is not a one-pixel allowance: at DPR 1, 867 mixed-boundary pixels fell in that subpixel band; at DPR 2 none did. No pixels outside the band leaked.
 
 The final integrated gameplay screenshot is still being recaptured after the remaining sidebar control integration; the old screenshot showing the yellow line is historical evidence, not a clean final image.
-
 
 ## Coalesced shroud performance
 

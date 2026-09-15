@@ -1,116 +1,323 @@
 <!doctype html>
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <title>Fractional zoom tile coverage regression</title>
-<style>body{background:#222;color:#eee;font:14px monospace}canvas{width:640px;height:480px;display:block}pre{white-space:pre-wrap}</style>
+<style>
+  body {
+    background: #222;
+    color: #eee;
+    font: 14px monospace;
+  }
+  canvas {
+    width: 640px;
+    height: 480px;
+    display: block;
+  }
+  pre {
+    white-space: pre-wrap;
+  }
+</style>
 <canvas id="battlefield"></canvas>
 <pre id="result">Running real WebGL coverage checks…</pre>
 <script type="module">
-import { Renderer } from '../src/render/Renderer.ts';
+  import { Renderer } from '../src/render/Renderer.ts';
 
-// Match the original 60×30 TMP scanline footprint. A completely explored
-// uniform map should cover every framebuffer pixel, including tile joins.
-const source=document.createElement('canvas');source.width=60;source.height=30;
-const ctx=source.getContext('2d');ctx.fillStyle='rgb(128,160,96)';
-let span=4;
-for(let y=0;y<30;y++){ctx.fillRect((60-span)/2,y,span,1);span+=y<14?4:-4;}
-const size=128;
-const game={defs:{},state:{width:size,height:size,tiles:Array.from({length:size*size},()=>({terrain:'grass',variant:0,ore:0})),fog:new Uint8Array(size*size).fill(1),explored:new Uint8Array(size*size).fill(1),entities:[],effects:[]}};
-const canvas=document.querySelector('canvas');
-const forceMedium=new URLSearchParams(location.search).has('mediump');
-if(forceMedium){
- const getContext=canvas.getContext.bind(canvas);
- canvas.getContext=(type,...args)=>{const context=getContext(type,...args);if(type==='webgl'&&context){const precision=context.getShaderPrecisionFormat.bind(context);context.getShaderPrecisionFormat=(shader,kind)=>kind===context.HIGH_FLOAT?{rangeMin:0,rangeMax:0,precision:0}:precision(shader,kind);}return context;};
-}
-const renderer=new Renderer(canvas,game);
-// Exercise UV coordinates deep in a populated atlas, alongside a conspicuous
-// unrelated texture. Transparent padding or neighboring texels cannot pass.
-const filler=document.createElement('canvas');filler.width=filler.height=440;
-const fill=filler.getContext('2d');fill.fillStyle='#ff00ff';fill.fillRect(0,0,440,440);
-for(let i=0;i<15;i++)renderer.gl.createTexture(filler);
-const alternate=document.createElement('canvas');alternate.width=60;alternate.height=30;
-const alternateContext=alternate.getContext('2d');alternateContext.drawImage(source,0,0);alternateContext.globalCompositeOperation='source-in';alternateContext.fillStyle='rgb(96,128,160)';alternateContext.fillRect(0,0,60,30);
-let baseSource=source;
-renderer.assets={ready:true,getTerrain:(_name,variant)=>({source:variant===1?alternate:baseSource,width:60,height:30,anchorX:30,anchorY:15}),getOverlay:()=>null};
-
-// Scan the whole framebuffer at every map edge. Point samples in the interior
-// missed a one-pixel TMP raster sliver beyond the vector shroud boundary.
-window.runBoundaryRegression=(zooms=[.45,.75,.9,1,1.15,1.3,2,2.4])=>{
- const rows=[],s=game.state,gl=renderer.gl.gl,subpixelBits=gl.getParameter(gl.SUBPIXEL_BITS);
- const positions=[[0,0],[size,0],[0,size],[size,size],[0,size/2],[size,size/2],[size/2,0],[size/2,size]];
- baseSource=source;s.fog.fill(1);
- for(const zoom of zooms)for(const [edgeX,edgeY]of positions){
-  renderer.camera.center(edgeX+.173,edgeY+.291);renderer.camera.zoom=zoom;
-  for(const partial of [false,true]){
-   s.explored.fill(0);
-   if(partial)for(let y=Math.max(0,edgeY-8);y<Math.min(size,edgeY+8);y++)for(let x=Math.max(0,edgeX-8);x<Math.min(size,edgeX+8);x++)s.explored[y*size+x]=1;
-   const core=new Uint8Array(size*size);
-   if(partial)for(let y=1;y<size-1;y++)for(let x=1;x<size-1;x++)if([-1,0,1].every(dy=>[-1,0,1].every(dx=>s.explored[(y+dy)*size+x+dx])))core[y*size+x]=1;
-   renderer.render();
-   const pixels=new Uint8Array(canvas.width*canvas.height*4),ratio=canvas.width/640;
-   gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
-   // WebGL quantizes polygon edges to its advertised subpixel grid. A pixel
-   // center within that tiny band may belong to either neighboring polygon.
-   // Fully hidden frames get no tolerance; this only classifies mixed edges.
-   const uncertainty=2**-subpixelBits*Math.sqrt(5)/(60*zoom*ratio);
-   const revealed=(wx,wy)=>{const x=Math.floor(wx),y=Math.floor(wy);return x>=0&&y>=0&&x<size&&y<size&&!!s.explored[y*size+x];};
-   let leaked=0,wrongCore=0,corePixels=0,hiddenPixels=0,rasterBoundaryPixels=0;const leakExamples=[];
-   for(let py=0;py<canvas.height;py++)for(let px=0;px<canvas.width;px++){
-    const i=(py*canvas.width+px)*4;
-    const world=renderer.camera.world((px+.5)/ratio,(canvas.height-py-.5)/ratio),x=Math.floor(world.x),y=Math.floor(world.y);
-    if(x<0||y<0||x>=size||y>=size||!s.explored[y*size+x]){
-     hiddenPixels++;if(pixels[i]||pixels[i+1]||pixels[i+2]){
-      if(partial&&[-uncertainty,uncertainty].some(dy=>[-uncertainty,uncertainty].some(dx=>revealed(world.x+dx,world.y+dy))))rasterBoundaryPixels++;
-      else{leaked++;if(leakExamples.length<3)leakExamples.push({pixel:[px,canvas.height-1-py],world,rgb:Array.from(pixels.slice(i,i+3))});}
-     }
-    }else if(core[y*size+x]){
-     corePixels++;if(Math.abs(pixels[i]-128)>1||Math.abs(pixels[i+1]-160)>1||Math.abs(pixels[i+2]-96)>1)wrongCore++;
-    }
-   }
-   rows.push({zoom,edge:[edgeX,edgeY],partial,leaked,hiddenPixels,rasterBoundaryPixels,wrongCore,corePixels,total:pixels.length/4,...(leaked?{leakExamples}:{})});
+  // Match the original 60×30 TMP scanline footprint. A completely explored
+  // uniform map should cover every framebuffer pixel, including tile joins.
+  const source = document.createElement('canvas');
+  source.width = 60;
+  source.height = 30;
+  const ctx = source.getContext('2d');
+  ctx.fillStyle = 'rgb(128,160,96)';
+  let span = 4;
+  for (let y = 0; y < 30; y++) {
+    ctx.fillRect((60 - span) / 2, y, span, 1);
+    span += y < 14 ? 4 : -4;
   }
- }
- s.explored.fill(1);renderer.camera.center(64,64);renderer.camera.zoom=1;renderer.render();
- const result={devicePixelRatio,forceMedium,subpixelBits,passed:rows.every(row=>row.leaked===0&&row.wrongCore===0&&(!row.partial||row.corePixels>0)),rows};
- document.querySelector('#result').textContent=JSON.stringify(result,null,2);
- return result;
-};
+  const size = 128;
+  const game = {
+    defs: {},
+    state: {
+      width: size,
+      height: size,
+      tiles: Array.from({ length: size * size }, () => ({ terrain: 'grass', variant: 0, ore: 0 })),
+      fog: new Uint8Array(size * size).fill(1),
+      explored: new Uint8Array(size * size).fill(1),
+      entities: [],
+      effects: [],
+    },
+  };
+  const canvas = document.querySelector('canvas');
+  const forceMedium = new URLSearchParams(location.search).has('mediump');
+  if (forceMedium) {
+    const getContext = canvas.getContext.bind(canvas);
+    canvas.getContext = (type, ...args) => {
+      const context = getContext(type, ...args);
+      if (type === 'webgl' && context) {
+        const precision = context.getShaderPrecisionFormat.bind(context);
+        context.getShaderPrecisionFormat = (shader, kind) =>
+          kind === context.HIGH_FLOAT
+            ? { rangeMin: 0, rangeMax: 0, precision: 0 }
+            : precision(shader, kind);
+      }
+      return context;
+    };
+  }
+  const renderer = new Renderer(canvas, game);
+  // Exercise UV coordinates deep in a populated atlas, alongside a conspicuous
+  // unrelated texture. Transparent padding or neighboring texels cannot pass.
+  const filler = document.createElement('canvas');
+  filler.width = filler.height = 440;
+  const fill = filler.getContext('2d');
+  fill.fillStyle = '#ff00ff';
+  fill.fillRect(0, 0, 440, 440);
+  for (let i = 0; i < 15; i++) renderer.gl.createTexture(filler);
+  const alternate = document.createElement('canvas');
+  alternate.width = 60;
+  alternate.height = 30;
+  const alternateContext = alternate.getContext('2d');
+  alternateContext.drawImage(source, 0, 0);
+  alternateContext.globalCompositeOperation = 'source-in';
+  alternateContext.fillStyle = 'rgb(96,128,160)';
+  alternateContext.fillRect(0, 0, 60, 30);
+  let baseSource = source;
+  renderer.assets = {
+    ready: true,
+    getTerrain: (_name, variant) => ({
+      source: variant === 1 ? alternate : baseSource,
+      width: 60,
+      height: 30,
+      anchorX: 30,
+      anchorY: 15,
+    }),
+    getOverlay: () => null,
+  };
 
-window.runTileSeamRegression=()=>{
- const rows=[];
- for(const zoom of [.45,.5,.65,.75,.9,1,1.15,1.3,1.5,2,2.4])for(const [x,y]of [[64,64],[64.173,64.291],[65.07,64.3]]){
-  renderer.camera.center(x,y);renderer.camera.zoom=zoom;renderer.render();
-  const gl=renderer.gl.gl,pixels=new Uint8Array(canvas.width*canvas.height*4);
-  gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
-  let incorrect=0;
-  for(let i=0;i<pixels.length;i+=4)if(Math.abs(pixels[i]-128)>1||Math.abs(pixels[i+1]-160)>1||Math.abs(pixels[i+2]-96)>1)incorrect++;
-  rows.push({zoom,camera:[x,y],incorrect,total:pixels.length/4});
- }
- renderer.camera.center(64,64);renderer.camera.zoom=1;
- const sample=(x,y)=>{const gl=renderer.gl.gl,p=renderer.camera.screen(x,y),pixel=new Uint8Array(4),ratio=canvas.width/640;gl.readPixels(Math.floor(p.x*ratio),canvas.height-1-Math.floor(p.y*ratio),1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);return Array.from(pixel).slice(0,3);};
- const equals=(actual,expected)=>actual.every((value,i)=>Math.abs(value-expected[i])<=1);
- game.state.tiles[64*size+64].variant=1;renderer.render();
- const tileMutation=equals(sample(64.5,64.5),[96,128,160]);
- game.state.tiles[64*size+64].variant=0;renderer.render();
- const tileRestored=equals(sample(64.5,64.5),[128,160,96]);
- baseSource=alternate;renderer.render();
- const assetRefresh=equals(sample(64.5,64.5),[96,128,160]);
- baseSource=source;game.state.explored.fill(0);renderer.render();
- const hiddenTerrain=equals(sample(64.5,64.5),[0,0,0]);
- game.state.explored.fill(1);renderer.camera.center(0,0);renderer.render();
- const mapBoundary=equals(sample(-2,-2),[0,0,0])&&equals(sample(.5,.5),[128,160,96]);
- renderer.camera.center(64,64);renderer.render();
- const gl=renderer.gl.gl,createTexture=gl.createTexture.bind(gl);let allocations=0;
- gl.createTexture=()=>{allocations++;return createTexture();};
- for(let i=0;i<12;i++){
-  game.state.tiles=game.state.tiles.map(tile=>({...tile}));
-  baseSource=i%2?source:alternate;renderer.render();
- }
- gl.createTexture=createTexture;baseSource=source;
- const repeatedRestartsAndImports=allocations===0;
- const checks={tileMutation,tileRestored,assetRefresh,hiddenTerrain,mapBoundary,repeatedRestartsAndImports};
- const result={devicePixelRatio,forceMedium,passed:rows.every(row=>row.incorrect===0)&&Object.values(checks).every(Boolean),checks,rows};
- document.querySelector('#result').textContent=JSON.stringify(result,null,2);
- return result;
-};
-window.tileSeamResult=window.runTileSeamRegression();
+  // Scan the whole framebuffer at every map edge. Point samples in the interior
+  // missed a one-pixel TMP raster sliver beyond the vector shroud boundary.
+  window.runBoundaryRegression = (zooms = [0.45, 0.75, 0.9, 1, 1.15, 1.3, 2, 2.4]) => {
+    const rows = [],
+      s = game.state,
+      gl = renderer.gl.gl,
+      subpixelBits = gl.getParameter(gl.SUBPIXEL_BITS);
+    const positions = [
+      [0, 0],
+      [size, 0],
+      [0, size],
+      [size, size],
+      [0, size / 2],
+      [size, size / 2],
+      [size / 2, 0],
+      [size / 2, size],
+    ];
+    baseSource = source;
+    s.fog.fill(1);
+    for (const zoom of zooms)
+      for (const [edgeX, edgeY] of positions) {
+        renderer.camera.center(edgeX + 0.173, edgeY + 0.291);
+        renderer.camera.zoom = zoom;
+        for (const partial of [false, true]) {
+          s.explored.fill(0);
+          if (partial)
+            for (let y = Math.max(0, edgeY - 8); y < Math.min(size, edgeY + 8); y++)
+              for (let x = Math.max(0, edgeX - 8); x < Math.min(size, edgeX + 8); x++)
+                s.explored[y * size + x] = 1;
+          const core = new Uint8Array(size * size);
+          if (partial)
+            for (let y = 1; y < size - 1; y++)
+              for (let x = 1; x < size - 1; x++)
+                if (
+                  [-1, 0, 1].every((dy) =>
+                    [-1, 0, 1].every((dx) => s.explored[(y + dy) * size + x + dx]),
+                  )
+                )
+                  core[y * size + x] = 1;
+          renderer.render();
+          const pixels = new Uint8Array(canvas.width * canvas.height * 4),
+            ratio = canvas.width / 640;
+          gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+          // WebGL quantizes polygon edges to its advertised subpixel grid. A pixel
+          // center within that tiny band may belong to either neighboring polygon.
+          // Fully hidden frames get no tolerance; this only classifies mixed edges.
+          const uncertainty = (2 ** -subpixelBits * Math.sqrt(5)) / (60 * zoom * ratio);
+          const revealed = (wx, wy) => {
+            const x = Math.floor(wx),
+              y = Math.floor(wy);
+            return x >= 0 && y >= 0 && x < size && y < size && !!s.explored[y * size + x];
+          };
+          let leaked = 0,
+            wrongCore = 0,
+            corePixels = 0,
+            hiddenPixels = 0,
+            rasterBoundaryPixels = 0;
+          const leakExamples = [];
+          for (let py = 0; py < canvas.height; py++)
+            for (let px = 0; px < canvas.width; px++) {
+              const i = (py * canvas.width + px) * 4;
+              const world = renderer.camera.world(
+                  (px + 0.5) / ratio,
+                  (canvas.height - py - 0.5) / ratio,
+                ),
+                x = Math.floor(world.x),
+                y = Math.floor(world.y);
+              if (x < 0 || y < 0 || x >= size || y >= size || !s.explored[y * size + x]) {
+                hiddenPixels++;
+                if (pixels[i] || pixels[i + 1] || pixels[i + 2]) {
+                  if (
+                    partial &&
+                    [-uncertainty, uncertainty].some((dy) =>
+                      [-uncertainty, uncertainty].some((dx) =>
+                        revealed(world.x + dx, world.y + dy),
+                      ),
+                    )
+                  )
+                    rasterBoundaryPixels++;
+                  else {
+                    leaked++;
+                    if (leakExamples.length < 3)
+                      leakExamples.push({
+                        pixel: [px, canvas.height - 1 - py],
+                        world,
+                        rgb: Array.from(pixels.slice(i, i + 3)),
+                      });
+                  }
+                }
+              } else if (core[y * size + x]) {
+                corePixels++;
+                if (
+                  Math.abs(pixels[i] - 128) > 1 ||
+                  Math.abs(pixels[i + 1] - 160) > 1 ||
+                  Math.abs(pixels[i + 2] - 96) > 1
+                )
+                  wrongCore++;
+              }
+            }
+          rows.push({
+            zoom,
+            edge: [edgeX, edgeY],
+            partial,
+            leaked,
+            hiddenPixels,
+            rasterBoundaryPixels,
+            wrongCore,
+            corePixels,
+            total: pixels.length / 4,
+            ...(leaked ? { leakExamples } : {}),
+          });
+        }
+      }
+    s.explored.fill(1);
+    renderer.camera.center(64, 64);
+    renderer.camera.zoom = 1;
+    renderer.render();
+    const result = {
+      devicePixelRatio,
+      forceMedium,
+      subpixelBits,
+      passed: rows.every(
+        (row) => row.leaked === 0 && row.wrongCore === 0 && (!row.partial || row.corePixels > 0),
+      ),
+      rows,
+    };
+    document.querySelector('#result').textContent = JSON.stringify(result, null, 2);
+    return result;
+  };
+
+  window.runTileSeamRegression = () => {
+    const rows = [];
+    for (const zoom of [0.45, 0.5, 0.65, 0.75, 0.9, 1, 1.15, 1.3, 1.5, 2, 2.4])
+      for (const [x, y] of [
+        [64, 64],
+        [64.173, 64.291],
+        [65.07, 64.3],
+      ]) {
+        renderer.camera.center(x, y);
+        renderer.camera.zoom = zoom;
+        renderer.render();
+        const gl = renderer.gl.gl,
+          pixels = new Uint8Array(canvas.width * canvas.height * 4);
+        gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+        let incorrect = 0;
+        for (let i = 0; i < pixels.length; i += 4)
+          if (
+            Math.abs(pixels[i] - 128) > 1 ||
+            Math.abs(pixels[i + 1] - 160) > 1 ||
+            Math.abs(pixels[i + 2] - 96) > 1
+          )
+            incorrect++;
+        rows.push({ zoom, camera: [x, y], incorrect, total: pixels.length / 4 });
+      }
+    renderer.camera.center(64, 64);
+    renderer.camera.zoom = 1;
+    const sample = (x, y) => {
+      const gl = renderer.gl.gl,
+        p = renderer.camera.screen(x, y),
+        pixel = new Uint8Array(4),
+        ratio = canvas.width / 640;
+      gl.readPixels(
+        Math.floor(p.x * ratio),
+        canvas.height - 1 - Math.floor(p.y * ratio),
+        1,
+        1,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        pixel,
+      );
+      return Array.from(pixel).slice(0, 3);
+    };
+    const equals = (actual, expected) =>
+      actual.every((value, i) => Math.abs(value - expected[i]) <= 1);
+    game.state.tiles[64 * size + 64].variant = 1;
+    renderer.render();
+    const tileMutation = equals(sample(64.5, 64.5), [96, 128, 160]);
+    game.state.tiles[64 * size + 64].variant = 0;
+    renderer.render();
+    const tileRestored = equals(sample(64.5, 64.5), [128, 160, 96]);
+    baseSource = alternate;
+    renderer.render();
+    const assetRefresh = equals(sample(64.5, 64.5), [96, 128, 160]);
+    baseSource = source;
+    game.state.explored.fill(0);
+    renderer.render();
+    const hiddenTerrain = equals(sample(64.5, 64.5), [0, 0, 0]);
+    game.state.explored.fill(1);
+    renderer.camera.center(0, 0);
+    renderer.render();
+    const mapBoundary =
+      equals(sample(-2, -2), [0, 0, 0]) && equals(sample(0.5, 0.5), [128, 160, 96]);
+    renderer.camera.center(64, 64);
+    renderer.render();
+    const gl = renderer.gl.gl,
+      createTexture = gl.createTexture.bind(gl);
+    let allocations = 0;
+    gl.createTexture = () => {
+      allocations++;
+      return createTexture();
+    };
+    for (let i = 0; i < 12; i++) {
+      game.state.tiles = game.state.tiles.map((tile) => ({ ...tile }));
+      baseSource = i % 2 ? source : alternate;
+      renderer.render();
+    }
+    gl.createTexture = createTexture;
+    baseSource = source;
+    const repeatedRestartsAndImports = allocations === 0;
+    const checks = {
+      tileMutation,
+      tileRestored,
+      assetRefresh,
+      hiddenTerrain,
+      mapBoundary,
+      repeatedRestartsAndImports,
+    };
+    const result = {
+      devicePixelRatio,
+      forceMedium,
+      passed: rows.every((row) => row.incorrect === 0) && Object.values(checks).every(Boolean),
+      checks,
+      rows,
+    };
+    document.querySelector('#result').textContent = JSON.stringify(result, null, 2);
+    return result;
+  };
+  window.tileSeamResult = window.runTileSeamRegression();
 </script>

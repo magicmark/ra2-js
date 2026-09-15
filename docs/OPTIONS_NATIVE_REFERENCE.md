@@ -53,17 +53,17 @@ The action templates use Windows `Button` with style `0x5000000b`. The class str
 
 The art dimensions and frame crops are supplied by assets' original MIX decode, preserved in [authored dimension handoff](reference/native-options/authored-dimensions-handoff.json). This review independently traces their usage; it does not duplicate the MIX audit. The pointer table in the formulas JSON ties executable pointers to exact SHP names.
 
-| Piece | Native nominal rectangle: x, y, width, height |
-| --- | --- |
-| BKGDMD | **0, 0, 632, 568** |
-| CREDITS | 632, 0, 168, 16 |
-| TOP | 632, 16, 168, 32 |
-| RADAR, frame 0 in this menu compositor | 632, 48, 168, 110 |
-| SIDE1 | 632, 158, 168, 69 |
-| SIDE2B, repeated six times | 632, **227 / 277 / 327 / 377 / 427 / 477**, 168, 50 |
-| SIDE3 | 632, **527**, 168, 26 |
-| ADDON | 632, **553**, 168, 63; only 47 rows fit within height 600 |
-| Left footer allocation | 0, 568, 632, 32 |
+| Piece                                  | Native nominal rectangle: x, y, width, height             |
+| -------------------------------------- | --------------------------------------------------------- |
+| BKGDMD                                 | **0, 0, 632, 568**                                        |
+| CREDITS                                | 632, 0, 168, 16                                           |
+| TOP                                    | 632, 16, 168, 32                                          |
+| RADAR, frame 0 in this menu compositor | 632, 48, 168, 110                                         |
+| SIDE1                                  | 632, 158, 168, 69                                         |
+| SIDE2B, repeated six times             | 632, **227 / 277 / 327 / 377 / 427 / 477**, 168, 50       |
+| SIDE3                                  | 632, **527**, 168, 26                                     |
+| ADDON                                  | 632, **553**, 168, 63; only 47 rows fit within height 600 |
+| Left footer allocation                 | 0, 568, 632, 32                                           |
 
 Allocator `0x6f4c90` computes:
 
@@ -91,10 +91,10 @@ button.y = rowOrigin + n * 25
 
 Here `c` is already in Windows pixels, not DLU. The exact function is useful even when the initial mapping is unresolved. **No final per-action row index is certified by this audit.** For a conditional vertical base unit of 13 with normal Windows rounding, the native templates yield:
 
-| Resource | Button IDs / labels in order | Conditional indices | Conditional y at 800×600 |
-| --- | --- | --- | --- |
-| 181 | 1313 Controls, 1310 Load, 1311 Save, 1312 Delete, 1314 Abort | 0, 1, 2, 3, 4 | 227, 252, 277, 302, 327 |
-| 3003 | 1325 Sound, 1324 Keyboard | 0, 1 | 227, 252 |
+| Resource | Button IDs / labels in order                                 | Conditional indices | Conditional y at 800×600 |
+| -------- | ------------------------------------------------------------ | ------------------- | ------------------------ |
+| 181      | 1313 Controls, 1310 Load, 1311 Save, 1312 Delete, 1314 Abort | 0, 1, 2, 3, 4       | 227, 252, 277, 302, 327  |
+| 3003     | 1325 Sound, 1324 Keyboard                                    | 0, 1                | 227, 252                 |
 
 Those example indices must retain their font-mapping qualification. Resource 184's Play/Stop controls use interior placement, not these navigation rows. The `317` DLU x for Delete is overwritten by the shared x=W−147 helper and does not create a one-pixel final displacement.
 
@@ -119,13 +119,13 @@ For heading 1684, `0x5e8e20` retains original pixel dimensions and y, and center
 
 The owner-draw chain copies `DRAWITEMSTRUCT.itemState` to child metadata +0xe8 at `0x5fe471`. Paint mode 2 at `0x5f0698` selects the following frames; pressed selection takes priority over flashing. The meaning of the Windows state structure is corroborated by [Microsoft DRAWITEMSTRUCT](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-drawitemstruct).
 
-| State | SHP frame | Evidence / limit |
-| --- | ---: | --- |
-| Normal | **0** | Default selection in the mode-2 branch |
-| Pressed / selected | **1** | `itemState & 1` selects frame 1 |
-| Ordinary hover or keyboard focus | No separate frame | This selector tests neither hover nor focus; absent press/flash it stays 0. Complete hover text/cursor behavior is not certified. |
-| Disabled, idle | **0** | `WS_DISABLED` changes text color after frame selection; it does not select frame 2. Exact resulting RGB remains unmeasured. |
-| Explicit timed flash, bright phase | **2** | Metadata +0xc5; separate from disabled and ordinary hover |
+| State                              |         SHP frame | Evidence / limit                                                                                                                  |
+| ---------------------------------- | ----------------: | --------------------------------------------------------------------------------------------------------------------------------- |
+| Normal                             |             **0** | Default selection in the mode-2 branch                                                                                            |
+| Pressed / selected                 |             **1** | `itemState & 1` selects frame 1                                                                                                   |
+| Ordinary hover or keyboard focus   | No separate frame | This selector tests neither hover nor focus; absent press/flash it stays 0. Complete hover text/cursor behavior is not certified. |
+| Disabled, idle                     |             **0** | `WS_DISABLED` changes text color after frame selection; it does not select frame 2. Exact resulting RGB remains unmeasured.       |
+| Explicit timed flash, bright phase |             **2** | Metadata +0xc5; separate from disabled and ordinary hover                                                                         |
 
 Custom message `0x4dc` with `lParam==1` starts a Windows timer with requested interval **1000 ms**. `WM_TIMER` (`0x113`) toggles the flash phase; stopping clears it and kills the timer. This is a requested interval from static code, not observed playback timing. The examined Options callbacks do not establish that their navigation buttons invoke this flashing mode. Do not automatically assign it to hover, disabled, or every Options button. [Microsoft WM_TIMER](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer).
 
@@ -137,16 +137,16 @@ The button text rectangle starts at its draw point plus `(0,1)`, with its right 
 
 Resource **181** contains the following right-hand button column. Rectangles are `x, y, width, height` in **DLU**; names below correspond to the resource's `GUI:*` keys, not newly measured rendered text.
 
-| Control | ID | Template rectangle |
-| --- | ---: | --- |
-| Game Options heading | 1684 | 318, 1, 108, 10 |
-| Game Controls | 1313 | 318, 122, 108, 23 |
-| Load Game | 1310 | 318, 149, 108, 23 |
-| Save Game | 1311 | 318, 176, 108, 23 |
-| Delete Game | 1312 | **317**, 203, 108, 23 |
-| Abort Mission | 1314 | 318, 230, 108, 23 |
-| Resume Mission | 1670 | 318, 257, 108, 23 |
-| Blank/help text | 1685 | 10, 282, 303, 12 |
+| Control              |   ID | Template rectangle    |
+| -------------------- | ---: | --------------------- |
+| Game Options heading | 1684 | 318, 1, 108, 10       |
+| Game Controls        | 1313 | 318, 122, 108, 23     |
+| Load Game            | 1310 | 318, 149, 108, 23     |
+| Save Game            | 1311 | 318, 176, 108, 23     |
+| Delete Game          | 1312 | **317**, 203, 108, 23 |
+| Abort Mission        | 1314 | 318, 230, 108, 23     |
+| Resume Mission       | 1670 | 318, 257, 108, 23     |
+| Blank/help text      | 1685 | 10, 282, 303, 12      |
 
 Preserve the actual `317` template value for Delete when reproducing the evidence; do not infer a required one-pixel visual misalignment from it.
 
@@ -156,19 +156,19 @@ Clicking Game Controls (1313) sets the menu state to 5 at `0x4ddbbf`; dispatch t
 
 ## Game Controls, resource 3003
 
-| Control | ID | Template rectangle, DLU | Template state |
-| --- | ---: | --- | --- |
-| Game Options heading | 1684 | 318, 1, 108, 10 | Visible |
-| Sound | 1325 | 318, 122, 108, 23 | Visible; callback may disable |
-| Keyboard | 1324 | 318, 149, 108, 23 | Visible |
-| Back | 1670 | 318, 257, 108, 23 | Visible |
-| Game Speed label / slider / value | 1812 / 1321 / 1649 | 4,86,78,15 / 87,87,128,13 / 221,86,92,15 | Visible in template; conditionally hidden |
-| Scroll Rate label / slider / value | 1813 / 1322 / 1650 | 4,117,78,15 / 87,118,128,13 / 221,117,92,15 | Visible |
-| Visual Details label / slider / value | 1814 / 1323 / 1651 | 4,148,78,15 / 87,149,128,13 / 221,148,92,15 | **Hidden and disabled** |
-| Target Lines | 1537 | 32, 193, 119, 10 | Visible checkbox |
-| Tooltips | 1538 | 157, 193, 127, 10 | Visible checkbox |
-| Show Hidden | 1540 | 32, 211, 119, 10 | Visible checkbox |
-| Blank/help text | 1685 | 10, 282, 303, 12 | Visible |
+| Control                               |                 ID | Template rectangle, DLU                     | Template state                            |
+| ------------------------------------- | -----------------: | ------------------------------------------- | ----------------------------------------- |
+| Game Options heading                  |               1684 | 318, 1, 108, 10                             | Visible                                   |
+| Sound                                 |               1325 | 318, 122, 108, 23                           | Visible; callback may disable             |
+| Keyboard                              |               1324 | 318, 149, 108, 23                           | Visible                                   |
+| Back                                  |               1670 | 318, 257, 108, 23                           | Visible                                   |
+| Game Speed label / slider / value     | 1812 / 1321 / 1649 | 4,86,78,15 / 87,87,128,13 / 221,86,92,15    | Visible in template; conditionally hidden |
+| Scroll Rate label / slider / value    | 1813 / 1322 / 1650 | 4,117,78,15 / 87,118,128,13 / 221,117,92,15 | Visible                                   |
+| Visual Details label / slider / value | 1814 / 1323 / 1651 | 4,148,78,15 / 87,149,128,13 / 221,148,92,15 | **Hidden and disabled**                   |
+| Target Lines                          |               1537 | 32, 193, 119, 10                            | Visible checkbox                          |
+| Tooltips                              |               1538 | 157, 193, 127, 10                           | Visible checkbox                          |
+| Show Hidden                           |               1540 | 32, 211, 119, 10                            | Visible checkbox                          |
+| Blank/help text                       |               1685 | 10, 282, 303, 12                            | Visible                                   |
 
 The Visual Details controls have styles `0x48000202`, `0x48000018`, and `0x48000200`: disabled, with no visible flag. Initializing the hidden slider in the callback does not prove it is displayed. There is **no Difficulty or Scroll Coasting control in 3003**; those occur in alternative template 245. [Microsoft window style flags](https://learn.microsoft.com/en-us/windows/win32/winmsg/window-styles).
 
@@ -184,19 +184,19 @@ The callback at `0x4cfc00` provides further constraints:
 
 Resource **184** places three volume rows above a track list, with separate playback controls. Its exact DLU rectangles are:
 
-| Control | ID | Template rectangle, DLU |
-| --- | ---: | --- |
-| Music label / slider | static / 1327 | 9,27,90,15 / 105,28,175,13 |
-| Sound label / slider | static / 1330 | 9,49,90,15 / 105,50,175,13 |
-| Voice label / slider | static / 1334 | 9,71,90,15 / 105,72,175,13 |
-| Track list | 1328 | 105, 97, 175, 99 |
-| Shuffle | 1331 | 29, 155, 70, 14 |
-| Repeat | 1332 | 29, 182, 70, 14 |
-| Play | 1329 | 29, 214, 83, 15 |
-| Stop | 1333 | 197, 214, 83, 15 |
-| Sound Options heading | 1684 | 318, 1, 108, 10 |
-| Back | 1670 | 318, 257, 108, 23 |
-| Blank/help text | 1685 | 10, 282, 303, 12 |
+| Control               |            ID | Template rectangle, DLU    |
+| --------------------- | ------------: | -------------------------- |
+| Music label / slider  | static / 1327 | 9,27,90,15 / 105,28,175,13 |
+| Sound label / slider  | static / 1330 | 9,49,90,15 / 105,50,175,13 |
+| Voice label / slider  | static / 1334 | 9,71,90,15 / 105,72,175,13 |
+| Track list            |          1328 | 105, 97, 175, 99           |
+| Shuffle               |          1331 | 29, 155, 70, 14            |
+| Repeat                |          1332 | 29, 182, 70, 14            |
+| Play                  |          1329 | 29, 214, 83, 15            |
+| Stop                  |          1333 | 197, 214, 83, 15           |
+| Sound Options heading |          1684 | 318, 1, 108, 10            |
+| Back                  |          1670 | 318, 257, 108, 23          |
+| Blank/help text       |          1685 | 10, 282, 303, 12           |
 
 At `0x688e2e`, `0x688e96`, and `0x688ef0`, the callback gives the volume sliders range **0–10**. It applies the availability predicate to the volume controls, Shuffle, Repeat and track list. No assumption about always-enabled audio or a populated playlist is warranted without the relevant game state and media. Alternative resource **214** has the simpler three-volume form; it is not interchangeable with 184.
 

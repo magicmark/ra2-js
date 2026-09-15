@@ -14,33 +14,33 @@ The local original files are opt-in test fixtures under `RA2_ASSET_DIR`; they ar
 
 ## Controls now implemented
 
-| Input | Current behavior |
-| --- | --- |
-| Left click | Select a friendly unit/building; command the current selection; selected GI toggles deployment. |
-| Right click | Cancel placement or a command mode; otherwise deselect. Existing unit orders continue. |
-| Right drag / middle drag | Pan the camera without issuing an order or deselecting. |
-| Shift + click | Add a unit or remove an already selected unit. |
-| Drag selection | Select friendly mobile units in the rectangle. |
-| Ctrl + Shift + click | Move while engaging encountered enemies. |
-| Ctrl + click | Deliberate fire at an entity, including friendly units, or at explored ground. |
-| Alt + click | Deliberate movement; vehicles authored as crushers can crush enemy infantry. |
-| Ctrl + Alt + click | Guard a destination or escort a friendly entity. |
-| P / T | Select mobile units throughout the battlefield / current selected types onscreen; a second T within 400ms expands type selection throughout the map. |
-| Ctrl + 1–9 / 1–9 | Store / recall control groups; Shift adds a recalled group. A second recall centers the camera. |
-| S / G / X / D | Stop in place / guard the area / scatter / toggle GI deployment. |
-| Q / W / E / R | Structures / defenses / infantry / vehicles tabs, through the UI callback. |
-| K / L | Toggle persistent repair / sell cursor modes. Click an owned building to act. |
-| H / F | Center the construction yard / follow the selected unit. Camera input cancels follow. |
-| M / N / U | Select the next mobile unit by creation order / restore a previous selection / cycle populated green, yellow, and red health groups. |
-| Ctrl + F1–F4 / F1–F4 | Store / jump to a camera bookmark. |
-| Hold Z, click destinations, release Z | Queue up to 32 movement destinations per selected unit, then execute. The command-bar planning button keeps this mode active until toggled off. |
-| Radar click | With selected mobile units, orders movement/attack/harvest or the active modifier command; without a selection, centers the camera. Right click cancels or deselects. |
-| Native contextual cursor | Select, move/blocked, attack, attack-move/blocked, deploy/blocked, repair/blocked, sell/blocked, guard, pan and eight scrolling directions use the actual command eligibility. |
-| Native team buttons | First click with a selection assigns an unused team; later clicks recall it. Ctrl reassigns; right click disbands. |
-| Esc | Cancel an active placement/mode; otherwise open options through the UI callback. |
-| Arrows / pointer at map edge | Continuous camera scrolling. |
-| Wheel / +/- | Zoom; browser extension to the original controls. |
-| Touch | Explicit select/pan/attack modes, selection drag, two-finger pan and anchored pinch zoom. |
+| Input                                 | Current behavior                                                                                                                                                               |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Left click                            | Select a friendly unit/building; command the current selection; selected GI toggles deployment.                                                                                |
+| Right click                           | Cancel placement or a command mode; otherwise deselect. Existing unit orders continue.                                                                                         |
+| Right drag / middle drag              | Pan the camera without issuing an order or deselecting.                                                                                                                        |
+| Shift + click                         | Add a unit or remove an already selected unit.                                                                                                                                 |
+| Drag selection                        | Select friendly mobile units in the rectangle.                                                                                                                                 |
+| Ctrl + Shift + click                  | Move while engaging encountered enemies.                                                                                                                                       |
+| Ctrl + click                          | Deliberate fire at an entity, including friendly units, or at explored ground.                                                                                                 |
+| Alt + click                           | Deliberate movement; vehicles authored as crushers can crush enemy infantry.                                                                                                   |
+| Ctrl + Alt + click                    | Guard a destination or escort a friendly entity.                                                                                                                               |
+| P / T                                 | Select mobile units throughout the battlefield / current selected types onscreen; a second T within 400ms expands type selection throughout the map.                           |
+| Ctrl + 1–9 / 1–9                      | Store / recall control groups; Shift adds a recalled group. A second recall centers the camera.                                                                                |
+| S / G / X / D                         | Stop in place / guard the area / scatter / toggle GI deployment.                                                                                                               |
+| Q / W / E / R                         | Structures / defenses / infantry / vehicles tabs, through the UI callback.                                                                                                     |
+| K / L                                 | Toggle persistent repair / sell cursor modes. Click an owned building to act.                                                                                                  |
+| H / F                                 | Center the construction yard / follow the selected unit. Camera input cancels follow.                                                                                          |
+| M / N / U                             | Select the next mobile unit by creation order / restore a previous selection / cycle populated green, yellow, and red health groups.                                           |
+| Ctrl + F1–F4 / F1–F4                  | Store / jump to a camera bookmark.                                                                                                                                             |
+| Hold Z, click destinations, release Z | Queue up to 32 movement destinations per selected unit, then execute. The command-bar planning button keeps this mode active until toggled off.                                |
+| Radar click                           | With selected mobile units, orders movement/attack/harvest or the active modifier command; without a selection, centers the camera. Right click cancels or deselects.          |
+| Native contextual cursor              | Select, move/blocked, attack, attack-move/blocked, deploy/blocked, repair/blocked, sell/blocked, guard, pan and eight scrolling directions use the actual command eligibility. |
+| Native team buttons                   | First click with a selection assigns an unused team; later clicks recall it. Ctrl reassigns; right click disbands.                                                             |
+| Esc                                   | Cancel an active placement/mode; otherwise open options through the UI callback.                                                                                               |
+| Arrows / pointer at map edge          | Continuous camera scrolling.                                                                                                                                                   |
+| Wheel / +/-                           | Zoom; browser extension to the original controls.                                                                                                                              |
+| Touch                                 | Explicit select/pan/attack modes, selection drag, two-finger pan and anchored pinch zoom.                                                                                      |
 
 The prior A-for-attack and P-for-pause bindings are removed. A is an alliance command in the original multiplayer game. F1 is a bookmark key. Buttons retain native Space/Enter activation. Text input, open dialogs, the source gate, window blur, and canceled pointer gestures suppress battlefield commands. Groups, bookmarks, and queued gestures reset with a new battle so reused entity IDs cannot recall stale teams.
 

@@ -5,13 +5,13 @@ Verified on 2026-09-13. Source-entry checks used the frozen production snapshot
 221-file change adds original sidebar control frames; its integrated artwork
 verification is recorded separately by the asset owner.
 
-| Check | Actual result |
-| --- | --- |
-| Fresh browser context, before Enter | Original archive URL was prefilled and editable. `awaiting-source`, `assets.ready === false`, game time 0; no archive, extraction worker, or WASM requests. No image elements, placeholder action, artwork-update panel, or asset strip. |
-| Native Enter with an invalid original archive URL | One real fetch of `/invalid-archive.exe`. Extraction returned an actionable “No game MIX files found” error. The source form stayed visible, assets stayed unready, game time stayed 0, and no image elements appeared. |
-| Error remains idle | After several minutes and both viewport changes, the invalid archive request count remained 1. The source remained editable and the multiple-file import remained enabled. |
-| Portrait 390×844 | Form bounds x=26–364; document width 390. No horizontal overflow; label, URL, error, submit, progress, and local import visible. |
-| Landscape 844×390 | Form bounds x=138–706; document width 844. The source dialog scrolls vertically and local import is reachable at its bottom. |
+| Check                                             | Actual result                                                                                                                                                                                                                            |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fresh browser context, before Enter               | Original archive URL was prefilled and editable. `awaiting-source`, `assets.ready === false`, game time 0; no archive, extraction worker, or WASM requests. No image elements, placeholder action, artwork-update panel, or asset strip. |
+| Native Enter with an invalid original archive URL | One real fetch of `/invalid-archive.exe`. Extraction returned an actionable “No game MIX files found” error. The source form stayed visible, assets stayed unready, game time stayed 0, and no image elements appeared.                  |
+| Error remains idle                                | After several minutes and both viewport changes, the invalid archive request count remained 1. The source remained editable and the multiple-file import remained enabled.                                                               |
+| Portrait 390×844                                  | Form bounds x=26–364; document width 390. No horizontal overflow; label, URL, error, submit, progress, and local import visible.                                                                                                         |
+| Landscape 844×390                                 | Form bounds x=138–706; document width 844. The source dialog scrolls vertically and local import is reachable at its bottom.                                                                                                             |
 
 A separate UI callback harness on live source tested native keyboard behavior
 without starting an archive download: two Enter presses produced exactly one

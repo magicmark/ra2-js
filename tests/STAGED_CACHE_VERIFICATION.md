@@ -11,12 +11,12 @@ Storage uses the existing `red-alert-command-assets` database, version 1, and
 `assets` store. Selected artwork remains under its existing string source key.
 Archive records use `['archive-stage-v1', sourceKey, stage]`:
 
-| Stage | Meaning |
-| --- | --- |
-| `download` | Fully received candidate, persisted before worker/WASM startup; not yet a verified game archive |
-| `mix-pending` | Structurally validated game MIX inputs, persisted before selected-art decoding |
-| `installer` | Installer retained after full artwork validation |
-| `mix` | Reusable original MIX inputs retained after full artwork validation |
+| Stage         | Meaning                                                                                         |
+| ------------- | ----------------------------------------------------------------------------------------------- |
+| `download`    | Fully received candidate, persisted before worker/WASM startup; not yet a verified game archive |
+| `mix-pending` | Structurally validated game MIX inputs, persisted before selected-art decoding                  |
+| `installer`   | Installer retained after full artwork validation                                                |
+| `mix`         | Reusable original MIX inputs retained after full artwork validation                             |
 
 Incomplete replacements retain the preceding verified stages. Invalid archive
 or consumed-art data marks only the failed generation rejected; another explicit
@@ -57,11 +57,11 @@ submission. DevTools retained one complete HTTP-200 archive request, id 574.
 The successful explicit transfer began at 18:44:59 UTC and the completed
 installer candidate was committed at 18:48:06 UTC. It was never seeded/imported.
 
-| Persisted record | Actual bytes | Files |
-| --- | ---: | ---: |
-| Installer | 206,530,229 | 1 |
-| MIX archives | 335,011,496 | 2 (`ra2.mix`, `language.mix`) |
-| Selected original artwork | 6,594,581 | 221 |
+| Persisted record          | Actual bytes |                         Files |
+| ------------------------- | -----------: | ----------------------------: |
+| Installer                 |  206,530,229 |                             1 |
+| MIX archives              |  335,011,496 | 2 (`ra2.mix`, `language.mix`) |
+| Selected original artwork |    6,594,581 |                           221 |
 
 All stages reached committed storage without warnings. A hard reload and two
 new pages each restored 221 originals with **zero fetches, workers, and writes**;

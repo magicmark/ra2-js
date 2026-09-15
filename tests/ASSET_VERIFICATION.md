@@ -38,12 +38,12 @@ archive bytes and a software implementation of its Canvas pixel operations. It
 checked **922 sprite variants** for non-null results and finite anchors, with no
 decoder diagnostics:
 
-| Coverage | Variants |
-| --- | ---: |
-| Six vehicles × 32 facings × two remap colors | 384 |
-| Sentry Gun turret × 32 facings × two remap colors | 64 |
-| Four infantry × 56 idle/walk frames × two remap colors | 448 |
-| Remaining 13 structures × two remap colors | 26 |
+| Coverage                                               | Variants |
+| ------------------------------------------------------ | -------: |
+| Six vehicles × 32 facings × two remap colors           |      384 |
+| Sentry Gun turret × 32 facings × two remap colors      |       64 |
+| Four infantry × 56 idle/walk frames × two remap colors |      448 |
+| Remaining 13 structures × two remap colors             |       26 |
 
 This audit verifies composition and decode coverage. Final battlefield appearance
 is separately captured from actual Chromium WebGL. Directional contact sheets

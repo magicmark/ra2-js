@@ -13,16 +13,16 @@ cells, including the border, and 15,480 cells inside the local playable rectangl
 This is an explicit project convention, not a claimed official RA2 size category.
 The native coordinate system is an isometric rectangle, not a 96×96 square grid.
 
-| Map | Native land/buildable | Connected land | Five-cell-wide route component | Minimum start separation |
-| --- | ---: | ---: | ---: | ---: |
-| Emerald Divide | 88.05% | 99.985% | 10,023 | 41.88 |
-| Frostline Basin | 90.79% | 100% | 10,634 | 39.12 |
-| Saffron Wash | 99.04% | 100% | 13,131 | 40.22 |
-| Ironwood Crossing | 97.64% | 100% | 11,200 | 40.82 |
-| Slatewater Reach | 89.49% | 100% | 11,270 | 40.82 |
-| Copperhead Mesa | 100% | 100% | 12,961 | 42.19 |
-| Whiteout Causeway | 88.87% | 100% | 10,995 | 41.88 |
-| Tidal Crown | 93.40% | 100% | 11,450 | 38.47 |
+| Map               | Native land/buildable | Connected land | Five-cell-wide route component | Minimum start separation |
+| ----------------- | --------------------: | -------------: | -----------------------------: | -----------------------: |
+| Emerald Divide    |                88.05% |        99.985% |                         10,023 |                    41.88 |
+| Frostline Basin   |                90.79% |           100% |                         10,634 |                    39.12 |
+| Saffron Wash      |                99.04% |           100% |                         13,131 |                    40.22 |
+| Ironwood Crossing |                97.64% |           100% |                         11,200 |                    40.82 |
+| Slatewater Reach  |                89.49% |           100% |                         11,270 |                    40.82 |
+| Copperhead Mesa   |                  100% |           100% |                         12,961 |                    42.19 |
+| Whiteout Causeway |                88.87% |           100% |                         10,995 |                    41.88 |
+| Tidal Crown       |                93.40% |           100% |                         11,450 |                    38.47 |
 
 All 48 starts have an unobstructed, buildable 11×11 plot. The nearest ore is ten
 orthogonal ground steps away; each start has exactly 78 full-density ore cells

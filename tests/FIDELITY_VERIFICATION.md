@@ -8,15 +8,15 @@ At 1280 × 800 and native 100% zoom, the original loaded-asset baseline gave the
 
 The Allied sidebar uses sidec01.mix artwork and its sidebar palette. Its measured 800 × 600 composition matches the reference:
 
-| Element | Vertical position |
-| --- | --- |
-| Credit inset | 0–16 |
-| Original top control surround/buttons | 16–48 |
-| Radar / inactive Allied eagle | 48–158 |
-| Repair/sell surround and category tabs | 158–227 |
-| Six rows of production cameos | 227–527 |
-| Scroll surround | 527–553 |
-| Visible lower metal panel | 553–600 |
+| Element                                | Vertical position |
+| -------------------------------------- | ----------------- |
+| Credit inset                           | 0–16              |
+| Original top control surround/buttons  | 16–48             |
+| Radar / inactive Allied eagle          | 48–158            |
+| Repair/sell surround and category tabs | 158–227           |
+| Six rows of production cameos          | 227–527           |
+| Scroll surround                        | 527–553           |
+| Visible lower metal panel              | 553–600           |
 
 The earlier noisy blue `tabs.shp` row was removed; `top.shp` belongs above the radar. The vehicle tab uses the original blank state until a factory exists. Gameplay no longer overlays asset-management or idle-queue text on the lower sidebar artwork.
 
@@ -30,17 +30,17 @@ The archive fixture was the real installer or its extracted `ra2.mix` and `langu
 
 ## Native input results
 
-| Check | Observed result |
-| --- | --- |
-| Production categories/cameos | Native category clicks showed original infantry and vehicle cameos and correct availability. |
-| Queue pause/cancel/resume | Two native G.I. clicks charged 400 credits. At 40%, native Pause held progress through three simulated seconds. Cancel refunded 200 for the second item. Clicking the paused cameo resumed and produced one G.I.; five G.I.s were present afterward. Recorded pointer events were trusted. |
-| Cameo context-menu action | Native keyboard context-menu input (`Shift+F10`) on a queued G.I. paused it; a second input cancelled it and refunded 200 credits. Both browser `contextmenu` events were trusted. This exercises the right-click handler through keyboard input. |
-| Building ready/placement | A native Airforce Command click completed its queue, the ready cameo entered placement, and a native canvas click placed it at `(18,35)`. The queue cleared and the radar activated. |
-| Radar power | The normal powered Airforce Command activated the isometric minimap. A browser-side zero-power fixture disabled it, and restoring power re-enabled it. |
-| Factory/vehicle production | Native factory production and placement at `(9,32)` enabled the previously blank vehicle tab. Native Grizzly production created a second tank, entity 49. |
-| Moving the new vehicle | Native canvas selection and terrain command gave the new Grizzly a three-waypoint path. It moved from `(11.5,35.5)` to `(8.5,38.5)` in six simulated seconds and returned to guard. |
-| Selection bounds | Native tank and infantry selections displayed compact health indicators aligned to the painted sprite, without transparent-canvas offsets. |
-| Mobile layout | Native Build opened the drawer at 390 × 844 and 844 × 390. Forced mobile at 1280 × 800 retained a 168-pixel drawer and a 58-pixel command bar. |
+| Check                        | Observed result                                                                                                                                                                                                                                                                            |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Production categories/cameos | Native category clicks showed original infantry and vehicle cameos and correct availability.                                                                                                                                                                                               |
+| Queue pause/cancel/resume    | Two native G.I. clicks charged 400 credits. At 40%, native Pause held progress through three simulated seconds. Cancel refunded 200 for the second item. Clicking the paused cameo resumed and produced one G.I.; five G.I.s were present afterward. Recorded pointer events were trusted. |
+| Cameo context-menu action    | Native keyboard context-menu input (`Shift+F10`) on a queued G.I. paused it; a second input cancelled it and refunded 200 credits. Both browser `contextmenu` events were trusted. This exercises the right-click handler through keyboard input.                                          |
+| Building ready/placement     | A native Airforce Command click completed its queue, the ready cameo entered placement, and a native canvas click placed it at `(18,35)`. The queue cleared and the radar activated.                                                                                                       |
+| Radar power                  | The normal powered Airforce Command activated the isometric minimap. A browser-side zero-power fixture disabled it, and restoring power re-enabled it.                                                                                                                                     |
+| Factory/vehicle production   | Native factory production and placement at `(9,32)` enabled the previously blank vehicle tab. Native Grizzly production created a second tank, entity 49.                                                                                                                                  |
+| Moving the new vehicle       | Native canvas selection and terrain command gave the new Grizzly a three-waypoint path. It moved from `(11.5,35.5)` to `(8.5,38.5)` in six simulated seconds and returned to guard.                                                                                                        |
+| Selection bounds             | Native tank and infantry selections displayed compact health indicators aligned to the painted sprite, without transparent-canvas offsets.                                                                                                                                                 |
+| Mobile layout                | Native Build opened the drawer at 390 × 844 and 844 × 390. Forced mobile at 1280 × 800 retained a 168-pixel drawer and a 58-pixel command bar.                                                                                                                                             |
 
 ## Vehicles, animations, and terrain
 

@@ -4,13 +4,13 @@ Researched 2026-09-13 against the original base game. The target is retail Red A
 
 ## Sources inspected
 
-| Source | Evidence inspected | Local research copy |
-| --- | --- | --- |
-| [Allied campaign screenshot](https://screens.16bit.pl/red-alert-2/5.jpg), via [game gallery](https://abandonwaregames.net/game/red-alert-2) | 800×600 gameplay; Allied sidebar, cameo proportions, buildings and infantry | `/tmp/ra2-references/allied-snow.jpg` |
-| [Soviet gameplay screenshot](https://multiplayer.net-cdn.it/thumbs/images/2001/04/30/17330.command--conquer-red-alert-2.bvegi_jpg_800x0_crop_upscale_q85.jpg), via [2001 game gallery](https://multiplayer.it/giochi/command-conquer-red-alert-2-per-pc.html) | 800×600 gameplay; Soviet chrome, radar, power bar, black shroud | `/tmp/ra2-references/soviet-beach.jpg` |
-| [Allied unit formation screenshot](https://retro.gg/image/screenshot/3424-command-conquer-red-alert-2-e6aeafef-36e0-4ce5-abc6-021d6415efb4.png/1280), via [game gallery](https://retro.gg/game/command-conquer-red-alert-2/3424) | Tanks, infantry, aircraft, directional silhouettes, trees, roads; 1280×960 is a scaled image, not a native geometry reference | `/tmp/ra2-references/allied-units.png` |
-| [Allied base screenshot](https://www.chucksgame.com/ii/s-command-conquer-red-alert-2-1473.jpg), via [game gallery](https://www.chucksgame.com/game-command-conquer-red-alert-2) | Inactive radar displays faction emblem; structures on pavement, selected building | `/tmp/ra2-references/allied-base.jpg` |
-| [RedAlert2Havoc: Allied mission 1, Lone Guardian](https://www.youtube.com/watch?v=LyygS_XHfQQ) | YouTube gameplay storyboard frames; sheets 2 and 3 cover approximately 04:07–06:11 and 06:11–08:14. Confirms progressive scouting into black shroud, fixed narrow sidebar, unobstructed tactical view. | `/tmp/ra2-references/video-storyboard-2.jpg`, `video-storyboard-3.jpg` |
+| Source                                                                                                                                                                                                                                                        | Evidence inspected                                                                                                                                                                                     | Local research copy                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| [Allied campaign screenshot](https://screens.16bit.pl/red-alert-2/5.jpg), via [game gallery](https://abandonwaregames.net/game/red-alert-2)                                                                                                                   | 800×600 gameplay; Allied sidebar, cameo proportions, buildings and infantry                                                                                                                            | `/tmp/ra2-references/allied-snow.jpg`                                  |
+| [Soviet gameplay screenshot](https://multiplayer.net-cdn.it/thumbs/images/2001/04/30/17330.command--conquer-red-alert-2.bvegi_jpg_800x0_crop_upscale_q85.jpg), via [2001 game gallery](https://multiplayer.it/giochi/command-conquer-red-alert-2-per-pc.html) | 800×600 gameplay; Soviet chrome, radar, power bar, black shroud                                                                                                                                        | `/tmp/ra2-references/soviet-beach.jpg`                                 |
+| [Allied unit formation screenshot](https://retro.gg/image/screenshot/3424-command-conquer-red-alert-2-e6aeafef-36e0-4ce5-abc6-021d6415efb4.png/1280), via [game gallery](https://retro.gg/game/command-conquer-red-alert-2/3424)                              | Tanks, infantry, aircraft, directional silhouettes, trees, roads; 1280×960 is a scaled image, not a native geometry reference                                                                          | `/tmp/ra2-references/allied-units.png`                                 |
+| [Allied base screenshot](https://www.chucksgame.com/ii/s-command-conquer-red-alert-2-1473.jpg), via [game gallery](https://www.chucksgame.com/game-command-conquer-red-alert-2)                                                                               | Inactive radar displays faction emblem; structures on pavement, selected building                                                                                                                      | `/tmp/ra2-references/allied-base.jpg`                                  |
+| [RedAlert2Havoc: Allied mission 1, Lone Guardian](https://www.youtube.com/watch?v=LyygS_XHfQQ)                                                                                                                                                                | YouTube gameplay storyboard frames; sheets 2 and 3 cover approximately 04:07–06:11 and 06:11–08:14. Confirms progressive scouting into black shroud, fixed narrow sidebar, unobstructed tactical view. | `/tmp/ra2-references/video-storyboard-2.jpg`, `video-storyboard-3.jpg` |
 
 The video was published 2017-03-09, runs 08:44, and identifies the base-game Allied campaign. Its description says the game was configured at 1920×1080 and the video rendered at 1280×720. Sample times are derived from the video's storyboard metadata (approximately 4.9434 seconds per frame). Actual downloaded frame samples were visually inspected; the full-motion video request returned HTTP 403. These samples establish layout and scouting behavior, not precise animation timing or movement quality.
 
@@ -51,22 +51,22 @@ Priorities sent directly to implementation agents: restore original sidebar and 
 
 Using the repository MIX/SHP decoder against the existing original `ra2.mix`, `sidec01.mix` and `sidec02.mix` each contain 51 entries. Identical filenames need faction namespaces and the corresponding `sidebar.pal`.
 
-| File | Native geometry / use |
-| --- | --- |
-| `credits.shp` | 168×16 credit inset |
-| `tabs.shp` | 168×16 upper controls backing |
-| `radar.shp` | 168×110, 33 frames; frame 0 faction emblem, frame 32 empty radar surround |
-| `top.shp` | 168×32 menu chrome, y=16–48 directly below credits |
-| `side1.shp` | 168×69 repair/sell and category surround |
-| `side2.shp` | 168×50, repeated paired empty cameo slots |
-| `side2b.shp` | 168×50, empty rails without slots |
-| `side3.shp` | 168×26 lower scroll surround |
-| `tab00.shp`–`tab03.shp` | Buildings, defenses, infantry, vehicles; 5 states each |
-| `repair.shp`, `sell.shp` | Faction-specific shapes, 2 states each |
-| `power.shp`, `powerp.shp` | Original power indicator components |
+| File                         | Native geometry / use                                                        |
+| ---------------------------- | ---------------------------------------------------------------------------- |
+| `credits.shp`                | 168×16 credit inset                                                          |
+| `tabs.shp`                   | 168×16 upper controls backing                                                |
+| `radar.shp`                  | 168×110, 33 frames; frame 0 faction emblem, frame 32 empty radar surround    |
+| `top.shp`                    | 168×32 menu chrome, y=16–48 directly below credits                           |
+| `side1.shp`                  | 168×69 repair/sell and category surround                                     |
+| `side2.shp`                  | 168×50, repeated paired empty cameo slots                                    |
+| `side2b.shp`                 | 168×50, empty rails without slots                                            |
+| `side3.shp`                  | 168×26 lower scroll surround                                                 |
+| `tab00.shp`–`tab03.shp`      | Buildings, defenses, infantry, vehicles; 5 states each                       |
+| `repair.shp`, `sell.shp`     | Faction-specific shapes, 2 states each                                       |
+| `power.shp`, `powerp.shp`    | Original power indicator components                                          |
 | `diplobtn.shp`, `optbtn.shp` | Left arrow / right two-circle menu controls; normal frame 0, pressed frame 1 |
-| `r-dn.shp`, `r-up.shp` | Left down / right up scroll controls; enabled 0, pressed 1, disabled blank 2 |
-| `addon.shp` | Lower sidebar artwork beneath side3 |
+| `r-dn.shp`, `r-up.shp`       | Left down / right up scroll controls; enabled 0, pressed 1, disabled blank 2 |
+| `addon.shp`                  | Lower sidebar artwork beneath side3                                          |
 
 `/tmp/ra2-references/sidebar-contact.png` visually catalogs the archive entries, including unidentified filename hashes. Original `local.mix/ui.ini` lists the default command-strip order: Team01, Team02, TypeSelect, Deploy, Guard, PlanningMode; multiplayer adds Beacon.
 

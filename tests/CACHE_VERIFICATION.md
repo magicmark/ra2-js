@@ -18,18 +18,18 @@ ordinary URL `http://omarky:5173/`. Before application scripts ran, instrumentat
 made any installer fetch or Worker construction throw and recorded attempts.
 The page was then reloaded with browser HTTP cache bypassed and the same checks.
 
-| Observation | First completed import | New page | HTTP-cache-bypassed reload |
-| --- | --- | --- | --- |
-| Final status | Ready; files saved | Ready; loaded from this browser | Ready; loaded from this browser |
-| Installer fetch attempts after opening | Initial empty-cache download deliberately blocked before local import | **0** | **0** |
-| Archive worker creation | **1**, actual extraction | **0** | **0** |
-| Installer/worker/WASM resource requests | Real worker + WASM observed | **0** | **0** |
-| Cache files / bytes | 126 / 4,897,139 | Unchanged | Unchanged |
-| Cache `saved` timestamp | 1789320292477 | Unchanged | Unchanged |
-| Original sprite + cameo canvases | 48 | 48 | 48 |
-| Combined RGBA FNV-1a fingerprint | `1281b0cb` | `1281b0cb` | `1281b0cb` |
-| Nontransparent pixels across those canvases | 200,860 | 200,860 | 200,860 |
-| Asset error / cache warning | null / null | null / null | null / null |
+| Observation                                 | First completed import                                                | New page                        | HTTP-cache-bypassed reload      |
+| ------------------------------------------- | --------------------------------------------------------------------- | ------------------------------- | ------------------------------- |
+| Final status                                | Ready; files saved                                                    | Ready; loaded from this browser | Ready; loaded from this browser |
+| Installer fetch attempts after opening      | Initial empty-cache download deliberately blocked before local import | **0**                           | **0**                           |
+| Archive worker creation                     | **1**, actual extraction                                              | **0**                           | **0**                           |
+| Installer/worker/WASM resource requests     | Real worker + WASM observed                                           | **0**                           | **0**                           |
+| Cache files / bytes                         | 126 / 4,897,139                                                       | Unchanged                       | Unchanged                       |
+| Cache `saved` timestamp                     | 1789320292477                                                         | Unchanged                       | Unchanged                       |
+| Original sprite + cameo canvases            | 48                                                                    | 48                              | 48                              |
+| Combined RGBA FNV-1a fingerprint            | `1281b0cb`                                                            | `1281b0cb`                      | `1281b0cb`                      |
+| Nontransparent pixels across those canvases | 200,860                                                               | 200,860                         | 200,860                         |
+| Asset error / cache warning                 | null / null                                                           | null / null                     | null / null                     |
 
 Network inspection also showed that application modules were requested with
 HTTP 200 during the bypassed reload, with no installer, worker, or WASM request.

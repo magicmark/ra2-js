@@ -1,17 +1,112 @@
-<!doctype html><meta charset="utf-8"><title>Original terrain contact sheets</title>
-<style>body{margin:0;background:#20252b;color:white;font:14px monospace}canvas{display:block}input{height:30px}</style>
-<input id="archive" type="file"><canvas id="sheet" width="1200" height="700"></canvas>
+<!doctype html><meta charset="utf-8" /><title>Original terrain contact sheets</title>
+<style>
+  body {
+    margin: 0;
+    background: #20252b;
+    color: white;
+    font: 14px monospace;
+  }
+  canvas {
+    display: block;
+  }
+  input {
+    height: 30px;
+  }
+</style>
+<input id="archive" type="file" /><canvas id="sheet" width="1200" height="700"></canvas>
 <script type="module">
-import {MixArchive, decodeTmp, decodePalette, ShpFile} from '/src/assets/formats.ts';
-const c=document.querySelector('canvas'),ctx=c.getContext('2d');
-window.review={};
-document.querySelector('input').onchange=async e=>{
- const root=new MixArchive(new Uint8Array(await e.target.files[0].arrayBuffer()),'ra2.mix'),archives=[];
- const visit=a=>{archives.push(a);for(const name of ['local.mix','cache.mix','generic.mix','conquer.mix','isogen.mix','isotemp.mix','isosnow.mix','isourb.mix','temperat.mix','snow.mix','urban.mix','neutral.mix']){const bytes=a.get(name);if(bytes)visit(new MixArchive(bytes,name));}};visit(root);
- const get=name=>archives.map(a=>a.get(name)).find(Boolean),pal=decodePalette(get('isotem.pal'));
- const paint=(frame,palette=pal)=>{const v=document.createElement('canvas');v.width=frame.width;v.height=frame.height;const t=v.getContext('2d'),im=t.createImageData(v.width,v.height);for(let i=0;i<frame.pixels.length;i++){const p=frame.pixels[i];if(p)im.data.set([...palette.slice(p*3,p*3+3),255],i*4);}t.putImageData(im,0,0);return v;};
- const tile=(name,dx,dy,scale=2)=>{const bytes=get(name),v=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength),w=v.getUint32(0,true),h=v.getUint32(4,true);for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=x+y*w;if(!v.getUint32(16+i*4,true))continue;ctx.drawImage(paint(decodeTmp(bytes,i)),dx+(x-y)*30*scale,dy+(x+y)*15*scale,60*scale,30*scale);}};
- Object.assign(window.review,{get,paint,tile,ctx,canvas:c,ready:true,show(names){ctx.fillStyle='#30363d';ctx.fillRect(0,0,c.width,c.height);ctx.imageSmoothingEnabled=false;for(let i=0;i<8;i++){const name=names[i],x=i%4*300,y=Math.floor(i/4)*350;ctx.fillStyle='#fff';ctx.fillText(name??'—',x+12,y+22);if(!name)continue;if(name.endsWith('.tem')&&!name.startsWith('tree'))tile(name,x+90,y+110,2);else{const shape=new ShpFile(get(name)),f=shape.frame(0),v=paint(f);ctx.drawImage(v,x+150-v.width,y+270-v.height*2,v.width*2,v.height*2);}}return names;}});
- window.review.show(Array.from({length:8},(_,i)=>`tree${String(i+1).padStart(2,'0')}.tem`));
-};
+  import { MixArchive, decodeTmp, decodePalette, ShpFile } from '/src/assets/formats.ts';
+  const c = document.querySelector('canvas'),
+    ctx = c.getContext('2d');
+  window.review = {};
+  document.querySelector('input').onchange = async (e) => {
+    const root = new MixArchive(new Uint8Array(await e.target.files[0].arrayBuffer()), 'ra2.mix'),
+      archives = [];
+    const visit = (a) => {
+      archives.push(a);
+      for (const name of [
+        'local.mix',
+        'cache.mix',
+        'generic.mix',
+        'conquer.mix',
+        'isogen.mix',
+        'isotemp.mix',
+        'isosnow.mix',
+        'isourb.mix',
+        'temperat.mix',
+        'snow.mix',
+        'urban.mix',
+        'neutral.mix',
+      ]) {
+        const bytes = a.get(name);
+        if (bytes) visit(new MixArchive(bytes, name));
+      }
+    };
+    visit(root);
+    const get = (name) => archives.map((a) => a.get(name)).find(Boolean),
+      pal = decodePalette(get('isotem.pal'));
+    const paint = (frame, palette = pal) => {
+      const v = document.createElement('canvas');
+      v.width = frame.width;
+      v.height = frame.height;
+      const t = v.getContext('2d'),
+        im = t.createImageData(v.width, v.height);
+      for (let i = 0; i < frame.pixels.length; i++) {
+        const p = frame.pixels[i];
+        if (p) im.data.set([...palette.slice(p * 3, p * 3 + 3), 255], i * 4);
+      }
+      t.putImageData(im, 0, 0);
+      return v;
+    };
+    const tile = (name, dx, dy, scale = 2) => {
+      const bytes = get(name),
+        v = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength),
+        w = v.getUint32(0, true),
+        h = v.getUint32(4, true);
+      for (let y = 0; y < h; y++)
+        for (let x = 0; x < w; x++) {
+          const i = x + y * w;
+          if (!v.getUint32(16 + i * 4, true)) continue;
+          ctx.drawImage(
+            paint(decodeTmp(bytes, i)),
+            dx + (x - y) * 30 * scale,
+            dy + (x + y) * 15 * scale,
+            60 * scale,
+            30 * scale,
+          );
+        }
+    };
+    Object.assign(window.review, {
+      get,
+      paint,
+      tile,
+      ctx,
+      canvas: c,
+      ready: true,
+      show(names) {
+        ctx.fillStyle = '#30363d';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.imageSmoothingEnabled = false;
+        for (let i = 0; i < 8; i++) {
+          const name = names[i],
+            x = (i % 4) * 300,
+            y = Math.floor(i / 4) * 350;
+          ctx.fillStyle = '#fff';
+          ctx.fillText(name ?? '—', x + 12, y + 22);
+          if (!name) continue;
+          if (name.endsWith('.tem') && !name.startsWith('tree')) tile(name, x + 90, y + 110, 2);
+          else {
+            const shape = new ShpFile(get(name)),
+              f = shape.frame(0),
+              v = paint(f);
+            ctx.drawImage(v, x + 150 - v.width, y + 270 - v.height * 2, v.width * 2, v.height * 2);
+          }
+        }
+        return names;
+      },
+    });
+    window.review.show(
+      Array.from({ length: 8 }, (_, i) => `tree${String(i + 1).padStart(2, '0')}.tem`),
+    );
+  };
 </script>

@@ -6,13 +6,13 @@ The current implementation replaces the custom FIELD SETTINGS dialog with the so
 
 The original `ra2.mix` contains these matching entries in both `sidec01.mix` (Allied) and `sidec02.mix` (Soviet):
 
-| File | Authored dimensions | Evidence / intended use |
-| --- | --- | --- |
-| `bkgdsm.shp` | 472 × 448, one frame | Small faction background |
-| `bkgdmd.shp` | 632 × 568, one frame | Medium faction background; its width equals an 800px viewport minus the native 168px sidebar |
-| `bkgdlg.shp` | 856 × 736, one frame | Large faction background; matches the large panel seen in the high-resolution forum images |
-| `uibkgd.pal` | 768 bytes | Correct background palette; native eagle/hammer-and-sickle colors were decoded and inspected |
-| `sidebttn.shp` | 125 × 25, three frames | Native battle sidebar button; sidebar palette, normal frame 0 and pressed frame 1 |
+| File           | Authored dimensions    | Evidence / intended use                                                                      |
+| -------------- | ---------------------- | -------------------------------------------------------------------------------------------- |
+| `bkgdsm.shp`   | 472 × 448, one frame   | Small faction background                                                                     |
+| `bkgdmd.shp`   | 632 × 568, one frame   | Medium faction background; its width equals an 800px viewport minus the native 168px sidebar |
+| `bkgdlg.shp`   | 856 × 736, one frame   | Large faction background; matches the large panel seen in the high-resolution forum images   |
+| `uibkgd.pal`   | 768 bytes              | Correct background palette; native eagle/hammer-and-sickle colors were decoded and inspected |
+| `sidebttn.shp` | 125 × 25, three frames | Native battle sidebar button; sidebar palette, normal frame 0 and pressed frame 1            |
 
 The [decoded faction-background contact sheet](../tests/artifacts/native-ui/native-options-assets-contact.png) preserves all six authored backgrounds. It is a diagnostic artifact, not a substitute runtime asset. Runtime originals continue to come from the user's game archives.
 
